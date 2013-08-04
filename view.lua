@@ -9,6 +9,8 @@ function mouseY()
 end
 
 function View:update()
+  self.prevx = self.x
+  self.prevy = self.y
   local object = Players:get(1)
   self.x = math.lerp(self.x, ((object.x + mouseX()) / 2) - (self.w / 2), .25)
   self.y = math.lerp(self.y, ((object.y + mouseY()) / 2) - (self.h / 2), .25)
@@ -25,7 +27,8 @@ end
 
 function View:push(map, entities, t)
   love.graphics.push()
-  love.graphics.translate(-math.floor(self.x + .5), -math.floor(self.y + .5))
+  local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  love.graphics.translate(-math.floor(x + .5), -math.floor(y + .5))
 end
 
 function View:pop()
@@ -33,6 +36,8 @@ function View:pop()
 end
 
 View.x = 0
+View.prevx = 0
 View.y = 0
+View.prevy = 0
 View.w = love.graphics.getWidth()
 View.h = love.graphics.getHeight()

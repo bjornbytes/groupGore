@@ -79,7 +79,7 @@ function love.run()
     love.draw()
     love.graphics.present()
     
-    love.timer.sleep(math.max(math.min(tickRate - tickDelta, syncRate - syncDelta) - .001, 0))
+    love.timer.sleep(.001)
   end
 end
 

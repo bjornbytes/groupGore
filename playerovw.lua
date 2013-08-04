@@ -1,6 +1,7 @@
 Players = {}
 
 Players.players = {}
+Players.history = {}
 Players.active = {}
 Players.next = 1
 
@@ -53,10 +54,20 @@ end
 
 function Players:update()
   self:with(self.active, f.ego('update'))
+  self:with(self.active, function(p)
+    self.history[p.id][tick] = table.copy(p)
+    self.history[p.id][tick - (1 / tick)] = nil
+  end)
 end
 
 function Players:draw()
-  self:with(self.active, f.ego('draw'))
+  self:with(self.active, function(current)
+    --current:draw()
+    local previous = self.history[current.id][tick - 1]
+    if previous then
+      table.interpolate(previous, current, tickDelta / tickRate):draw()
+    end
+  end)
 end
 
 function Players:mousepressed(x, y, b)
@@ -83,6 +94,8 @@ end
 for i = 1, 16 do
   Players.players[i] = Player:create()
   Players.players[i].id = i
+  
+  Players.history[i] = {}
 end
 
 local dir

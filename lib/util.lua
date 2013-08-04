@@ -1,6 +1,6 @@
 -- Math
 function math.lerp(x1, x2, z) return x1 + (x2 - x1) * z end
-function math.anglerp(d1, d2, z) return d1 + (angleDiff(d1, d2) * z) end
+function math.anglerp(d1, d2, z) return d1 + (math.anglediff(d1, d2) * z) end
 function math.distance(x1, y1, x2, y2) return ((x2 - x1) ^ 2 + (y2 - y1) ^ 2) ^ .5 end
 function math.direction(x1, y1, x2, y2) return -math.atan2(x2 - x1, y2 - y1) end
 function math.inside(px, py, rx, ry, rw, rh) return px >= rx and px <= rx + rw and py >= ry and py <= ry + rh end
@@ -90,6 +90,20 @@ function table.merge(t1, t2)
   t2 = t2 or {}
   for k, v in pairs(t1) do t2[k] = v end
   return t2
+end
+
+function table.interpolate(t1, t2, z)
+  local interp = table.copy(t1)
+  for k, v in pairs(interp) do
+    if t2[k] then
+      if type(v) == 'table' then interp[k] = table.interpolate(t1[k], t2[k], z)
+      elseif type(v) == 'number' then
+        if k == 'angle' then interp[k] = math.anglerp(t1[k], t2[k], z)
+        else interp[k] = math.lerp(t1[k], t2[k], z) end
+      end
+    end
+  end
+  return interp
 end 
 
 function table.deltas(t1, t2)
