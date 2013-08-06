@@ -21,6 +21,7 @@ function Players:activate(tag, class)
   p.class = class
   setmetatable(p, {__index = tags[tag]})
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
+  table.print(p.class.slots[2])
   p:activate()
   self:refresh()
   return id
