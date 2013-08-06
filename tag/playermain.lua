@@ -18,6 +18,7 @@ function PlayerMain:activate()
   
   self.input.slot = {}
   self.input.slot.weapon = 1
+  self.input.slot.skill = 3
   self.input.slot.reload = false
   
   Player.activate(self)
@@ -37,9 +38,18 @@ function PlayerMain:update()
 end
 
 function PlayerMain:poll()
-  local wasd, mouse, slot = self.input.wasd, self.input.mouse, self.input.slot
-  
-  wasd.w, wasd.a, wasd.s, wasd.d = love.keyboard.downs('w', 'a', 's', 'd')
+  local mouse = self.input.mouse
   mouse.x, mouse.y = mouseX(), mouseY()
-  slot.reload = love.keyboard.isDown('r')
+end
+
+function PlayerMain:keyHandler(key)
+  if key == 'w' or key == 'a' or key == 's' or key == 'd' then
+    self.input.wasd[key] = love.keyboard.isDown(key)
+  elseif key == 'r' then
+    self.input.slot.reload = love.keyboard.isDown(key)
+  elseif key:match('^[1-5]$') and love.keyboard.isDown(key) then
+    key = tonumber(key)
+    local slotType = self.slots[key].type
+    if self.input.slot[slotType] ~= key then self.input.slot[slotType] = key end
+  end
 end

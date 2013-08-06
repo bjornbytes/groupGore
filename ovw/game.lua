@@ -1,6 +1,7 @@
 Game = {}
 
 function Game:load()
+  myId = 1
   MapOvw:load('jungleCarnage')
   Players:activate('main', Brute)
 end
@@ -29,4 +30,12 @@ end
 
 function Game.mousereleased(...)
   Players:mousereleased(...)
+end
+
+function Game.keypressed(...)
+  Players:keypressed(...)
+end
+
+function Game.keyreleased(...)
+  Players:keyreleased(...)
 end

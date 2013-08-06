@@ -61,9 +61,9 @@ end
 
 function Player:slot()
   assert(self.input)
-  for i = 1, 5 do self.slots[i].update(self, self.slots[i]) end
   
-  local weapon = self.slots[1]
+  local weapon = self.slots[self.input.slot.weapon]
+  weapon.update(self, weapon)
   
   if self.input.mouse.l and weapon.canFire(self, weapon) then
     weapon.fire(self, weapon)

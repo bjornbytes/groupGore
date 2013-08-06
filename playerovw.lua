@@ -71,12 +71,20 @@ function Players:draw()
 end
 
 function Players:mousepressed(x, y, b)
-  self:get(1).input.mouse[b] = true
+  self:get(myId).input.mouse[b] = true
 end
 
 function Players:mousereleased(x, y, b)
-  self:get(1).input.mouse[b] = false
+  self:get(myId).input.mouse[b] = false
 end
+
+local function keyHandler(self, key)
+  if not myId then return end
+  local p = self:get(myId)
+  f.exe(p.keyHandler, p, key)
+end
+Players.keypressed = keyHandler
+Players.keyreleased = keyHandler
 
 function Players:refresh()
   self.next = nil

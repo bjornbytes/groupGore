@@ -41,6 +41,7 @@ Shotgun.canFire = function(self, myShotgun)
 end
 
 Shotgun.fire = function(self, myShotgun)
+  print('firing shotgun ' .. self.input.slot.weapon)
   self:spell(ShotgunBullet)
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1
