@@ -3,7 +3,7 @@ Game = {}
 function Game:load()
   myId = 1
   MapOvw:load('jungleCarnage')
-  Players:activate('main', Brute)
+  Players:activate('main', data.class.brute)
 end
 
 function Game:update()

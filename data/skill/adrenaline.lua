@@ -4,6 +4,7 @@ local Adrenaline = {}
 -- Meta
 ----------------
 Adrenaline.name = 'Adrenaline'
+Adrenaline.code = 'adrenaline'
 Adrenaline.icon = 'media/graphics/icon.png'
 Adrenaline.text = 'It is Adrenaline.  It sucks.'
 Adrenaline.type = 'skill'
@@ -34,10 +35,10 @@ end
 
 function Adrenaline.fire(self, myAdrenaline)
   if not myAdrenaline.active then
-    self:addBuff(AdrenalineBuff)
+    self:addBuff(data.buff.adrenaline)
     myAdrenaline.active = true
   else
-    self:removeBuff(AdrenalineBuff)
+    self:removeBuff(data.buff.adrenaline)
     myAdrenaline.active = false
   end
 end

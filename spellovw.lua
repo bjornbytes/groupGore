@@ -66,11 +66,3 @@ for i = 17, 256 do
   Spells.spells[i].id = i
   Spells.spells[i].owner = math.floor((i - 1) / 16)
 end
-
-local dir
-dir = '/data/spell'
-for _, file in ipairs(love.filesystem.enumerate(dir)) do
-  if file:match('\.lua') then
-    local spell = love.filesystem.load(dir .. '/' .. file)()
-  end
-end

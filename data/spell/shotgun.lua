@@ -1,8 +1,10 @@
-ShotgunBullet = {}
-ShotgunBullet.hp = .2
+local Shotgun = {}
+Shotgun.code = 'shotgun'
 
-ShotgunBullet.activate = function(self)
-  self.hp = ShotgunBullet.hp
+Shotgun.hp = .2
+
+Shotgun.activate = function(self)
+  self.hp = Shotgun.hp
   self.x = self.owner.x
   self.y = self.owner.y
   self.bullets = {}
@@ -15,7 +17,7 @@ ShotgunBullet.activate = function(self)
   end
 end
 
-ShotgunBullet.update = function(self)
+Shotgun.update = function(self)
   self.hp = timer.rot(self.hp, function() Spells:deactivate(self.id) end)
   for k, bullet in pairs(self.bullets) do
     bullet.x = bullet.x + (math.cos(bullet.angle) * 2500 * tickRate)
@@ -23,12 +25,12 @@ ShotgunBullet.update = function(self)
   end
 end
 
-ShotgunBullet.draw = function(self)
-  love.graphics.setColor(255, 255, 255, (self.hp / ShotgunBullet.hp) * 255)
+Shotgun.draw = function(self)
+  love.graphics.setColor(255, 255, 255, (self.hp / Shotgun.hp) * 255)
   for _, bullet in pairs(self.bullets) do
     love.graphics.line(bullet.x, bullet.y, bullet.x + math.cos(bullet.angle) * 300, bullet.y + math.sin(bullet.angle) * 300)
   end
   love.graphics.setColor(255, 255, 255, 255)
 end
 
-return ShotgunBullet
+return Shotgun

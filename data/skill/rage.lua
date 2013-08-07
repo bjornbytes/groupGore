@@ -4,6 +4,7 @@ local Rage = {}
 -- Meta
 ----------------
 Rage.name = 'Rage'
+Rage.code = 'rage'
 Rage.icon = 'media/graphics/icon.png'
 Rage.text = 'All of myRage.'
 Rage.type = 'skill'
@@ -29,7 +30,7 @@ end
 
 function Rage.fire(self, myRage)
   if not myRage.active then
-    self:addBuff(RageBuff)
+    self:addBuff(data.buff.rage)
     myRage.active = true
   end
 end

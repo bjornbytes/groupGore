@@ -1,8 +1,8 @@
 Players = {}
 
 Players.players = {}
-Players.history = {}
 Players.active = {}
+Players.history = {}
 Players.next = 1
 
 function Players:activate(tag, class)
@@ -21,7 +21,6 @@ function Players:activate(tag, class)
   p.class = class
   setmetatable(p, {__index = tags[tag]})
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
-  table.print(p.class.slots[2])
   p:activate()
   self:refresh()
   return id
@@ -111,23 +110,4 @@ local dir
 dir = '/tag'
 for _, file in ipairs(love.filesystem.enumerate(dir)) do
   if file:match('player.*\.lua') then love.filesystem.load(dir .. '/' .. file)() end
-end
-
-dir = 'data/class'
-for _, file in ipairs(love.filesystem.enumerate(dir)) do
-  if file:match('\.lua') then
-    local class = love.filesystem.load(dir .. '/' .. file)()
-    assert(class.name, 'No name for the class in ' .. file)
-    assert(class.health, 'No health for the class in ' .. file)
-    assert(class.speed, 'No speed for the class in ' .. file)
-    assert(class.sprite, 'No sprite for the class in ' .. file)
-    assert(class.slots, 'No slots for the class in ' .. file)
-    
-    class.sprite = love.graphics.newImage(class.sprite)
-    for i = 1, 5 do
-      class.slots[i] = love.filesystem.load(class.slots[i])()
-    end
-    
-    _G[class.name] = class
-  end
 end

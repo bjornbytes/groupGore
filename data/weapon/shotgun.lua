@@ -4,6 +4,7 @@ local Shotgun = {}
 -- Meta
 ----------------
 Shotgun.name = 'Shotgun'
+Shotgun.code = 'shotgun'
 Shotgun.icon = 'media/graphics/icon.png'
 Shotgun.text = 'It is a shotgun.  It blows people to bits.'
 Shotgun.type = 'weapon'
@@ -42,7 +43,7 @@ end
 
 Shotgun.fire = function(self, myShotgun)
   print('firing shotgun ' .. self.input.slot.weapon)
-  self:spell(ShotgunBullet)
+  self:spell(data.spell.shotgun)
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1
   if myShotgun.clip == 0 then myShotgun.timers.reload = Shotgun.reload end

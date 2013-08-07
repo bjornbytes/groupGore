@@ -5,7 +5,6 @@ require './lib/bitstream'
 require './lib/linkedlist'
 require './lib/message'
 require './lib/net'
-require './lib/view'
 
 require './ovw/menu'
 require './ovw/game'
@@ -20,9 +19,12 @@ require './playerovw'
 require './spell'
 require './spellovw'
 
+require './data/loader'
+
 function love.load()
   Overwatch = Menu
   Overwatch:load()
+  data.load()
   
   love.update = function() Overwatch:update() end
   love.draw = function() f.exe(Overwatch.draw, Overwatch) end

@@ -4,6 +4,7 @@ local SMG = {}
 -- Meta
 ----------------
 SMG.name = 'SMG'
+SMG.code = 'smg'
 SMG.icon = 'media/graphics/icon.png'
 SMG.text = 'It is a SMG.  It pumps people full of lead.'
 SMG.type = 'weapon'
@@ -42,7 +43,7 @@ end
 
 SMG.fire = function(self, mySMG)
   print('firing SMG ' .. self.input.slot.weapon)
-  self:spell(SMGBullet)
+  self:spell(data.spell.smg)
   mySMG.timers.shoot = mySMG.firerate
   mySMG.clip = mySMG.clip - 1
   if mySMG.clip == 0 then mySMG.timers.reload = SMG.reload end
