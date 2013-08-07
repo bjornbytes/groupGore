@@ -82,11 +82,3 @@ function love.run()
     love.timer.sleep(.001)
   end
 end
-
-function love.keyboard.downs(...)
-  local t = {}
-  for _, key in pairs({...}) do
-    t[#t + 1] = love.keyboard.isDown(key)
-  end
-  return unpack(t)
-end
