@@ -9,6 +9,10 @@ function Player:create()
     x = 0,
     y = 0,
     angle = 0,
+    speed = 0,
+    health = 0,
+    maxSpeed = 0,
+    maxHealth = 0,
     slots = {{}, {}, {}, {}, {}},
     buffs = {}
   }
@@ -17,6 +21,9 @@ end
 function Player:activate()
   self.x = 400
   self.y = 300
+  self.maxHealth = self.class.health
+  self.maxSpeed = self.class.speed
+  self.health = self.maxHealth
   for i = 1, 5 do
     self.slots[i].activate(self, self.slots[i])
   end
@@ -40,7 +47,7 @@ function Player:move()
   local w, a, s, d = self.input.wasd.w, self.input.wasd.a, self.input.wasd.s, self.input.wasd.d
   if not (w or a or s or d) then return end
   
-  local up, down, left, right, speed, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi, self.class.speed * tickRate
+  local up, down, left, right, speed, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi, self.maxSpeed * tickRate
   
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
@@ -74,4 +81,10 @@ end
 function Player:spell(kind)
   assert(kind)
   Spells:activate(self.id, kind)
+end
+
+function Player:buff()
+  for _, buff in pairs(self.buffs) do
+    f.exe(buff.update, self, buff)
+  end
 end

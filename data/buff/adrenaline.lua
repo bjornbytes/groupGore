@@ -10,8 +10,8 @@ Adrenaline.effects = {}
 Adrenaline.effects.haste = .4
 
 Adrenaline.update = function(self, myAdrenaline)
-	if self.hp > 15 * tickRate then
-		self.hp = self.hp - (15 * tickRate)
+	if self.health > 15 * tickRate then
+		self.health = self.health - (15 * tickRate)
 	end
 end
 
