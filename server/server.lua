@@ -1,16 +1,13 @@
 Server = {}
 
+function Server:load()
+  Net:load('server')
+end
+
 function Server:update()
-  --
+  Net:update()
 end
 
 function Server:sync()
   --
 end
-
-function Server.net(data, ip, port)
-  --
-end
-
-Udp:listen(6061)
-love.handlers['net'] = Server.net

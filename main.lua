@@ -11,8 +11,9 @@ require './ovw/game'
 
 require './mapovw'
 require './collisionovw'
+require './netovw'
 require './buffovw'
-require './view'
+require './viewovw'
 
 require './player'
 require './playerovw'

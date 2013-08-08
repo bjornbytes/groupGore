@@ -1,6 +1,6 @@
-MapOvw = {}
+Map = {}
 
-function MapOvw:load(name)
+function Map:load(name)
   local dir = 'maps/' .. name .. '/'
   local map  = love.filesystem.load(dir .. name .. '.lua')()
   map.graphics = {}
@@ -20,7 +20,7 @@ function MapOvw:load(name)
   _G['map'] = map
 end
 
-function MapOvw:draw()
+function Map:draw()
   for i = 0, map.width, map.graphics.background:getWidth() do
     for j = 0, map.height, map.graphics.background:getHeight() do
       love.graphics.draw(map.graphics.background, i, j)

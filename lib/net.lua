@@ -19,11 +19,11 @@ function Udp:send(data, ip, port)
   self.udp:sendto(tostring(data), ip, port)
 end
 
-function Udp:receive()
+function Udp:receive(fn)
   assert(self.udp)
   
   repeat
     local data, ip, port = self.udp:receivefrom()
-    if data then love.event.push('net', data, ip, port) end
+    if data then fn(data, ip, port) end
   until not data
 end

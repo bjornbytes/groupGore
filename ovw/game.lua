@@ -1,12 +1,13 @@
 Game = {}
 
 function Game:load()
-  myId = 1
-  MapOvw:load('jungleCarnage')
+  Net:load('client')
+  Map:load('jungleCarnage')
   Players:activate('main', data.class.brute)
 end
 
 function Game:update()
+  Net:update()
   Players:update()
   Spells:update()
   View:update()
@@ -18,7 +19,7 @@ end
 
 function Game:draw()
   View:push()
-  MapOvw:draw()
+  Map:draw()
   Players:draw()
   Spells:draw()
   View:pop()
