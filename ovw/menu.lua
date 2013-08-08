@@ -17,7 +17,7 @@ end
 
 function Menu:update()
   if love.keyboard.isDown('s') then
-    -- Start server.
+    love.filesystem.load('server/main.lua')()
   elseif love.keyboard.isDown('c') then
     serverIp = '127.0.0.1'
     serverPort = 6061

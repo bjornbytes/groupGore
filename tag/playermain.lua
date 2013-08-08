@@ -52,5 +52,11 @@ function PlayerMain:keyHandler(key)
     key = tonumber(key)
     local slotType = self.slots[key].type
     if self.input.slot[slotType] ~= key then self.input.slot[slotType] = key end
+  elseif key == ' ' then
+    if love.keyboard.isDown(' ') then
+      if self.slots[3].canFire(self, self.slots[3]) then
+        self.slots[3].fire(self, self.slots[3])
+      end
+    end
   end
 end

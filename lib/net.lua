@@ -1,26 +1,29 @@
 local socket = require 'socket'
 
-Udp = class()
+Udp = {}
 
-function Udp:init(port, remoteIp, remotePort)
-  self.remoteIp = remoteIp
-  self.remotePort = remotePort
+function Udp:listen(port)
+  assert(port)
+  
   self.udp = socket.udp()
   self.udp:settimeout(0)
-  if port then self.udp:setsockname('*', port) end
-  if self.remoteIp then self.udp:setpeername(remoteIp, remotePort) end
+  self.udp:setsockname('*', port)
 end
 
 function Udp:send(data, ip, port)
-  if not ip then return self.udp:send(tostring(data)) end
+  assert(self.udp)
+  assert(data)
+  assert(ip)
+  assert(port)
+  
   self.udp:sendto(tostring(data), ip, port)
 end
 
 function Udp:receive()
+  assert(self.udp)
+  
   repeat
-    local data, ip, port
-    if self.remoteIp then data = self.udp:receive()
-    else data, ip, port = self.udp:receivefrom() end
-    if data and self.onmessage then self.onmessage(data, ip, port) end
+    local data, ip, port = self.udp:receivefrom()
+    if data then love.event.push('net', data, ip, port) end
   until not data
 end

@@ -70,9 +70,13 @@ end
 function Player:slot()
   assert(self.input)
   
-  local weapon = self.slots[self.input.slot.weapon]
-  weapon.update(self, weapon)
+  for i = 1, 5 do
+    if self.slots[i].type ~= 'weapon' or self.input.slot.weapon == i then
+      f.exe(self.slots[i].update, self, self.slots[i])
+    end
+  end
   
+  local weapon = self.slots[self.input.slot.weapon]
   if self.input.mouse.l and weapon.canFire(self, weapon) then
     weapon.fire(self, weapon)
   end

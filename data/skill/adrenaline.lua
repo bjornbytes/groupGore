@@ -23,10 +23,7 @@ function Adrenaline.activate(self, myAdrenaline)
 end
 
 function Adrenaline.update(self, myAdrenaline)
-  timer.rot(myAdrenaline.cooldown, f.empty)
-  if myAdrenaline.active and self.hp > (Adrenaline.drain * tickRate) then
-    self.hp = self.hp - (Adrenaline.drain * tickRate)
-  end
+  myAdrenaline.cooldown = timer.rot(myAdrenaline.cooldown, f.empty)
 end
 
 function Adrenaline.canFire(self, myAdrenaline)
