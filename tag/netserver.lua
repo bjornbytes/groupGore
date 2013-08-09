@@ -38,7 +38,7 @@ function NetServer:lookup(ip, port)
 end
 
 NetServer.messageHandlers = {
-	[1] = function(ip, port, stream)
+	[Net.msgInit] = function(ip, port, stream)
 		local name, listen = stream:read('', 16)
 		local client = Client.create(ip, port, name, listen)
 		self.clients[client.id] = client

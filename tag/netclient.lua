@@ -30,7 +30,7 @@ function NetClient:send()
 end
 
 NetClient.receiveHandlers = {
-	[1] = function(stream)
+	[Net.msgInit] = function(stream)
 		myId = stream:read(4)
 	end
 }
