@@ -1,13 +1,21 @@
-Bitstream = class()
+Stream = {}
 
-function Bitstream:init(str)
-  self.str = str or ''
-  self.byte = nil
-  self.byteLen = nil
+function Stream:create()
+  local stream = {}
+  stream.str = ''
+  stream.byte = nil
+  stream.byteLen = nil
+  setmetatable(stream, {
+    __index = Stream,
+    __tostring = function(self)
+      return self:write('').str
+    end
+  })
+  return stream
 end
 
-function Bitstream:write(data, kind)
-  if not kind or kind == 0 or type(kind) == 'string' then
+function Stream:write(data, len)
+  if type(data) == 'string' then
     if self.byte then
       self.str = self.str .. string.char(self.byte)
       self.byte = nil
@@ -17,7 +25,7 @@ function Bitstream:write(data, kind)
     return self
   end
   
-  local n = kind
+  local n = len
   if n then
     local idx = 0
     repeat
@@ -43,7 +51,7 @@ function Bitstream:write(data, kind)
   return self
 end
 
-function Bitstream:read(n)
+function Stream:read(n)
   if type(n) == 'string' or n <= 0 then
     if self.byte then
       self.str = self.str:sub(2)

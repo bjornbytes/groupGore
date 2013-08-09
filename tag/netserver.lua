@@ -4,19 +4,18 @@ function NetServer:activate()
 	Udp:listen(6061)
 end
 
-function NetServer:update()
-	Udp:receive(function(data, ip, port)
-		local id = data:byte(1)
-		self.messageHandlers[id](self, data, ip, port)
-	end)
-end
-
-function NetServer:send(data, client)
-	Udp:send(data, client.ip, client.port)
-end
-
-function NetServer:sendAll(data)
-	--
+function NetServer:send(clients, except)
+	assert(self.message)
+	local body = string.char(self.message.header) .. tostring(self.message.stream)
+	if type(clients) == 'table' then
+		if except then clients[except] = nil end
+		for _, client in pairs(clients) do
+			Udp:send(body, client.ip, client.port)
+		end
+	else
+		Udp:send(body, clients.ip, clients.port)
+	end
+	self.message = nil
 end
 
 NetServer.messageHandlers = {
