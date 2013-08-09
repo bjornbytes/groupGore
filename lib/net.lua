@@ -8,6 +8,8 @@ function Udp:listen(port)
   self.udp = socket.udp()
   self.udp:settimeout(0)
   self.udp:setsockname('*', port)
+  
+  print('Listening on ' .. port)
 end
 
 function Udp:send(data, ip, port)

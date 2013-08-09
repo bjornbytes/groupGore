@@ -1,5 +1,7 @@
 require './server/server'
 
+Server:load()
+
 tick = 0
 tickRate = .02
 tickDelta = 0

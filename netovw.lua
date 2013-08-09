@@ -13,13 +13,6 @@ function Net:load(tag)
 	f.exe(self.activate)
 end
 
-function Net:update()
-	Udp:receive(function(data, ip, port)
-		local id = data:byte(1)
-		self.messageHandlers[id](self, data, ip, port)
-	end)
-end
-
 function Net:begin(header)
 	self.message = {}
 	self.message.header = header

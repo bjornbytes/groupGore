@@ -8,6 +8,18 @@ function NetClient:activate()
 	   :write(username)
 	   :write(port, 16)
 	   :send()
+	
+	while not myId do
+		Net:receive()
+	end
+end
+
+function NetClient:update()
+	Udp:receive(function(data, ip, port)
+		local stream = Stream.create(data)
+		local id = stream:read(8)
+		self.messageHandlers[id](stream)
+	end)
 end
 
 function NetClient:send()
@@ -18,11 +30,7 @@ function NetClient:send()
 end
 
 NetClient.receiveHandlers = {
-	[0] = function(self, data, ip, port)
-		--
-	end,
-	
-	[1] = function(self, data, ip, port)
-		--
+	[1] = function(stream)
+		myId = stream:read(4)
 	end
 }

@@ -1,8 +1,8 @@
 Stream = {}
 
-function Stream:create()
+function Stream:create(str)
   local stream = {}
-  stream.str = ''
+  stream.str = str or ''
   stream.byte = nil
   stream.byteLen = nil
   setmetatable(stream, {
