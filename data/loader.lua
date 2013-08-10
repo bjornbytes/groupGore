@@ -21,4 +21,5 @@ data.load = function()
 	load('data/class', 'class', function(class)
 	  class.sprite = love.graphics.newImage(class.sprite)
 	end)
+	data.classes = {data.class.brute}
 end

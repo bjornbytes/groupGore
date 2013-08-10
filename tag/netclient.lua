@@ -36,7 +36,7 @@ NetClient.messageHandlers = {
 		myId, tick = stream:read(4, 16)
 		local ct = stream:read(4)
 		for i = 1, ct do
-			local id, name, class = stream:read(4, '', 4)
+			local id, name, class, team = stream:read(4, '', 4, 1)
 			
 			self.clients[id] = {
 				id = id,
@@ -50,5 +50,22 @@ NetClient.messageHandlers = {
 			end
 		end
 		print('myId is ' .. myId)
+	end,
+	
+	[Net.msgLeave] = function(self, stream)
+		local id = stream:read(4)
+		Players:deactivate(id)
+		self.clients[id] = nil
+		print('Someone left.')
+	end,
+	
+	[Net.msgClass] = function(self, stream)
+		local id, class, team = stream:read(4, 4, 1)
+		if not Players:get(id).active then
+			local tag = id == myId and 'main' or 'dummy'
+			Players:activate(id, tag, class, team)
+		else
+			Players:setClass(id, class, team)
+		end
 	end
 }

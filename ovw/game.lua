@@ -31,17 +31,21 @@ function Game:quit()
 end
 
 function Game.mousepressed(...)
-  Players:mousepressed(...)
+  if Hud:mousepressed(...) then return
+  elseif Players:mousepressed(...) then return end
 end
 
 function Game.mousereleased(...)
-  Players:mousereleased(...)
+  if Hud:mousereleased(...) then return
+  elseif Players:mousereleased(...) then return end
 end
 
 function Game.keypressed(...)
-  Players:keypressed(...)
+  if Hud:keypressed(...) then return
+  elseif Players:keypressed(...) then return end
 end
 
 function Game.keyreleased(...)
-  Players:keyreleased(...)
+  if Hud:keyreleased(...) then return
+  elseif Players:keyreleased(...) then return end
 end

@@ -4,7 +4,7 @@ Players.players = {}
 Players.active = {}
 Players.history = {}
 
-function Players:activate(id, tag, class)
+function Players:activate(id, tag, class, team)
   assert(id >= 1 and id <= 16)
   local p = self.players[id]
   
@@ -16,10 +16,8 @@ function Players:activate(id, tag, class)
   assert(tags[tag])
   assert(not p.active)
   p.active = true
-  p.class = class
   setmetatable(p, {__index = tags[tag]})
-  for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
-  p:activate()
+  self:setClass(id, class, team)
   self:refresh()
   return id
 end
@@ -84,6 +82,13 @@ local function keyHandler(self, key)
 end
 Players.keypressed = keyHandler
 Players.keyreleased = keyHandler
+
+function Players:setClass(id, class, team)
+  local p = self:get(id)
+  p.class = data.classes[class]
+  for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
+  p:activate()
+end
 
 function Players:refresh()
   for i = 1, 16 do

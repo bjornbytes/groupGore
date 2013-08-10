@@ -54,15 +54,24 @@ NetServer.messageHandlers = {
 		
 		print('Client ' .. name .. ' joined!  Assigned id ' .. client.id)
 		
-		Net:begin(Net.msgJoin):write(client.id, 4):write(tick, 16):write(ct, 4)
+		Net:begin(Net.msgJoin)
+		   :write(client.id, 4)
+		   :write(tick, 16)
+		   :write(ct, 4)
 		   
 		for i = 1, 16 do
 			if self.clients[i] and i ~= client.id then
 				local p = Players:get(i)
 				if not p.active then
-					Net:write(p.id, 4):write(0, 4)
+					Net:write(p.id, 4)
+					   :write(0, 4)
 				else
-					Net:write(p.id, 4):write(name):write(1, 4):write(p.x, 16):write(p.y, 16)
+					Net:write(p.id, 4)
+					   :write(name)
+					   :write(1, 4)
+					   :write(0, 1)
+					   :write(p.x, 16)
+					   :write(p.y, 16)
 				end
 			end
 		end
@@ -71,11 +80,26 @@ NetServer.messageHandlers = {
 	end,
 	
 	[Net.msgLeave] = function(self, client, stream)
-		print('Someone left :[')
 		for k, v in pairs(self.clientsByIp) do
 			if v == client then self.clientsByIp[k] = nil end
 		end
 		self.clients[client.id] = nil
 		table.print(self.clients)
+	end,
+	
+	[Net.msgClass] = function(self, client, stream)
+		local class, team = stream:read(4, 1)
+		if not Players:get(client.id).active then
+			Players:activate(client.id, 'server', class, team)
+		else
+			local p = Players:get(client.id)
+			p.class, p.team = class, team
+		end
+		
+		Net:begin(Net.msgClass)
+		   :write(client.id, 4)
+		   :write(class, 4)
+		   :write(team, 1)
+		   :send(self.clients)
 	end
 }

@@ -1,11 +1,7 @@
 Hud = {}
 
 function Hud:update()
-	if self:classSelect() then
-		if math.inside(love.mouse.getX(), love.mouse.getY(), 110, 125, 64, 64) and love.mouse.isDown('l') then
-			print('Smart choice')
-		end
-	end
+	
 end
 
 function Hud:draw()
@@ -19,6 +15,28 @@ function Hud:draw()
 		love.graphics.rectangle('line', 110, 125, 64, 64)
 		love.graphics.print('BR00T', 120, 150)
 	end
+end
+
+function Hud:mousepressed(x, y, button)
+	
+end
+
+function Hud:mousereleased(x, y, button)
+	if self:classSelect() and math.inside(x, y, 110, 125, 64, 64) and button == 'l' then
+		print('Smart choice')
+		Net:begin(Net.msgClass)
+		   :write(1, 4)
+		   :write(0, 1)
+		   :send()
+	end
+end
+
+function Hud:keypressed(x, y, button)
+	
+end
+
+function Hud:keyreleased(x, y, button)
+	
 end
 
 function Hud:classSelect() return myId and not Players:get(myId).active end
