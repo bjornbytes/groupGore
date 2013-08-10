@@ -44,7 +44,7 @@ NetClient.messageHandlers = {
 			}
 			
 			if class > 0 then
-				Players:activate(id, 'dummy', data.class.brute)
+				Players:activate(id, 'dummy', class, team)
 				local p = Players:get(id)
 				p.x, p.y = stream:read(16, 16)
 			end

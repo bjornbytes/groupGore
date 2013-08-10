@@ -58,9 +58,17 @@ end
 
 function Players:draw()
   self:with(self.active, function(current)
-    local previous = self.history[current.id][tick - 1]
-    if previous then
-      table.interpolate(previous, current, tickDelta / tickRate):draw()
+    if current.id == myId then
+      local previous = self.history[current.id][tick - 1]
+      if previous then
+        table.interpolate(previous, current, tickDelta / tickRate):draw()
+      end
+    else
+      local previous = self.history[current.id][tick - (interp / tickRate) - 1]
+      current = self.history[current.id][tick - (interp / tickRate)]
+      if current and previous then
+        table.interpolate(previous, current, tickDelta / tickRate):draw()
+      end
     end
   end)
 end

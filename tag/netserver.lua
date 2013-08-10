@@ -64,11 +64,13 @@ NetServer.messageHandlers = {
 				local p = Players:get(i)
 				if not p.active then
 					Net:write(p.id, 4)
+					   :write(self.clients[p.id].name)
 					   :write(0, 4)
+					   :write(0, 1)
 				else
 					Net:write(p.id, 4)
-					   :write(name)
-					   :write(1, 4)
+					   :write(self.clients[p.id].name)
+					   :write(data.classes[p.class], 4)
 					   :write(0, 1)
 					   :write(p.x, 16)
 					   :write(p.y, 16)
