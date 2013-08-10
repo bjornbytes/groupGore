@@ -10,25 +10,26 @@ end
 function NetServer:update()
 	Udp:receive(function(data, ip, port)
 		local stream = Stream.create(data)
-		local id, client = stream:read(8), self:lookup(ip, port)
+		local id, client = stream:read(4), self:lookup(ip, port)
 		
-		if not client and id = Net.msgInit then
-			self.messageHandlers[id](ip, port, stream)
+		if not client and id == Net.msgJoin then
+			self.messageHandlers[id](self, ip, port, stream)
 		else
-			self.messageHandlers[id](self:lookup(ip, port), stream)
+			self.messageHandlers[id](self, self:lookup(ip, port), stream)
 		end
 	end)
 end
 
 function NetServer:send(clients, except)
-	local body = string.char(self.message.header) .. tostring(self.message.stream)
+	self.message:write('')
 	if type(clients) == 'table' then
 		if except then clients[except] = nil end
 		for _, client in pairs(clients) do
-			Udp:send(body, client.ip, client.port)
+			Udp:send(self.message, client.ip, client.port)
 		end
 	else
-		Udp:send(body, clients.ip, clients.port)
+		local id = clients
+		Udp:send(self.message, self.clients[id].ip, self.clients[id].port)
 	end
 	self.message = nil
 end
@@ -38,14 +39,43 @@ function NetServer:lookup(ip, port)
 end
 
 NetServer.messageHandlers = {
-	[Net.msgInit] = function(ip, port, stream)
+	[Net.msgJoin] = function(self, ip, port, stream)
 		local name, listen = stream:read('', 16)
-		local client = Client.create(ip, port, name, listen)
+		local ct = 0
+	  table.iwith(self.clients, function() ct = ct + 1 end)
+		local client = {
+			id = ct + 1,
+			ip = ip,
+			port = listen,
+			name = name
+		}
 		self.clients[client.id] = client
 		self.clientsByIp[ip .. port] = client
 		
-		Net:begin(Net.msgInit)
-		   :write(client.id, 4)
-		   :send(client)
+		print('Client ' .. name .. ' joined!  Assigned id ' .. client.id)
+		
+		Net:begin(Net.msgJoin):write(client.id, 4):write(tick, 16):write(ct, 4)
+		   
+		for i = 1, 16 do
+			if self.clients[i] and i ~= client.id then
+				local p = Players:get(i)
+				if not p.active then
+					Net:write(p.id, 4):write(0, 4)
+				else
+					Net:write(p.id, 4):write(name):write(1, 4):write(p.x, 16):write(p.y, 16)
+				end
+			end
+		end
+		
+		Net:send(client.id)
+	end,
+	
+	[Net.msgLeave] = function(self, client, stream)
+		print('Someone left :[')
+		for k, v in pairs(self.clientsByIp) do
+			if v == client then self.clientsByIp[k] = nil end
+		end
+		self.clients[client.id] = nil
+		table.print(self.clients)
 	end
 }

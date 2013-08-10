@@ -1,5 +1,6 @@
 Net = {}
-Net.msgInit = 1
+Net.msgJoin = 1
+Net.msgLeave = 2
 
 function Net:load(tag)
 	assert(tag)
@@ -10,18 +11,17 @@ function Net:load(tag)
 	}
 	
 	setmetatable(self, {__index = tags[tag]})
-	f.exe(self.activate)
+	f.exe(self.activate, self)
 end
 
 function Net:begin(header)
-	self.message = {}
-	self.message.header = header
-	self.message.stream = Stream.create()
+	self.message = Stream.create()
+	self.message:write(header, 4)
 	return self
 end
 
 function Net:write(data, len)
-	self.message.stream:write(data, len)
+	self.message:write(data, len)
 	return self
 end
 

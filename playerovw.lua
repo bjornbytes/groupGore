@@ -3,12 +3,10 @@ Players = {}
 Players.players = {}
 Players.active = {}
 Players.history = {}
-Players.next = 1
 
-function Players:activate(tag, class)
-  if self.next == -1 then return nil end
-  assert(self.next >= 1 and self.next <= 16)
-  local p = self.players[self.next]
+function Players:activate(id, tag, class)
+  assert(id >= 1 and id <= 16)
+  local p = self.players[id]
   
   local tags = {
     main = PlayerMain,
@@ -71,10 +69,12 @@ function Players:draw()
 end
 
 function Players:mousepressed(x, y, b)
+  if not myId then return end
   self:get(myId).input.mouse[b] = true
 end
 
 function Players:mousereleased(x, y, b)
+  if not myId then return end
   self:get(myId).input.mouse[b] = false
 end
 
@@ -87,16 +87,12 @@ Players.keypressed = keyHandler
 Players.keyreleased = keyHandler
 
 function Players:refresh()
-  self.next = nil
   for i = 1, 16 do
     self.active[i] = nil
-    if not self.players[i].active then
-      self.next = self.next or i
-    else
+    if self.players[i].active then
       table.insert(self.active, i)
     end
   end
-  self.next = self.next or -1
 end
 
 for i = 1, 16 do

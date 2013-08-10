@@ -1,6 +1,6 @@
 Stream = {}
 
-function Stream:create(str)
+function Stream.create(str)
   local stream = {}
   stream.str = str or ''
   stream.byte = nil
@@ -51,37 +51,41 @@ function Stream:write(data, len)
   return self
 end
 
-function Stream:read(n)
-  if type(n) == 'string' or n <= 0 then
-    if self.byte then
-      self.str = self.str:sub(2)
-      self.byte = nil
-      self.byteLen = nil
-    end
-    n = self.str:byte(1)
-    self.str = self.str:sub(2)
-    local res = self.str:sub(1, n)
-    self.str = self.str:sub(n + 1)
-    return res
-  else
-    local x = 0
-    local idx = 0
-    while n > 0 do
-      if not self.byte then self.byte = self.str:byte(1) or 0 self.byteLen = 0 end
-      local numRead = math.min(n, (7 - self.byteLen) + 1)
-      x = x + (byte.extract(self.byte, self.byteLen, self.byteLen + (numRead - 1)) * (2 ^ idx))
-      self.byteLen = self.byteLen + numRead
-      
-      if self.byteLen == 8 then
+function Stream:read(...)
+  local t = {}
+  for _, n in pairs({...}) do
+    if type(n) == 'string' or n <= 0 then
+      if self.byte then
         self.str = self.str:sub(2)
         self.byte = nil
         self.byteLen = nil
       end
+      n = self.str:byte(1)
+      self.str = self.str:sub(2)
+      local res = self.str:sub(1, n)
+      self.str = self.str:sub(n + 1)
+      table.insert(t, res)
+    else
+      local x = 0
+      local idx = 0
+      while n > 0 do
+        if not self.byte then self.byte = self.str:byte(1) or 0 self.byteLen = 0 end
+        local numRead = math.min(n, (7 - self.byteLen) + 1)
+        x = x + (byte.extract(self.byte, self.byteLen, self.byteLen + (numRead - 1)) * (2 ^ idx))
+        self.byteLen = self.byteLen + numRead
+        
+        if self.byteLen == 8 then
+          self.str = self.str:sub(2)
+          self.byte = nil
+          self.byteLen = nil
+        end
+        
+        n = n - numRead
+        idx = idx + numRead
+      end
       
-      n = n - numRead
-      idx = idx + numRead
+      table.insert(t, x)
     end
-    
-    return x
   end
+  return unpack(t)
 end
