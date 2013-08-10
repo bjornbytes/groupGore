@@ -10,6 +10,7 @@ function Game:update()
   Players:update()
   Spells:update()
   View:update()
+  Hud:update()
 end
 
 function Game:sync()
@@ -22,6 +23,7 @@ function Game:draw()
   Players:draw()
   Spells:draw()
   View:pop()
+  Hud:draw()
 end
 
 function Game:quit()

@@ -14,6 +14,7 @@ require './collisionovw'
 require './netovw'
 require './buffovw'
 require './viewovw'
+require './hud'
 
 require './player'
 require './playerovw'

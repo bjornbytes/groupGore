@@ -21,6 +21,8 @@ function Map:load(name)
 end
 
 function Map:draw()
+  love.graphics.reset()
+  
   for i = 0, map.width, map.graphics.background:getWidth() do
     for j = 0, map.height, map.graphics.background:getHeight() do
       love.graphics.draw(map.graphics.background, i, j)

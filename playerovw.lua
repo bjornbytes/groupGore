@@ -60,7 +60,6 @@ end
 
 function Players:draw()
   self:with(self.active, function(current)
-    --current:draw()
     local previous = self.history[current.id][tick - 1]
     if previous then
       table.interpolate(previous, current, tickDelta / tickRate):draw()
@@ -69,12 +68,12 @@ function Players:draw()
 end
 
 function Players:mousepressed(x, y, b)
-  if not myId then return end
+  if not self:get(myId).active then return end
   self:get(myId).input.mouse[b] = true
 end
 
 function Players:mousereleased(x, y, b)
-  if not myId then return end
+  if not self:get(myId).active then return end
   self:get(myId).input.mouse[b] = false
 end
 
