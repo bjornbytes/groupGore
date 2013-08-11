@@ -14,6 +14,7 @@ function Player:create()
     health = 0,
     maxSpeed = 0,
     maxHealth = 0,
+    size = 0,
     slots = {{}, {}, {}, {}, {}},
     buffs = {}
   }
@@ -24,6 +25,7 @@ function Player:activate()
   self.y = map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
+  self.size = self.class.size
   self.health = self.maxHealth
   for i = 1, 5 do
     self.slots[i].activate(self, self.slots[i])
@@ -63,7 +65,10 @@ function Player:move()
   local dir = (dx + dy) / 2
   local newx, newy = self.x + math.cos(dir) * speed, self.y + math.sin(dir) * speed
   
-  self.x, self.y = CollisionOvw:resolveCircle(newx, newy, 16, .5)
+  self.x, self.y = CollisionOvw:resolveCircleWall(newx, newy, self.size, .5)
+  self.x, self.y = CollisionOvw:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
+  CollisionOvw:refreshPlayer(self)
+  
   if self.x < 0 then self.x = 0
   elseif self.x > map.width then self.x = map.width end
   if self.y < 0 then self.y = 0

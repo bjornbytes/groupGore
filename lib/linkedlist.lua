@@ -1,9 +1,14 @@
 LinkedList = class()
 
-function LinkedList:init()
-  self.head = nil
-  self.tail = nil
-  self.length = 0
+function LinkedList.create()
+  local list = {}
+  list.head = nil
+  list.tail = nil
+  list.length = 0
+  setmetatable(list, {
+    __index = LinkedList
+  })
+  return list
 end
 
 function LinkedList:insert(val)

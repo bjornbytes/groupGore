@@ -22,6 +22,10 @@ function math.hloca(x1, y1, x2, y2, cx, cy, cr) -- Hot line on circle action.
   if t < 0 then return false end
   return l > t - ((cr ^ 2 - h ^ 2) ^ .5)
 end
+function math.hcoca(x1, y1, r1, x2, y2, r2)
+  local dx, dy, r = x2 - x1, y2 - y1, r1 + r2
+  return (dx * dx) + (dy * dy) < r * r
+end
 
 -- Table
 function table.eq(t1, t2)

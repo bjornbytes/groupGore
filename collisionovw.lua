@@ -5,6 +5,8 @@ local size = 64
 CollisionOvw.grid = {}
 CollisionOvw.gridSize = size
 CollisionOvw.testCache = {}
+CollisionOvw.playerGrid = {}
+CollisionOvw.players = {}
 
 function CollisionOvw:addWall(...)
   local x, y, w, h = ...
@@ -17,7 +19,7 @@ function CollisionOvw:addWall(...)
 end
 
 function CollisionOvw:getTests(x, y)
-  x, y = math.floor(x / 64), math.floor(y / 64)
+  x, y = math.floor(x / size), math.floor(y / size)
   if not self.testCache[x] or not self.testCache[x][y] then
     self.testCache[x] = self.testCache[x] or {}
     self.testCache[x][y] = {}
@@ -52,7 +54,7 @@ function CollisionOvw:checkPointWall(px, py)
   return false
 end
 
-function CollisionOvw:resolveCircle(x, y, r, step)
+function CollisionOvw:resolveCircleWall(x, y, r, step)
   local wall = self:checkCircleWall(x, y, r)
   if not wall then return x, y end
   
@@ -97,5 +99,58 @@ function CollisionOvw:resolveCircle(x, y, r, step)
     end
   end
   
-  return self:resolveCircle(x, y, r, step)
+  return self:resolveCircleWall(x, y, r, step)
+end
+
+function CollisionOvw:resolveCirclePlayer(x, y, r, step, team)
+  local players = {}
+  local xx, yy = math.floor(x / size), math.floor(y / size)
+  for i = -1, 1 do
+    for j = -1, 1 do
+      if self.playerGrid[xx + i] and self.playerGrid[xx + i][yy + j] then
+        local node = self.playerGrid[xx + i][yy + j].head
+        repeat
+          if node.val.player.team ~= team then
+            table.insert(players, node.val.player)
+          end
+          node = node.next
+        until not node
+      end
+    end
+  end
+  
+  if #players == 0 then return x, y end
+  
+  local free = true
+  for i = 1, #players do
+    local player = players[i]
+    if math.hcoca(x, y, r, player.x, player.y, r) then
+      local d = math.direction(x, y, player.x, player.y) + (math.pi / 2)
+      x = x - math.cos(d) * step
+      y = y - math.sin(d) * step
+      free = false
+    end
+  end
+  
+  if free then return x, y end
+  
+  return self:resolveCirclePlayer(x, y, r, step, team)
+end
+
+function CollisionOvw:refreshPlayer(p)
+  local nx, ny
+  if self.players[p.id] then
+    local node = self.players[p.id]
+    nx, ny = node.val.x, node.val.y
+    self.playerGrid[nx][ny]:remove(node)
+  end
+  x, y = math.floor(p.x / size), math.floor(p.y / size)
+  self.playerGrid[x] = self.playerGrid[x] or {}
+  self.playerGrid[x][y] = self.playerGrid[x][y] or LinkedList.create()
+  self.players[p.id] = self.playerGrid[x][y]:insert({
+    player = p,
+    x = x,
+    y = y
+  })
+  if nx and ny and self.playerGrid[nx][ny].length == 0 then self.playerGrid[nx][ny] = nil end
 end

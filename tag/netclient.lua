@@ -91,6 +91,7 @@ NetClient.messageHandlers = {
         p.x = math.lerp(p.x, x, .5)
         p.y = math.lerp(p.y, y, .5)
       end
+      CollisionOvw:refreshPlayer(p)
       p.angle = math.anglerp(p.angle, math.rad(angle), .5)
     end
   end,
