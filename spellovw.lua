@@ -31,11 +31,11 @@ function Spells:with(sel, fn)
   if type(sel) == 'number' then
     fn(self:get(sel))
   elseif type(sel) == 'table' then
-    for _, id in ipairs(sel) do
+    for _, id in pairs(sel) do
       fn(self:get(id))
     end
   elseif type(sel) == 'function' then
-    for _, s in ipairs(table.filter(self.spells, sel)) do
+    for _, s in pairs(table.filter(self.spells, sel)) do
       fn(s)
     end
   end
