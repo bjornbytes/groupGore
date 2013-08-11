@@ -13,7 +13,13 @@ Brute.size = 20
 ----------------
 -- Media
 ----------------
-Brute.sprite = 'media/graphics/brute.png'
+Brute.anchor = {}
+Brute.anchor.x = 55
+Brute.anchor.y = 35
+
+Brute.sprites = {}
+Brute.sprites.head = 'media/graphics/bruteHead.png'
+Brute.sprites.body = 'media/graphics/bruteBody.png'
 
 
 ----------------

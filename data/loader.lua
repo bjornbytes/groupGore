@@ -22,7 +22,9 @@ data.load = function()
 	load('data/buff', 'buff')
 	load('data/spell', 'spell')
 	load('data/class', 'class', function(class)
-	  class.sprite = love.graphics.newImage(class.sprite)
+		for name, sprite in pairs(class.sprites) do
+		  class.sprites[name] = love.graphics.newImage(sprite)
+		end
 	end)
 	data.classes = {[1] = data.class.brute, [data.class.brute] = 1}
 end

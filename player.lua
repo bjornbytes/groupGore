@@ -15,6 +15,7 @@ function Player:create()
     maxSpeed = 0,
     maxHealth = 0,
     size = 0,
+    anchor = nil,
     slots = {{}, {}, {}, {}, {}},
     buffs = {}
   }
@@ -26,6 +27,7 @@ function Player:activate()
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
   self.size = self.class.size
+  self.anchor = self.class.anchor
   self.health = self.maxHealth
   for i = 1, 5 do
     self.slots[i].activate(self, self.slots[i])
@@ -45,7 +47,8 @@ function Player:draw()
   love.graphics.reset()
   if self.team == purple then love.graphics.setColor(190, 160, 220)
   elseif self.team == orange then love.graphics.setColor(240, 160, 140) end
-  love.graphics.draw(self.class.sprite, self.x, self.y, self.angle, 1, 1, self.class.sprite:getWidth() / 2, self.class.sprite:getHeight() / 2)
+  love.graphics.draw(self.class.sprites.body, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
+  love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y) 
 end
 
 function Player:move()
