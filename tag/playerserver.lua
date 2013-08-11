@@ -38,5 +38,10 @@ function PlayerServer:update()
 end
 
 function PlayerServer:sync()
-  --
+  local ang = math.floor(math.deg(self.angle))
+  if ang < 0 then ang = ang + 360 end
+  Net:write(self.id, 4)
+     :write(math.floor(self.x + .5), 16)
+     :write(math.floor(self.y + .5), 16)
+     :write(math.floor(ang), 9)
 end

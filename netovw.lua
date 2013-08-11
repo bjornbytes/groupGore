@@ -23,6 +23,7 @@ function Net:begin(header)
 end
 
 function Net:write(data, len)
+	assert(self.message)
 	self.message:write(data, len)
 	return self
 end

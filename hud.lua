@@ -23,10 +23,9 @@ end
 
 function Hud:mousereleased(x, y, button)
 	if self:classSelect() and math.inside(x, y, 110, 125, 64, 64) and button == 'l' then
-		print('Smart choice')
 		Net:begin(Net.msgClass)
 		   :write(1, 4)
-		   :write(0, 1)
+		   :write(myId == 1 and 0 or 1, 1)
 		   :send()
 	end
 end

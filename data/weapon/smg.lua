@@ -33,7 +33,6 @@ SMG.update = function(self, mySMG)
     local amt = math.min(SMG.clip, mySMG.ammo)
     mySMG.clip = amt
     mySMG.ammo = mySMG.ammo - amt
-    print(mySMG.clip, mySMG.ammo)
   end)
 end
 
@@ -42,7 +41,6 @@ SMG.canFire = function(self, mySMG)
 end
 
 SMG.fire = function(self, mySMG)
-  print('firing SMG ' .. self.input.slot.weapon)
   self:spell(data.spell.smg)
   mySMG.timers.shoot = mySMG.firerate
   mySMG.clip = mySMG.clip - 1

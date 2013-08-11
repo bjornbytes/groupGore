@@ -33,21 +33,33 @@ end
 
 NetClient.messageHandlers = {
   [Net.msgJoin] = function(self, stream)
-    myId, tick = stream:read(4, 16)
-    local ct = stream:read(4)
-    for i = 1, ct do
-      local id, name, class, team = stream:read(4, '', 4, 1)
+    if not myId then
+      myId, tick = stream:read(4, 16)
+      local ct = stream:read(4)
       
+      Map:load('jungleCarnage')
+      
+      for i = 1, ct do
+        local id, name, class, team = stream:read(4, '', 4, 1)
+        
+        self.clients[id] = {
+          id = id,
+          name = name
+        }
+        
+        if class > 0 then
+          Players:activate(id, 'dummy', class, team)
+          local p = Players:get(id)
+          p.x, p.y = stream:read(16, 16)
+        end
+      end
+    else
+      local id, name = stream:read(4, '')
+      print('new player ' .. name)
       self.clients[id] = {
         id = id,
         name = name
       }
-      
-      if class > 0 then
-        Players:activate(id, 'dummy', class, team)
-        local p = Players:get(id)
-        p.x, p.y = stream:read(16, 16)
-      end
     end
   end,
   
@@ -55,7 +67,6 @@ NetClient.messageHandlers = {
     local id = stream:read(4)
     Players:deactivate(id)
     self.clients[id] = nil
-    print('Someone left.')
   end,
   
   [Net.msgClass] = function(self, stream)
@@ -69,6 +80,13 @@ NetClient.messageHandlers = {
   end,
   
   [Net.msgSync] = function(self, stream)
-    --
+    local ct = stream:read(4)
+    for _ = 1, ct do
+      local id, x, y, angle = stream:read(4, 16, 16, 9)
+      local p = Players:get(id)
+      p.x = math.lerp(p.x, x, .5)
+      p.y = math.lerp(p.y, y, .5)
+      p.angle = math.anglerp(p.angle, math.rad(angle), .5)
+    end
   end
 }

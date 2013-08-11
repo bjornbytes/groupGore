@@ -2,7 +2,6 @@ Game = {}
 
 function Game:load()
   Net:load('client')
-  Map:load('jungleCarnage')
 end
 
 function Game:update()

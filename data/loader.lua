@@ -13,6 +13,9 @@ data.load = function()
 		  end
 		end
 	end
+	
+	purple = 0
+	orange = 1
 
 	load('data/weapon', 'weapon')
 	load('data/skill', 'skill')

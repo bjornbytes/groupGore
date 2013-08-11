@@ -19,8 +19,8 @@ function Player:create()
 end
 
 function Player:activate()
-  self.x = 400
-  self.y = 300
+  self.x = map.spawn[self.team].x
+  self.y = map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
   self.health = self.maxHealth

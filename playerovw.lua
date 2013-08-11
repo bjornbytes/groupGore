@@ -57,12 +57,24 @@ function Players:update()
 end
 
 function Players:sync()
-  --
+  local toSync = {}
+  for _, id in ipairs(self.active) do
+    local p = Players:get(id)
+    if p.sync then table.insert(toSync, id) end
+  end
+  if #toSync == 0 then return end
+  
+  Net:begin(Net.msgSync)
+     :write(#toSync, 4)
+     
+  self:with(toSync, f.ego('sync'))
+
+  Net:send(Net.clients)
 end
 
 function Players:draw()
   self:with(self.active, function(current)
-    if current.id == myId and false then
+    if current.id == myId then
       local previous = self.history[current.id][tick - 1]
       if previous then
         table.interpolate(previous, current, tickDelta / tickRate):draw()
@@ -98,6 +110,7 @@ Players.keyreleased = keyHandler
 function Players:setClass(id, class, team)
   local p = self:get(id)
   p.class = data.classes[class]
+  p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
   p:activate()
 end

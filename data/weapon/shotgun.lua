@@ -33,7 +33,6 @@ Shotgun.update = function(self, myShotgun)
     local amt = math.min(Shotgun.clip, myShotgun.ammo)
     myShotgun.clip = amt
     myShotgun.ammo = myShotgun.ammo - amt
-    print(myShotgun.clip, myShotgun.ammo)
   end)
 end
 
@@ -42,7 +41,6 @@ Shotgun.canFire = function(self, myShotgun)
 end
 
 Shotgun.fire = function(self, myShotgun)
-  print('firing shotgun ' .. self.input.slot.weapon)
   self:spell(data.spell.shotgun)
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1

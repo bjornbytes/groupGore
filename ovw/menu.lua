@@ -1,7 +1,6 @@
 Menu = {}
 
 function Menu:load()
-  print('Loading menu')
   self.bg = love.graphics.newImage('media/graphics/menu/background.png')
 end
 

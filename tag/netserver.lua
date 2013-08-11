@@ -23,9 +23,10 @@ end
 function NetServer:send(clients, except)
   self.message:write('')
   if type(clients) == 'table' then
-    if except then clients[except] = nil end
-    for _, client in pairs(clients) do
-      Udp:send(self.message, client.ip, client.port)
+    for id, client in pairs(clients) do
+      if id ~= except then
+        Udp:send(self.message, client.ip, client.port)
+      end
     end
   else
     local id = clients
@@ -52,12 +53,10 @@ NetServer.messageHandlers = {
     self.clients[client.id] = client
     self.clientsByIp[ip .. port] = client
     
-    print('Client ' .. name .. ' joined!  Assigned id ' .. client.id)
-    
     Net:begin(Net.msgJoin)
        :write(client.id, 4)
        :write(tick, 16)
-       :write(ct, 4)
+       :write(table.count(self.clients) - 1, 4)
        
     for i = 1, 16 do
       if self.clients[i] and i ~= client.id then
@@ -71,7 +70,7 @@ NetServer.messageHandlers = {
           Net:write(p.id, 4)
              :write(self.clients[p.id].name)
              :write(data.classes[p.class], 4)
-             :write(0, 1)
+             :write(p.team, 1)
              :write(p.x, 16)
              :write(p.y, 16)
         end
@@ -79,14 +78,23 @@ NetServer.messageHandlers = {
     end
     
     Net:send(client.id)
+    
+    Net:begin(Net.msgJoin)
+       :write(client.id, 4)
+       :write(client.name)
+       :send(self.clients, client.id)
   end,
   
   [Net.msgLeave] = function(self, client, stream)
     for k, v in pairs(self.clientsByIp) do
-      if v == client then self.clientsByIp[k] = nil end
+      if v == client then self.clientsByIp[k] = nil break end
     end
+    Players:deactivate(client.id)
+    Net:begin(Net.msgLeave)
+       :write(client.id, 4)
+       :send(self.clients, client.id)
+       
     self.clients[client.id] = nil
-    table.print(self.clients)
   end,
   
   [Net.msgClass] = function(self, client, stream)
@@ -106,6 +114,9 @@ NetServer.messageHandlers = {
   end,
   
   [Net.msgSync] = function(self, client, stream)
-    --
+    local ct, w, a, s, d, mx, my = stream:read(4, 1, 1, 1, 1, 16, 16)
+    local input = Players:get(client.id).input
+    input.wasd.w, input.wasd.a, input.wasd.s, input.wasd.d = w > 0, a > 0, s > 0, d > 0
+    input.mouse.x, input.mouse.y = mx, my
   end
 }
