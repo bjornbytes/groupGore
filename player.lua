@@ -6,6 +6,7 @@ function Player:create()
     class = nil,
     team = nil,
     active = false,
+    ded = false,
     x = 0,
     y = 0,
     angle = 0,
@@ -63,6 +64,10 @@ function Player:move()
   local newx, newy = self.x + math.cos(dir) * speed, self.y + math.sin(dir) * speed
   
   self.x, self.y = CollisionOvw:resolveCircle(newx, newy, 16, .5)
+  if self.x < 0 then self.x = 0
+  elseif self.x > map.width then self.x = map.width end
+  if self.y < 0 then self.y = 0
+  elseif self.y > map.height then self.y = map.height end
 end
 
 function Player:turn()
@@ -94,4 +99,25 @@ function Player:buff()
   for _, buff in pairs(self.buffs) do
     f.exe(buff.update, self, buff)
   end
+end
+
+function Player:hurt(amount, from)
+  if self.ded then return false end
+  self.health = math.max(self.health - amount, 0)
+  return true
+end
+
+function Player:die()
+  print('ded')
+  self.ded = 5
+  self.x = -100
+  self.y = -100
+  self.health = 0
+end
+
+function Player:respawn()
+  self.ded = false
+  self.x = map.spawn[self.team].x
+  self.y = map.spawn[self.team].y
+  self.health = self.maxHealth
 end

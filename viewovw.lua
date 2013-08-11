@@ -12,7 +12,7 @@ function View:update()
   self.prevx = self.x
   self.prevy = self.y
   local object = Players:get(myId)
-  if object then
+  if object and not object.ded then
     self.x = math.lerp(self.x, ((object.x + mouseX()) / 2) - (self.w / 2), .25)
     self.y = math.lerp(self.y, ((object.y + mouseY()) / 2) - (self.h / 2), .25)
     if object.x - self.x > (self.w * .80) then self.x = object.x - (self.w * .80) end

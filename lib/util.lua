@@ -193,7 +193,7 @@ f.ego = function(f) return function(x, ...) x[f](x, ...) end end
 timer = {}
 timer.start = function() _t1 = love.timer.getMicroTime() end
 timer.delta = function() return love.timer.getMicroTime() - _t1 end
-timer.rot = function(val, f) assert(val) if val == 0 then return 0 end if val < tickRate then f() return 0 end return val - tickRate end
+timer.rot = function(val, f) if not val or val == 0 then return val end if val < tickRate then f() return 0 end return val - tickRate end
 
 -- String
 string.capitalize = function(s) s = ' ' .. s return s:gsub('(%s%l)', string.upper) end

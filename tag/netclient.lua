@@ -84,9 +84,24 @@ NetClient.messageHandlers = {
     for _ = 1, ct do
       local id, x, y, angle = stream:read(4, 16, 16, 9)
       local p = Players:get(id)
-      p.x = math.lerp(p.x, x, .5)
-      p.y = math.lerp(p.y, y, .5)
+      if math.distance(p.x, p.y, x, y) > 64 then
+        p.x = x
+        p.y = y 
+      else
+        p.x = math.lerp(p.x, x, .5)
+        p.y = math.lerp(p.y, y, .5)
+      end
       p.angle = math.anglerp(p.angle, math.rad(angle), .5)
     end
+  end,
+  
+  [Net.msgDie] = function(self, stream)
+    local id = stream:read(4)
+    Players:with(id, f.ego('die'))
+  end,
+  
+  [Net.msgRespawn] = function(self, stream)
+    local id = stream:read(4)
+    Players:with(id, f.ego('respawn'))
   end
 }
