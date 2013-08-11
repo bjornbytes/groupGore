@@ -42,7 +42,7 @@ function Players:with(ps, fn)
       fn(self:get(id))
     end
   elseif type(ps) == 'function' then
-    for _, p in ipairs(table.filter(self.players, ps)) do
+    for _, p in pairs(table.filter(self.players, ps)) do
       fn(p)
     end
   end
@@ -57,27 +57,12 @@ function Players:update()
 end
 
 function Players:sync()
-  local toSync = table.filter(self.active, function(id)
-    local p = self.players[id]
-    return p.syncBuffer and table.count(p.syncBuffer) > 0
-  end)
-  
-  local ct = table.count(toSync)
-  if ct > 0 then
-    Net:begin(Net.msgSync)
-       :write(ct, 4)
-    
-    self:with(self.active, function(p)
-      f.exe(p.sync, p)
-    end)
-    
-    Net:send()
-  end
+  --
 end
 
 function Players:draw()
   self:with(self.active, function(current)
-    if current.id == myId then
+    if current.id == myId and false then
       local previous = self.history[current.id][tick - 1]
       if previous then
         table.interpolate(previous, current, tickDelta / tickRate):draw()
@@ -118,8 +103,8 @@ function Players:setClass(id, class, team)
 end
 
 function Players:refresh()
+  table.clear(self.active)
   for i = 1, 16 do
-    self.active[i] = nil
     if self.players[i].active then
       table.insert(self.active, i)
     end

@@ -21,8 +21,6 @@ function PlayerServer:activate()
   self.input.slot.skill = 3
   self.input.slot.reload = false
   
-  self.syncBuffer = {}
-  
   Player.activate(self)
 end
 
