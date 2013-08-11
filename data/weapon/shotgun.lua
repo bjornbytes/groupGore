@@ -41,7 +41,7 @@ Shotgun.canFire = function(self, myShotgun)
 end
 
 Shotgun.fire = function(self, myShotgun)
-  Spells:activate(self, data.spell.shotgun)
+  self:spell(data.spell.shotgun)
   
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1

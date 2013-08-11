@@ -69,7 +69,7 @@ NetServer.messageHandlers = {
         else
           Net:write(p.id, 4)
              :write(self.clients[p.id].name)
-             :write(data.classes[p.class], 4)
+             :write(p.class.id, 4)
              :write(p.team, 1)
              :write(p.x, 16)
              :write(p.y, 16)

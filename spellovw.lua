@@ -8,8 +8,8 @@ function Spells:activate(owner, kind)
   s._idx = #self.spells
   
   s.owner = type(owner) == 'number' and Players:get(owner) or owner
-  s.kind = kind
-  setmetatable(s, {__index = kind})
+  s.kind = type(kind) == 'number' and data.spell[kind] or kind
+  setmetatable(s, {__index = s.kind})
   s:activate()
   return s
 end

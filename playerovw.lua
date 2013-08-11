@@ -110,7 +110,7 @@ Players.keyreleased = keyHandler
 
 function Players:setClass(id, class, team)
   local p = self:get(id)
-  p.class = data.classes[class]
+  p.class = data.class[class]
   p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
   p:activate()

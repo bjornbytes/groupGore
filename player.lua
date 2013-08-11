@@ -104,6 +104,10 @@ function Player:buff()
   end
 end
 
+function Player:spell(kind)
+  Spells:activate(self, kind)
+end
+
 function Player:hurt(amount, from)
   if self.ded then return false end
   self.health = math.max(self.health - amount, 0)

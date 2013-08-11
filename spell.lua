@@ -1,6 +1,6 @@
 Spell = {}
 
-function Spell:create()
+function Spell.create()
   return {
     id = nil,
     owner = nil,

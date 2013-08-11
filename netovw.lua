@@ -5,6 +5,7 @@ Net.msgClass = 3
 Net.msgSync = 4
 Net.msgDie = 5
 Net.msgRespawn = 6
+Net.msgSpell = 7
 
 function Net:load(tag)
 	assert(tag)

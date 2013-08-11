@@ -104,5 +104,10 @@ NetClient.messageHandlers = {
   [Net.msgRespawn] = function(self, stream)
     local id = stream:read(4)
     Players:with(id, f.ego('respawn'))
+  end,
+  
+  [Net.msgSpell] = function(self, stream)
+    local owner, kind = stream:read(4, 6)
+    Players:get(owner):spell(kind)
   end
 }

@@ -52,6 +52,14 @@ function PlayerServer:time()
   if self.ded == 0 then self.ded = false end
 end
 
+function PlayerServer:spell(kind)
+  Player.spell(self, kind)
+  Net:begin(Net.msgSpell)
+     :write(self.id, 4)
+     :write(kind.id, 6)
+     :send(Net.clients, self.id)
+end
+
 function PlayerServer:hurt(amount, from)
   if Player.hurt(self, amount, from) then
     if self.health <= 0 then self:die() end
