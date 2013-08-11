@@ -41,7 +41,8 @@ Shotgun.canFire = function(self, myShotgun)
 end
 
 Shotgun.fire = function(self, myShotgun)
-  self:spell(data.spell.shotgun)
+  Spells:activate(self, data.spell.shotgun)
+  
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1
   if myShotgun.clip == 0 then myShotgun.timers.reload = Shotgun.reload end

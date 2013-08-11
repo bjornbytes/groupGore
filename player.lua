@@ -98,11 +98,6 @@ function Player:slot()
   end
 end
 
-function Player:spell(kind)
-  assert(kind)
-  Spells:activate(self.id, kind)
-end
-
 function Player:buff()
   for _, buff in pairs(self.buffs) do
     f.exe(buff.update, self, buff)

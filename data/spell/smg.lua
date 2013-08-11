@@ -12,29 +12,29 @@ SMG.activate = function(self)
   local endx, endy = self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len
   local targets = {}
   Players:with(function(p)
-  	return p.team ~= self.owner.team and math.hloca(self.x, self.y, endx, endy, p.x, p.y, 20)
-	end, function(p)
-		table.insert(targets, {
-			id = p.id,
-			dist = math.distance(p.x, p.y, self.x, self.y)
-		})
-	end)
-	
-	table.sort(targets, function(a, b) return a.dist < b.dist end)
-	if targets[1] then
-		print('I HIT PLAYER NUMBER ' .. targets[1].id)
-		local p = Players:get(targets[1].id)
-		self.len = math.distance(self.x, self.y, p.x, p.y)
-		p:hurt(30)
-	end
+    return p.team ~= self.owner.team and math.hloca(self.x, self.y, endx, endy, p.x, p.y, 20)
+  end, function(p)
+    table.insert(targets, {
+      id = p.id,
+      dist = math.distance(p.x, p.y, self.x, self.y)
+    })
+  end)
+  
+  table.sort(targets, function(a, b) return a.dist < b.dist end)
+  if targets[1] then
+    print('I HIT PLAYER NUMBER ' .. targets[1].id)
+    local p = Players:get(targets[1].id)
+    self.len = math.distance(self.x, self.y, p.x, p.y)
+    p:hurt(30)
+  end
 end
 
 SMG.update = function(self)
-  self.hp = timer.rot(self.hp, function() Spells:deactivate(self.id) end)
+  self.hp = timer.rot(self.hp, function() Spells:deactivate(self) end)
 end
 
 SMG.draw = function(self)
-	local alpha = self.hp / .15
+  local alpha = self.hp / .15
   love.graphics.setColor(255, 255, 255, alpha * 255)
   love.graphics.line(self.x, self.y, self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len)
   love.graphics.setColor(255, 255, 255, 255)

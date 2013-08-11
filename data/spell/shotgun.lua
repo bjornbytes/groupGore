@@ -40,7 +40,7 @@ Shotgun.activate = function(self)
 end
 
 Shotgun.update = function(self)
-  self.hp = timer.rot(self.hp, function() Spells:deactivate(self.id) end)
+  self.hp = timer.rot(self.hp, function() Spells:deactivate(self) end)
 end
 
 Shotgun.draw = function(self)
