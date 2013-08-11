@@ -52,6 +52,8 @@ function PlayerMain:sync()
      :write(math.floor(self.input.mouse.y + .5), 16)
      :write(self.input.mouse.l, 1)
      :write(self.input.mouse.r, 1)
+     :write(self.input.slot.weapon, 3)
+     :write(self.input.slot.skill, 3)
 end
 
 function PlayerMain:keyHandler(key)
