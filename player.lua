@@ -39,6 +39,9 @@ end
 
 function Player:draw()
   assert(self.class)
+  love.graphics.reset()
+  if self.team == purple then love.graphics.setColor(190, 160, 220)
+  elseif self.team == orange then love.graphics.setColor(240, 160, 140) end
   love.graphics.draw(self.class.sprite, self.x, self.y, self.angle, 1, 1, self.class.sprite:getWidth() / 2, self.class.sprite:getHeight() / 2)
 end
 
