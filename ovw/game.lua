@@ -14,7 +14,7 @@ function Game:update()
 end
 
 function Game:sync()
-  --
+  Players:sync()
 end
 
 function Game:draw()

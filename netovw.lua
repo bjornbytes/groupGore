@@ -2,6 +2,7 @@ Net = {}
 Net.msgJoin = 1
 Net.msgLeave = 2
 Net.msgClass = 3
+Net.msgSync = 4
 
 function Net:load(tag)
 	assert(tag)

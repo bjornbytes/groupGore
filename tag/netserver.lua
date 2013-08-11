@@ -103,5 +103,19 @@ NetServer.messageHandlers = {
 		   :write(class, 4)
 		   :write(team, 1)
 		   :send(self.clients)
+	end,
+	
+	[Net.msgSync] = function(self, client, stream)
+		local playerCt = stream:read(4)
+		print('Receiving sync for ' .. playerCt .. ' players')
+		for _ = 1, playerCt do
+			local id = stream:read(4)
+			local tickCt = stream:read(6)
+			for _ = 1, tickCt do
+				local t, flags = stream:read(16, 4)
+				local w, a, s, d = stream:read(1, 1, 1, 1)
+			  print(t, flags, w, a, s, d)
+			end
+		end
 	end
 }

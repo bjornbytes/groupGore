@@ -56,6 +56,25 @@ function Players:update()
   end)
 end
 
+function Players:sync()
+  local toSync = table.filter(self.active, function(id)
+    local p = self.players[id]
+    return p.syncBuffer and table.count(p.syncBuffer) > 0
+  end)
+  
+  local ct = table.count(toSync)
+  if ct > 0 then
+    Net:begin(Net.msgSync)
+       :write(ct, 4)
+    
+    self:with(self.active, function(p)
+      f.exe(p.sync, p)
+    end)
+    
+    Net:send()
+  end
+end
+
 function Players:draw()
   self:with(self.active, function(current)
     if current.id == myId then

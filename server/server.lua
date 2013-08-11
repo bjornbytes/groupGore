@@ -9,5 +9,5 @@ function Server:update()
 end
 
 function Server:sync()
-  --
+  Players:sync()
 end

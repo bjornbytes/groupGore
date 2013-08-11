@@ -21,6 +21,8 @@ function PlayerServer:activate()
   self.input.slot.skill = 3
   self.input.slot.reload = false
   
+  self.syncBuffer = {}
+  
   Player.activate(self)
 end
 
@@ -35,4 +37,8 @@ function PlayerServer:update()
   self:move()
   self:turn()
   self:slot()
+end
+
+function PlayerServer:sync()
+  --
 end

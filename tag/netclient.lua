@@ -49,7 +49,6 @@ NetClient.messageHandlers = {
 				p.x, p.y = stream:read(16, 16)
 			end
 		end
-		print('myId is ' .. myId)
 	end,
 	
 	[Net.msgLeave] = function(self, stream)
@@ -67,5 +66,9 @@ NetClient.messageHandlers = {
 		else
 			Players:setClass(id, class, team)
 		end
+	end,
+	
+	[Net.msgSync] = function(self, stream)
+	
 	end
 }

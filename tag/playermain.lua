@@ -21,6 +21,8 @@ function PlayerMain:activate()
   self.input.slot.skill = 3
   self.input.slot.reload = false
   
+  self.syncBuffer = {}
+  
   Player.activate(self)
 end
 
@@ -43,20 +45,35 @@ function PlayerMain:poll()
   mouse.x, mouse.y = mouseX(), mouseY()
 end
 
+function PlayerMain:sync()
+  Net:write(self.id, 4)
+     :write(table.count(self.syncBuffer), 6)
+  
+  for i = tick - 5, tick do
+    if self.syncBuffer[i] then      
+      local input = self.input
+      Net:write(i, 16)
+         :write(1, 4) -- Flags
+         :write(input.wasd.w and 1 or 0, 1)
+         :write(input.wasd.a and 1 or 0, 1)
+         :write(input.wasd.s and 1 or 0, 1)
+         :write(input.wasd.d and 1 or 0, 1)
+      
+      self.syncBuffer[i] = nil
+    end
+  end
+end
+
 function PlayerMain:keyHandler(key)
   if key == 'w' or key == 'a' or key == 's' or key == 'd' then
     self.input.wasd[key] = love.keyboard.isDown(key)
+    self.syncBuffer[tick] = self.syncBuffer[tick] or {}
+    self.syncBuffer[tick].wasd = true
   elseif key == 'r' then
     self.input.slot.reload = love.keyboard.isDown(key)
   elseif key:match('^[1-5]$') and love.keyboard.isDown(key) then
     key = tonumber(key)
     local slotType = self.slots[key].type
     if self.input.slot[slotType] ~= key then self.input.slot[slotType] = key end
-  elseif key == ' ' then
-    if love.keyboard.isDown(' ') then
-      if self.slots[3].canFire(self, self.slots[3]) then
-        self.slots[3].fire(self, self.slots[3])
-      end
-    end
   end
 end

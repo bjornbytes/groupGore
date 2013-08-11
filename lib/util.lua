@@ -111,6 +111,12 @@ function table.deltas(t1, t2)
   return table.filter(t2, function(v, k) return v ~= t1[k] end)
 end
 
+function table.count(t)
+  local ct = 0
+  table.with(t, function() ct = ct + 1 end)
+  return ct
+end
+
 function table.print(t, n)
   n = n or 0
   if t == nil then print('nil') end
