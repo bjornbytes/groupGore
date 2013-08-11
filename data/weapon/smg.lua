@@ -13,7 +13,7 @@ SMG.type = 'weapon'
 ----------------
 -- Data
 ----------------
-SMG.firerate = .135
+SMG.firerate = .2
 SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 24

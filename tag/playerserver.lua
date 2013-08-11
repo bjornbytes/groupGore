@@ -36,8 +36,6 @@ function PlayerServer:update()
   self:move()
   self:turn()
   self:slot()
-  
-  self:hurt(50 * tickRate)
 end
 
 function PlayerServer:sync()

@@ -31,7 +31,7 @@ function Player:activate()
 end
 
 function Player:deactivate()
-  self.x, self.y = f.dbl(0)
+  self.x, self.y = 0, 0
 end
 
 function Player:update()

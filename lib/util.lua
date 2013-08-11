@@ -179,13 +179,6 @@ end
 -- Functions
 f = {}
 f.empty = function() end
-f.id = function(x) return x end
-f.inc = function(x) return x + 1 end
-f.dec = function(x) return x - 1 end
-f.fst = f.id
-f.snd = function(...) return arg[2] end
-f.lst = function(...) return arg[#arg] end
-f.dbl = function(x) return x, x end
 f.exe = function(x, ...) if x then x(...) end end
 f.ego = function(f) return function(x, ...) x[f](x, ...) end end
 
@@ -197,9 +190,3 @@ timer.rot = function(val, f) if not val or val == 0 then return val end if val <
 
 -- String
 string.capitalize = function(s) s = ' ' .. s return s:gsub('(%s%l)', string.upper) end
-
--- Graphics
-graphics = {}
-graphics.reset = function()
-  love.graphics.setColor(255, 255, 255, 255)
-end
