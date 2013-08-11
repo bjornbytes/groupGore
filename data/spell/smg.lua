@@ -25,6 +25,7 @@ SMG.activate = function(self)
 		print('I HIT PLAYER NUMBER ' .. targets[1].id)
 		local p = Players:get(targets[1].id)
 		self.len = math.distance(self.x, self.y, p.x, p.y)
+		p:hurt(30)
 	end
 end
 

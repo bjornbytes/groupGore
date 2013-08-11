@@ -25,6 +25,8 @@ function Stream:write(data, len)
     return self
   end
   
+  if type(data) == 'boolean' then data = data and 1 or 0 end
+  
   local n = len
   if n then
     local idx = 0

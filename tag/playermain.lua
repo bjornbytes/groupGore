@@ -44,12 +44,14 @@ function PlayerMain:poll()
 end
 
 function PlayerMain:sync()
-  Net:write(self.input.wasd.w and 1 or 0, 1)
-     :write(self.input.wasd.a and 1 or 0, 1)
-     :write(self.input.wasd.s and 1 or 0, 1)
-     :write(self.input.wasd.d and 1 or 0, 1)
+  Net:write(self.input.wasd.w, 1)
+     :write(self.input.wasd.a, 1)
+     :write(self.input.wasd.s, 1)
+     :write(self.input.wasd.d, 1)
      :write(math.floor(self.input.mouse.x + .5), 16)
      :write(math.floor(self.input.mouse.y + .5), 16)
+     :write(self.input.mouse.l, 1)
+     :write(self.input.mouse.r, 1)
 end
 
 function PlayerMain:keyHandler(key)
