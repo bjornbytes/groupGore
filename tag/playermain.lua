@@ -59,7 +59,9 @@ end
 
 function PlayerMain:fade()
   local function shouldFade(p)
-    return p.team ~= self.team and math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2
+    if p.team == self.team then return false end
+    if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
+    return CollisionOvw:checkLineWall(self.x, self.y, p.x, p.y)
   end
   Players:with(Players.active, function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
