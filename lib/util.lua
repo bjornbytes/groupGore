@@ -22,9 +22,21 @@ function math.hloca(x1, y1, x2, y2, cx, cy, cr) -- Hot line on circle action.
   if t < 0 then return false end
   return l > t - ((cr ^ 2 - h ^ 2) ^ .5)
 end
-function math.hcoca(x1, y1, r1, x2, y2, r2)
+function math.hcoca(x1, y1, r1, x2, y2, r2) -- Hot circle on circle action.
   local dx, dy, r = x2 - x1, y2 - y1, r1 + r2
   return (dx * dx) + (dy * dy) < r * r
+end
+function math.hlola(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action.
+  local function s(x1, y1, x2, y2, x3, y3)
+    return (y3 - y1) * (x2 - x1) > (y2 - y1) * (x3 - x1)
+  end
+  return s(x1, y1, x3, y3, x4, y4) ~= s(x2, y2, x3, y3, x4, y4) and s(x1, y1, x2, y2, x3, y3) ~= s(x1, y1, x2, y2, x4, y4)
+end
+function math.hlora(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action.
+  return math.hlola(x1, y1, x2, y2, rx, ry, rx + rw, ry)
+      or math.hlola(x1, y1, x2, y2, rx, ry, rx, ry + rh)
+      or math.hlola(x1, y1, x2, y2, rx + rw, ry, rx + rw, ry + rh)
+      or math.hlola(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh)
 end
 
 -- Table

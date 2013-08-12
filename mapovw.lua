@@ -12,7 +12,7 @@ function Map:load(name)
     end
   end
   
-  map.walls = love.filesystem.load(dir .. 'walls.lua')()
+  map.walls = love.filesystem.load(dir .. 'walls.lua')(map)
   for _, coords in pairs(map.walls) do
     CollisionOvw:addWall(coords.x, coords.y, coords.w, coords.h)
   end

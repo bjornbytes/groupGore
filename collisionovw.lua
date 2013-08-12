@@ -54,6 +54,23 @@ function CollisionOvw:checkPointWall(px, py)
   return false
 end
 
+function CollisionOvw:checkLineWall(x1, y1, x2, y2)
+  local tests1 = self:getTests(x1, y1)
+  local tests2 = self:getTests(x2, y2)
+  local tests3 = self:getTests((x1 + x2) / 2, (y1 + y2) / 2))
+  if #tests1 == 0 and #tests2 == 0 and #tests3 then return false end
+  for _, coords in pairs(tests1) do
+    if math.hlora(x1, y1, x2, y2, unpack(coords)) then return coords end
+  end
+  for _, coords in pairs(tests2) do
+    if math.hlora(x1, y1, x2, y2, unpack(coords)) then return coords end
+  end
+  for _, coords in pairs(tests3) do
+    if math.hlora(x1, y1, x2, y2, unpack(coords)) then return coords end
+  end
+  return false
+end
+
 function CollisionOvw:resolveCircleWall(x, y, r, step)
   local wall = self:checkCircleWall(x, y, r)
   if not wall then return x, y end
