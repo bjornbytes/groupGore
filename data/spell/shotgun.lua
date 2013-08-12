@@ -7,13 +7,19 @@ Shotgun.activate = function(self)
   self.hp = Shotgun.hp
   self.x = self.owner.x
   self.y = self.owner.y
-  self.len = 700
+  self.len = 600
   self.bullets = {}
   
-  for i = self.owner.angle - math.rad(6), self.owner.angle + math.rad(6), math.rad(3) do
+  for i = self.owner.angle - .1, self.owner.angle + .1, .0625 do
     local ang, len = i + (math.pi / 2), self.len
     
     local endx, endy = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
+    local wall = CollisionOvw:checkLineWall(self.x, self.y, endx, endy)
+    if wall then
+      len = math.distance(self.x, self.y, wall[1] + (wall[3] / 2), wall[2] + (wall[4] / 2))
+      endx, endy = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
+    end
+    
     local targets = {}
     Players:with(function(p)
       return p.team ~= self.owner.team and math.hloca(self.x, self.y, endx, endy, p.x, p.y, p.size)
@@ -29,7 +35,7 @@ Shotgun.activate = function(self)
       print('I HIT PLAYER NUMBER ' .. targets[1].id)
       local p = Players:get(targets[1].id)
       len = math.distance(self.x, self.y, p.x, p.y)
-      p:hurt(30)
+      p:hurt(data.weapon.shotgun.damage)
     end
     
     table.insert(self.bullets, {

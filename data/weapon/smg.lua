@@ -13,10 +13,11 @@ SMG.type = 'weapon'
 ----------------
 -- Data
 ----------------
-SMG.firerate = .2
+SMG.damage = 12
+SMG.firerate = .15
 SMG.reload = 1.6
 SMG.clip = 12
-SMG.ammo = 24
+SMG.ammo = 240
 
 SMG.activate = function(self, mySMG)
   mySMG.timers = {}

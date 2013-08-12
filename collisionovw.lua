@@ -55,14 +55,20 @@ function CollisionOvw:checkPointWall(px, py)
 end
 
 function CollisionOvw:checkLineWall(x1, y1, x2, y2)
-  local l, dis, dir = 0, math.distance(x1, y1, x2, y2), math.direction(x1, y1, x2, y2)
+  local l, dis, dir = 0, math.distance(x1, y1, x2, y2), math.direction(x1, y1, x2, y2) + (math.pi / 2)
   repeat
-    local tests = self:getTests(x1 + math.cos(dir) * l, y1 + math.cos(dir) * l)
+    local ex, ey = x1 + math.cos(dir) * l, y1 + math.sin(dir) * l
+    local tests = self:getTests(ex, ey)
     for _, coords in pairs(tests) do
-      if math.hlora(x1, y1, x2, y2, unpack(coords)) then return coords end
+      if math.hlora(x1, y1, ex, ey, unpack(coords)) then return coords end
     end
     l = l + 100
   until l > dis
+  
+  local tests = self:getTests(x2, y2)
+  for _, coords in pairs(tests) do
+    if math.hlora(x1, y1, x2, y2, unpack(coords)) then return coords end
+  end
   return false
 end
 
