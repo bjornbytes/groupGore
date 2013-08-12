@@ -42,8 +42,8 @@ function Players:with(ps, fn)
       fn(self:get(id))
     end
   elseif type(ps) == 'function' then
-    for _, p in pairs(table.filter(self.players, ps)) do
-      fn(p)
+    for id, _ in pairs(table.filter(self.players, ps)) do
+      fn(self:get(id))
     end
   end
 end

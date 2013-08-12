@@ -36,6 +36,7 @@ function PlayerMain:update()
   self:move()
   self:turn()
   self:slot()
+  self:fade()
 end
 
 function PlayerMain:poll()
@@ -54,6 +55,16 @@ function PlayerMain:sync()
      :write(self.input.mouse.r, 1)
      :write(self.input.slot.weapon, 3)
      :write(self.input.slot.skill, 3)
+end
+
+function PlayerMain:fade()
+  local function shouldFade(p)
+    return p.team ~= self.team and math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2
+  end
+  Players:with(Players.active, function(p)
+    if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
+    else p.visible = math.min(p.visible + tickRate, 1) end
+  end)
 end
 
 function PlayerMain:keyHandler(key)

@@ -16,6 +16,7 @@ function Player:create()
     maxHealth = 0,
     size = 0,
     anchor = nil,
+    visible = 0,
     slots = {{}, {}, {}, {}, {}},
     buffs = {}
   }
@@ -45,8 +46,8 @@ end
 function Player:draw()
   assert(self.class)
   love.graphics.reset()
-  if self.team == purple then love.graphics.setColor(190, 160, 220)
-  elseif self.team == orange then love.graphics.setColor(240, 160, 140) end
+  if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)
+  elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
   love.graphics.draw(self.class.sprites.body, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
   love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y) 
 end
