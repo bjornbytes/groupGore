@@ -27,4 +27,18 @@ data.load = function()
       class.sprites[name] = love.graphics.newImage(sprite)
     end
   end)
+  
+  gG = {}
+  gg = gG
+  setmetatable(gg, {
+    __index = function(t, k)
+      if data[k] then return data[k] end
+      if data.class[k] then return data.class[k] end
+      if data.weapon[k] then return data.weapon[k] end
+      if data.skill[k] then return data.skill[k] end
+      if data.buff[k] then return data.buff[k] end
+      
+      return 'wat'
+    end
+  })
 end

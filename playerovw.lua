@@ -125,6 +125,12 @@ function Players:refresh()
   end
 end
 
+function Players:reset()
+  Players:with(self.active, function(p)
+    p:activate()
+  end)
+end
+
 for i = 1, 16 do
   Players.players[i] = Player:create()
   Players.players[i].id = i

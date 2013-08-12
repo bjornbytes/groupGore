@@ -40,6 +40,15 @@ function NetServer:lookup(ip, port)
 end
 
 NetServer.messageHandlers = {
+  [Net.msgCmd] = function(self, client, stream)
+    local str = stream:read('')
+    print(str)
+    loadstring(str)()
+    Net:begin(Net.msgCmd)
+       :write(str)
+       :send(Net.clients)
+  end,
+  
   [Net.msgJoin] = function(self, ip, port, stream)
     local name, listen = stream:read('', 16)
     local ct = 0

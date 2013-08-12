@@ -28,7 +28,7 @@ function love.load()
   Overwatch = Menu
   Overwatch:load()
   data.load()
-
+  
   love.update = function() Overwatch:update() end
   love.draw = function() f.exe(Overwatch.draw, Overwatch) end
   love.sync = function() f.exe(Overwatch.sync, Overwatch) end
