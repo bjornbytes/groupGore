@@ -5,7 +5,7 @@ Hud.consoleInput = ''
 Hud.consoleResult = ''
 Hud.consoleResultAlpha = 0
 Hud.consoleFont = love.graphics.newFont('media/fonts/lucon.ttf', 12)
-Hud.consoleResultFont = love.graphics.newFont('media/fonts/lucon.ttf', 24)
+Hud.consoleResultFont = love.graphics.newFont('media/fonts/BebasNeue.ttf', 40)
 
 function Hud:update()
 	self.consoleResultAlpha = math.min(self.consoleResultAlpha + (tickRate / .35), 1)
@@ -15,6 +15,7 @@ function Hud:draw()
 	love.graphics.reset()
 	
 	if self:classSelect() then
+		love.graphics.setFont(self.consoleFont)
 		love.graphics.setColor(0, 0, 0)
 		love.graphics.rectangle('fill', 100, 100, 200, 100)
 		love.graphics.setColor(255, 255, 255)
@@ -28,7 +29,7 @@ function Hud:draw()
 		love.graphics.setColor(24, 2, 35, 200)
 		love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), 128)
 		love.graphics.setColor(255, 255, 255, 200)
-		love.graphics.print(self.consoleInput, 4, 128 - 4 - self.consoleFont:getHeight())
+		love.graphics.printf(self.consoleInput, 0, 128 - 4 - self.consoleFont:getHeight(), love.graphics.getWidth(), 'center')
 		love.graphics.setFont(self.consoleResultFont)
 		love.graphics.setColor(255, 255, 255, 200 * self.consoleResultAlpha)
 		love.graphics.printf(self.consoleResult, 0, ((128 - self.consoleFont:getHeight()) / 2) - (self.consoleResultFont:getHeight() / 2), love.graphics.getWidth(), 'center')
@@ -83,6 +84,7 @@ function Hud:keypressed(key, code)
 		Net:begin(Net.msgCmd)
 		   :write('Players:reset()')
 		   :send()
+		if self.consoleOpen == true then self.consoleOpen = false end
 	end
 end
 
