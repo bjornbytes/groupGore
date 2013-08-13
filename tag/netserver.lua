@@ -123,10 +123,14 @@ NetServer.messageHandlers = {
   end,
   
   [Net.msgSync] = function(self, client, stream)
-    local ct, w, a, s, d, mx, my, l, r, wep, skl, rel = stream:read(4, 1, 1, 1, 1, 16, 16, 1, 1, 3, 3, 1)
-    local input = Players:get(client.id).input
-    input.wasd.w, input.wasd.a, input.wasd.s, input.wasd.d = w > 0, a > 0, s > 0, d > 0
-    input.mouse.x, input.mouse.y, input.mouse.l, input.mouse.r = mx, my, l > 0, r > 0
-    input.slot.weapon, input.slot.skill, input.slot.reload = wep, skl, rel > 0
+    local ct, ticks = stream:read(4, 6)
+    for _ = 1, ticks do
+      local t = stream:read(16)
+      local w, a, s, d, mx, my, l, r, wep, skl, rel = stream:read(1, 1, 1, 1, 16, 16, 1, 1, 3, 3, 1)
+      local input = Players:get(client.id).input
+      input.wasd.w, input.wasd.a, input.wasd.s, input.wasd.d = w > 0, a > 0, s > 0, d > 0
+      input.mouse.x, input.mouse.y, input.mouse.l, input.mouse.r = mx, my, l > 0, r > 0
+      input.slot.weapon, input.slot.skill, input.slot.reload = wep, skl, rel > 0
+    end
   end
 }

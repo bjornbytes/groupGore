@@ -85,19 +85,22 @@ NetClient.messageHandlers = {
   end,
   
   [Net.msgSync] = function(self, stream)
-    local ct = stream:read(4)
-    for _ = 1, ct do
-      local id, x, y, angle = stream:read(4, 16, 16, 9)
+    local players = stream:read(4)
+    for _ = 1, players do
+      local id, ticks = stream:read(4, 6)
       local p = Players:get(id)
-      if math.distance(p.x, p.y, x, y) > 64 then
-        p.x = x
-        p.y = y 
-      else
-        p.x = math.lerp(p.x, x, .5)
-        p.y = math.lerp(p.y, y, .5)
+      for _ = 1, ticks do
+        t, x, y, angle = stream:read(16, 16, 16, 9)
+        if math.distance(p.x, p.y, x, y) > 64 then
+          p.x = x
+          p.y = y 
+        else
+          p.x = math.lerp(p.x, x, .5)
+          p.y = math.lerp(p.y, y, .5)
+        end
+        p.angle = math.anglerp(p.angle, math.rad(angle), .5)
       end
       CollisionOvw:refreshPlayer(p)
-      p.angle = math.anglerp(p.angle, math.rad(angle), .5)
     end
   end,
   

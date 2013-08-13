@@ -60,7 +60,7 @@ function Players:sync()
   local toSync = {}
   for _, id in ipairs(self.active) do
     local p = Players:get(id)
-    if p.sync then table.insert(toSync, id) end
+    if p.sync and table.count(p.syncBuffer) > 0 then table.insert(toSync, id) end
   end
   if #toSync == 0 then return end
   
