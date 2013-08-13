@@ -55,6 +55,7 @@ function PlayerMain:sync()
      :write(self.input.mouse.r, 1)
      :write(self.input.slot.weapon, 3)
      :write(self.input.slot.skill, 3)
+     :write(self.input.slot.reload, 1)
 end
 
 function PlayerMain:fade()
