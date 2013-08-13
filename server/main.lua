@@ -5,7 +5,7 @@ Server:load()
 tick = 0
 tickRate = .02
 tickDelta = 0
-syncRate = .03
+syncRate = .05
 syncDelta = 0
 interp = .1
 

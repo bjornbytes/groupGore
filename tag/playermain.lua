@@ -49,7 +49,9 @@ function PlayerMain:poll()
 end
 
 function PlayerMain:sync()
-  Net:write(table.count(self.syncBuffer), 6)
+  local ct = table.count(self.syncBuffer)
+  if self.syncBuffer[tick + 1] then ct = ct - 1 end
+  Net:write(ct, 6)
   for i = self.syncFrom, tick do
     if self.syncBuffer[i] then
       local input = Players.history[self.id][i].input

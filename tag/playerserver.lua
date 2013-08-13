@@ -97,3 +97,36 @@ function PlayerServer:respawn()
      :write(self.id, 4)
      :send(Net.clients)
 end
+
+function PlayerServer:trace(data)
+  if #data == 0 then return end
+  
+  -- Stick received input into previous states.
+  local i = 1
+  local first = data[i].tick
+  repeat
+    local state = Players.history[self.id][data[i].tick]
+    table.merge(table.except(data[i], {'tick'}), state)
+    i = i + 1
+  until not data[i]
+  
+  -- Assume that the most recent input cascades forward to the present.
+  local input = data[i - 1].input
+  for t = data[i - 1].tick + 1, tick - 1 do
+    table.merge({input = input}, Players.history[self.id][t])
+  end
+  
+  -- Now we need to actually predict state from the inputs we just filled in.
+  for t = first, tick - 1 do
+    local state = Players.history[self.id][t]
+    state:update()
+    
+    local dst = self
+    if t < tick - 1 then dst = Players.history[self.id][t + 1] end
+
+    dst.x = state.x
+    dst.y = state.y
+
+    self.syncBuffer[math.max(t, self.syncFrom)] = true
+  end
+end

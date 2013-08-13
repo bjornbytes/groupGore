@@ -129,3 +129,14 @@ function Player:respawn()
   self.y = map.spawn[self.team].y
   self.health = self.maxHealth
 end
+
+function Player:trace(data)
+  if #data == 0 then return end
+  local i = 1
+  repeat
+    table.merge(table.except(data[i], {'tick'}), Players.history[self.id][data[i].tick])
+    i = i + 1
+  until not data[i]
+  
+  table.merge(table.except(data[i - 1], {'tick'}), self)
+end

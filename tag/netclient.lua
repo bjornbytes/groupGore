@@ -11,6 +11,7 @@ function NetClient:activate()
      :write(port, 16)
      :send()
   
+  timer.start()
   while not myId do
     Net:update()
   end
@@ -58,6 +59,9 @@ NetClient.messageHandlers = {
           p.x, p.y = stream:read(16, 16)
         end
       end
+      
+      tickDelta = timer.delta()
+      love.timer.step()
     else
       local id, name = stream:read(4, '')
       print('new player ' .. name)
@@ -88,18 +92,18 @@ NetClient.messageHandlers = {
     local players = stream:read(4)
     for _ = 1, players do
       local id, ticks = stream:read(4, 6)
+      local data = {}
       local p = Players:get(id)
       for _ = 1, ticks do
         t, x, y, angle = stream:read(16, 16, 16, 9)
-        if math.distance(p.x, p.y, x, y) > 64 then
-          p.x = x
-          p.y = y 
-        else
-          p.x = math.lerp(p.x, x, .5)
-          p.y = math.lerp(p.y, y, .5)
-        end
-        p.angle = math.anglerp(p.angle, math.rad(angle), .5)
+        table.insert(data, {
+          tick = t,
+          x = x,
+          y = y,
+          angle = math.rad(angle)
+        })
       end
+      p:trace(data)
       CollisionOvw:refreshPlayer(p)
     end
   end,
