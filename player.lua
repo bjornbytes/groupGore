@@ -138,7 +138,14 @@ function Player:trace(data)
     if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
     
     local dst = (i == tick) and self or (Players.history[self.id][i] or self)
-    table.merge(table.except(data[idx], {'tick'}), dst)
+    if i > data[#data].tick then
+      local extrapolate = table.copy(data[idx])
+      extrapolate.x = math.lerp(Players.history[self.id][data[idx].tick - 1].x, data[idx].x, i - data[idx].tick)
+      extrapolate.y = math.lerp(Players.history[self.id][data[idx].tick - 1].y, data[idx].y, i - data[idx].tick)
+      table.merge(table.except(extrapolate, {'tick'}), dst)
+    else
+      table.merge(table.except(data[idx], {'tick'}), dst)
+    end
     if Players.history[self.id][i - 1] then
       dst.angle = math.anglerp(dst.angle, Players.history[self.id][i - 1].angle, .5)
     end
