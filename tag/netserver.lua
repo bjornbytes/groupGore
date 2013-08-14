@@ -56,7 +56,9 @@ function NetServer:removeClient(client)
   for k, v in pairs(self.clientsByIp) do
     if v == client then self.clientsByIp[k] = nil break end
   end
-  Players:deactivate(client.id)
+  if Players:get(client.id).active then
+    Players:deactivate(client.id)
+  end
   Net:begin(Net.msgLeave)
      :write(client.id, 4)
      :send(self.clients, client.id)
