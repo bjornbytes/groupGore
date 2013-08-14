@@ -8,15 +8,25 @@ Networking
 -Delta Compression
 -More frequent network polling
 
+Server
+------
+-Console commands
+-Run as listen server
+-Statistics/HUD
+-Crash/Shutdown Message
+-Config File
+
 Gameplay
 --------
 -Event Network
--Targeting for Skills (Player, Enemy, Location)
+-Targeted Skills (Player, Enemy, Location)
 -Buff System Upgrade
 -Assist System
 -Multikills
 -Killstreaks
 -Fancy Callouts (No-scope, Survived with 1% HP, Used last bullet, etc.)
+-Movespeed Acceleration
+-Turnspeed Smoothing
 
 Map Logic
 ---------
@@ -26,11 +36,12 @@ Map Logic
 -Game Timer
 -Spawn Room
 -Team Walls
--Lighting?
 
 Aesthetics
 ----------
 -Fake 3D
+-Bloodshot Effects
+-Shaders
 
 Interface
 ---------
@@ -53,6 +64,7 @@ Integration
 -Display Player Country
 -Graphs
 -Automatic patching
+-Server Heartbeat
 
 Graphics
 --------
@@ -65,3 +77,8 @@ Modding
 
 Content
 -------
+
+Public
+------
+-Redo website
+-Upgrade forums
