@@ -87,6 +87,28 @@ function PlayerMain:fade()
   end)
 end
 
+function PlayerMain:trace(data)
+  if #data == 0 then return end
+
+  local idx = 1
+  for i = data[1].tick, tick do
+    if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
+    
+    local dst = (i == tick) and self or (Players.history[self.id][i] or self)
+    if data[idx].x ~= math.floor(dst.x + .5) or data[idx].y ~= math.floor(dst.y + .5) then
+      dst.x = math.lerp(dst.x, data[idx].x, .25)
+      dst.y = math.lerp(dst.y, data[idx].y, .25)
+      for j = i + 1, tick do
+        local state = table.copy(Players.history[self.id][j - 1])
+        local dst = (j == tick) and self or Players.history[self.id][j]
+        state:update()
+        dst.x = math.lerp(dst.x, state.x, .25)
+        dst.y = math.lerp(dst.y, state.y, .25)
+      end
+    end
+  end
+end
+
 function PlayerMain:keyHandler(key)
   local dirty = false
   if key == 'w' or key == 'a' or key == 's' or key == 'd' then

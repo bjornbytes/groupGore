@@ -137,7 +137,10 @@ function Player:trace(data)
   for i = data[1].tick, tick do
     if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
     
-    local dst = (i == tick) and self or Players.history[self.id][i]
+    local dst = (i == tick) and self or (Players.history[self.id][i] or self)
     table.merge(table.except(data[idx], {'tick'}), dst)
+    if Players.history[self.id][i - 1] then
+      dst.angle = math.anglerp(dst.angle, Players.history[self.id][i - 1].angle, .5)
+    end
   end
 end

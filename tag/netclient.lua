@@ -99,9 +99,9 @@ NetClient.messageHandlers = {
         table.insert(data, {
           tick = t,
           x = x,
-          y = y,
-          angle = math.rad(angle)
+          y = y
         })
+        if id ~= myId then data[#data].angle = math.rad(angle) end
       end
       p:trace(data)
       CollisionOvw:refreshPlayer(p)
