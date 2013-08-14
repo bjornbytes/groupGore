@@ -130,3 +130,13 @@ function PlayerMain:keyHandler(key)
     self.syncBuffer[tick + 1] = true
   end
 end
+
+function PlayerMain:mouseHandler(x, y, button)
+  self.input.mouse[button] = love.mouse.isDown(button)
+  
+  if love.mouse.isDown(button) then
+    self.syncBuffer[tick] = true
+  elseif not love.mouse.isDown(button) then
+    self.syncBuffer[tick + 1] = true
+  end
+end

@@ -90,15 +90,13 @@ function Players:draw()
   end)
 end
 
-function Players:mousepressed(x, y, b)
-  if not self:get(myId).active then return end
-  self:get(myId).input.mouse[b] = true
+local function mouseHandler(self, x, y, b)
+  if not myId then return end
+  local p = self:get(myId)
+  f.exe(p.mouseHandler, p, x, y, b)
 end
-
-function Players:mousereleased(x, y, b)
-  if not self:get(myId).active then return end
-  self:get(myId).input.mouse[b] = false
-end
+Players.mousepressed = mouseHandler
+Players.mousereleased = mouseHandler
 
 local function keyHandler(self, key)
   if not myId then return end
