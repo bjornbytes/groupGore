@@ -35,6 +35,7 @@ SMG.update = function(self, mySMG)
     mySMG.clip = amt
     mySMG.ammo = mySMG.ammo - amt
   end)
+  if self.input.slot.reload and mySMG.timers.reload == 0 then mySMG.timers.reload = SMG.reload end
 end
 
 SMG.canFire = function(self, mySMG)
