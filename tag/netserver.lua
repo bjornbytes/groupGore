@@ -18,6 +18,19 @@ function NetServer:update()
       self.messageHandlers[id](self, self:lookup(ip, port), stream)
     end
   end)
+  
+  for id, client in pairs(self.clients) do
+    local t = love.timer.getMicroTime()
+    if client.pingTime > 0 and t - client.pingTime > 1 then
+      self:removeClient(client)
+    elseif client.pingTime < 0 and client.pingTime + t > 1 then
+      Net:begin(Net.msgPing)
+         :write(tick, 16)
+         :send(client.id)
+      
+      client.pingTime = t
+    end
+  end
 end
 
 function NetServer:send(clients, except)
@@ -39,14 +52,31 @@ function NetServer:lookup(ip, port)
   return self.clientsByIp[ip .. port]
 end
 
+function NetServer:removeClient(client)
+  for k, v in pairs(self.clientsByIp) do
+    if v == client then self.clientsByIp[k] = nil break end
+  end
+  Players:deactivate(client.id)
+  Net:begin(Net.msgLeave)
+     :write(client.id, 4)
+     :send(self.clients, client.id)
+     
+  self.clients[client.id] = nil
+end
+
 NetServer.messageHandlers = {
   [Net.msgCmd] = function(self, client, stream)
     local str = stream:read('')
-    print(str)
     loadstring(str)()
     Net:begin(Net.msgCmd)
        :write(str)
        :send(Net.clients)
+  end,
+  
+  [Net.msgPing] = function(self, client, stream)
+    local t = love.timer.getMicroTime()
+    client.ping = math.floor((t - client.pingTime) * 1000 + .5)
+    client.pingTime = -t
   end,
   
   [Net.msgJoin] = function(self, ip, port, stream)
@@ -57,7 +87,9 @@ NetServer.messageHandlers = {
       id = ct + 1,
       ip = ip,
       port = listen,
-      name = name
+      name = name,
+      ping = 0,
+      pingTime = -1
     }
     self.clients[client.id] = client
     self.clientsByIp[ip .. port] = client
@@ -94,17 +126,7 @@ NetServer.messageHandlers = {
        :send(self.clients, client.id)
   end,
   
-  [Net.msgLeave] = function(self, client, stream)
-    for k, v in pairs(self.clientsByIp) do
-      if v == client then self.clientsByIp[k] = nil break end
-    end
-    Players:deactivate(client.id)
-    Net:begin(Net.msgLeave)
-       :write(client.id, 4)
-       :send(self.clients, client.id)
-       
-    self.clients[client.id] = nil
-  end,
+  [Net.msgLeave] = NetServer.removeClient,
   
   [Net.msgClass] = function(self, client, stream)
     local class, team = stream:read(4, 1)

@@ -45,6 +45,12 @@ NetClient.messageHandlers = {
     loadstring(str)()
   end,
   
+  [Net.msgPing] = function(self, stream)
+    local t = stream:read(16)
+    Net:begin(Net.msgPing)
+       :send()
+  end,
+  
   [Net.msgJoin] = function(self, stream)
     if not myId then
       myId, tick = stream:read(4, 16)
