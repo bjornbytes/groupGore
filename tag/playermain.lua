@@ -67,10 +67,11 @@ function PlayerMain:sync()
          :write(input.slot.weapon, 3)
          :write(input.slot.skill, 3)
          :write(input.slot.reload, 1)
+      
+      self.syncBuffer[i] = nil
     end
   end
   
-  table.clear(self.syncBuffer)
   self.syncFrom = tick + 1
 end
 
@@ -101,5 +102,9 @@ function PlayerMain:keyHandler(key)
     dirty = true
   end
   
-  if dirty then self.syncBuffer[tick + 1] = true end
+  if love.keyboard.isDown(key) and dirty then
+    self.syncBuffer[tick] = true
+  elseif not love.keyboard.isDown(key) and dirty then
+    self.syncBuffer[tick + 1] = true
+  end
 end

@@ -41,7 +41,7 @@ function PlayerServer:update()
   self:turn()
   self:slot()
   if prevx ~= self.x or prevy ~= self.y or prevang ~= self.angle then
-    self.syncBuffer[tick ] = true
+    self.syncBuffer[tick] = true
   end
 end
 
@@ -101,32 +101,14 @@ end
 function PlayerServer:trace(data)
   if #data == 0 then return end
   
-  -- Stick received input into previous states.
-  local i = 1
-  local first = data[i].tick
-  repeat
-    local state = Players.history[self.id][data[i].tick]
-    table.merge(table.except(data[i], {'tick'}), state)
-    i = i + 1
-  until not data[i]
-  
-  -- Assume that the most recent input cascades forward to the present.
-  local input = data[i - 1].input
-  for t = data[i - 1].tick + 1, tick - 1 do
-    table.merge({input = input}, Players.history[self.id][t])
-  end
-  
-  -- Now we need to actually predict state from the inputs we just filled in.
-  for t = first, tick - 1 do
-    local state = Players.history[self.id][t]
-    state:update()
+  local idx = 1
+  for i = data[1].tick, tick do
+    if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
     
-    local dst = self
-    if t < tick - 1 then dst = Players.history[self.id][t + 1] end
-
-    dst.x = state.x
-    dst.y = state.y
-
-    self.syncBuffer[math.max(t, self.syncFrom)] = true
+    local state = table.copy(Players.history[self.id][i - 1] or Players.history[self.id][i])
+    table.merge(table.except(data[idx], {'tick'}), state)
+    state:update()
+    local dst = (i == tick) and self or Players.history[self.id][i]
+    table.merge(table.except(data[idx], {'tick'}), dst)
   end
 end

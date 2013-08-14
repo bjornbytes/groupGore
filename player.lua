@@ -132,11 +132,12 @@ end
 
 function Player:trace(data)
   if #data == 0 then return end
-  local i = 1
-  repeat
-    table.merge(table.except(data[i], {'tick'}), Players.history[self.id][data[i].tick])
-    i = i + 1
-  until not data[i]
-  
-  table.merge(table.except(data[i - 1], {'tick'}), self)
+
+  local idx = 1
+  for i = data[1].tick, tick do
+    if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
+    
+    local dst = (i == tick) and self or Players.history[self.id][i]
+    table.merge(table.except(data[idx], {'tick'}), dst)
+  end
 end
