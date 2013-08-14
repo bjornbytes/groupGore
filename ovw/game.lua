@@ -4,6 +4,10 @@ function Game:load()
   Net:load('client')
 end
 
+function Game:unload()
+  --
+end
+
 function Game:update()
   Net:update()
   Players:update()

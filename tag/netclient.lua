@@ -14,6 +14,13 @@ function NetClient:activate()
   timer.start()
   while not myId do
     Net:update()
+    if timer.delta() > 2 then
+      print('Unable to connect to server')
+      Overwatch:unload()
+      Overwatch = Menu
+      Overwatch:load()
+      return
+    end
   end
 end
 
