@@ -97,6 +97,11 @@ function Player:slot()
   if self.input.mouse.l and weapon.canFire(self, weapon) then
     weapon.fire(self, weapon)
   end
+  
+  local skill = self.slots[self.input.slot.skill]
+  if self.input.mouse.r and skill.canFire(self, skill) then
+    skill.fire(self, skill)
+  end
 end
 
 function Player:buff()

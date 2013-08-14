@@ -7,7 +7,7 @@ Adrenaline.icon = 'media/graphics/icon.png'
 Adrenaline.hide = false
 
 Adrenaline.effects = {}
-Adrenaline.effects.haste = .4
+Adrenaline.effects.haste = .5
 
 Adrenaline.update = function(self, myAdrenaline)
 	if self.health > 15 * tickRate then

@@ -34,6 +34,7 @@ function Adrenaline.fire(self, myAdrenaline)
   if not myAdrenaline.active then
     Buffs:add(self, data.buff.adrenaline)
     myAdrenaline.active = true
+    myAdrenaline.cooldown = 1
   else
     Buffs:remove(self, data.buff.adrenaline)
     myAdrenaline.active = false
