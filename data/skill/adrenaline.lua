@@ -17,6 +17,10 @@ Adrenaline.target = 'none'
 Adrenaline.drain = 10
 Adrenaline.cooldown = 6
 
+
+----------------
+-- Behavior
+----------------
 function Adrenaline.activate(self, myAdrenaline)
   myAdrenaline.cooldown = 0
   myAdrenaline.active = false
@@ -32,11 +36,11 @@ end
 
 function Adrenaline.fire(self, myAdrenaline)
   if not myAdrenaline.active then
-    Buffs:add(self, data.buff.adrenaline)
+    Buff:add(self, data.buff.adrenaline)
     myAdrenaline.active = true
     myAdrenaline.cooldown = 1
   else
-    Buffs:remove(self, data.buff.adrenaline)
+    Buff:remove(self, data.buff.adrenaline)
     myAdrenaline.active = false
     myAdrenaline.cooldown = Adrenaline.cooldown
   end

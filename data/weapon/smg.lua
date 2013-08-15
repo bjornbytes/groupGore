@@ -19,6 +19,10 @@ SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 240
 
+
+----------------
+-- Behavior
+----------------
 SMG.activate = function(self, mySMG)
   mySMG.timers = {}
   mySMG.timers.shoot = 0

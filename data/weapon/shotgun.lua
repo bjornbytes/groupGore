@@ -19,6 +19,10 @@ Shotgun.reload = 2
 Shotgun.clip = 4
 Shotgun.ammo = 16
 
+
+----------------
+-- Behavior
+----------------
 Shotgun.activate = function(self, myShotgun)
   myShotgun.timers = {}
   myShotgun.timers.shoot = 0

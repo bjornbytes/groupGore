@@ -4,6 +4,10 @@ Players.players = {}
 Players.active = {}
 Players.history = {}
 
+Players.event = {}
+Players.event.die = 1
+Players.event.respawn = 2
+
 function Players:activate(id, tag, class, team)
   assert(id >= 1 and id <= 16)
   local p = self.players[id]
@@ -81,8 +85,9 @@ function Players:draw()
         table.interpolate(previous, current, tickDelta / tickRate):draw()
       end
     else
-      local previous = self.history[current.id][tick - (interp / tickRate) - 1]
-      current = self.history[current.id][tick - (interp / tickRate)]
+      local t = tick - (interp / tickRate)
+      local previous = self.history[current.id][t - 1]
+      current = self.history[current.id][t]
       if current and previous then
         table.interpolate(previous, current, tickDelta / tickRate):draw()
       end

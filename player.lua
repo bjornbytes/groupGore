@@ -121,7 +121,6 @@ function Player:hurt(amount, from)
 end
 
 function Player:die()
-  print('ded')
   self.ded = 5
   self.x = -100
   self.y = -100
@@ -129,23 +128,9 @@ function Player:die()
 end
 
 function Player:respawn()
+  event.emit(self, 'respawn')
   self.ded = false
   self.x = map.spawn[self.team].x
   self.y = map.spawn[self.team].y
   self.health = self.maxHealth
-end
-
-function Player:trace(data)
-  if #data == 0 then return end
-
-  local idx = 1
-  for i = data[1].tick, tick do
-    if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
-    
-    local dst = (i == tick) and self or (Players.history[self.id][i] or self)
-    table.merge(table.except(data[idx], {'tick'}), dst)
-    if Players.history[self.id][i - 1] then
-      dst.angle = math.anglerp(dst.angle, Players.history[self.id][i - 1].angle, .5)
-    end
-  end
 end

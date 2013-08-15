@@ -1,35 +1,38 @@
-Buffs = {}
+Buff = {}
 
-function Buffs:add(player, b)
+function Buff:add(player, b, ...)
   if self:getBuff(player, b) then return end
   local buff = {}
   setmetatable(buff, {__index = b})
-  player.buffs[buff.code] = buff
+  player.buffs[buff.id] = buff
   
-  for fn, x in pairs(buff.effects) do
-    self[fn](self, player, x, true)
+  for fn, x in pairs(buff.effects or {}) do
+    self[fn](self, player, false, x, ...)
   end
+  
+  f.exe(buff.activate, player, buff)
 end
 
-function Buffs:remove(player, b)
+function Buff:remove(player, b, ...)
   local buff = self:getBuff(player, b)
   if not buff then return end
   
-  for fn, x in pairs(buff.effects) do
-    self[fn](self, player, x, false)
+  for fn, x in pairs(buff.effects or {}) do
+    self[fn](self, player, true, x, ...)
   end
   
-  player.buffs[buff.code] = nil
+  player.buffs[buff.id] = nil
+  f.exe(buff.deactivate, player, buff)
 end
 
-function Buffs:getBuff(player, b)
+function Buff:getBuff(player, b)
   return player.buffs[b.code]
 end
 
-function Buffs:haste(player, percent, apply)
-  if apply then
-    player.maxSpeed = player.maxSpeed + (player.class.speed * percent)
-  else
+function Buff:haste(player, undo, percent)
+  if undo then
     player.maxSpeed = player.maxSpeed - (player.class.speed * percent)
+  else
+    player.maxSpeed = player.maxSpeed + (player.class.speed * percent)
   end
 end

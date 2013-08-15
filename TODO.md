@@ -50,6 +50,7 @@ Interface
 -Chat
 -Kill Feed
 -Scoreboard
+-Fullscreen
 
 Menu
 ----

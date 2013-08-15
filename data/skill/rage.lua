@@ -11,10 +11,14 @@ Rage.type = 'skill'
 
 
 ----------------
--- Data
----------------- Still gotta work out the specifics of this guy.
-Rage.target = 'none'
+-- Meta
+----------------
+Rage.max = 50
 
+
+----------------
+-- Behavior
+----------------
 function Rage.activate(self, myRage)
   myRage.amount = 0
   myRage.active = false
@@ -25,12 +29,12 @@ function Rage.update(self, myRage)
 end
 
 function Rage.canFire(self, myRage)
-  return myRage.amount == 50 and not myRage.active
+  return myRage.amount == myRage.max and not myRage.active
 end
 
 function Rage.fire(self, myRage)
   if not myRage.active then
-    self:addBuff(data.buff.rage)
+    Buff:add(self, data.buff.rage)
     myRage.active = true
   end
 end
