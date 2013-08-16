@@ -32,7 +32,7 @@ function Player:activate()
   self.anchor = self.class.anchor
   self.health = self.maxHealth
   for i = 1, 5 do
-    self.slots[i].activate(self, self.slots[i])
+    f.exe(self.slots[i].activate, self, self.slots[i])
   end
 end
 
@@ -133,4 +133,12 @@ function Player:respawn()
   self.x = map.spawn[self.team].x
   self.y = map.spawn[self.team].y
   self.health = self.maxHealth
+end
+
+function Player:emit(e, args)
+  if self.class.on[e] then
+    for _, f in pairs(self.class.on[e]) do
+      f(self, args)
+    end
+  end
 end

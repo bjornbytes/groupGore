@@ -58,6 +58,11 @@ function PlayerServer:sync()
          :write(math.floor(state.x + .5), 16)
          :write(math.floor(state.y + .5), 16)
          :write(math.floor(ang), 9)
+         :write(#state.events, 4)
+      
+      for j = 1, #state.events do
+        Net:write(state.events[j].e, 4)
+      end
     end
   end
   
@@ -86,10 +91,8 @@ end
 
 function PlayerServer:die(killer)
   Player.die(self)
-end
-
-function PlayerServer:respawn()
-  Player.respawn(self)
+  Players:get(killer):emit(Players.events.kill)
+  self:emit(Players.events.die)
 end
 
 function PlayerServer:trace(data)
@@ -105,4 +108,12 @@ function PlayerServer:trace(data)
     local dst = (i == tick) and self or Players.history[self.id][i]
     table.merge(table.except(data[idx], {'tick'}), dst)
   end
+end
+
+function PlayerServer:emit(e, args)
+  Player.emit(self, e, args)
+  table.insert(self.events, {
+    e = e,
+    args = args
+  })
 end

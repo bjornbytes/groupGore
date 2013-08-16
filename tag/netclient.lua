@@ -108,11 +108,17 @@ NetClient.messageHandlers = {
       local data = {}
       local p = Players:get(id)
       for _ = 1, ticks do
-        t, x, y, angle = stream:read(16, 16, 16, 9)
+        local t, x, y, angle = stream:read(16, 16, 16, 9)
+        local eventCount, events = stream:read(4), {}
+        for i = 1, eventCount do
+          events[i] = stream:read(4)
+          print('event: ' .. events[i])
+        end
         table.insert(data, {
           tick = t,
           x = x,
-          y = y
+          y = y,
+          events = events
         })
         if id ~= myId then data[#data].angle = math.rad(angle) p.updatedAt = t end
       end

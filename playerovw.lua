@@ -53,6 +53,7 @@ function Players:update()
   self:with(self.active, function(p)
     self.history[p.id][tick] = table.copy(p)
     self.history[p.id][tick - (1 / tick)] = nil
+    table.clear(p.events)
   end)
 end
 
@@ -138,7 +139,10 @@ for i = 1, 16 do
 end
 
 Players.events = {
-  kill = 1
+  kill = 1,
+  assist = 2,
+  die = 3,
+  respawn = 4
 }
 
 local dir

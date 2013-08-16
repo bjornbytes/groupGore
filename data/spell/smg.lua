@@ -28,7 +28,6 @@ SMG.activate = function(self)
   
   table.sort(targets, function(a, b) return a.dist < b.dist end)
   if targets[1] then
-    print('I HIT PLAYER NUMBER ' .. targets[1].id)
     local p = Players:get(targets[1].id)
     self.len = math.distance(self.x, self.y, p.x, p.y)
     p:hurt(data.weapon.smg.damage, self.owner.id)
