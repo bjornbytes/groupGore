@@ -56,28 +56,61 @@ end
 function Player:move()
   assert(self.input)
   local w, a, s, d = self.input.wasd.w, self.input.wasd.a, self.input.wasd.s, self.input.wasd.d
-  if not (w or a or s or d) then return end
+  local moving = w or a or s or d
   
-  local up, down, left, right, speed, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi, self.maxSpeed * tickRate
+  local up, down, left, right, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi
+  
+  if moving then
+    self.speed = math.min(self.speed + (2 * self.class.speed * tickRate), self.maxSpeed)
+  else
+    self.speed = math.max(self.speed - (2 * self.class.speed * tickRate), 0)
+    for i = 1, (.5 / tickRate) do
+      local state = Players.history[self.id][tick - i]
+      if state then
+        if state.input.wasd.w then w = true
+        elseif state.input.wasd.s then s = true
+        elseif state.input.wasd.a then a = true
+        elseif state.input.wasd.d then d = true end
+        
+        if w or a or s or d then
+          
+          for j = 1, 3 do
+            local state = Players.history[self.id][tick - i - j]
+            if state then
+              if not w and state.input.wasd.w then w = true break
+              elseif not s and state.input.wasd.s then s = true break
+              elseif not a and state.input.wasd.a then a = true break
+              elseif not d and state.input.wasd.d then d = true break end
+            end
+          end
+          break
+        end
+      end
+    end
+  end
+  
+  if self.speed == 0 then return end
   
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
 
-  if not dx then dx = dy end
-  if not dy then dy = dx end
-  if dx == right and dy == down then dx = 0 end
-  
-  local dir = (dx + dy) / 2
-  local newx, newy = self.x + math.cos(dir) * speed, self.y + math.sin(dir) * speed
-  
-  self.x, self.y = CollisionOvw:resolveCircleWall(newx, newy, self.size, .5)
-  self.x, self.y = CollisionOvw:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
-  CollisionOvw:refreshPlayer(self)
-  
-  if self.x < 0 then self.x = 0
-  elseif self.x > map.width then self.x = map.width end
-  if self.y < 0 then self.y = 0
-  elseif self.y > map.height then self.y = map.height end
+  if dx or dy then
+    if not dx then dx = dy end
+    if not dy then dy = dx end
+    if dx == right and dy == down then dx = 0 end
+    
+    local dir = (dx + dy) / 2
+    local newx, newy = self.x + math.cos(dir) * (self.speed * tickRate), self.y + math.sin(dir) * (self.speed * tickRate)
+    
+    self.x, self.y = CollisionOvw:resolveCircleWall(newx, newy, self.size, .5)
+    self.x, self.y = CollisionOvw:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
+    CollisionOvw:refreshPlayer(self)
+    
+    if self.x < 0 then self.x = 0
+    elseif self.x > map.width then self.x = map.width end
+    if self.y < 0 then self.y = 0
+    elseif self.y > map.height then self.y = map.height end
+  end
 end
 
 function Player:turn()
