@@ -60,6 +60,7 @@ function PlayerServer:sync()
          :write(math.floor(ang), 9)
          :write(#state.events, 4)
       
+      table.print(state.events)
       for j = 1, #state.events do
         Net:write(state.events[j].e, 4)
       end
@@ -116,4 +117,6 @@ function PlayerServer:emit(e, args)
     e = e,
     args = args
   })
+  self.syncBuffer[tick] = true
+  self.syncBuffer[tick + 1] = true
 end
