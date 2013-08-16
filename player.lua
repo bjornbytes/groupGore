@@ -18,7 +18,8 @@ function Player:create()
     anchor = nil,
     visible = 0,
     slots = {{}, {}, {}, {}, {}},
-    buffs = {}
+    buffs = {},
+    events = {}
   }
 end
 
@@ -128,7 +129,6 @@ function Player:die()
 end
 
 function Player:respawn()
-  event.emit(self, 'respawn')
   self.ded = false
   self.x = map.spawn[self.team].x
   self.y = map.spawn[self.team].y

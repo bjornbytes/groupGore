@@ -13,10 +13,9 @@ Bloodlust.type = 'passive'
 ----------------
 -- Behavior
 ----------------
-function Bloodlust.activate(self, myBloodlust)
-	self:on(Players.event.kill, function()
-		Buff:add(self, data.buff.bloodlust)
-	end)
+Bloodlust.on = {}
+Bloodlust.on['kill'] = function(self)
+	Buff:add(self, data.buff.bloodlust)
 end
 
 return Bloodlust

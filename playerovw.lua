@@ -4,10 +4,6 @@ Players.players = {}
 Players.active = {}
 Players.history = {}
 
-Players.event = {}
-Players.event.die = 1
-Players.event.respawn = 2
-
 function Players:activate(id, tag, class, team)
   assert(id >= 1 and id <= 16)
   local p = self.players[id]
@@ -140,6 +136,10 @@ for i = 1, 16 do
   
   Players.history[i] = {}
 end
+
+Players.events = {
+  kill = 1
+}
 
 local dir
 dir = '/tag'

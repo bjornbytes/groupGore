@@ -80,22 +80,16 @@ end
 
 function PlayerServer:hurt(amount, from)
   if Player.hurt(self, amount, from) then
-    if self.health <= 0 then self:die() end
+    if self.health <= 0 then self:die(from) end
   end
 end
 
-function PlayerServer:die()
+function PlayerServer:die(killer)
   Player.die(self)
-  Net:begin(Net.msgDie)
-     :write(self.id, 4)
-     :send(Net.clients)
 end
 
 function PlayerServer:respawn()
   Player.respawn(self)
-  Net:begin(Net.msgRespawn)
-     :write(self.id, 4)
-     :send(Net.clients)
 end
 
 function PlayerServer:trace(data)
