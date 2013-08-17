@@ -60,9 +60,8 @@ function PlayerServer:sync()
          :write(math.floor(ang), 9)
          :write(#state.events, 4)
       
-      table.print(state.events)
       for j = 1, #state.events do
-        Net:write(state.events[j].e, 4)
+        Net:write(Player.events[state.events[j].e], 4)
       end
     end
   end

@@ -47,7 +47,7 @@ SMG.canFire = function(self, mySMG)
 end
 
 SMG.fire = function(self, mySMG)
-  self:spell(data.spell.smg)
+  Spells:activate(self.id, data.spell.smg)
   mySMG.timers.shoot = mySMG.firerate
   mySMG.clip = mySMG.clip - 1
   if mySMG.clip == 0 then mySMG.timers.reload = SMG.reload end

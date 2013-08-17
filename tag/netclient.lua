@@ -112,7 +112,9 @@ NetClient.messageHandlers = {
         local eventCount, events = stream:read(4), {}
         for i = 1, eventCount do
           events[i] = stream:read(4)
-          print('event: ' .. events[i])
+          if p.id ~= myId or (events[i] ~= 'fire' and events[i] ~= 'skill') then
+            p:handle(Player.events[events[i]], {})
+          end
         end
         table.insert(data, {
           tick = t,
@@ -125,10 +127,5 @@ NetClient.messageHandlers = {
       p:trace(data)
       CollisionOvw:refreshPlayer(p)
     end
-  end,
-  
-  [Net.msgSpell] = function(self, stream)
-    local owner, kind = stream:read(4, 6)
-    Players:get(owner):spell(kind)
   end
 }

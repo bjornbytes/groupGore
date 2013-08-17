@@ -3,13 +3,15 @@ Player = {}
 Player.events = {
   kill = 1,
   assist = 2,
-  die = 3,
+  death = 3,
   spawn = 4,
   hurt = 5,
+  fire = 6,
+  skill = 7,
   
   [1] = 'kill',
   [2] = 'assist',
-  [3] = 'die',
+  [3] = 'death',
   [4] = 'spawn',
   [5] = 'hurt'
 }
@@ -151,12 +153,12 @@ function Player:slot()
   
   local weapon = self.slots[self.input.slot.weapon]
   if self.input.mouse.l and weapon.canFire(self, weapon) then
-    weapon.fire(self, weapon)
+    self:emit('fire', {slot = self.input.slot.weapon})
   end
   
   local skill = self.slots[self.input.slot.skill]
   if self.input.mouse.r and skill.canFire(self, skill) then
-    skill.fire(self, skill)
+    self:emit('fire', {slot = self.input.slot.skill})
   end
 end
 
@@ -167,6 +169,7 @@ function Player:buff()
 end
 
 function Player:handle(e, args)
+  if type(e) == 'number' then e = Player.events[e] end
   if self.class.on[e] then
     for _, f in pairs(self.class.on[e]) do
       f(self, args)
@@ -185,32 +188,42 @@ end
 -- Events
 ----------------
 Player.on = {}
-Player.on['kill'] = function(self, e, args)
+Player.on['kill'] = function(self, e)
 
 end
 
-Player.on['assist'] = function(self, e, args)
+Player.on['assist'] = function(self, e)
 
 end
 
-Player.on['die'] = function(self, e, args)
+Player.on['death'] = function(self, e)
   self.ded = true
   self.x = -100
   self.y = -100
   self.health = 0
 end
 
-Player.on['spawn'] = function(self, e, args)
+Player.on['spawn'] = function(self, e)
   self.ded = false
   self.x = map.spawn[self.team].x
   self.y = map.spawn[self.team].y
   self.health = self.maxHealth
 end
 
-Player.on['hurt'] = function(self, e, args)
-  self.health = math.max(self.health - args.amount, 0)
+Player.on['hurt'] = function(self, e)
+  self.health = math.max(self.health - e.amount, 0)
   if self.health <= 0 then
-    self:emit('die')
-    Players:get(args.from):emit('kill')
+    self:emit('death')
+    Players:get(e.from):emit('kill')
   end
+end
+
+Player.on['fire'] = function(self, e)
+  local weapon = self.slots[e.slot]
+  weapon.fire(self, weapon)
+end
+
+Player.on['skill'] = function(self, e)
+  local skill = self.slots[e.slot]
+  skill.fire(self, skill)
 end

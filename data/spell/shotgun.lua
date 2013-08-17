@@ -35,7 +35,10 @@ Shotgun.activate = function(self)
       print('I HIT PLAYER NUMBER ' .. targets[1].id)
       local p = Players:get(targets[1].id)
       len = math.distance(self.x, self.y, p.x, p.y)
-      p:hurt(data.weapon.shotgun.damage, self.owner.id)
+      p:emit('hurt', {
+        amount = data.weapon.shotgun.damage,
+        from = self.owner.id
+      })
     end
     
     table.insert(self.bullets, {
