@@ -72,7 +72,7 @@ function PlayerServer:sync()
 end
 
 function PlayerServer:time()
-  self.ded = timer.rot(self.ded, function() self:respawn() end)
+  self.ded = timer.rot(self.ded, function() self:emit('spawn') end)
   if self.ded == 0 then self.ded = false end
 end
 
@@ -82,18 +82,6 @@ function PlayerServer:spell(kind)
      :write(self.id, 4)
      :write(kind.id, 6)
      :send(Net.clients, self.id)
-end
-
-function PlayerServer:hurt(amount, from)
-  if Player.hurt(self, amount, from) then
-    if self.health <= 0 then self:die(from) end
-  end
-end
-
-function PlayerServer:die(killer)
-  Player.die(self)
-  Players:get(killer):emit(Players.events.kill)
-  self:emit(Players.events.die)
 end
 
 function PlayerServer:trace(data)
@@ -112,11 +100,11 @@ function PlayerServer:trace(data)
 end
 
 function PlayerServer:emit(e, args)
-  Player.emit(self, e, args)
+  self:handle(e, args)
   table.insert(self.events, {
     e = e,
     args = args
   })
-  self.syncBuffer[tick] = true
-  self.syncBuffer[tick + 1] = true
+  if Players.history[self.id][tick] then self.syncBuffer[tick + 1] = true
+  else self.syncBuffer[tick] = true end
 end

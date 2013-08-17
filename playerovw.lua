@@ -138,13 +138,6 @@ for i = 1, 16 do
   Players.history[i] = {}
 end
 
-Players.events = {
-  kill = 1,
-  assist = 2,
-  die = 3,
-  respawn = 4
-}
-
 local dir
 dir = '/tag'
 for _, file in ipairs(love.filesystem.enumerate(dir)) do

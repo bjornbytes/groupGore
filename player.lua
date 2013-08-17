@@ -1,5 +1,23 @@
 Player = {}
 
+Player.events = {
+  kill = 1,
+  assist = 2,
+  die = 3,
+  spawn = 4,
+  hurt = 5,
+  
+  [1] = 'kill',
+  [2] = 'assist',
+  [3] = 'die',
+  [4] = 'spawn',
+  [5] = 'hurt'
+}
+
+
+----------------
+-- Core
+----------------
 function Player:create()
   return {
     id = nil,
@@ -53,6 +71,10 @@ function Player:draw()
   love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y) 
 end
 
+
+----------------
+-- Behavior
+----------------
 function Player:move()
   assert(self.input)
   local w, a, s, d = self.input.wasd.w, self.input.wasd.a, self.input.wasd.s, self.input.wasd.d
@@ -144,34 +166,51 @@ function Player:buff()
   end
 end
 
-function Player:spell(kind)
-  Spells:activate(self, kind)
+function Player:handle(e, args)
+  if self.class.on[e] then
+    for _, f in pairs(self.class.on[e]) do
+      f(self, args)
+    end
+  end
+  
+  f.exe(self.on[e], self, args)
 end
 
-function Player:hurt(amount, from)
-  if self.ded then return false end
-  self.health = math.max(self.health - amount, 0)
-  return true
+function Player:emit(e, args)
+  --
 end
 
-function Player:die()
-  self.ded = 5
+
+----------------
+-- Events
+----------------
+Player.on = {}
+Player.on['kill'] = function(self, e, args)
+
+end
+
+Player.on['assist'] = function(self, e, args)
+
+end
+
+Player.on['die'] = function(self, e, args)
+  self.ded = true
   self.x = -100
   self.y = -100
   self.health = 0
 end
 
-function Player:respawn()
+Player.on['spawn'] = function(self, e, args)
   self.ded = false
   self.x = map.spawn[self.team].x
   self.y = map.spawn[self.team].y
   self.health = self.maxHealth
 end
 
-function Player:emit(e, args)
-  if self.class.on[e] then
-    for _, f in pairs(self.class.on[e]) do
-      f(self, args)
-    end
+Player.on['hurt'] = function(self, e, args)
+  self.health = math.max(self.health - args.amount, 0)
+  if self.health <= 0 then
+    self:emit('die')
+    Players:get(args.from):emit('kill')
   end
 end

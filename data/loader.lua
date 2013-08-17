@@ -28,13 +28,9 @@ data.load = function()
     end
     
     class.on = {}
-    local eventMap = {
-      kill = Players.events.kill
-    }
     for i = 1, 5 do
       if class.slots[i].on then
         for e, f in pairs(class.slots[i].on) do
-          e = eventMap[e]
           class.on[e] = class.on[e] or {}
           table.insert(class.on[e], f)
         end
