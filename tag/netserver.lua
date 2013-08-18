@@ -66,6 +66,30 @@ function NetServer:removeClient(client)
   self.clients[client.id] = nil
 end
 
+function NetServer:writeEvents(events)
+  Net:write(#events, 4)
+  
+  local sigs = {
+    kill = {},
+    assist = {},
+    death = {{4, 'killer'}},
+    spawn = {},
+    hurt = {{4, 'from'}, {'f', 'amount'}},
+    fire = {{3, 'slot'}},
+    skill = {{3, 'slot'}}
+  }
+  
+  for i = 1, #events do
+    local event = events[i].e
+    Net:write(Player.events[event], 4)
+    for _, sig in pairs(sigs[event]) do
+      Net:write(events[i].args[sig[2]], sig[1])
+    end
+  end
+  
+  return self
+end
+
 NetServer.messageHandlers = {
   [Net.msgCmd] = function(self, client, stream)
     local str = stream:read('')

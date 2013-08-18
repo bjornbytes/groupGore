@@ -39,6 +39,33 @@ function NetClient:send()
   self.message = nil
 end
 
+function NetClient:readEvents(id, stream)
+  local events = {}
+  local ct = stream:read(4)
+  local sigs = {
+    kill = {},
+    assist = {},
+    death = {{4, 'killer'}},
+    spawn = {},
+    hurt = {{4, 'from'}, {'f', 'amount'}},
+    fire = {{3, 'slot'}},
+    skill = {{3, 'slot'}}
+  }
+  for _ = 1, ct do
+    local e = Player.events[stream:read(4)]
+    local args = {}
+    for _, sig in pairs(sigs[e]) do
+      args[sig[2]] = stream:read(sig[1])
+      if sig[1] == 'f' then args[sig[2]] = tonumber(args[sig[2]]) end
+    end
+    table.insert(events, {
+      e = e,
+      args = args
+    })
+  end
+  return events
+end
+
 NetClient.messageHandlers = {
   [Net.msgCmd] = function(self, stream)
     local str = stream:read('')
@@ -109,13 +136,7 @@ NetClient.messageHandlers = {
       local p = Players:get(id)
       for _ = 1, ticks do
         local t, x, y, angle = stream:read(16, 16, 16, 9)
-        local eventCount, events = stream:read(4), {}
-        for i = 1, eventCount do
-          events[i] = stream:read(4)
-          if p.id ~= myId or (events[i] ~= 'fire' and events[i] ~= 'skill') then
-            p:handle(Player.events[events[i]], {})
-          end
-        end
+        local events = self:readEvents(p.id, stream)
         table.insert(data, {
           tick = t,
           x = x,

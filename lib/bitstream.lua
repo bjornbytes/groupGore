@@ -15,7 +15,8 @@ function Stream.create(str)
 end
 
 function Stream:write(data, len)
-  if type(data) == 'string' then
+  if type(data) == 'string' or len == 'f' then
+    data = tostring(data)
     if self.byte then
       self.str = self.str .. string.char(self.byte)
       self.byte = nil

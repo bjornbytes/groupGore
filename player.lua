@@ -13,7 +13,9 @@ Player.events = {
   [2] = 'assist',
   [3] = 'death',
   [4] = 'spawn',
-  [5] = 'hurt'
+  [5] = 'hurt',
+  [6] = 'fire',
+  [7] = 'skill'
 }
 
 
@@ -197,7 +199,7 @@ Player.on['assist'] = function(self, e)
 end
 
 Player.on['death'] = function(self, e)
-  self.ded = true
+  self.ded = 5
   self.x = -100
   self.y = -100
   self.health = 0
@@ -213,7 +215,9 @@ end
 Player.on['hurt'] = function(self, e)
   self.health = math.max(self.health - e.amount, 0)
   if self.health <= 0 then
-    self:emit('death')
+    self:emit('death', {
+      killer = e.from
+    })
     Players:get(e.from):emit('kill')
   end
 end
