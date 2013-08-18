@@ -13,17 +13,20 @@ Adrenaline.hide = false
 ----------------
 -- Data
 ----------------
+Adrenaline.drain = 20
+
 Adrenaline.effects = {}
-Adrenaline.effects.haste = .5
+Adrenaline.effects.haste = .7
 
 
 ----------------
 -- Behavior
 ----------------
 Adrenaline.update = function(self, myAdrenaline)
-	if self.health > 15 * tickRate then
-		self.health = self.health - (15 * tickRate)
-	end
+	self:emit('hurt', {
+		from = self.id,
+		amount = Adrenaline.drain * tickRate
+	})
 end
 
 return Adrenaline

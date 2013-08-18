@@ -4,7 +4,7 @@ function Buff:add(player, b, ...)
   if self:getBuff(player, b) then return end
   local buff = {}
   setmetatable(buff, {__index = b})
-  player.buffs[buff.id] = buff
+  player.buffs[buff.code] = buff
   
   for fn, x in pairs(buff.effects or {}) do
     self[fn](self, player, false, x, ...)
@@ -21,7 +21,7 @@ function Buff:remove(player, b, ...)
     self[fn](self, player, true, x, ...)
   end
   
-  player.buffs[buff.id] = nil
+  player.buffs[buff.code] = nil
   f.exe(buff.deactivate, player, buff)
 end
 

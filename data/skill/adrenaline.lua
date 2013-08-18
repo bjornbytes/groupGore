@@ -14,7 +14,6 @@ Adrenaline.type = 'skill'
 -- Data
 ----------------
 Adrenaline.target = 'none'
-Adrenaline.drain = 10
 Adrenaline.cooldown = 6
 
 

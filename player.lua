@@ -56,6 +56,8 @@ function Player:activate()
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
+  table.clear(self.buffs)
+  table.clear(self.events)
 end
 
 function Player:deactivate()
@@ -207,9 +209,7 @@ end
 
 Player.on['spawn'] = function(self, e)
   self.ded = false
-  self.x = map.spawn[self.team].x
-  self.y = map.spawn[self.team].y
-  self.health = self.maxHealth
+  self:activate()
 end
 
 Player.on['hurt'] = function(self, e)
