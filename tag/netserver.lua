@@ -15,7 +15,10 @@ function NetServer:update()
     if not client and id == Net.msgJoin then
       self.messageHandlers[id](self, ip, port, stream)
     else
-      self.messageHandlers[id](self, self:lookup(ip, port), stream)
+      local client = self:lookup(ip, port)
+      if client then
+        self.messageHandlers[id](self, self:lookup(ip, port), stream)
+      end
     end
   end)
   

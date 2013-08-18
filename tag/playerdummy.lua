@@ -17,9 +17,16 @@ function PlayerDummy:trace(data)
     if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
     
     local dst = (i == tick) and self or (Players.history[self.id][i] or self)
-    table.merge(table.except(data[idx], {'tick'}), dst)
+    table.merge(table.except(data[idx], {'tick', 'events'}), dst)
     if Players.history[self.id][i - 1] then
       dst.angle = math.anglerp(dst.angle, Players.history[self.id][i - 1].angle, .5)
+    end
+    
+    if data[idx].tick == i then
+      table.merge({events = data[idx].events}, dst)
+      for _, event in pairs(dst.events) do
+        self:handle(event.e, event.args)
+      end
     end
   end
 end

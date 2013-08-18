@@ -22,7 +22,7 @@ Shotgun.activate = function(self)
     
     local targets = {}
     Players:with(function(p)
-      return p.team ~= self.owner.team and math.hloca(self.x, self.y, endx, endy, p.x, p.y, p.size)
+      return p.active and p.team ~= self.owner.team and math.hloca(self.x, self.y, endx, endy, p.x, p.y, p.size)
     end, function(p)
       table.insert(targets, {
         id = p.id,
