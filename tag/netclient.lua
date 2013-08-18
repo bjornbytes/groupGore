@@ -143,7 +143,7 @@ NetClient.messageHandlers = {
           y = y,
           events = events
         })
-        if id ~= myId then data[#data].angle = math.rad(angle) p.updatedAt = t end
+        if id ~= myId then data[#data].angle = math.rad(angle) end
       end
       p:trace(data)
       CollisionOvw:refreshPlayer(p)
