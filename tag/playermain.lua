@@ -98,7 +98,7 @@ function PlayerMain:trace(data)
     
     local dst = (i == tick) and self or (Players.history[self.id][i] or self)
     if data[idx].x ~= math.floor(dst.x + .5) or data[idx].y ~= math.floor(dst.y + .5) then
-      if math.distance(dst.x, dst.y, data[idx].x, data[idx].y) > 64 then
+      if math.distance(dst.x, dst.y, data[idx].x, data[idx].y) > 32 then
         dst.x = data[idx].x
         dst.y = data[idx].y
       else
@@ -108,7 +108,7 @@ function PlayerMain:trace(data)
       for j = i + 1, tick do
         local state = table.copy(Players.history[self.id][j - 1])
         local dst = (j == tick) and self or Players.history[self.id][j]
-        state:update()
+        state:move()
         dst.x = math.lerp(dst.x, state.x, .25)
         dst.y = math.lerp(dst.y, state.y, .25)
       end
