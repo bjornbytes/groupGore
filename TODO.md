@@ -18,14 +18,11 @@ Server
 
 Gameplay
 --------
-- Event Network
 - Targeted Skills (Player, Enemy, Location)
-- Buff System Upgrade
 - Assist System
 - Multikills
 - Killstreaks
 - Fancy Callouts (No-scope, Survived with 1% HP, Used last bullet, etc.)
-- Movespeed Acceleration
 - Turnspeed Smoothing
 
 Map Logic
