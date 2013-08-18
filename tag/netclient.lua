@@ -5,6 +5,7 @@ function NetClient:activate()
   local _, port = Udp.udp:getsockname()
   
   self.clients = {}
+  self.lastMessage = tick
   
   Net:begin(Net.msgJoin)
      :write(username)
@@ -29,7 +30,14 @@ function NetClient:update()
     local stream = Stream.create(data)
     local id = stream:read(4)
     self.messageHandlers[id](self, stream)
+    self.lastMessage = tick
   end)
+  if tick - self.lastMessage > 3 / tickRate then
+    print('Lost connection to server')
+    Overwatch:unload()
+    Overwatch = Menu
+    Overwatch:load()
+  end
 end
 
 function NetClient:send()
@@ -85,6 +93,8 @@ NetClient.messageHandlers = {
       
       Map:load('jungleCarnage')
       
+      self.lastMessage = tick
+      
       for i = 1, ct do
         local id, name, class, team = stream:read(4, '', 4, 1)
         
@@ -114,8 +124,15 @@ NetClient.messageHandlers = {
   
   [Net.msgLeave] = function(self, stream)
     local id = stream:read(4)
-    Players:deactivate(id)
-    self.clients[id] = nil
+    if id == 0 then
+      print('Server shut down')
+      Overwatch:unload()
+      Overwatch = Menu
+      Overwatch:load()
+    else
+      Players:deactivate(id)
+      self.clients[id] = nil
+    end
   end,
   
   [Net.msgClass] = function(self, stream)

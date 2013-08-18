@@ -19,7 +19,7 @@ while true do
     love.event.pump()
       for e, a, b, c, d in love.event.poll() do
       if e == 'quit' then
-        f.exe(love.quit)
+        Server:quit()
         love.audio.stop()
         return
       end
