@@ -39,7 +39,7 @@ Shotgun.update = function(self, myShotgun)
     myShotgun.clip = amt
     myShotgun.ammo = myShotgun.ammo - amt
   end)
-  if self.input.slot.reload and myShotgun.timers.reload == 0 then myShotgun.timers.reload = Shotgun.reload end
+  if self.input.slot.reload and myShotgun.clip < Shotgun.clip and myShotgun.timers.reload == 0 then myShotgun.timers.reload = Shotgun.reload end
 end
 
 Shotgun.canFire = function(self, myShotgun)
