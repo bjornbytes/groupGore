@@ -1,11 +1,19 @@
 Hud = {}
 
-Hud.consoleOpen = false
-Hud.consoleInput = ''
-Hud.consoleResult = ''
-Hud.consoleResultAlpha = 0
-Hud.consoleFont = love.graphics.newFont('media/fonts/lucon.ttf', 12)
-Hud.consoleResultFont = love.graphics.newFont('media/fonts/BebasNeue.ttf', 40)
+function Hud:init()
+	Hud.consoleOpen = false
+	Hud.consoleInput = ''
+	Hud.consoleResult = ''
+	Hud.consoleResultAlpha = 0
+	Hud.consoleFont = love.graphics.newFont('media/fonts/lucon.ttf', 12)
+	Hud.consoleResultFont = love.graphics.newFont('media/fonts/BebasNeue.ttf', 40)
+	
+	Hud.health = {}
+	Hud.health.canvas = love.graphics.newCanvas(160, 160)
+	Hud.health.back = love.graphics.newImage('media/graphics/healthBack.png')
+	Hud.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
+	Hud.health.red = love.graphics.newImage('media/graphics/healthRed.png')
+end
 
 function Hud:update()
 	self.consoleResultAlpha = math.min(self.consoleResultAlpha + (tickRate / .35), 1)
@@ -13,6 +21,14 @@ end
 
 function Hud:draw()
 	love.graphics.reset()
+	
+	self.health.canvas:clear()
+	self.health.canvas:renderTo(function()
+		love.graphics.draw(self.health.back, 8, 8)
+		love.graphics.draw(self.health.red, 4, 13)
+		love.graphics.draw(self.health.glass, -4, -4)
+	end)
+	love.graphics.draw(self.health.canvas, 4, 4)
 	
 	if self:classSelect() then
 		love.graphics.setFont(self.consoleFont)

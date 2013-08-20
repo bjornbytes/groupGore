@@ -2,6 +2,7 @@ Game = {}
 
 function Game:load()
   Net:load('client')
+  Hud:init()
 end
 
 function Game:unload()
