@@ -17,18 +17,26 @@ end
 
 function Hud:update()
 	self.consoleResultAlpha = math.min(self.consoleResultAlpha + (tickRate / .35), 1)
+
+	if myId and Players:get(myId).active then
+		self.health.canvas:clear()
+		self.health.canvas:renderTo(function()
+			love.graphics.draw(self.health.red, 4, 13)
+			love.graphics.setBlendMode('subtractive')
+			love.graphics.setColor(255, 255, 255, 255)
+			local p = Players:get(myId)
+			love.graphics.arc('fill', 80, 80, 80, 0, 0 - ((2 * math.pi) * (1 - (p.health / p.maxHealth))))
+			love.graphics.setBlendMode('alpha')
+		end)
+	end
 end
 
 function Hud:draw()
 	love.graphics.reset()
 	
-	self.health.canvas:clear()
-	self.health.canvas:renderTo(function()
-		love.graphics.draw(self.health.back, 8, 8)
-		love.graphics.draw(self.health.red, 4, 13)
-		love.graphics.draw(self.health.glass, -4, -4)
-	end)
+	love.graphics.draw(self.health.back, 12, 12)
 	love.graphics.draw(self.health.canvas, 4, 4)
+	love.graphics.draw(self.health.glass, 0, 0)
 	
 	if self:classSelect() then
 		love.graphics.setFont(self.consoleFont)
