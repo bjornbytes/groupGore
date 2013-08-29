@@ -21,6 +21,7 @@ function Hud:update()
 	if myId and Players:get(myId).active then
 		self.health.canvas:clear()
 		self.health.canvas:renderTo(function()
+			love.graphics.reset()
 			love.graphics.draw(self.health.red, 4, 13)
 			love.graphics.setBlendMode('subtractive')
 			love.graphics.setColor(255, 255, 255, 255)
@@ -37,6 +38,59 @@ function Hud:draw()
 	love.graphics.draw(self.health.back, 12, 12)
 	love.graphics.draw(self.health.canvas, 4, 4)
 	love.graphics.draw(self.health.glass, 0, 0)
+	
+	local p = Players:get(myId)
+	if p and p.active then
+		local wep, skl, pas = {}, {}, {}
+		for i = 1, 5 do
+			if p.slots[i].type == 'weapon' then wep[#wep + 1] = p.slots[i]
+			elseif p.slots[i].type == 'skill' then skl[#skl + 1] = p.slots[i]
+			else pas[#pas + 1] = p.slots[i] end
+		end
+
+		local ww = math.max(Hud.consoleFont:getWidth('weapon'), 52 * #wep)
+		local sw = math.max(Hud.consoleFont:getWidth('skill'), 52 * #skl)
+		local pw = math.max(Hud.consoleFont:getWidth('passive'), 52 * #pas)
+		print(love.graphics.getLineWidth())
+		local w = 4 + ww + 16 + 4 + sw + 16 + 4 + pw
+		
+		local x = love.graphics.getWidth() / 2 - math.floor((w / 2) + .5)
+		love.graphics.setColor(0, 0, 0, 200)
+		love.graphics.rectangle('fill', x, 0, ww + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		love.graphics.setColor(80, 80, 80, 255)
+		love.graphics.rectangle('line', x, -1, ww + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		for i = 1, #wep do
+			if p.slots[p.input.slot.weapon] == wep[i] then love.graphics.setColor(255, 255, 255, 255)
+			else love.graphics.setColor(80, 80, 80, 255) end
+			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
+			love.graphics.setColor(80, 80, 80, 255)
+		end
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.printf('weapon', x + 4, 2, ww, 'center')
+		x = x + (ww + 8 + 16)
+		love.graphics.setColor(0, 0, 0, 200)
+		love.graphics.rectangle('fill', x, 0, sw + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		love.graphics.setColor(80, 80, 80, 255)
+		love.graphics.rectangle('line', x, -1, sw + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		for i = 1, #skl do
+			if p.slots[p.input.slot.skill] == skl[i] then love.graphics.setColor(255, 255, 255, 255)
+			else love.graphics.setColor(80, 80, 80, 255) end
+			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
+			love.graphics.setColor(80, 80, 80, 255)
+		end
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.printf('skill', x + 4, 2, sw, 'center')
+		x = x + (sw + 8 + 16)
+		love.graphics.setColor(0, 0, 0, 200)
+		love.graphics.rectangle('fill', x, 0, pw + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		love.graphics.setColor(80, 80, 80, 255)
+		love.graphics.rectangle('line', x, -1, pw + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		for i = 1, #pas do
+			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
+		end
+		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.printf('passive', x + 4, 2, pw, 'center')
+	end
 	
 	if self:classSelect() then
 		love.graphics.setFont(self.consoleFont)
