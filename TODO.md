@@ -3,7 +3,6 @@ gG todo
 
 Networking
 ----------
-- Extrapolation
 - Lag Compensation
 - Delta Compression
 - More frequent network polling
@@ -13,7 +12,6 @@ Server
 - Console commands
 - Run as listen server
 - Statistics/HUD
-- Crash/Shutdown Message
 - Config File
 
 Gameplay

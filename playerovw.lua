@@ -82,11 +82,12 @@ function Players:draw()
         table.interpolate(previous, current, tickDelta / tickRate):draw()
       end
     else
-      local t = tick - (interp / tickRate)
+      local t = math.min(tick - (interp / tickRate), current.lastUpdated)
+      local z = (tickDelta / tickRate) + math.max(t - current.lastUpdated, 0)
       local previous = self.history[current.id][t - 1]
       current = self.history[current.id][t]
       if current and previous then
-        table.interpolate(previous, current, tickDelta / tickRate):draw()
+        table.interpolate(previous, current, z):draw()
       end
     end
   end)
