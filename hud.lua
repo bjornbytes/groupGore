@@ -51,7 +51,6 @@ function Hud:draw()
 		local ww = math.max(Hud.consoleFont:getWidth('weapon'), 52 * #wep)
 		local sw = math.max(Hud.consoleFont:getWidth('skill'), 52 * #skl)
 		local pw = math.max(Hud.consoleFont:getWidth('passive'), 52 * #pas)
-		print(love.graphics.getLineWidth())
 		local w = 4 + ww + 16 + 4 + sw + 16 + 4 + pw
 		
 		local x = love.graphics.getWidth() / 2 - math.floor((w / 2) + .5)

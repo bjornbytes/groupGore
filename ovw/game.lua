@@ -10,7 +10,6 @@ function Game:unload()
 end
 
 function Game:update()
-  Net:update()
   Players:update()
   Spells:update()
   View:update()
