@@ -106,6 +106,7 @@ NetServer.messageHandlers = {
     local t = love.timer.getMicroTime()
     client.ping = math.floor((t - client.pingTime) * 1000 + .5)
     client.pingTime = -t
+    print(client.ping)
   end,
   
   [Net.msgJoin] = function(self, ip, port, stream)

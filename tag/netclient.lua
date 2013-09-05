@@ -83,6 +83,7 @@ NetClient.messageHandlers = {
   [Net.msgPing] = function(self, stream)
     local t = stream:read(16)
     Net:begin(Net.msgPing)
+       :write(t, 16)
        :send()
   end,
   

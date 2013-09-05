@@ -78,7 +78,7 @@ function love.run()
       end
     end
     
-    if Overwatch == Game then Net:update() end
+   if Overwatch == Game then Net:update() end
 
     syncDelta = syncDelta + delta
     if syncDelta >= syncRate then
