@@ -88,6 +88,7 @@ function PlayerServer:trace(data)
     
     local state = table.copy(Players.history[self.id][i - 1] or Players.history[self.id][i])
     table.merge(table.except(data[idx], {'tick'}), state)
+    assert(state, data[idx])
     state:move()
     state:turn()
     local dst = (i == tick) and self or Players.history[self.id][i]

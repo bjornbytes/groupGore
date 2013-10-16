@@ -21,7 +21,7 @@ function Hud:update()
 	if myId and Players:get(myId).active then
 		self.health.canvas:clear()
 		self.health.canvas:renderTo(function()
-			love.graphics.reset()
+			love.graphics.setColor(255, 255, 255, 255)
 			love.graphics.draw(self.health.red, 4, 13)
 			love.graphics.setBlendMode('subtractive')
 			love.graphics.setColor(255, 255, 255, 255)
