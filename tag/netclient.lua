@@ -152,6 +152,7 @@ NetClient.messageHandlers = {
       local id, ticks = stream:read(4, 6)
       local data = {}
       local p = Players:get(id)
+      assert(p and p.trace, 'no trace for ' .. id)
       for _ = 1, ticks do
         local t, x, y, angle = stream:read(16, 16, 16, 9)
         local events = self:readEvents(p.id, stream)
@@ -161,7 +162,7 @@ NetClient.messageHandlers = {
           y = y,
           events = events
         })
-        if id ~= myId then data[#data].angle = math.rad(angle) p.lastUpdated = t end
+        if id ~= myId then data[#data].angle = math.rad(angle) end
       end
       p:trace(data)
       CollisionOvw:refreshPlayer(p)
