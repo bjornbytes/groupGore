@@ -20,6 +20,19 @@ function Map:load(name)
   _G['map'] = map
 end
 
+
+local function getz(z)
+	return (.8 * z) ^ (1 + (.0008 * z))
+end
+
+local function getx(x)
+	return (View.x + View.w / 2 - x) / 500
+end
+
+local function gety(y)
+	return (View.y + View.h / 2 - y) / 500
+end
+
 function Map:draw()
   love.graphics.reset()
   
@@ -32,6 +45,12 @@ function Map:draw()
   love.graphics.setColor(0, 0, 0)
   for _, wall in pairs(map.walls) do
     love.graphics.rectangle('fill', wall.x, wall.y, wall.w, wall.h)
+		
+		local z = getz(64)
+		local x, y = wall.x + wall.w / 2, wall.y + wall.h / 2
+		love.graphics.setColor(255, 0, 0)
+		love.graphics.point(x - (z * getx(x)), y - (z * gety(y)))
+		love.graphics.setColor(0, 0, 0)
   end
   love.graphics.setColor(255, 255, 255)
 end
