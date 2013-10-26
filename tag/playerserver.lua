@@ -87,12 +87,13 @@ function PlayerServer:trace(data)
     if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
     
     local state = table.copy(Players.history[self.id][i - 1] or Players.history[self.id][i])
-    table.merge(table.except(data[idx], {'tick'}), state)
-    assert(state, data[idx])
-    state:move()
-    state:turn()
-    local dst = (i == tick) and self or Players.history[self.id][i]
-    table.merge(table.except(data[idx], {'tick'}), dst)
+		if state then
+			table.merge(table.except(data[idx], {'tick'}), state)
+			state:move()
+			state:turn()
+			local dst = (i == tick) and self or Players.history[self.id][i]
+			table.merge(table.except(data[idx], {'tick'}), dst)
+		end
   end
 end
 
