@@ -119,10 +119,10 @@ end
 
 function Hud:mousereleased(x, y, button)
 	if self:classSelect() and math.inside(x, y, 110, 125, 64, 64) and button == 'l' then
-		Net:begin(Net.msgClass)
-		   :write(1, 4)
-		   :write(myId == 1 and 0 or 1, 1)
-		   :send()
+		Net:send(Net.msgClass, Net.server, {
+			class = 1,
+			team = 0
+		})
 	end
 end
 

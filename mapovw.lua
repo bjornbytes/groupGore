@@ -5,7 +5,7 @@ function Map:load(name)
   local map  = love.filesystem.load(dir .. name .. '.lua')()
   map.graphics = {}
   
-  for _, file in ipairs(love.filesystem.enumerate(dir)) do
+  for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
     if file:match('\.png$') then
       local image = file:gsub('\.png$', '')
       map.graphics[image] = love.graphics.newImage(dir .. file)
@@ -34,7 +34,7 @@ local function gety(y)
 end
 
 function Map:draw()
-  love.graphics.reset()
+	love.graphics.reset()
   
   for i = 0, map.width, map.graphics.background:getWidth() do
     for j = 0, map.height, map.graphics.background:getHeight() do

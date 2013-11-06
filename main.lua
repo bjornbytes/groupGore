@@ -1,10 +1,10 @@
+require 'enet'
 require './lib/util'
 require './lib/core'
 
-require './lib/bitstream'
+require './lib/stream'
 require './lib/linkedlist'
 require './lib/message'
-require './lib/net'
 
 require './ovw/menu'
 require './ovw/game'

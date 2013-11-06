@@ -15,5 +15,5 @@ function Server:sync()
 end
 
 function Server:quit()
-	Net:begin(Net.msgLeave):write(0, 4):send(Net.clients)
+	-- Tell people you're leaving.
 end

@@ -140,6 +140,6 @@ end
 
 local dir
 dir = '/tag'
-for _, file in ipairs(love.filesystem.enumerate(dir)) do
+for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
   if file:match('player.*\.lua') then love.filesystem.load(dir .. '/' .. file)() end
 end

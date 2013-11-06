@@ -20,7 +20,7 @@ function Menu:update()
   elseif love.keyboard.isDown('c') then
     serverIp = self.ip
     serverPort = 6061
-    username = 'tie372' .. math.floor(love.timer.getMicroTime()) % 100
+    username = 'tie372' .. math.floor(love.timer.getTime()) % 100
     
     Overwatch:unload()
     Overwatch = Game

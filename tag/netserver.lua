@@ -1,72 +1,29 @@
 NetServer = {}
 
+NetServer.signatures = {
+	outbound = {
+		[Net.msgJoin] = {{'id', '4bits'}},
+		[Net.msgClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}}
+	}
+}
+
+NetServer.receive = {}
+NetServer.receive[Net.msgJoin] = function(self, data, peer)
+	local id = peer:index()
+	self.clients[id] = {}
+	self:send(Net.msgJoin, peer, {id = id})
+end
+NetServer.receive[Net.msgClass] = function(self, data, peer)
+	self:broadcast(Net.msgClass, {
+		id = peer:index(),
+		class = data.class,
+		team = data.team
+	})
+end
+
 function NetServer:activate()
-  Udp:listen(6061)
-  
-  self.clients = {}
-  self.clientsByIp = {}
-end
-
-function NetServer:update()
-  Udp:receive(function(data, ip, port)
-    local stream = Stream.create(data)
-    local id, client = stream:read(4), self:lookup(ip, port)
-    
-    if not client and id == Net.msgJoin then
-      self.messageHandlers[id](self, ip, port, stream)
-    else
-      local client = self:lookup(ip, port)
-      if client then
-        self.messageHandlers[id](self, self:lookup(ip, port), stream)
-      end
-    end
-  end)
-  
-  for id, client in pairs(self.clients) do
-    local t = love.timer.getMicroTime()
-    if client.pingTime > 0 and t - client.pingTime > 1 then
-      self:removeClient(client)
-    elseif client.pingTime < 0 and client.pingTime + t > 1 then
-      Net:begin(Net.msgPing)
-         :write(tick, 16)
-         :send(client.id)
-      
-      client.pingTime = t
-    end
-  end
-end
-
-function NetServer:send(clients, except)
-  self.message:write('')
-  if type(clients) == 'table' then
-    for id, client in pairs(clients) do
-      if id ~= except then
-        Udp:send(self.message, client.ip, client.port)
-      end
-    end
-  else
-    local id = clients
-    Udp:send(self.message, self.clients[id].ip, self.clients[id].port)
-  end
-  self.message = nil
-end
-
-function NetServer:lookup(ip, port)
-  return self.clientsByIp[ip .. port]
-end
-
-function NetServer:removeClient(client)
-  for k, v in pairs(self.clientsByIp) do
-    if v == client then self.clientsByIp[k] = nil break end
-  end
-  if Players:get(client.id).active then
-    Players:deactivate(client.id)
-  end
-  Net:begin(Net.msgLeave)
-     :write(client.id, 4)
-     :send(self.clients, client.id)
-     
-  self.clients[client.id] = nil
+	self:listen(6061)
+	self.clients = {}
 end
 
 function NetServer:writeEvents(events)
@@ -94,20 +51,6 @@ function NetServer:writeEvents(events)
 end
 
 NetServer.messageHandlers = {
-  [Net.msgCmd] = function(self, client, stream)
-    local str = stream:read('')
-    loadstring(str)()
-    Net:begin(Net.msgCmd)
-       :write(str)
-       :send(Net.clients)
-  end,
-  
-  [Net.msgPing] = function(self, client, stream)
-    local t = love.timer.getMicroTime()
-    client.ping = math.floor((t - client.pingTime) * 1000 + .5)
-    client.pingTime = -t
-  end,
-  
   [Net.msgJoin] = function(self, ip, port, stream)
     local name, listen = stream:read('', 16)
     local ct = 0

@@ -31,7 +31,7 @@ function Game:draw()
 end
 
 function Game:quit()
-  Net:begin(Net.msgLeave):send()
+  -- Net:begin(Net.msgLeave):send()
 end
 
 function Game.mousepressed(...)

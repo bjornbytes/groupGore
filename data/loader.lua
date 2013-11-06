@@ -3,7 +3,7 @@ data.load = function()
   local function load(dir, type, fn)
     data[type] = {}
     local id = 1
-    for _, file in ipairs(love.filesystem.enumerate(dir)) do
+    for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
       if file:match('\.lua') then
         local obj = love.filesystem.load(dir .. '/' .. file)()
         obj.id = id

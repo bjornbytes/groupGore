@@ -1,50 +1,40 @@
 NetClient = {}
 
+NetClient.signatures = {
+	outbound = {
+		[Net.msgJoin] = {{'username', 'string'}},
+		[Net.msgClass] = {{'class', '4bits'}, {'team', '1bit'}},
+	}
+}
+
+NetClient.receive = {}
+NetClient.receive[Net.msgJoin] = function(self, data, peer)
+	myId = data.id
+	Map:load('jungleCarnage')
+end
+
+NetClient.receive[Net.msgClass] = function(self, data, peer)
+	if not Players:get(data.id).active then
+		local tag = data.id == myId and 'main' or 'dummy'
+		Players:activate(data.id, tag, data.class, data.team)
+	else
+		Players:setClass(data.id, data.class, data.team)
+	end
+end
+
+function NetClient:connect(peer)
+	self.server = peer
+	self:send(Net.msgJoin, Net.server, {
+		username = username
+	})
+end
+
 function NetClient:activate()
-  Udp:listen(0)
-  local _, port = Udp.udp:getsockname()
-  
-  self.clients = {}
-  self.lastMessage = tick
-  
-  Net:begin(Net.msgJoin)
-     :write(username)
-     :write(port, 16)
-     :send()
-  
-  timer.start()
-  while not myId do
-    Net:update()
-    if timer.delta() > 2 then
-      print('Unable to connect to server')
-      Overwatch:unload()
-      Overwatch = Menu
-      Overwatch:load()
-      return
-    end
-  end
-end
-
-function NetClient:update()
-  Udp:receive(function(data, ip, port)
-    local stream = Stream.create(data)
-    local id = stream:read(4)
-    self.messageHandlers[id](self, stream)
-    self.lastMessage = tick
-  end)
-  if tick - self.lastMessage > 3 / tickRate then
-    print('Lost connection to server')
-    Overwatch:unload()
-    Overwatch = Menu
-    Overwatch:load()
-  end
-end
-
-function NetClient:send()
-  assert(self.message)
-  self.message:write('')
-  Udp:send(self.message, serverIp, serverPort)
-  self.message = nil
+  self:connectTo('localhost', 6061)
+  local port = self.host:socket_get_address():match(':(%d+)')
+	while not myId do
+		self:update()
+	end
 end
 
 function NetClient:readEvents(id, stream)
@@ -75,18 +65,6 @@ function NetClient:readEvents(id, stream)
 end
 
 NetClient.messageHandlers = {
-  [Net.msgCmd] = function(self, stream)
-    local str = stream:read('')
-    loadstring(str)()
-  end,
-  
-  [Net.msgPing] = function(self, stream)
-    local t = stream:read(16)
-    Net:begin(Net.msgPing)
-       :write(t, 16)
-       :send()
-  end,
-  
   [Net.msgJoin] = function(self, stream)
     if not myId then
       myId, tick = stream:read(4, 16)
@@ -137,13 +115,6 @@ NetClient.messageHandlers = {
   end,
   
   [Net.msgClass] = function(self, stream)
-    local id, class, team = stream:read(4, 4, 1)
-    if not Players:get(id).active then
-      local tag = id == myId and 'main' or 'dummy'
-      Players:activate(id, tag, class, team)
-    else
-      Players:setClass(id, class, team)
-    end
   end,
   
   [Net.msgSync] = function(self, stream)
