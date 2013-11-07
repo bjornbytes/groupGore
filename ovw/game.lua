@@ -18,7 +18,7 @@ function Game:update()
 end
 
 function Game:sync()
-  Players:sync()
+  Net:sync()
 end
 
 function Game:draw()
@@ -44,12 +44,12 @@ function Game.mousereleased(...)
   elseif Players:mousereleased(...) then return end
 end
 
-function Game.keypressed(...)
-  if Hud:keypressed(...) then return
-  elseif Players:keypressed(...) then return end
+function Game.keypressed(key)
+  if Hud:keypressed(key) then return
+  elseif Players:keypressed(key) then return end
 end
 
-function Game.keyreleased(...)
-  if Hud:keyreleased(...) then return
-  elseif Players:keyreleased(...) then return end
+function Game.keyreleased(key)
+  if Hud:keyreleased(key) then return
+  elseif Players:keyreleased(key) then return end
 end

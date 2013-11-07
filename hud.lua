@@ -126,7 +126,7 @@ function Hud:mousereleased(x, y, button)
 	end
 end
 
-function Hud:keypressed(key, code)
+function Hud:keypressed(key)
 	if key == '`' then
 		self.consoleOpen = not self.consoleOpen
 		love.keyboard.setKeyRepeat(self.consoleOpen)
@@ -153,7 +153,7 @@ function Hud:keypressed(key, code)
 		end
 		self.consoleInput = ''
 		self.consoleResultAlpha = 0
-	elseif code >= 30 and self.consoleOpen then
+	elseif key:byte(1) >= 30 and self.consoleOpen then
 		self.consoleInput = self.consoleInput .. string.char(code)
 		return true
 	elseif key == 'f5' then

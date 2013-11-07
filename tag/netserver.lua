@@ -8,11 +8,13 @@ NetServer.signatures = {
 }
 
 NetServer.receive = {}
+
 NetServer.receive[Net.msgJoin] = function(self, data, peer)
 	local id = peer:index()
 	self.clients[id] = {}
 	self:send(Net.msgJoin, peer, {id = id})
 end
+
 NetServer.receive[Net.msgClass] = function(self, data, peer)
 	self:broadcast(Net.msgClass, {
 		id = peer:index(),
@@ -21,9 +23,24 @@ NetServer.receive[Net.msgClass] = function(self, data, peer)
 	})
 end
 
+NetServer.receive[Net.msgSync] = function(self, data, peer)
+	table.print(data.events)
+end
+
 function NetServer:activate()
 	self:listen(6061)
 	self.clients = {}
+end
+
+function NetServer:sync()
+	local data = {}
+
+	local needsSync = function(p) return p.active and p.sync and table.count(p.syncBuffer) > 0 end
+	Players:with(needsSync, function(p)
+		for _, s in ipairs(p:sync()) do data[#data + 1] = s end
+	end)
+
+	if #data > 0 then self:broadcast(Net.msgSync, data) end
 end
 
 function NetServer:writeEvents(events)
@@ -97,8 +114,6 @@ NetServer.messageHandlers = {
        :write(client.name)
        :send(self.clients, client.id)
   end,
-  
-  [Net.msgLeave] = NetServer.removeClient,
   
   [Net.msgClass] = function(self, client, stream)
     local class, team = stream:read(4, 1)

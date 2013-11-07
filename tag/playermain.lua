@@ -53,28 +53,30 @@ end
 function PlayerMain:sync()
   local ct = table.count(self.syncBuffer)
   if self.syncBuffer[tick + 1] then ct = ct - 1 end
-  Net:write(ct, 6)
-  for i = self.syncFrom, tick do
+  local data = {}
+	for i = self.syncFrom, tick do
     if self.syncBuffer[i] then
       local input = Players.history[self.id][i].input
-      Net:write(i, 16)
-         :write(input.wasd.w, 1)
-         :write(input.wasd.a, 1)
-         :write(input.wasd.s, 1)
-         :write(input.wasd.d, 1)
-         :write(math.floor(input.mouse.x + .5), 16)
-         :write(math.floor(input.mouse.y + .5), 16)
-         :write(input.mouse.l, 1)
-         :write(input.mouse.r, 1)
-         :write(input.slot.weapon, 3)
-         :write(input.slot.skill, 3)
-         :write(input.slot.reload, 1)
-      
+			data[#data + 1] = {
+				tick = i,
+				w = input.wasd.w and 1 or 0,
+				a = input.wasd.a and 1 or 0,
+				s = input.wasd.s and 1 or 0,
+				d = input.wasd.d and 1 or 0,
+				mx = math.floor(input.mouse.x + .5),
+				my = math.floor(input.mouse.y + .5),
+				l = input.mouse.l and 1 or 0,
+				r = input.mouse.r and 1 or 0,
+				wep = input.slot.weapon,
+				skl = input.slot.skill,
+				rel = input.slot.reload and 1 or 0
+			}
       self.syncBuffer[i] = nil
     end
   end
   
   self.syncFrom = tick + 1
+	return data
 end
 
 function PlayerMain:fade()

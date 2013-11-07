@@ -125,13 +125,15 @@ function Stream.pack(data, signature)
 
 	for _, sig in ipairs(signature) do
 		local key, kind = sig[1], sig[2]
+		assert(data[key], 'key "' .. key .. '" does not exist')
 		if type(kind) == 'table' then
-			local count = table.count(data[key])
+			local count = #data[key]
 			self:writeBits(count, 8)
 			for i = 1, count do
 				local subdata = data[key][i]
 				for _, subsig in ipairs(kind) do
 					local subkey, subkind = subsig[1], subsig[2]
+					assert(subdata[subkey], 'subkey "' .. subkey .. '" does not exist')
 					self:write(subdata[subkey], subkind)
 				end
 			end

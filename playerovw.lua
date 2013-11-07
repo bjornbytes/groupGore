@@ -57,22 +57,6 @@ function Players:update()
   end)
 end
 
-function Players:sync()
-  local toSync = {}
-  for _, id in ipairs(self.active) do
-    local p = Players:get(id)
-    if p.sync and table.count(p.syncBuffer) > 0 then table.insert(toSync, id) end
-  end
-  if #toSync == 0 then return end
-  
-  Net:begin(Net.msgSync)
-     :write(#toSync, 4)
-     
-  self:with(toSync, f.ego('sync'))
-
-  Net:send(Net.clients)
-end
-
 function Players:draw()
   self:with(self.active, function(current)
     if current.ded then return end

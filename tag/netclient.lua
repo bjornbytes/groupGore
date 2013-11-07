@@ -4,6 +4,20 @@ NetClient.signatures = {
 	outbound = {
 		[Net.msgJoin] = {{'username', 'string'}},
 		[Net.msgClass] = {{'class', '4bits'}, {'team', '1bit'}},
+		[Net.msgSync] = {{'events', {
+			{'tick', '16bits'},
+			{'w', '1bit'},
+			{'a', '1bit'},
+			{'s', '1bit'},
+			{'d', '1bit'},
+			{'mx', '16bits'},
+			{'my', '16bits'},
+			{'l', '1bit'},
+			{'r', '1bit'},
+			{'wep', '3bits'},
+			{'skl', '3bits'},
+			{'rel', '1bit'}
+		}}}
 	}
 }
 
@@ -34,6 +48,13 @@ function NetClient:activate()
   local port = self.host:socket_get_address():match(':(%d+)')
 	while not myId do
 		self:update()
+	end
+end
+
+function NetClient:sync()
+	local p = Players:get(myId)
+	if p and p.active and p.sync and table.count(p.syncBuffer) > 0 then
+		self:send(Net.msgSync, Net.server, {events = p:sync()})
 	end
 end
 
@@ -101,20 +122,7 @@ NetClient.messageHandlers = {
     end
   end,
   
-  [Net.msgLeave] = function(self, stream)
-    local id = stream:read(4)
-    if id == 0 then
-      print('Server shut down')
-      Overwatch:unload()
-      Overwatch = Menu
-      Overwatch:load()
-    else
-      Players:deactivate(id)
-      self.clients[id] = nil
-    end
-  end,
-  
-  [Net.msgClass] = function(self, stream)
+	[Net.msgClass] = function(self, stream)
   end,
   
   [Net.msgSync] = function(self, stream)

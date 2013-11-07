@@ -11,7 +11,7 @@ function Server:update()
 end
 
 function Server:sync()
-  Players:sync()
+  Net:sync()
 end
 
 function Server:quit()
