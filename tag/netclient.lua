@@ -4,7 +4,7 @@ NetClient.signatures = {
 	outbound = {
 		[Net.msgJoin] = {{'username', 'string'}},
 		[Net.msgClass] = {{'class', '4bits'}, {'team', '1bit'}},
-		[Net.msgSync] = {{'events', {
+		[Net.msgSync] = {{'updates', {
 			{'tick', '16bits'},
 			{'w', '1bit'},
 			{'a', '1bit'},
@@ -17,7 +17,8 @@ NetClient.signatures = {
 			{'wep', '3bits'},
 			{'skl', '3bits'},
 			{'rel', '1bit'}
-		}}}
+		}}},
+		[Net.msgSnapshot] = {}
 	}
 }
 
@@ -33,6 +34,34 @@ NetClient.receive[Net.msgClass] = function(self, data, peer)
 		Players:activate(data.id, tag, data.class, data.team)
 	else
 		Players:setClass(data.id, data.class, data.team)
+	end
+end
+
+NetClient.receive[Net.msgSync] = function(self, data, peer)
+	local playerUpdates = {}
+
+	for _, update in ipairs(data.updates) do
+		playerUpdates[update.id] = playerUpdates[update.id] or {}
+		table.insert(playerUpdates[update.id], {
+			tick = update.tick,
+			x = update.x,
+			y = update.y
+		})
+	end
+
+	for id, data in pairs(playerUpdates) do
+		Players:get(id):trace(data)
+	end
+end
+
+NetClient.receive[Net.msgSnapshot] = function(self, data, peer)
+	table.print(data)
+	tick = data.tick
+	Map:load(data.map)
+	for _, client in ipairs(data.clients) do
+		if client.class > 0 then
+			Players:activate(client.id, 'dummy', client.class, client.team)
+		end
 	end
 end
 
@@ -54,7 +83,7 @@ end
 function NetClient:sync()
 	local p = Players:get(myId)
 	if p and p.active and p.sync and table.count(p.syncBuffer) > 0 then
-		self:send(Net.msgSync, Net.server, {events = p:sync()})
+		self:send(Net.msgSync, Net.server, {updates = p:sync()})
 	end
 end
 

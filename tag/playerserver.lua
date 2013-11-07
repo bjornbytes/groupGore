@@ -46,24 +46,27 @@ function PlayerServer:update()
 end
 
 function PlayerServer:sync()
-  Net:write(self.id, 4)
-     :write(table.count(self.syncBuffer), 6)
-  
+	local data = {}
+
   for i = self.syncFrom, tick do
     if self.syncBuffer[i] then
       local state = Players.history[self.id][i]
       local ang = math.floor(math.deg(state.angle))
       if ang < 0 then ang = ang + 360 end
-      Net:write(i, 16)
-         :write(math.floor(state.x + .5), 16)
-         :write(math.floor(state.y + .5), 16)
-         :write(math.floor(ang), 9)
-         :writeEvents(state.events)
+			data[#data + 1] = {
+				tick = i,
+				id = self.id,
+				x = math.floor(state.x + .5),
+				y = math.floor(state.y + .5),
+				angle = math.floor(ang)
+			}
     end
   end
   
   table.clear(self.syncBuffer)
   self.syncFrom = tick + 1
+	
+	return data
 end
 
 function PlayerServer:time()
