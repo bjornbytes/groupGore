@@ -45,7 +45,8 @@ NetClient.receive[Net.msgSync] = function(self, data, peer)
 		table.insert(playerUpdates[update.id], {
 			tick = update.tick,
 			x = update.x,
-			y = update.y
+			y = update.y,
+      angle = math.rad(update.angle)
 		})
 	end
 
@@ -73,7 +74,7 @@ function NetClient:connect(peer)
 end
 
 function NetClient:activate()
-  self:connectTo('localhost', 6061)
+  self:connectTo(serverIp, 6061)
   local port = self.host:socket_get_address():match(':(%d+)')
 	while not myId do
 		self:update()
