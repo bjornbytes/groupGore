@@ -9,6 +9,7 @@ require './lib/message'
 require './ovw/menu'
 require './ovw/game'
 
+require './eventovw'
 require './mapovw'
 require './collisionovw'
 require './netovw'

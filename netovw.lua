@@ -11,6 +11,8 @@ function Net:load(tag)
 		client = NetClient,
 		server = NetServer
 	}
+
+	self.eventBuffer = {}
 	
 	setmetatable(self, {__index = tags[tag]})
 	f.exe(self.activate, self)
@@ -47,6 +49,10 @@ end
 function Net:broadcast(id, data)
 	local str = Stream.pack(data, self.signatures.outbound[id]):truncate()
 	self.host:broadcast(string.char(id) .. str)
+end
+
+function Net:sendEvent(event, args)
+	
 end
 
 local dir

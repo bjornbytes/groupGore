@@ -148,7 +148,7 @@ end
 function Stream.unpack(str, signature)
 	local self = Stream(str)
 	local data = {}
-
+	
 	for _, sig in ipairs(signature) do
 		local key, kind = sig[1], sig[2]
 		if type(kind) == 'table' then
