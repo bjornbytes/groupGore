@@ -1,8 +1,4 @@
 Net = {}
-Net.msgJoin = 1
-Net.msgClass = 2
-Net.msgSync = 3
-Net.msgSnapshot = 4
 
 function Net:load(tag)
 	assert(tag)
@@ -11,8 +7,6 @@ function Net:load(tag)
 		client = NetClient,
 		server = NetServer
 	}
-
-	self.eventBuffer = {}
 	
 	setmetatable(self, {__index = tags[tag]})
 	f.exe(self.activate, self)
@@ -28,31 +22,31 @@ function Net:connectTo(ip, port)
 end
 
 function Net:update()
-	local event = self.host:service()
-	while event do	
-		if event and event.type == 'receive' then
-			local id = event.data:byte(1)
-			local data = Stream.unpack(event.data:sub(2), self.signatures.inbound[id])
-			f.exe(self.receive[id], self, data, event.peer)
+	while true do
+		local event = self.host:service()
+		if not event then break end
+		
+		if event.type ~= 'receive' then f.exe(self[event.type], self, event.peer)
 		else
-			f.exe(self[event.type], self, event.peer)
+			while #event.data do
+				local str, e, data = readEvent(event.data)
+				event.data = str
+				Event:emit(e, data)
+			end
 		end
-		event = self.host:service()
 	end
 end
 
-function Net:send(id, peer, data)
-	local str = Stream.pack(data, self.signatures.outbound[id]):truncate()
-	peer:send(string.char(id) .. str)
+function Net:sync()
+	-- send all buffered events
 end
 
-function Net:broadcast(id, data)
-	local str = Stream.pack(data, self.signatures.outbound[id]):truncate()
-	self.host:broadcast(string.char(id) .. str)
+local function readEvent(str)
+	--
 end
 
-function Net:sendEvent(event, args)
-	
+local function writeEvent(event, data)
+	--
 end
 
 local dir
@@ -60,5 +54,3 @@ dir = '/tag'
 for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
   if file:match('net.*\.lua') then love.filesystem.load(dir .. '/' .. file)() end
 end
-NetClient.signatures.inbound = NetServer.signatures.outbound
-NetServer.signatures.inbound = NetClient.signatures.outbound

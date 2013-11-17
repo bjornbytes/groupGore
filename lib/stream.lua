@@ -24,7 +24,7 @@ end
 
 function Stream:write(x, sig)
 	if sig == 'string' then self:writeString(x)
-	elseif sig == 'boolean' then self:writeBoolean(x)
+	elseif sig == 'bool' then self:writeBoolean(x)
 	elseif sig == 'float' then self:writeFloat(x)
 	else
 		local n = sig:match('(%d+)bit')
@@ -69,7 +69,7 @@ end
 
 function Stream:read(kind)
 	if kind == 'string' then return self:readString()
-	elseif kind == 'boolean' then return self:readBool()
+	elseif kind == 'bool' then return self:readBool()
 	elseif kind == 'float' then return self:readFloat()
 	else
 		local n = tonumber(kind:match('(%d+)bit'))
