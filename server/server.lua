@@ -18,7 +18,3 @@ end
 function Server:quit()
 	-- Tell people you're leaving.
 end
-
-on(evtJoin, Server, function(self, data)
-	print(data.username)
-end)

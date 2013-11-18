@@ -29,23 +29,7 @@ function Net:update()
 		local event = self.host:service()
 		if not event then break end
 		
-		if event.type ~= 'receive' then f.exe(self[event.type], self, event.peer)
-		else
-			self.inStream.str = event.data
-			self.inStream.byte, self.inStream.byteLen = nil, nil
-			
-			while true do
-				local e = self.inStream:read('4bits')
-				if e == 0 or not self.other.signatures[e] then break end
-				
-				local data = {}
-				for _, sig in ipairs(self.other.signatures[e]) do
-					data[sig[1]] = self.inStream:read(sig[2])
-				end
-				
-				emit(e, data)
-			end
-		end
+		f.exe(self[event.type], self, event)
 	end
 end
 
