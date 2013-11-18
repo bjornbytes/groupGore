@@ -1,10 +1,12 @@
 NetClient = {}
 
+NetClient.signatures = {}
+NetClient.signatures[evtJoin] = {{'username', 'string'}}
+NetClient.signatures[evtLeave] = {}
+
 function NetClient:connect(peer)
 	self.server = peer
-	self:send(Net.msgJoin, Net.server, {
-		username = username
-	})
+	self:send(evtJoin, {username = username})
 end
 
 function NetClient:activate()

@@ -62,8 +62,6 @@ function love.run()
       tick = tick + 1
       tickDelta = tickDelta - tickRate
       
-      --if Overwatch == Game then Net:update() end
-      
       love.event.pump()
       local releases = {}
       for e, a, b, c, d in love.event.poll() do
@@ -78,8 +76,6 @@ function love.run()
         love.handlers[e[1]](e[2], e[3], e[4], e[5])
       end
     end
-    
-   --if Overwatch == Game then Net:update() end
 
     syncDelta = syncDelta + delta
     if syncDelta >= syncRate then

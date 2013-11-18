@@ -120,56 +120,6 @@ function Stream:readBits(n)
 	return x
 end
 
-function Stream.pack(data, signature)
-	local self = Stream()
-
-	for _, sig in ipairs(signature) do
-		local key, kind = sig[1], sig[2]
-		assert(data[key], 'key "' .. key .. '" does not exist')
-		if type(kind) == 'table' then
-			local count = #data[key]
-			self:writeBits(count, 8)
-			for i = 1, count do
-				local subdata = data[key][i]
-				for _, subsig in ipairs(kind) do
-					local subkey, subkind = subsig[1], subsig[2]
-					assert(subdata[subkey], 'subkey "' .. subkey .. '" does not exist')
-					self:write(subdata[subkey], subkind)
-				end
-			end
-		else
-			self:write(data[key], kind)
-		end
-	end
-
-	return self
-end
-
-function Stream.unpack(str, signature)
-	local self = Stream(str)
-	local data = {}
-	
-	for _, sig in ipairs(signature) do
-		local key, kind = sig[1], sig[2]
-		if type(kind) == 'table' then
-			data[key] = {}
-			local count = self:readBits(8)
-			for i = 1, count do
-				local subdata = {}
-				data[key][#data[key] + 1] = subdata
-				for _, subsig in ipairs(kind) do
-					local subkey, subkind = subsig[1], subsig[2]
-					subdata[subkey] = self:read(subkind)
-				end
-			end
-		else
-			data[key] = self:read(kind)
-		end
-	end
-
-	return data
-end
-
 setmetatable(Stream, {
 	__call = Stream.create
 })
