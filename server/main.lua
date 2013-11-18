@@ -31,8 +31,6 @@ while true do
     Server:update()
   end
   
-  Net:update()
-  
   syncDelta = syncDelta + delta
   if syncDelta >= syncRate then
     Server:sync()

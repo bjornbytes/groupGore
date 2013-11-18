@@ -6,8 +6,8 @@ function Map:load(name)
   map.graphics = {}
   
   for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-    if file:match('\.png$') then
-      local image = file:gsub('\.png$', '')
+    if file:match('%.png$') then
+      local image = file:gsub('%.png$', '')
       map.graphics[image] = love.graphics.newImage(dir .. file)
     end
   end

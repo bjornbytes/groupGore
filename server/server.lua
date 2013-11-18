@@ -6,6 +6,7 @@ function Server:load()
 end
 
 function Server:update()
+	Net:update()
   Players:update()
   Spells:update()
 end

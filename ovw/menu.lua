@@ -29,7 +29,7 @@ function Menu:update()
 end
 
 function Menu.keypressed(key)
-  if key:match('[0-9\.]') then
+  if key:match('[0-9%.]') then
     Menu.ip = Menu.ip .. key
   elseif key == 'backspace' then
     Menu.ip = Menu.ip:sub(1, -2)

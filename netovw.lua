@@ -16,16 +16,15 @@ function Net:load(tag)
 end
 
 function Net:listen(port)
-	self.host = enet.host_create(port and 'localhost:' .. port or 'localhost:6061')
+	self.host = enet.host_create(port and '*:' .. port or nil)
 end
 
 function Net:connectTo(ip, port)
 	if not self.host then self:listen() end
-	remotePeer = self.host:connect(ip .. ':' .. port)
+	self.host:connect(ip .. ':' .. port)
 end
 
 function Net:update()
-	if remotePeer then print(remotePeer:state()) end
 	while true do
 		local event = self.host:service()
 		if not event then break end
@@ -65,7 +64,7 @@ end
 local dir
 dir = '/tag'
 for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-  if file:match('net.*\.lua') then love.filesystem.load(dir .. '/' .. file)() end
+  if file:match('net.*%.lua') then love.filesystem.load(dir .. '/' .. file)() end
 end
 NetClient.other = NetServer
 NetServer.other = NetClient
