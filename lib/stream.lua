@@ -22,6 +22,12 @@ function Stream:truncate()
 	return self.str
 end
 
+function Stream:clear()
+	self.str = ''
+	self.byte = nil
+	self.byteLen = nil
+end
+
 function Stream:write(x, sig)
 	if sig == 'string' then self:writeString(x)
 	elseif sig == 'bool' then self:writeBoolean(x)

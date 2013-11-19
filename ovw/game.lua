@@ -32,7 +32,8 @@ function Game:draw()
 end
 
 function Game:quit()
-  -- Net:begin(Net.msgLeave):send()
+  Net:send(msgLeave)
+  Net.host:flush()
 end
 
 function Game.mousepressed(...)

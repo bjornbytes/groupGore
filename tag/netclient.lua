@@ -1,31 +1,45 @@
 NetClient = {}
 
 NetClient.signatures = {}
-NetClient.signatures[evtJoin] = {{'username', 'string'}}
-NetClient.signatures[evtLeave] = {}
+NetClient.signatures[msgJoin] = {{'username', 'string'}}
+NetClient.signatures[msgLeave] = {}
+
+NetClient.receive = {}
+NetClient.receive['default'] = function(self, event) emit(event.msg, event.data) end
+
+NetClient.receive[msgJoin] = function(self, event)
+	print('tick', event.data.tick)
+	print('map', event.data.map)
+end
 
 function NetClient:activate()
 	self:connectTo(serverIp, 6061)
+	
+	on(evtJoin, self, function(self, data)
+		print(data.username .. ' has joined!')
+	end)
+	
+	on(evtLeave, self, function(self, data)
+		print('Player ' .. data.id .. ' has left!')
+	end)
 end
 
 function NetClient:connect(event)
 	self.server = event.peer
-	self:send(evtJoin, {username = username})
+	self:send(msgJoin, {username = username})
 end
 
-function NetClient:receive(event)
-	self.inStream.str = event.data
-	self.inStream.byte, self.inStream.byteLen = nil, nil
+function NetClient:send(msg, data)
+	self.outStream:clear()
+	self.outStream:write(msg, '4bits')
 	
-	while true do
-		local e = self.inStream:read('4bits')
-		if e == 0 or not self.other.signatures[e] then break end
-		
-		local data = {}
-		for _, sig in ipairs(self.other.signatures[e]) do
-			data[sig[1]] = self.inStream:read(sig[2])
-		end
-		
-		emit(e, data)
+	for _, sig in ipairs(self.signatures[msg]) do
+		self.outStream:write(data[sig[1]], sig[2])
 	end
+	
+	self.server:send(tostring(self.outStream))
+end
+
+function NetClient:sync()
+	--
 end
