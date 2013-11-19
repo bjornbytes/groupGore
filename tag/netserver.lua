@@ -1,8 +1,9 @@
 NetServer = {}
 
 NetServer.signatures = {}
-NetServer.signatures[evtJoin] = {{'id', '4bits'}}
-NetServer.signatures[evtLeave] = {{'id', '4bits'}}
+NetServer.signatures[msgEvtJoin] = {{'id', '4bits'}, {'username', 'string'}}
+NetServer.signatures[msgEvtLeave] = {{'id', '4bits'}, {'reason', 'string'}}
+NetServer.signatures[msgJoin] = {{'tick', '16bits'}, {'map', 'string'}}
 
 function NetServer:activate()
 	self:listen(6061)
