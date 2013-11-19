@@ -1,5 +1,13 @@
 Net = {}
 
+msgEvtJoin  = 1
+msgEvtLeave = 2
+msgJoin     = 1
+msgLeave    = 2
+msgClass    = 3
+msgInput    = 4
+msgChat     = 5
+
 function Net:load(tag)
 	assert(tag)
 	
@@ -7,9 +15,6 @@ function Net:load(tag)
 		client = NetClient,
 		server = NetServer
 	}
-	
-	self.inStream = Stream()
-	self.outStream = Stream()
 	
 	setmetatable(self, {__index = tags[tag]})
 	f.exe(self.activate, self)
@@ -30,18 +35,6 @@ function Net:update()
 		if not event then break end
 		
 		f.exe(self[event.type], self, event)
-	end
-end
-
-function Net:sync()
-	self.host:broadcast(tostring(self.outStream))
-	self.outStream.str = ''
-end
-
-function Net:send(event, data)
-	self.outStream:write(event, '4bits')
-	for _, sig in ipairs(self.signatures[event]) do
-		self.outStream:write(data[sig[1]], sig[2])
 	end
 end
 

@@ -2,9 +2,6 @@ Event = {}
 
 Event.handlers = {}
 
-evtJoin = 1
-evtLeave = 2
-
 function on(event, context, fn)
 	Event.handlers[event] = Event.handlers[event] or {}
 	table.insert(Event.handlers[event], {context, fn})

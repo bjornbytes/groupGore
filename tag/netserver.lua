@@ -1,12 +1,12 @@
 NetServer = {}
 
 NetServer.signatures = {}
-NetServer.signatures[evtJoin] = {{'tick', '16bits'}, {'map', 'string'}}
+NetServer.signatures[evtJoin] = {{'id', '4bits'}}
 NetServer.signatures[evtLeave] = {{'id', '4bits'}}
 
 function NetServer:activate()
 	self:listen(6061)
-	self.peers = {}
+	self.eventBuffer = {}`
 	
 	on(evtJoin, self, function(self, data)
 		print(data.username .. ' has joined!')
