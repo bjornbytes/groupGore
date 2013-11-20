@@ -8,8 +8,13 @@ NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) emit(event.msg, event.data) end
 
 NetClient.receive[msgJoin] = function(self, event)
-	print('tick', event.data.tick)
-	print('map', event.data.map)
+	print('myId', event.data.id)
+end
+
+NetClient.receive[msgSnapshot] = function(self, event)
+	print(event.data.tick)
+	print(event.data.map)
+	print(#event.data.clients)
 end
 
 function NetClient:activate()
@@ -31,12 +36,7 @@ end
 
 function NetClient:send(msg, data)
 	self.outStream:clear()
-	self.outStream:write(msg, '4bits')
-	
-	for _, sig in ipairs(self.signatures[msg]) do
-		self.outStream:write(data[sig[1]], sig[2])
-	end
-	
+	self:pack(msg, data)
 	self.server:send(tostring(self.outStream))
 end
 
