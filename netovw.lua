@@ -2,10 +2,12 @@ Net = {}
 
 evtJoin  = 1
 evtLeave = 2
+evtClass = 3
 
 msgJoin  = 3
 msgLeave = 4
 msgSnapshot = 5
+msgClass = 6
 
 function Net:load(tag)
 	assert(tag)
@@ -36,10 +38,12 @@ function Net:update()
 		local event = self.host:service()
 		if not event then break end
 		
+		event.pid = event.peer:index()
+		
 		if event.type == 'receive' then
 			self.inStream:clear()
 			self.inStream.str = event.data
-			
+
 			repeat
 				event.msg, event.data = self:unpack()
 				;(self.receive[event.msg] or self.receive.default)(self, event)

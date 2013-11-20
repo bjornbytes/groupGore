@@ -3,6 +3,7 @@ NetClient = {}
 NetClient.signatures = {}
 NetClient.signatures[msgJoin] = {{'username', 'string'}}
 NetClient.signatures[msgLeave] = {}
+NetClient.signatures[msgClass] = {{'class', '4bits'}, {'team', '1bit'}}
 
 NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) emit(event.msg, event.data) end
@@ -14,7 +15,7 @@ end
 NetClient.receive[msgSnapshot] = function(self, event)
 	print(event.data.tick)
 	print(event.data.map)
-	print(#event.data.clients)
+	print(#event.data.players)
 end
 
 function NetClient:activate()

@@ -3,36 +3,32 @@ NetServer = {}
 NetServer.signatures = {}
 NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}}
 NetServer.signatures[evtLeave] = {{'id', '4bits'}, {'reason', 'string'}}
+NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}}
 NetServer.signatures[msgJoin] = {{'id', '4bits'}}
 NetServer.signatures[msgSnapshot] = {
 	{'tick', '16bits'},
 	{'map', 'string'},
-	{'clients', {{'id', '4bits'}, {'username', 'string'}}}
+	{'players', {{'id', '4bits'}, {'username', 'string'}, {'class', '4bits'}, {'team', '1bit'}}}
 }
 
 NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
 NetServer.receive[msgJoin] = function(self, event)
-	self.peers[event.peer].username = event.data.username
-	self:send(msgJoin, event.peer, {id = self.peers[event.peer].id})
-	self:emit(evtJoin, {id = self.peers[event.peer].id, username = event.data.username})
-
-	local ps = {}
-	table.with(self.peers, function(p) table.insert(ps, p) end)
-	self:send(msgSnapshot, event.peer, {tick = tick, map = 'jungleCarnage', clients = ps})
+	self.clients[event.pid].username = event.data.username
+	self:send(msgJoin, event.peer, {id = event.pid})
+	self:emit(evtJoin, {id = event.pid, username = event.data.username})
+	self:snapshot(event.peer)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
-	self:emit(evtLeave, {id = self.peers[event.peer].id, reason = 'left'})
-	self.peers[event.peer] = nil
+	self:emit(evtLeave, {id = event.pid, reason = 'left'})
 	event.peer:disconnect_now()
 end
 
 function NetServer:activate()
 	self:listen(6061)
-	
-	self.peers = {}
+	self.clients = {}
 	self.eventBuffer = {}
 	
 	on(evtJoin, self, function(self, data)
@@ -45,8 +41,7 @@ function NetServer:activate()
 end
 
 function NetServer:connect(event)
-	local idx = event.peer:index()
-	self.peers[event.peer] = {id = idx}
+	self.clients[event.pid] = {id = event.pid}
 end
 
 function NetServer:send(msg, peer, data)
@@ -69,4 +64,18 @@ function NetServer:sync()
 	end
 	
 	self.host:broadcast(tostring(self.outStream))
+end
+
+function NetServer:snapshot(peer)
+	local players = {}
+	table.with(self.clients, function(c)
+		local p = Players:get(c.id)
+		table.insert(players, {
+			id = c.id,
+			username = c.username,
+			class = p.class or 0,
+			team = p.team or 0,
+		})
+	end)
+	self:send(msgSnapshot, peer, {tick = tick, map = 'jungleCarnage', players = players})
 end
