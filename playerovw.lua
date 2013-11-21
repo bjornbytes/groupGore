@@ -1,32 +1,32 @@
 Players = {}
 
-Players.players = {}
-Players.active = {}
-Players.history = {}
-
-function Players:activate(id, tag, class, team)
-  assert(id >= 1 and id <= 16)
-  local p = self.players[id]
-  
+function Players:init(tag)
   local tags = {
-    main = PlayerMain,
-    dummy = PlayerDummy,
+    client = PlayerDummy,
     server = PlayerServer
   }
-  assert(tags[tag])
-  assert(not p.active)
-  p.active = true
-  setmetatable(p, {__index = tags[tag]})
-  self:setClass(id, class, team)
+  
+  self.players = {}
+  self.active = {}
+  self.history = {}
+  
+  for i = 1, 16 do
+    self.players[i] = Player:create()
+    self.players[i].id = i
+    self.history[i] = {}
+    setmetatable(self.players[i], {__index = tags[tag]})
+  end
+end
+
+function Players:activate(id, class, team)
+  assert(id >= 1 and id <= 16)
+  self.players[id].active = true
   self:refresh()
-  return id
 end
 
 function Players:deactivate(id)
-  local p = self.players[id]
-  assert(p.active)
-  p.active = false
-  p:deactivate()
+  self.players[id].active = false
+  self.players[id]:deactivate()
   self:refresh()
 end
 
@@ -113,13 +113,6 @@ function Players:reset()
   Players:with(self.active, function(p)
     p:activate()
   end)
-end
-
-for i = 1, 16 do
-  Players.players[i] = Player:create()
-  Players.players[i].id = i
-  
-  Players.history[i] = {}
 end
 
 local dir

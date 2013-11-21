@@ -1,6 +1,7 @@
 Server = {}
 
 function Server:load()
+	Players:init('server')
   Net:load('server')
   Map:load('jungleCarnage')
 end

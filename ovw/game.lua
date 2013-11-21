@@ -1,6 +1,7 @@
 Game = {}
 
 function Game:load()
+  Players:init('client')
   Net:load('client')
   Hud:init()
 end
