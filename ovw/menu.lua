@@ -9,9 +9,11 @@ function Menu:load()
   
   self.page = 'login'
   self.focused = nil
-  
+ 
+	self.ip = '127.0.0.1'
   self.username = 'username'
   self.password = 'password'
+	self.ipDefault = nil
   self.usernameDefault = self.username
   self.passwordDefault = self.password
   
@@ -51,50 +53,85 @@ function Menu:draw()
     if self.focused == 'password' then
       love.graphics.line(w(.5) - (iw / 2) + (fh / 2) + self.font:getWidth(string.rep('•', #self.password)) + 1, h(.35) - (fh / 2) + ih + 1, w(.5) - (iw / 2) + (fh / 2) + self.font:getWidth(string.rep('•', #self.password)) + 1, h(.35) - (fh / 2) + ih + 1 + fh)
     end
-  end
+  elseif self.page == 'main' then	
+    love.graphics.setFont(self.titleFont)
+    love.graphics.setColor(108, 89, 128)
+    love.graphics.print('g', 20, 16)
+    love.graphics.setColor(140, 107, 84)
+    love.graphics.print('G', 20 + self.titleFont:getWidth('g'), 16)
+    
+    love.graphics.setFont(self.font)
+    local fh = self.font:getHeight()
+    local ih = math.max(40, fh)
+    local iw = math.min(w(.3), 240)
+    love.graphics.setColor(30, 30, 30)
+    love.graphics.rectangle('fill', w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih)
+    
+    love.graphics.setColor(112, 85, 67)
+    love.graphics.print(self.ip, w(.5) - (iw / 2) + (fh / 2), h(.35) - (fh / 2))
+    if self.focused == 'ip' then
+      love.graphics.line(w(.5) - (iw / 2) + (fh / 2) + self.font:getWidth(self.ip) + 1, h(.35) - (fh / 2), w(.5) - (iw / 2) + (fh / 2) + self.font:getWidth(self.ip) + 1, h(.35) - (fh / 2) + fh)
+    end
+	end
 end
 
 function Menu:update()
-  --[[if love.keyboard.isDown('s') then
-    love.filesystem.load('server/main.lua')()
-  elseif love.keyboard.isDown('c') then
-    serverIp = self.ip
-    serverPort = 6061
-    
-    Overwatch:unload()
-    Overwatch = Game
-    Overwatch:load()
-  end]]
+	--
 end
 
 function Menu.keypressed(key)
   local self = Menu
-  if self.focused == 'username' then
-    if #key == 1 and key:match('%w') then self.username = self.username .. key
-    elseif key == 'backspace' then self.username = self.username:sub(1, -2)
-    elseif key == 'tab' then self:focusInput('password') end
-  elseif self.focused == 'password' then
-    if #key == 1 and key:match('%w') then self.password = self.password .. key
-    elseif key == 'backspace' then self.password = self.password:sub(1, -2)
-    elseif key == 'tab' then self:focusInput('username')
-    elseif key == 'return' then
-      username = self.username
-      password = self.password
-      self.page = 'main'
-    end
-  end
+	if self.page == 'login' then
+		if self.focused == 'username' then
+			if #key == 1 and key:match('%w') then self.username = self.username .. key
+			elseif key == 'backspace' then self.username = self.username:sub(1, -2)
+			elseif key == 'tab' then self:focusInput('password') end
+		elseif self.focused == 'password' then
+			if #key == 1 and key:match('%w') then self.password = self.password .. key
+			elseif key == 'backspace' then self.password = self.password:sub(1, -2)
+			elseif key == 'tab' then self:focusInput('username')
+			elseif key == 'return' then
+				username = self.username
+				password = self.password
+				self.page = 'main'
+			end
+		end
+	elseif self.page == 'main' then
+		if key == 's' then love.filesystem.load('server/main.lua')() return end
+		if self.focused == 'ip' then
+			if #key == 1 and key:match('[0-9%.]') then self.ip = self.ip .. key
+			elseif key == 'backspace' then self.ip = self.ip:sub(1, -2)
+			elseif key == 'return' then
+				serverIp = self.ip
+				serverPort = 6061
+				
+				Overwatch:unload()
+				Overwatch = Game
+				Overwatch:load()
+			end
+		end
+	end
 end
 
 function Menu.mousepressed(x, y, button)
   local self = Menu
-  if button == 'l' then
-    local fh = self.font:getHeight()
-    local ih = math.max(40, fh)
-    local iw = math.min(w(.3), 240)
-    if math.inside(x, y, w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih) then self:focusInput('username')
-    elseif math.inside(x, y, w(.5) - (iw / 2), h(.35) + (ih / 2) + 1, iw, ih) then self:focusInput('password')
-    else self:unfocus() end
-  end
+	self:unfocus()
+	if self.page == 'login' then
+		if button == 'l' then
+			local fh = self.font:getHeight()
+			local ih = math.max(40, fh)
+			local iw = math.min(w(.3), 240)
+			if math.inside(x, y, w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih) then self:focusInput('username')
+			elseif math.inside(x, y, w(.5) - (iw / 2), h(.35) + (ih / 2) + 1, iw, ih) then self:focusInput('password') end
+		end
+	elseif self.page == 'main' then
+		if button == 'l' then
+			local fh = self.font:getHeight()
+			local ih = math.max(40, fh)
+			local iw = math.min(w(.3), 240)
+			if math.inside(x, y, w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih) then self:focusInput('ip') end
+		end
+	end
 end
 
 function Menu:focusInput(key)

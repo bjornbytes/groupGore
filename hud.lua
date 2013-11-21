@@ -5,8 +5,8 @@ function Hud:init()
 	Hud.consoleInput = ''
 	Hud.consoleResult = ''
 	Hud.consoleResultAlpha = 0
-	Hud.consoleFont = love.graphics.newFont('media/fonts/lucon.ttf', 12)
-	Hud.consoleResultFont = love.graphics.newFont('media/fonts/BebasNeue.ttf', 40)
+	Hud.consoleFont = love.graphics.newFont('media/fonts/UbuntuMono.ttf', 12)
+	Hud.consoleResultFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 40)
 	
 	--[[Hud.health = {}
 	Hud.health.canvas = love.graphics.newCanvas(160, 160)
