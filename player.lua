@@ -1,24 +1,5 @@
 Player = {}
 
-Player.events = {
-  kill = 1,
-  assist = 2,
-  death = 3,
-  spawn = 4,
-  hurt = 5,
-  fire = 6,
-  skill = 7,
-  
-  [1] = 'kill',
-  [2] = 'assist',
-  [3] = 'death',
-  [4] = 'spawn',
-  [5] = 'hurt',
-  [6] = 'fire',
-  [7] = 'skill'
-}
-
-
 ----------------
 -- Core
 ----------------
@@ -40,8 +21,7 @@ function Player:create()
     anchor = nil,
     visible = 0,
     slots = {{}, {}, {}, {}, {}},
-    buffs = {},
-    events = {}
+    buffs = {}
   }
 end
 
@@ -57,7 +37,6 @@ function Player:activate()
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
   table.clear(self.buffs)
-  table.clear(self.events)
 end
 
 function Player:deactivate()
@@ -89,32 +68,9 @@ function Player:move()
   local up, down, left, right, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi
   
   if moving then
-    self.speed = math.min(self.speed + (2 * self.class.speed * tickRate), self.maxSpeed)
+    self.speed = self.maxSpeed
   else
-    self.speed = math.max(self.speed - (2 * self.class.speed * tickRate), 0)
-    for i = 1, (.5 / tickRate) do
-      local state = Players.history[self.id][tick - i]
-      if state then
-        if state.input.wasd.w then w = true
-        elseif state.input.wasd.s then s = true
-        elseif state.input.wasd.a then a = true
-        elseif state.input.wasd.d then d = true end
-        
-        if w or a or s or d then
-          
-          for j = 1, 3 do
-            local state = Players.history[self.id][tick - i - j]
-            if state then
-              if not w and state.input.wasd.w then w = true break
-              elseif not s and state.input.wasd.s then s = true break
-              elseif not a and state.input.wasd.a then a = true break
-              elseif not d and state.input.wasd.d then d = true break end
-            end
-          end
-          break
-        end
-      end
-    end
+    self.speed = 0
   end
   
   if self.speed == 0 then return end
@@ -154,80 +110,10 @@ function Player:slot()
       f.exe(self.slots[i].update, self, self.slots[i])
     end
   end
-  
-  local weapon = self.slots[self.input.slot.weapon]
-  if self.input.mouse.l and weapon.canFire(self, weapon) then
-    self:emit('fire', {slot = self.input.slot.weapon})
-  end
-  
-  local skill = self.slots[self.input.slot.skill]
-  if self.input.mouse.r and skill.canFire(self, skill) then
-    self:emit('fire', {slot = self.input.slot.skill})
-  end
 end
 
 function Player:buff()
   for _, buff in pairs(self.buffs) do
     f.exe(buff.update, self, buff)
   end
-end
-
-function Player:handle(e, args)
-  if type(e) == 'number' then e = Player.events[e] end
-  if self.class.on[e] then
-    for _, f in pairs(self.class.on[e]) do
-      f(self, args)
-    end
-  end
-  
-  f.exe(self.on[e], self, args)
-end
-
-function Player:emit(e, args)
-  --
-end
-
-
-----------------
--- Events
-----------------
-Player.on = {}
-Player.on['kill'] = function(self, e)
-
-end
-
-Player.on['assist'] = function(self, e)
-
-end
-
-Player.on['death'] = function(self, e)
-  self.ded = 5
-  self.x = -100
-  self.y = -100
-  self.health = 0
-end
-
-Player.on['spawn'] = function(self, e)
-  self.ded = false
-  self:activate()
-end
-
-Player.on['hurt'] = function(self, e)
-  self.health = math.max(self.health - e.amount, 0)
-  if self.health <= 0 then
-    self:emit('death', {
-      killer = e.from
-    })
-    Players:get(e.from):emit('kill')
-  end
-end
-
-Player.on['fire'] = function(self, e)
-  local weapon = self.slots[e.slot]
-  weapon.fire(self, weapon)
-end
-
-Player.on['skill'] = function(self, e)
-  local skill = self.slots[e.slot]
-  skill.fire(self, skill)
 end

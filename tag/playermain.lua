@@ -158,8 +158,3 @@ function PlayerMain:mouseHandler(x, y, button)
     self.syncBuffer[tick + 1] = true
   end
 end
-
-function PlayerMain:emit(e, args)
-  if e ~= 'fire' and e ~= 'skill' then return end
-  self:handle(e, args)
-end

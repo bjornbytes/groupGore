@@ -99,13 +99,3 @@ function PlayerServer:trace(data)
 		end
   end
 end
-
-function PlayerServer:emit(e, args)
-  self:handle(e, args)
-  table.insert(self.events, {
-    e = e,
-    args = args
-  })
-  if Players.history[self.id][tick] then self.syncBuffer[tick + 1] = true
-  else self.syncBuffer[tick] = true end
-end
