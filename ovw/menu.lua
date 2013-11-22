@@ -97,7 +97,16 @@ function Menu.keypressed(key)
 			end
 		end
 	elseif self.page == 'main' then
-		if key == 's' then love.filesystem.load('server/main.lua')() return end
+		if key == 's' then love.filesystem.load('server/main.lua')() return
+    elseif key == 'c' then 
+      serverIp = self.ip
+      serverPort = 6061
+      
+      Overwatch:unload()
+      Overwatch = Game
+      Overwatch:load()
+    end
+    
 		if self.focused == 'ip' then
 			if #key == 1 and key:match('[0-9%.]') then self.ip = self.ip .. key
 			elseif key == 'backspace' then self.ip = self.ip:sub(1, -2)

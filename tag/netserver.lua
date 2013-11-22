@@ -26,6 +26,10 @@ NetServer.receive[msgLeave] = function(self, event)
 	event.peer:disconnect_now()
 end
 
+NetServer.receive[msgClass] = function(self, event)
+	self:emit(evtClass, {id = event.pid, class = event.data.class, team = event.data.team})
+end
+
 function NetServer:activate()
 	self:listen(6061)
 	self.clients = {}
@@ -37,6 +41,10 @@ function NetServer:activate()
 	
 	on(evtLeave, self, function(self, data)
 		print('Player ' .. data.id .. ' has left!')
+	end)
+	
+	on(evtClass, self, function(self, data)
+		Players:setClass(data.id, data.class, data.team)
 	end)
 end
 

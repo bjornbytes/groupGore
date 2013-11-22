@@ -18,7 +18,7 @@ function Players:init(tag)
   end
 end
 
-function Players:activate(id, class, team)
+function Players:activate(id)
   assert(id >= 1 and id <= 16)
   self.players[id].active = true
   self:refresh()
@@ -79,6 +79,7 @@ end
 local function mouseHandler(self, x, y, b)
   if not myId then return end
   local p = self:get(myId)
+  if not p.active then return end
   f.exe(p.mouseHandler, p, x, y, b)
 end
 Players.mousepressed = mouseHandler
@@ -87,6 +88,7 @@ Players.mousereleased = mouseHandler
 local function keyHandler(self, key)
   if not myId then return end
   local p = self:get(myId)
+  if not p.active then return end
   f.exe(p.keyHandler, p, key)
 end
 Players.keypressed = keyHandler
@@ -94,6 +96,7 @@ Players.keyreleased = keyHandler
 
 function Players:setClass(id, class, team)
   local p = self:get(id)
+  if not p.active then self:activate(id) end
   p.class = data.class[class]
   p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end

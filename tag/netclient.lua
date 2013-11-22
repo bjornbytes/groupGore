@@ -9,13 +9,13 @@ NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) emit(event.msg, event.data) end
 
 NetClient.receive[msgJoin] = function(self, event)
-	print('myId', event.data.id)
+	myId = event.data.id
+	setmetatable(Players:get(myId), {__index = PlayerMain})
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
-	print(event.data.tick)
-	print(event.data.map)
-	print(#event.data.players)
+	tick = event.data.tick
+	Map:load(event.data.map)
 end
 
 function NetClient:activate()
@@ -27,6 +27,10 @@ function NetClient:activate()
 	
 	on(evtLeave, self, function(self, data)
 		print('Player ' .. data.id .. ' has left!')
+	end)
+	
+	on(evtClass, self, function(self, data)
+		Players:setClass(data.id, data.class, data.team)
 	end)
 end
 

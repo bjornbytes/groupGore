@@ -33,7 +33,15 @@ local function gety(y)
 	return (View.y + View.h / 2 - y) / 500
 end
 
+function Map:update()
+  if not map then return end
+  
+  View:update()
+end
+
 function Map:draw()
+  if not map then return end
+  
 	love.graphics.reset()
   
   for i = 0, map.width, map.graphics.background:getWidth() do

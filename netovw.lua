@@ -4,10 +4,10 @@ evtJoin  = 1
 evtLeave = 2
 evtClass = 3
 
-msgJoin  = 3
-msgLeave = 4
-msgSnapshot = 5
-msgClass = 6
+msgJoin  = 4
+msgLeave = 5
+msgSnapshot = 6
+msgClass = 7
 
 function Net:load(tag)
 	assert(tag)

@@ -12,11 +12,10 @@ end
 
 function Game:update()
   Net:update()
-  -- Net:update()
-  -- Players:update()
-  -- Spells:update()
-  -- View:update()
-  -- Hud:update()
+  Players:update()
+  Spells:update()
+  Map:update()
+  Hud:update()
 end
 
 function Game:sync()
@@ -24,12 +23,12 @@ function Game:sync()
 end
 
 function Game:draw()
-  -- View:push()
-  -- Map:draw()
-  -- Players:draw()
-  -- Spells:draw()
-  -- View:pop()
-  -- Hud:draw()
+  View:push()
+  Map:draw()
+  Players:draw()
+  Spells:draw()
+  View:pop()
+  Hud:draw()
 end
 
 function Game:quit()

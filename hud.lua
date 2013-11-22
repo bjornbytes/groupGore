@@ -8,17 +8,17 @@ function Hud:init()
 	Hud.consoleFont = love.graphics.newFont('media/fonts/UbuntuMono.ttf', 12)
 	Hud.consoleResultFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 40)
 	
-	--[[Hud.health = {}
+	Hud.health = {}
 	Hud.health.canvas = love.graphics.newCanvas(160, 160)
 	Hud.health.back = love.graphics.newImage('media/graphics/healthBack.png')
 	Hud.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
-	Hud.health.red = love.graphics.newImage('media/graphics/healthRed.png')]]
+	Hud.health.red = love.graphics.newImage('media/graphics/healthRed.png')
 end
 
 function Hud:update()
 	self.consoleResultAlpha = math.min(self.consoleResultAlpha + (tickRate / .35), 1)
 
-	--[[if myId and Players:get(myId).active then
+	if myId and Players:get(myId).active then
 		self.health.canvas:clear()
 		self.health.canvas:renderTo(function()
 			love.graphics.setColor(255, 255, 255, 255)
@@ -29,15 +29,15 @@ function Hud:update()
 			love.graphics.arc('fill', 80, 80, 80, 0, 0 - ((2 * math.pi) * (1 - (p.health / p.maxHealth))))
 			love.graphics.setBlendMode('alpha')
 		end)
-	end]]
+	end
 end
 
 function Hud:draw()
 	love.graphics.reset()
 	
-	--[[love.graphics.draw(self.health.back, 12, 12)
+	love.graphics.draw(self.health.back, 12, 12)
 	love.graphics.draw(self.health.canvas, 4, 4)
-	love.graphics.draw(self.health.glass, 0, 0)]]
+	love.graphics.draw(self.health.glass, 0, 0)
 	
 	local p = Players:get(myId)
 	if p and p.active then
@@ -119,7 +119,7 @@ end
 
 function Hud:mousereleased(x, y, button)
 	if self:classSelect() and math.inside(x, y, 110, 125, 64, 64) and button == 'l' then
-		Net:send(Net.msgClass, Net.server, {
+		Net:send(msgClass, {
 			class = 1,
 			team = 0
 		})
