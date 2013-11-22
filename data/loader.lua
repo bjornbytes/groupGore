@@ -26,16 +26,6 @@ data.load = function()
     for name, sprite in pairs(class.sprites) do
       class.sprites[name] = love.graphics.newImage(sprite)
     end
-    
-    class.on = {}
-    for i = 1, 5 do
-      if class.slots[i].on then
-        for e, f in pairs(class.slots[i].on) do
-          class.on[e] = class.on[e] or {}
-          table.insert(class.on[e], f)
-        end
-      end
-    end
   end)
   
   gG = {}

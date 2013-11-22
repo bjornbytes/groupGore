@@ -20,6 +20,7 @@ end
 
 function NetClient:activate()
 	self:connectTo(serverIp, 6061)
+	self.messageBuffer = {}
 	
 	on(evtJoin, self, function(self, data)
 		print(data.username .. ' has joined!')
@@ -45,6 +46,19 @@ function NetClient:send(msg, data)
 	self.server:send(tostring(self.outStream))
 end
 
-function NetClient:sync()
-	--
+function NetClient:buffer(msg, data)
+	table.insert(self.messageBuffer, {msg, data})
+end
+
+function NetServer:sync()
+	if #self.messageBuffer == 0 then return end
+	
+	self.outStream:clear()
+	
+	while #self.messageBuffer > 0 do
+		self:pack(unpack(self.messageBuffer[1]))
+		table.remove(self.messageBuffer, 1)
+	end
+	
+	self.server:send(tostring(self.outStream))
 end
