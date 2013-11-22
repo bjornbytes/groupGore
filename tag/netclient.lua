@@ -50,7 +50,7 @@ function NetClient:buffer(msg, data)
 	table.insert(self.messageBuffer, {msg, data})
 end
 
-function NetServer:sync()
+function NetClient:sync()
 	if #self.messageBuffer == 0 then return end
 	
 	self.outStream:clear()

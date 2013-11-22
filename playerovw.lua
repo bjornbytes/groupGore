@@ -53,7 +53,6 @@ function Players:update()
   self:with(self.active, function(p)
     self.history[p.id][tick] = table.copy(p)
     self.history[p.id][tick - (1 / tick)] = nil
-    table.clear(p.events)
   end)
 end
 
