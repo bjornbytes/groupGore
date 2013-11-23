@@ -7,6 +7,8 @@ function Menu:load()
   self.font = love.graphics.newFont('/media/fonts/Ubuntu.ttf', 16)
   self.titleFont = love.graphics.newFont('/media/fonts/Ubuntu.ttf', 32)
   
+  self.bg = love.graphics.newImage('/media/graphics/menu/bgMenu.jpeg')
+  
   self.page = 'login'
   self.focused = nil
  
@@ -28,6 +30,9 @@ end
 function Menu:draw()
   love.graphics.setColor(50, 50, 55)
   love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+  
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.draw(self.bg, 0, 0, 0, love.window.getWidth() / self.bg:getWidth(), love.window.getHeight() / self.bg:getHeight())
   
   if self.page == 'login' then
     love.graphics.setFont(self.titleFont)
