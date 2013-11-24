@@ -28,11 +28,21 @@ function PlayerServer:deactivate()
 end
 
 function PlayerServer:update()
+  local prevx, prevy, prevangle = x, y, angle
   self:time()
   self:buff()
   self:move()
   self:turn()
   self:slot()
+  if x ~= prevx or y ~= prevy or angle ~= prevangle then
+    Net:emit(evtSync, {
+      id = self.id,
+      tick = tick,
+      x = math.floor(self.x + .5),
+      y = math.floor(self.y + .5),
+      angle = math.floor(math.deg(self.angle) + .5)
+    })
+  end
 end
 
 function PlayerServer:time()

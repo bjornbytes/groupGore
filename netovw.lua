@@ -3,12 +3,13 @@ Net = {}
 evtJoin  = 1
 evtLeave = 2
 evtClass = 3
+evtSync = 4
 
-msgJoin  = 4
-msgLeave = 5
-msgSnapshot = 6
-msgClass = 7
-msgInput = 8
+msgJoin  = 5
+msgLeave = 6
+msgSnapshot = 7
+msgClass = 8
+msgInput = 9
 
 function Net:load(tag)
 	assert(tag)

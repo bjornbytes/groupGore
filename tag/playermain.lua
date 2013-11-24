@@ -32,7 +32,7 @@ function PlayerMain:update()
   
   self:poll()
   self:buff()
-  self:move()
+  --self:move()
   self:turn()
   self:slot()
   self:fade()
@@ -78,15 +78,6 @@ function PlayerMain:trace(data)
         state:move()
         dst.x = math.lerp(dst.x, state.x, .25)
         dst.y = math.lerp(dst.y, state.y, .25)
-      end
-    end
-    
-    if data[idx].tick == i then
-      table.merge({events = data[idx].events}, dst)
-      for _, event in pairs(dst.events) do
-        if event.e ~= 'fire' and event.e ~= 'skill' then
-          self:handle(event.e, event.args)
-        end
       end
     end
   end

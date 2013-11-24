@@ -39,6 +39,10 @@ function NetClient:activate()
 	on(evtClass, self, function(self, data)
 		Players:setClass(data.id, data.class, data.team)
 	end)
+	
+	on(evtSync, self, function(self, data)
+		Players:get(data.id):trace({data})
+	end)
 end
 
 function NetClient:connect(event)
