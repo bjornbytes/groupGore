@@ -59,7 +59,7 @@ function Hud:draw()
 		love.graphics.setColor(80, 80, 80, 255)
 		love.graphics.rectangle('line', x, -1, ww + 4, 52 + 8 + Hud.consoleFont:getHeight())
 		for i = 1, #wep do
-			if p.slots[p.input.slot.weapon] == wep[i] then love.graphics.setColor(255, 255, 255, 255)
+			if p.slots[p.input.weapon] == wep[i] then love.graphics.setColor(255, 255, 255, 255)
 			else love.graphics.setColor(80, 80, 80, 255) end
 			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
 			love.graphics.setColor(80, 80, 80, 255)
@@ -72,7 +72,7 @@ function Hud:draw()
 		love.graphics.setColor(80, 80, 80, 255)
 		love.graphics.rectangle('line', x, -1, sw + 4, 52 + 8 + Hud.consoleFont:getHeight())
 		for i = 1, #skl do
-			if p.slots[p.input.slot.skill] == skl[i] then love.graphics.setColor(255, 255, 255, 255)
+			if p.slots[p.input.skill] == skl[i] then love.graphics.setColor(255, 255, 255, 255)
 			else love.graphics.setColor(80, 80, 80, 255) end
 			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
 			love.graphics.setColor(80, 80, 80, 255)

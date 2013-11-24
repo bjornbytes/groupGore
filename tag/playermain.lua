@@ -4,26 +4,20 @@ setmetatable(PlayerMain, {__index = Player})
 function PlayerMain:activate()
   self.input = {}
   
-  self.input.wasd = {}
-  self.input.wasd.w = false
-  self.input.wasd.a = false
-  self.input.wasd.s = false
-  self.input.wasd.d = false
+  self.input.w = false
+  self.input.a = false
+  self.input.s = false
+  self.input.d = false
   
-  self.input.mouse = {}
-  self.input.mouse.x = 0
-  self.input.mouse.y = 0
-  self.input.mouse.l = false
-  self.input.mouse.r = false
+  self.input.mx = 0
+  self.input.my = 0
+  self.input.l = false
+  self.input.r = false
   
-  self.input.slot = {}
-  self.input.slot.weapon = 1
-  self.input.slot.skill = 3
-  self.input.slot.reload = false
-  
-  self.syncBuffer = {}
-  self.syncFrom = tick
-  
+  self.input.weapon = 1
+  self.input.skill = 3
+  self.input.reload = false
+    
   Player.activate(self)
 end
 
@@ -45,38 +39,9 @@ function PlayerMain:update()
 end
 
 function PlayerMain:poll()
-  local mouse, prevx, prevy = self.input.mouse, self.input.mouse.x, self.input.mouse.y
-  mouse.x, mouse.y = mouseX(), mouseY()
-  if prevx ~= mouse.x or prevy ~= mouse.y then self.syncBuffer[tick] = true end
-end
-
-function PlayerMain:sync()
-  local ct = table.count(self.syncBuffer)
-  if self.syncBuffer[tick + 1] then ct = ct - 1 end
-  local data = {}
-	for i = self.syncFrom, tick do
-    if self.syncBuffer[i] then
-      local input = Players.history[self.id][i].input
-			data[#data + 1] = {
-				tick = i,
-				w = input.wasd.w and 1 or 0,
-				a = input.wasd.a and 1 or 0,
-				s = input.wasd.s and 1 or 0,
-				d = input.wasd.d and 1 or 0,
-				mx = math.floor(input.mouse.x + .5),
-				my = math.floor(input.mouse.y + .5),
-				l = input.mouse.l and 1 or 0,
-				r = input.mouse.r and 1 or 0,
-				wep = input.slot.weapon,
-				skl = input.slot.skill,
-				rel = input.slot.reload and 1 or 0
-			}
-      self.syncBuffer[i] = nil
-    end
-  end
-  
-  self.syncFrom = tick + 1
-	return data
+  local prevx, prevy = self.input.mx, self.input.my
+  self.input.mx, self.input.my = mouseX(), mouseY()
+  if prevx ~= self.input.mx or prevy ~= self.input.my then Net:send(msgInput, table.merge({tick = tick}, self.input)) end
 end
 
 function PlayerMain:fade()
@@ -128,33 +93,21 @@ function PlayerMain:trace(data)
 end
 
 function PlayerMain:keyHandler(key)
-  local dirty = false
   if key == 'w' or key == 'a' or key == 's' or key == 'd' then
-    self.input.wasd[key] = love.keyboard.isDown(key)
-    dirty = true
+    self.input[key] = love.keyboard.isDown(key)
+    Net:send(msgInput, table.merge({tick = tick}, self.input))
   elseif key == 'r' then
-    self.input.slot.reload = love.keyboard.isDown(key)
-    dirty = true
+    self.input.reload = love.keyboard.isDown(key)
+    Net:send(msgInput, table.merge({tick = tick}, self.input))
   elseif key:match('^[1-5]$') and love.keyboard.isDown(key) then
     key = tonumber(key)
     local slotType = self.slots[key].type
-    if self.input.slot[slotType] ~= key then self.input.slot[slotType] = key end
-    dirty = true
-  end
-  
-  if love.keyboard.isDown(key) and dirty then
-    self.syncBuffer[tick] = true
-  elseif not love.keyboard.isDown(key) and dirty then
-    self.syncBuffer[tick + 1] = true
+    if self.input[slotType] ~= key then self.input[slotType] = key end
+    Net:send(msgInput, table.merge({tick = tick}, self.input))
   end
 end
 
 function PlayerMain:mouseHandler(x, y, button)
-  self.input.mouse[button] = love.mouse.isDown(button)
-  
-  if love.mouse.isDown(button) then
-    self.syncBuffer[tick] = true
-  elseif not love.mouse.isDown(button) then
-    self.syncBuffer[tick + 1] = true
-  end
+  self.input[button] = love.mouse.isDown(button)
+  Net:send(msgInput, table.merge({tick = tick}, self.input))
 end

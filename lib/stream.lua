@@ -30,7 +30,7 @@ end
 
 function Stream:write(x, sig)
 	if sig == 'string' then self:writeString(x)
-	elseif sig == 'bool' then self:writeBoolean(x)
+	elseif sig == 'bool' then self:writeBool(x)
 	elseif sig == 'float' then self:writeFloat(x)
 	else
 		local n = sig:match('(%d+)bit')

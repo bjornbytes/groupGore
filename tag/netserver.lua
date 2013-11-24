@@ -30,6 +30,10 @@ NetServer.receive[msgClass] = function(self, event)
 	self:emit(evtClass, {id = event.pid, class = event.data.class, team = event.data.team})
 end
 
+NetServer.receive[msgInput] = function(self, event)
+	table.print(event.data)
+end
+
 function NetServer:activate()
 	self:listen(6061)
 	self.clients = {}

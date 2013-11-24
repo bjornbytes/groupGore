@@ -8,6 +8,7 @@ msgJoin  = 4
 msgLeave = 5
 msgSnapshot = 6
 msgClass = 7
+msgInput = 8
 
 function Net:load(tag)
 	assert(tag)

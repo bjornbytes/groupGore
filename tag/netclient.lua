@@ -4,6 +4,12 @@ NetClient.signatures = {}
 NetClient.signatures[msgJoin] = {{'username', 'string'}}
 NetClient.signatures[msgLeave] = {}
 NetClient.signatures[msgClass] = {{'class', '4bits'}, {'team', '1bit'}}
+NetClient.signatures[msgInput] = {
+	{'tick', '16bits'},
+	{'w', 'bool'}, {'a', 'bool'}, {'s', 'bool'}, {'d', 'bool'},
+	{'mx', '12bits'}, {'my', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
+	{'weapon', '3bits'}, {'skill', '3bits'}, {'reload', 'bool'}
+}
 
 NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) emit(event.msg, event.data) end

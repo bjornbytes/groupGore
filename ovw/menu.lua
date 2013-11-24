@@ -11,11 +11,11 @@ function Menu:load()
   
   self.page = 'login'
   self.focused = nil
- 
-	self.ip = '127.0.0.1'
+
+  self.ip = '127.0.0.1'
   self.username = 'username'
   self.password = 'password'
-	self.ipDefault = nil
+  self.ipDefault = nil
   self.usernameDefault = self.username
   self.passwordDefault = self.password
   
@@ -110,6 +110,7 @@ function Menu.keypressed(key)
       Overwatch:unload()
       Overwatch = Game
       Overwatch:load()
+      love.keyboard.setKeyRepeat(false)
     end
     
 		if self.focused == 'ip' then
@@ -122,6 +123,7 @@ function Menu.keypressed(key)
 				Overwatch:unload()
 				Overwatch = Game
 				Overwatch:load()
+        love.keyboard.setKeyRepeat(false)
 			end
 		end
 	end

@@ -62,7 +62,7 @@ end
 ----------------
 function Player:move()
   assert(self.input)
-  local w, a, s, d = self.input.wasd.w, self.input.wasd.a, self.input.wasd.s, self.input.wasd.d
+  local w, a, s, d = self.input.w, self.input.a, self.input.s, self.input.d
   local moving = w or a or s or d
   
   local up, down, left, right, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi
@@ -99,14 +99,14 @@ end
 
 function Player:turn()
   assert(self.input)
-  self.angle = math.direction(self.x, self.y, self.input.mouse.x, self.input.mouse.y)
+  self.angle = math.direction(self.x, self.y, self.input.mx, self.input.my)
 end
 
 function Player:slot()
   assert(self.input)
   
   for i = 1, 5 do
-    if self.slots[i].type ~= 'weapon' or self.input.slot.weapon == i then
+    if self.slots[i].type ~= 'weapon' or self.input.weapon == i then
       f.exe(self.slots[i].update, self, self.slots[i])
     end
   end
