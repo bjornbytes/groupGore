@@ -42,26 +42,17 @@ end
 
 function PlayerServer:spell(kind)
   Player.spell(self, kind)
-  Net:begin(Net.msgSpell)
-     :write(self.id, 4)
-     :write(kind.id, 6)
-     :send(Net.clients, self.id)
 end
 
 function PlayerServer:trace(data)
-  if #data == 0 then return end
-  
-  local idx = 1
-  for i = data[1].tick, tick do
-    if data[idx + 1] and data[idx + 1].tick == i then idx = idx + 1 end
-    
-    local state = table.copy(Players.history[self.id][i - 1] or Players.history[self.id][i])
+  for i = data.tick, tick do
+    local state = table.copy(Players.history[self.id][i - 1])
     if state then
-      table.merge(table.except(data[idx], {'tick'}), state)
+      table.merge(data, state.input)
       state:move()
       state:turn()
       local dst = (i == tick) and self or Players.history[self.id][i]
-      table.merge(table.except(data[idx], {'tick'}), dst)
+      table.merge(data, dst.input)
     end
   end
 end
