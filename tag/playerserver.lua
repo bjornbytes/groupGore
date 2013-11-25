@@ -50,20 +50,6 @@ function PlayerServer:time()
   if self.ded == 0 then self.ded = false end
 end
 
-function PlayerServer:slot()
-  Player.slot(self)
-  
-  local weapon = self.slots[self.input.weapon]
-  if self.input.l and weapon.canFire(self, weapon) then
-    Net:emit(evtFire, {id = self.id, slot = self.input.weapon})
-  end
-  
-  local skill = self.slots[self.input.skill]
-  if self.input.r and skill.canFire(self, skill) then
-    Net:emit(evtFire, {id = self.id, slot = self.input.skill})
-  end
-end
-
 function PlayerServer:spell(kind)
   Player.spell(self, kind)
 end

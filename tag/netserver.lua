@@ -79,7 +79,6 @@ end
 
 function NetServer:emit(evt, data)
   table.insert(self.eventBuffer, {evt, data})
-  emit(evt, data)
 end
 
 function NetServer:sync()

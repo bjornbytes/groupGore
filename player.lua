@@ -111,6 +111,16 @@ function Player:slot()
       f.exe(self.slots[i].update, self, self.slots[i])
     end
   end
+  
+	local weapon = self.slots[self.input.weapon]
+  if self.input.l and weapon.canFire(self, weapon) then
+    emit(evtFire, {id = self.id, slot = self.input.weapon})
+  end
+  
+  local skill = self.slots[self.input.skill]
+  if self.input.r and skill.canFire(self, skill) then
+    emit(evtFire, {id = self.id, slot = self.input.skill})
+  end
 end
 
 function Player:buff()

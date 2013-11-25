@@ -34,10 +34,7 @@ Shotgun.activate = function(self)
     if targets[1] then
       local p = Players:get(targets[1].id)
       len = math.distance(self.x, self.y, p.x, p.y)
-      p:emit('hurt', {
-        amount = data.weapon.shotgun.damage,
-        from = self.owner.id
-      })
+      emit(evtDamage, {amount = data.weapon.shotgun.damage, from = self.owner.id})
     end
     
     table.insert(self.bullets, {
