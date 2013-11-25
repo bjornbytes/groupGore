@@ -33,7 +33,7 @@ function PlayerMain:update()
   self:poll()
   self:buff()
   --self:move()
-  self:turn()
+  --self:turn()
   self:slot()
   self:fade()
 end
