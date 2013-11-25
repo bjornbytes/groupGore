@@ -16,6 +16,12 @@ function Players:init(tag)
     self.history[i] = {}
     setmetatable(self.players[i], {__index = tags[tag]})
   end
+  
+  on(evtFire, self, function(self, data)
+    local p = self:get(data.id)
+    local slot = p.slots[data.slot]
+    slot.fire(p, slot)
+  end)
 end
 
 function Players:activate(id)

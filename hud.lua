@@ -121,7 +121,7 @@ function Hud:mousereleased(x, y, button)
 	if self:classSelect() and math.inside(x, y, 110, 125, 64, 64) and button == 'l' then
 		Net:send(msgClass, {
 			class = 1,
-			team = 0
+			team = myId > 1 and 1 or 0
 		})
 	end
 end

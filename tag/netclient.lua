@@ -60,7 +60,6 @@ function NetClient:activate()
 			if i == tick then dst = p end
 			table.merge(data, dst)
 		end
-		-- table.insert(Players:get(data.id).trace, data)
 	end)
 end
 

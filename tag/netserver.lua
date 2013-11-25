@@ -5,6 +5,7 @@ NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}}
 NetServer.signatures[evtLeave] = {{'id', '4bits'}, {'reason', 'string'}}
 NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}}
 NetServer.signatures[evtSync] = {{'id', '4bits'}, {'tick', '16bits'}, {'x', '12bits'}, {'y', '12bits'}, {'angle', '10bits'}}
+NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[msgJoin] = {{'id', '4bits'}}
 NetServer.signatures[msgSnapshot] = {
   {'tick', '16bits'},
@@ -32,8 +33,20 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  -- table.insert(Players:get(event.pid).trace, event.data)
-  table.merge(event.data, Players:get(event.pid).input)
+  local p = Players:get(event.pid)
+  local t = event.data.tick
+  event.data.tick = nil
+  for i = t, tick do
+    local state = table.copy(Players.history[p.id][i - 1])
+    if state then
+      local dst = (i == tick) and p or Players.history[p.id][i]
+      state.input = event.data
+      dst.input = event.data
+      state:move()
+      state:turn()
+      table.merge({x = state.x, y = state.y, angle = state.angle}, dst)
+    end
+  end
 end
 
 function NetServer:activate()
