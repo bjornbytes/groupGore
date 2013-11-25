@@ -100,7 +100,7 @@ end
 
 function Player:turn()
   assert(self.input)
-  self.angle = math.direction(self.x, self.y, self.input.mx, self.input.my)
+  self.angle = math.anglerp(self.angle, math.direction(self.x, self.y, self.input.mx, self.input.my), .35)
 end
 
 function Player:slot()
