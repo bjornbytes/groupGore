@@ -135,6 +135,7 @@ end
 
 function table.print(t, n)
   n = n or 0
+  if n > 10 then return end
   if t == nil then print('nil') end
   if type(t) ~= 'table' then io.write(tostring(t)) io.write('\n')
   else

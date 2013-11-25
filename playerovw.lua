@@ -52,7 +52,7 @@ function Players:update()
   self:with(self.active, f.ego('update'))
   self:with(self.active, function(p)
     self.history[p.id][tick] = table.copy(p)
-    --self.history[p.id][tick - (1 / tickRate)] = nil
+    self.history[p.id][tick - (1 / tickRate)] = nil
   end)
 end
 

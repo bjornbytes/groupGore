@@ -72,8 +72,8 @@ function Net:pack(msg, data)
 end
 
 function Net:unpack()
-	local data = {}
 	local function halp(signature)
+		local data = {}
 		for _, sig in ipairs(signature) do
 			if type(sig[2]) == 'table' then
 				local ct = self.inStream:read('4bits')

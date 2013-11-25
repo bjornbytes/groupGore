@@ -32,7 +32,8 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  Players:get(event.pid):trace(event.data)
+  -- table.insert(Players:get(event.pid).trace, event.data)
+  table.merge(event.data, Players:get(event.pid).input)
 end
 
 function NetServer:activate()
@@ -69,6 +70,8 @@ function NetServer:emit(evt, data)
 end
 
 function NetServer:sync()
+  if #self.eventBuffer == 0 then return end
+  
   self.outStream:clear()
   
   while #self.eventBuffer > 0 do
@@ -82,13 +85,14 @@ end
 function NetServer:snapshot(peer)
   local players = {}
   table.with(self.clients, function(c)
+    if c.id == peer:index() then return end
     local p = Players:get(c.id)
     table.insert(players, {
       id = c.id,
       username = c.username,
-      class = data.class[p.class] or 0,
+      class = p.active and 1 or 0,
       team = p.team or 0,
     })
   end)
-  self:send(msgSnapshot, peer, {tick = tick, map = 'jungleCarnage', players = players})
+  self:send(msgSnapshot, peer, {tick = tick, map = 'jungleCarnage', ['players'] = players})
 end

@@ -41,7 +41,7 @@ end
 function PlayerMain:poll()
   local prevx, prevy = self.input.mx, self.input.my
   self.input.mx, self.input.my = mouseX(), mouseY()
-  if prevx ~= self.input.mx or prevy ~= self.input.my then Net:send(msgInput, table.merge({tick = tick}, self.input)) end
+  if prevx ~= self.input.mx or prevy ~= self.input.my then self:syncInput() end
 end
 
 function PlayerMain:fade()
@@ -56,7 +56,7 @@ function PlayerMain:fade()
   end)
 end
 
-function PlayerMain:trace(data)
+--[[function PlayerMain:trace(data)
   if #data == 0 then return end
 
   local idx = 1
@@ -81,24 +81,28 @@ function PlayerMain:trace(data)
       end
     end
   end
-end
+end]]
 
 function PlayerMain:keyHandler(key)
   if key == 'w' or key == 'a' or key == 's' or key == 'd' then
     self.input[key] = love.keyboard.isDown(key)
-    Net:send(msgInput, table.merge({tick = tick}, self.input))
+    self:syncInput()
   elseif key == 'r' then
     self.input.reload = love.keyboard.isDown(key)
-    Net:send(msgInput, table.merge({tick = tick}, self.input))
+    self:syncInput()
   elseif key:match('^[1-5]$') and love.keyboard.isDown(key) then
     key = tonumber(key)
     local slotType = self.slots[key].type
     if self.input[slotType] ~= key then self.input[slotType] = key end
-    Net:send(msgInput, table.merge({tick = tick}, self.input))
+    self:syncInput()
   end
 end
 
 function PlayerMain:mouseHandler(x, y, button)
   self.input[button] = love.mouse.isDown(button)
-  Net:send(msgInput, table.merge({tick = tick}, self.input))
+  self:syncInput()
+end
+
+function PlayerMain:syncInput()
+  Net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end

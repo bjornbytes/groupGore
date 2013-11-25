@@ -9,7 +9,7 @@ function PlayerDummy:update()
   --
 end
 
-function PlayerDummy:trace(data)
+--[[function PlayerDummy:trace(data)
   if #data == 0 then return end
 
   local idx = 1
@@ -22,4 +22,4 @@ function PlayerDummy:trace(data)
       dst.angle = math.anglerp(dst.angle, Players.history[self.id][i - 1].angle, .5)
     end
   end
-end
+end]]

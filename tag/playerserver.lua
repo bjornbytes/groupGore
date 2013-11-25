@@ -28,19 +28,19 @@ function PlayerServer:deactivate()
 end
 
 function PlayerServer:update()
-  local prevx, prevy, prevangle = x, y, angle
+  local prevx, prevy, prevangle = self.x, self.y, self.angle
   self:time()
   self:buff()
   self:move()
   self:turn()
   self:slot()
-  if x ~= prevx or y ~= prevy or angle ~= prevangle then
+  if self.x ~= prevx or self.y ~= prevy or self.angle ~= prevangle then
     Net:emit(evtSync, {
       id = self.id,
       tick = tick,
       x = math.floor(self.x + .5),
       y = math.floor(self.y + .5),
-      angle = math.floor(math.deg(self.angle) + .5)
+      angle = math.floor(((math.deg(self.angle) + 360) % 360) + .5)
     })
   end
 end
@@ -54,7 +54,7 @@ function PlayerServer:spell(kind)
   Player.spell(self, kind)
 end
 
-function PlayerServer:trace(data)
+--[[function PlayerServer:trace(data)
   for i = data.tick, tick do
     local state = table.copy(Players.history[self.id][i - 1])
     if state then
@@ -65,4 +65,4 @@ function PlayerServer:trace(data)
       table.merge(data, dst.input)
     end
   end
-end
+end]]

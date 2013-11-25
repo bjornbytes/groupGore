@@ -20,8 +20,16 @@ NetClient.receive[msgJoin] = function(self, event)
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
+	table.print(event.data)
 	tick = event.data.tick
 	Map:load(event.data.map)
+	for i = 1, #event.data.players do
+		local p = event.data.players[i]
+		if p.class > 0 then
+			Players:activate(p.id)
+			Players:setClass(p.id, p.class, p.team)
+		end
+	end
 end
 
 function NetClient:activate()
@@ -37,11 +45,17 @@ function NetClient:activate()
 	end)
 	
 	on(evtClass, self, function(self, data)
+		print(data.class)
 		Players:setClass(data.id, data.class, data.team)
 	end)
 	
 	on(evtSync, self, function(self, data)
-		Players:get(data.id):trace({data})
+		local p = Players:get(data.id)
+		data.tick = nil
+		data.id = nil
+		data.angle = math.rad(data.angle)
+		table.merge(data, p)
+		-- table.insert(Players:get(data.id).trace, data)
 	end)
 end
 

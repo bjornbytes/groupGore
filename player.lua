@@ -21,7 +21,8 @@ function Player:create()
     anchor = nil,
     visible = 0,
     slots = {{}, {}, {}, {}, {}},
-    buffs = {}
+    buffs = {},
+    trace = {}
   }
 end
 
