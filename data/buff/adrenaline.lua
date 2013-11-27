@@ -23,11 +23,11 @@ Adrenaline.effects.haste = .7
 -- Behavior
 ----------------
 Adrenaline.update = function(self, myAdrenaline)
-	--[[Net:emit(evtDamage, {
+	Net:emit(evtDamage, {
 		id = self.id,
 		amount = Adrenaline.drain * tickRate,
 		from = self.id
-	})]]
+	})
 end
 
 return Adrenaline

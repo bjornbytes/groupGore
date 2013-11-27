@@ -27,10 +27,10 @@ function Players:init(tag)
     self:setClass(data.id, data.class, data.team)
   end)
   
-  --[[on(evtDamage, self, function(self, data)
+  on(evtDamage, self, function(self, data)
     local p = self:get(data.id)
     p.health = p.health - data.amount
-  end)]]
+  end)
 end
 
 function Players:activate(id)
