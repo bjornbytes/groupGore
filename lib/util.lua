@@ -26,17 +26,38 @@ function math.hcoca(x1, y1, r1, x2, y2, r2) -- Hot circle on circle action.
   local dx, dy, r = x2 - x1, y2 - y1, r1 + r2
   return (dx * dx) + (dy * dy) < r * r
 end
-function math.hlola(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action.
+function math.hlola(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action (boolean).
   local function s(x1, y1, x2, y2, x3, y3)
     return (y3 - y1) * (x2 - x1) > (y2 - y1) * (x3 - x1)
   end
   return s(x1, y1, x3, y3, x4, y4) ~= s(x2, y2, x3, y3, x4, y4) and s(x1, y1, x2, y2, x3, y3) ~= s(x1, y1, x2, y2, x4, y4)
 end
-function math.hlora(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action.
+function math.hlolax(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action (intersection point).
+  local a1, b1, a2, b2 = y2 - y1, x1 - x2, y4 - y3, x3 - x4
+  local c1, c2 = a1 * x1 + b1 * y1, a2 * x3 + b2 * y3
+  local d = a1 * b2 - a2 * b1
+  if d == 0 then return false end
+  local x, y = (b2 * c1 - b1 * c2) / d, (a1 * c2 - a2 * c1) / d
+  if x < math.min(x1, x2) or x > math.max(x1, x2) or x < math.min(x3, x4) or x > math.max(x3, x4) then return false end
+  if y < math.min(y1, y2) or y > math.max(y1, y2) or y < math.min(y3, y4) or y > math.max(y3, y4) then return false end
+  return x, y
+end
+function math.hlora(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action (boolean).
   return math.hlola(x1, y1, x2, y2, rx, ry, rx + rw, ry)
-      or math.hlola(x1, y1, x2, y2, rx, ry, rx, ry + rh)
-      or math.hlola(x1, y1, x2, y2, rx + rw, ry, rx + rw, ry + rh)
-      or math.hlola(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh)
+    or math.hlola(x1, y1, x2, y2, rx, ry, rx, ry + rh)
+    or math.hlola(x1, y1, x2, y2, rx + rw, ry, rx + rw, ry + rh)
+    or math.hlola(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh)
+end
+function math.hlorax(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action (closest intersection point).
+  local ps = {}
+  ps[1] = {math.hlolax(x1, y1, x2, y2, rx, ry, rx + rw, ry)}
+  ps[2] = {math.hlolax(x1, y1, x2, y2, rx, ry, rx, ry + rh)}
+  ps[3] = {math.hlolax(x1, y1, x2, y2, rx + rw, ry, rx + rw, ry + rh)}
+  ps[4] = {math.hlolax(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh)}
+  local ds = table.map(ps, function(v, i) return v[1] and {math.distance(x1, y1, v[1], v[2]), i} or {math.huge, i} end)
+  table.sort(ds, function(a, b) return a[1] < b[1] end)
+  if ds[1][1] == math.huge then return false end
+  return unpack(ps[ds[1][2]])
 end
 
 -- Table
