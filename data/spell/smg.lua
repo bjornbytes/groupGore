@@ -9,11 +9,12 @@ SMG.activate = function(self)
   self.angle = self.owner.angle + (math.pi / 2)
   self.len = 900
   
-  local endx, endy = self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len
-  local wall = CollisionOvw:checkLineWall(self.x, self.y, endx, endy)
-  if wall then
-    self.len = math.distance(self.x, self.y, wall[1] + (wall[3] / 2), wall[2] + (wall[4] / 2))
-    endx, endy = self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len
+  local x2, y2 = self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len
+  local endx, endy = CollisionOvw:checkLineWall(self.x, self.y, x2, y2, true)
+  if endx then
+    self.len = math.distance(self.x, self.y, endx, endy)
+  else
+    endx, endy = x2, y2
   end
   
   local targets = {}

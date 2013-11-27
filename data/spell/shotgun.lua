@@ -13,11 +13,10 @@ Shotgun.activate = function(self)
   for i = self.owner.angle - .1, self.owner.angle + .1, .0625 do
     local ang, len = i + (math.pi / 2), self.len
     
-    local endx, endy = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
-    local wall = CollisionOvw:checkLineWall(self.x, self.y, endx, endy)
-    if wall then
-      len = math.distance(self.x, self.y, wall[1] + (wall[3] / 2), wall[2] + (wall[4] / 2))
-      endx, endy = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
+    local x2, y2 = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
+    local endx, endy = CollisionOvw:checkLineWall(self.x, self.y, x2, y2, true)
+    if not endx then
+      endx, endy = x2, y2
     end
     
     local targets = {}
@@ -39,7 +38,8 @@ Shotgun.activate = function(self)
     
     table.insert(self.bullets, {
       angle = i + (math.pi / 2),
-      len = len
+      endx = endx,
+      endy = endy
     })
   end
 end
@@ -51,7 +51,7 @@ end
 Shotgun.draw = function(self)
   love.graphics.setColor(255, 255, 255, (self.hp / Shotgun.hp) * 255)
   for _, bullet in pairs(self.bullets) do
-    love.graphics.line(self.x, self.y, self.x + math.cos(bullet.angle) * bullet.len, self.y + math.sin(bullet.angle) * bullet.len)
+    love.graphics.line(self.x, self.y, bullet.endx, bullet.endy)
   end
   love.graphics.setColor(255, 255, 255, 255)
 end
