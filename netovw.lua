@@ -5,12 +5,13 @@ evtLeave = 2
 evtClass = 3
 evtSync = 4
 evtFire = 5
+evtDamage = 6
 
-msgJoin  = 6
-msgLeave = 7
-msgSnapshot = 8
-msgClass = 9
-msgInput = 10
+msgJoin  = 7
+msgLeave = 8
+msgSnapshot = 9
+msgClass = 10
+msgInput = 11
 
 function Net:load(tag)
 	assert(tag)

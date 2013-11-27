@@ -61,10 +61,6 @@ function NetServer:activate()
   on(evtLeave, self, function(self, data)
     print('Player ' .. data.id .. ' has left!')
   end)
-  
-  on(evtClass, self, function(self, data)
-    Players:setClass(data.id, data.class, data.team)
-  end)
 end
 
 function NetServer:connect(event)
@@ -79,6 +75,7 @@ end
 
 function NetServer:emit(evt, data)
   table.insert(self.eventBuffer, {evt, data})
+  emit(evt, data)
 end
 
 function NetServer:sync()

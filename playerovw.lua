@@ -22,6 +22,15 @@ function Players:init(tag)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
   end)
+  
+  on(evtClass, self, function(self, data)
+    self:setClass(data.id, data.class, data.team)
+  end)
+  
+  --[[on(evtDamage, self, function(self, data)
+    local p = self:get(data.id)
+    p.health = p.health - data.amount
+  end)]]
 end
 
 function Players:activate(id)

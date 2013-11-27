@@ -44,11 +44,6 @@ function NetClient:activate()
 		print('Player ' .. data.id .. ' has left!')
 	end)
 	
-	on(evtClass, self, function(self, data)
-		print(data.class)
-		Players:setClass(data.id, data.class, data.team)
-	end)
-	
 	on(evtSync, self, function(self, data)
 		local p = Players:get(data.id)
 		local t = data.tick
@@ -90,3 +85,5 @@ function NetClient:sync()
 	
 	self.server:send(tostring(self.outStream))
 end
+
+NetClient.emit = f.empty
