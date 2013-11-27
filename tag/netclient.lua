@@ -46,14 +46,16 @@ function NetClient:activate()
 	
 	on(evtSync, self, function(self, data)
 		local p = Players:get(data.id)
-		local t = data.tick
-		data.tick = nil
-		data.id = nil
-		data.angle = math.rad(data.angle)
-		for i = t, tick do
-			local dst = Players.history[p.id][i]
-			if i == tick then dst = p end
-			table.merge(data, dst)
+		if p.id ~= myId then
+			local t = data.tick
+			data.tick = nil
+			data.id = nil
+			data.angle = math.rad(data.angle)
+			for i = t, tick do
+				local dst = Players.history[p.id][i]
+				if i == tick then dst = p end
+				table.merge(data, dst)
+			end
 		end
 	end)
 end

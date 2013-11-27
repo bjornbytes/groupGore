@@ -45,7 +45,6 @@ NetServer.receive[msgInput] = function(self, event)
       dst.input = event.data
       state:move()
       state:turn()
-      table.merge({x = state.x, y = state.y, angle = state.angle}, dst)
     end
   end
 end
