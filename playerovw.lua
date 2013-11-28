@@ -33,13 +33,7 @@ function Players:init(tag)
   
   on(evtDamage, self, function(self, data)
     local p = self:get(data.id)
-    if not p.ded then
-      p.health = p.health - data.amount
-      if p.health <= 0 then
-        p.ded = 5
-        Net:emit(evtDead, {id = p.id})
-      end
-    end
+    p:hurt(data)
   end)
   
   on(evtDead, self, function(self, data)

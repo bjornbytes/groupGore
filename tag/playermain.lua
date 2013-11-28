@@ -81,3 +81,17 @@ end
 function PlayerMain:syncInput()
   Net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
+
+function PlayerMain:trace(data)
+  local t = data.tick
+  data.tick = nil
+  data.id = nil
+  data.x = nil
+  data.y = nil
+  data.angle = nil
+  for i = t, tick do
+    local dst = Players.history[self.id][i]
+    if i == tick then dst = self end
+    table.merge(data, dst)
+  end
+end

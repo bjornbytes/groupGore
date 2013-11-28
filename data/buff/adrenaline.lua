@@ -26,7 +26,8 @@ Adrenaline.update = function(self, myAdrenaline)
 	Net:emit(evtDamage, {
 		id = self.id,
 		amount = Adrenaline.drain * tickRate,
-		from = self.id
+		from = self.id,
+		tick = tick
 	})
 end
 

@@ -17,12 +17,12 @@ function Player:create()
     health = 0,
     maxSpeed = 0,
     maxHealth = 0,
+    lastHurt = 0,
     size = 0,
     anchor = nil,
     visible = 0,
     slots = {{}, {}, {}, {}, {}},
-    buffs = {},
-    trace = {}
+    buffs = {}
   }
 end
 
@@ -108,6 +108,8 @@ end
 function Player:slot()
   assert(self.input)
   
+  if self.ded then return end
+  
   for i = 1, 5 do
     if self.slots[i].type ~= 'weapon' or self.input.weapon == i then
       f.exe(self.slots[i].update, self, self.slots[i])
@@ -126,7 +128,12 @@ function Player:slot()
 end
 
 function Player:buff()
+  if self.ded then return end
   for _, buff in pairs(self.buffs) do
     f.exe(buff.update, self, buff)
   end
+end
+
+function Player:hurt()
+  --
 end

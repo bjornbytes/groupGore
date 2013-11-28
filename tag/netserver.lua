@@ -4,7 +4,14 @@ NetServer.signatures = {}
 NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}}
 NetServer.signatures[evtLeave] = {{'id', '4bits'}, {'reason', 'string'}}
 NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}}
-NetServer.signatures[evtSync] = {{'id', '4bits'}, {'tick', '16bits'}, {'x', '12bits'}, {'y', '12bits'}, {'angle', '10bits'}}
+NetServer.signatures[evtSync] = {
+  {'id', '4bits'},
+  {'tick', '16bits'},
+  {'x', '12bits'},
+  {'y', '12bits'},
+  {'angle', '10bits'},
+  {'health', '10bits'}
+}
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
 NetServer.signatures[evtDead] = {{'id', '4bits'}}

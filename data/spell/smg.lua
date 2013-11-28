@@ -31,7 +31,7 @@ SMG.activate = function(self)
   if targets[1] then
     local p = Players:get(targets[1].id)
     self.len = math.distance(self.x, self.y, p.x, p.y)
-    Net:emit(evtDamage, {id = p.id, amount = data.weapon.smg.damage, from = self.owner.id})
+    Net:emit(evtDamage, {id = p.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
 end
 
