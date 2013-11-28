@@ -64,10 +64,6 @@ function View:letterbox()
   love.graphics.rectangle('fill', 0, love.window.getHeight() - self.margin, love.window.getWidth(), self.margin)
 end
 
-function View:draw()
-  --
-end
-
 function View.resize()
   View.scale = love.window.getWidth() / View.w
   View.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (View.h / View.w)) / 2) + .5)

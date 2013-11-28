@@ -22,7 +22,7 @@ function Menu:load()
   self.usernameDefault = self.username
   self.passwordDefault = self.password
   
-  love.window.setMode(800, 600, {resizable = true, minwidth = 640, minheight = 480})
+  love.window.setMode(1024, 600, {resizable = true, minwidth = 640, minheight = 480})
   love.keyboard.setKeyRepeat(true)
 end
 

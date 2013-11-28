@@ -27,6 +27,7 @@ data.load = function()
       class.sprites[name] = love.graphics.newImage(sprite)
     end
   end)
+  load('data/particle', 'particle')
   
   gG = {}
   gg = gG
@@ -37,6 +38,7 @@ data.load = function()
       if data.weapon[k] then return data.weapon[k] end
       if data.skill[k] then return data.skill[k] end
       if data.buff[k] then return data.buff[k] end
+      if data.particle[k] then return data.particle[k] end
       
       return 'wat'
     end
