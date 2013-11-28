@@ -65,6 +65,12 @@ function NetClient:connect(event)
 	self:send(msgJoin, {username = username})
 end
 
+function NetClient:disconnect(event)
+	Overwatch:unload()
+	Overwatch = Menu
+	Overwatch:load()
+end
+
 function NetClient:send(msg, data)
 	if not self.server then return end
 	

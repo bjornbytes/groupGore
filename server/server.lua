@@ -17,5 +17,9 @@ function Server:sync()
 end
 
 function Server:quit()
-	-- Tell people you're leaving.
+	if Net.host then
+		for i = 1, 16 do
+			if Net.host:get_peer(i) then Net.host:get_peer(i):disconnect_now() end
+		end
+	end
 end
