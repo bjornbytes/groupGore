@@ -13,6 +13,8 @@ function Hud:init()
 	Hud.health.back = love.graphics.newImage('media/graphics/healthBack.png')
 	Hud.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
 	Hud.health.red = love.graphics.newImage('media/graphics/healthRed.png')
+	
+	Hud.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', 12)
 end
 
 function Hud:update()
@@ -34,6 +36,15 @@ end
 
 function Hud:draw()
 	love.graphics.reset()
+	love.graphics.setFont(self.font)
+	
+	if not myId then
+		love.graphics.setColor(0, 0, 0)
+		love.graphics.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.printf('Connecting...', 0, love.window.getHeight() / 2 - self.font:getHeight(), love.window.getWidth(), 'center')
+		return
+	end
 	
 	love.graphics.draw(self.health.back, 12, 12)
 	love.graphics.draw(self.health.canvas, 4, 4)

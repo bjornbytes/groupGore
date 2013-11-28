@@ -66,6 +66,8 @@ function NetClient:connect(event)
 end
 
 function NetClient:send(msg, data)
+	if not self.server then return end
+	
 	self.outStream:clear()
 	self:pack(msg, data)
 	self.server:send(tostring(self.outStream))
