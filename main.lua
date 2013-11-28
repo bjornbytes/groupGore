@@ -2,7 +2,6 @@ require 'enet'
 require './lib/util'
 require './lib/linkedlist'
 require './lib/stream'
-require './lib/tlfres'
 
 require './ovw/menu'
 require './ovw/game'
