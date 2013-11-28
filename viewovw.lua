@@ -1,11 +1,27 @@
 View = {}
 
 function mouseX()
-  return love.mouse.getX() + math.floor(View.x + .5)
+  return math.floor(((love.mouse.getX() / View.scale) + View.x) + .5)
 end
 
 function mouseY()
-  return love.mouse.getY() + math.floor(View.y + .5)
+  return math.floor(((love.mouse.getY() / View.scale) + View.y) + .5)
+end
+
+function View:init()
+  local modes = love.window.getFullscreenModes()
+  table.sort(modes, function(a, b) return a.width > b.width end)
+  while modes[#modes].width ~= modes[1].width do table.remove(modes, #modes) end
+  table.sort(modes, function(a, b) return a.width * a.height > b.width * b.height end)
+  love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true})
+  
+  self.x = 0
+  self.prevx = 0
+  self.y = 0
+  self.prevy = 0
+  self.w = 800
+  self.h = 600
+  self.scale = love.window.getWidth() / self.w
 end
 
 function View:update()
@@ -30,6 +46,7 @@ end
 function View:push(map, entities, t)
   love.graphics.push()
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  love.graphics.scale(View.scale)
   love.graphics.translate(-math.floor(x + .5), -math.floor(y + .5))
 end
 
@@ -37,9 +54,6 @@ function View:pop()
   love.graphics.pop()
 end
 
-View.x = 0
-View.prevx = 0
-View.y = 0
-View.prevy = 0
-View.w = love.graphics.getWidth()
-View.h = love.graphics.getHeight()
+function View.resize()
+  View.scale = love.window.getWidth() / View.w
+end

@@ -3,6 +3,7 @@ Game = {}
 function Game:load()
   Players:init('client')
   Net:load('client')
+  View:init()
   Hud:init()
 end
 
@@ -49,9 +50,15 @@ end
 function Game.keypressed(key)
   if Hud:keypressed(key) then return
   elseif Players:keypressed(key) then return end
+  
+  if key == 'escape' then love.event.quit() end
 end
 
 function Game.keyreleased(key)
   if Hud:keyreleased(key) then return
   elseif Players:keyreleased(key) then return end
+end
+
+function Game.resize()
+  View.resize()
 end

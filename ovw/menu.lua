@@ -32,7 +32,7 @@ end
 
 function Menu:draw()
   love.graphics.setColor(50, 50, 55)
-  love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+  love.graphics.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
   
   love.graphics.setColor(255, 255, 255)
   love.graphics.draw(self.bg, 0, 0, 0, love.window.getWidth() / self.bg:getWidth(), love.window.getHeight() / self.bg:getHeight())
@@ -131,6 +131,8 @@ function Menu.keypressed(key)
       end
     end
   end
+  
+  if key == 'escape' then love.event.quit() end
 end
 
 function Menu.mousepressed(x, y, button)

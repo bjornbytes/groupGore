@@ -1,6 +1,6 @@
 SMG = {}
 SMG.code = 'smg'
-SMG.hp = .1
+SMG.hp = .12
 
 SMG.activate = function(self)
   self.hp = SMG.hp
@@ -40,7 +40,7 @@ SMG.update = function(self)
 end
 
 SMG.draw = function(self)
-  local alpha = self.hp / .1
+  local alpha = self.hp / .12
   love.graphics.setColor(255, 255, 255, alpha * 255)
   love.graphics.line(self.x, self.y, self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len)
   love.graphics.setColor(255, 255, 255, 255)
