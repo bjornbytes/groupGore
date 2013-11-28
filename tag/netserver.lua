@@ -7,6 +7,8 @@ NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', 
 NetServer.signatures[evtSync] = {{'id', '4bits'}, {'tick', '16bits'}, {'x', '12bits'}, {'y', '12bits'}, {'angle', '10bits'}}
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
+NetServer.signatures[evtDead] = {{'id', '4bits'}}
+NetServer.signatures[evtSpawn] = {{'id', '4bits'}}
 NetServer.signatures[msgJoin] = {{'id', '4bits'}}
 NetServer.signatures[msgSnapshot] = {
   {'tick', '16bits'},
