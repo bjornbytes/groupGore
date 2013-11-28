@@ -18,6 +18,8 @@ function PlayerMain:activate()
   self.input.skill = 3
   self.input.reload = false
   
+  self.visible = 1
+  
   Player.activate(self)
 end
 

@@ -51,10 +51,12 @@ end
 function Player:draw()
   assert(self.class)
   love.graphics.reset()
+  love.graphics.setColor(0, 0, 0, self.visible * 50)
+  love.graphics.draw(self.class.sprites.body, self.x + 4, self.y + 4, self.angle, 1, 1, self.anchor.x, self.anchor.y)
   if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)
   elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
   love.graphics.draw(self.class.sprites.body, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
-  love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y) 
+  love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
 end
 
 

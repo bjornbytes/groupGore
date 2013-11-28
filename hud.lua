@@ -59,9 +59,9 @@ function Hud:draw()
 			else pas[#pas + 1] = p.slots[i] end
 		end
 
-		local ww = math.max(Hud.consoleFont:getWidth('weapon'), 52 * #wep)
-		local sw = math.max(Hud.consoleFont:getWidth('skill'), 52 * #skl)
-		local pw = math.max(Hud.consoleFont:getWidth('passive'), 52 * #pas)
+		local ww = math.max(Hud.consoleFont:getWidth('Weapon'), 52 * #wep)
+		local sw = math.max(Hud.consoleFont:getWidth('Skill'), 52 * #skl)
+		local pw = math.max(Hud.consoleFont:getWidth('Passive'), 52 * #pas)
 		local w = 4 + ww + 16 + 4 + sw + 16 + 4 + pw
 		
 		local x = love.graphics.getWidth() / 2 - math.floor((w / 2) + .5)
@@ -76,7 +76,7 @@ function Hud:draw()
 			love.graphics.setColor(80, 80, 80, 255)
 		end
 		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.printf('weapon', x + 4, 2, ww, 'center')
+		love.graphics.printf('Weapon', x + 4, 2, ww, 'center')
 		x = x + (ww + 8 + 16)
 		love.graphics.setColor(0, 0, 0, 200)
 		love.graphics.rectangle('fill', x, 0, sw + 4, 52 + 8 + Hud.consoleFont:getHeight())
@@ -89,7 +89,7 @@ function Hud:draw()
 			love.graphics.setColor(80, 80, 80, 255)
 		end
 		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.printf('skill', x + 4, 2, sw, 'center')
+		love.graphics.printf('Skill', x + 4, 2, sw, 'center')
 		x = x + (sw + 8 + 16)
 		love.graphics.setColor(0, 0, 0, 200)
 		love.graphics.rectangle('fill', x, 0, pw + 4, 52 + 8 + Hud.consoleFont:getHeight())
@@ -99,7 +99,7 @@ function Hud:draw()
 			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
 		end
 		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.printf('passive', x + 4, 2, pw, 'center')
+		love.graphics.printf('Passive', x + 4, 2, pw, 'center')
 	end
 	
 	if self:classSelect() then
