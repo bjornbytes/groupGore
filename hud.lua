@@ -15,6 +15,7 @@ function Hud:init()
 	Hud.health.red = love.graphics.newImage('media/graphics/healthRed.png')
 	
 	Hud.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', 12)
+	Hud.biggerFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 16)
 end
 
 function Hud:update()
@@ -58,48 +59,43 @@ function Hud:draw()
 			elseif p.slots[i].type == 'skill' then skl[#skl + 1] = p.slots[i]
 			else pas[#pas + 1] = p.slots[i] end
 		end
-
-		local ww = math.max(Hud.consoleFont:getWidth('Weapon'), 52 * #wep)
-		local sw = math.max(Hud.consoleFont:getWidth('Skill'), 52 * #skl)
-		local pw = math.max(Hud.consoleFont:getWidth('Passive'), 52 * #pas)
-		local w = 4 + ww + 16 + 4 + sw + 16 + 4 + pw
 		
-		local x = love.graphics.getWidth() / 2 - math.floor((w / 2) + .5)
-		love.graphics.setColor(0, 0, 0, 200)
-		love.graphics.rectangle('fill', x, 0, ww + 4, 52 + 8 + Hud.consoleFont:getHeight())
-		love.graphics.setColor(80, 80, 80, 255)
-		love.graphics.rectangle('line', x, -1, ww + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		love.graphics.setFont(self.biggerFont)
+		local yy = 256
 		for i = 1, #wep do
-			if p.slots[p.input.weapon] == wep[i] then love.graphics.setColor(255, 255, 255, 255)
-			else love.graphics.setColor(80, 80, 80, 255) end
-			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
-			love.graphics.setColor(80, 80, 80, 255)
+			love.graphics.setColor(10, 10, 10)
+			if p.slots[p.input.weapon] == wep[i] then love.graphics.setColor(40, 40, 40) end
+			love.graphics.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			love.graphics.setColor(80, 80, 80)
+			love.graphics.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			love.graphics.setColor(160, 160, 160)
+			love.graphics.print(wep[i].name, 16, yy + 8)
+			yy = yy + self.biggerFont:getHeight() + 24
 		end
-		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.printf('Weapon', x + 4, 2, ww, 'center')
-		x = x + (ww + 8 + 16)
-		love.graphics.setColor(0, 0, 0, 200)
-		love.graphics.rectangle('fill', x, 0, sw + 4, 52 + 8 + Hud.consoleFont:getHeight())
-		love.graphics.setColor(80, 80, 80, 255)
-		love.graphics.rectangle('line', x, -1, sw + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		
+		yy = yy + 24
 		for i = 1, #skl do
-			if p.slots[p.input.skill] == skl[i] then love.graphics.setColor(255, 255, 255, 255)
-			else love.graphics.setColor(80, 80, 80, 255) end
-			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
-			love.graphics.setColor(80, 80, 80, 255)
+			love.graphics.setColor(10, 10, 10)
+			if p.slots[p.input.skill] == skl[i] then love.graphics.setColor(40, 40, 40) end
+			love.graphics.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			love.graphics.setColor(80, 80, 80)
+			love.graphics.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			love.graphics.setColor(160, 160, 160)
+			love.graphics.print(skl[i].name, 16, yy + 8)
+			yy = yy + self.biggerFont:getHeight() + 24
 		end
-		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.printf('Skill', x + 4, 2, sw, 'center')
-		x = x + (sw + 8 + 16)
-		love.graphics.setColor(0, 0, 0, 200)
-		love.graphics.rectangle('fill', x, 0, pw + 4, 52 + 8 + Hud.consoleFont:getHeight())
-		love.graphics.setColor(80, 80, 80, 255)
-		love.graphics.rectangle('line', x, -1, pw + 4, 52 + 8 + Hud.consoleFont:getHeight())
+		
+		yy = yy + 24
 		for i = 1, #pas do
-			love.graphics.rectangle('line', x + 4 + (52 * (i - 1)), 8 + Hud.consoleFont:getHeight(), 48, 48)
+			love.graphics.setColor(10, 10, 10)
+			love.graphics.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			love.graphics.setColor(80, 80, 80)
+			love.graphics.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			love.graphics.setColor(160, 160, 160)
+			love.graphics.print(pas[i].name, 16, yy + 8)
+			yy = yy + self.biggerFont:getHeight() + 24
 		end
-		love.graphics.setColor(255, 255, 255, 255)
-		love.graphics.printf('Passive', x + 4, 2, pw, 'center')
+		love.graphics.setFont(self.font)
 	end
 	
 	if self:classSelect() then
