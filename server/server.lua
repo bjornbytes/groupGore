@@ -1,13 +1,13 @@
 Server = {}
 
 function Server:load()
-	Players:init('server')
+  Players:init('server')
   Net:load('server')
   Map:load('jungleCarnage')
 end
 
 function Server:update()
-	Net:update()
+  Net:update()
   Players:update()
   Spells:update()
 end

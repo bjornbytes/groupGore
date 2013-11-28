@@ -14,5 +14,6 @@ function PlayerDummy:trace(data)
 		local dst = Players.history[self.id][i]
 		if i == tick then dst = self end
 		table.merge(data, dst)
+		CollisionOvw:refreshPlayer(self)
 	end
 end
