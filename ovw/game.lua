@@ -30,6 +30,7 @@ function Game:draw()
   Spells:draw()
   View:pop()
   Hud:draw()
+  View:letterbox()
 end
 
 function Game:quit()
@@ -38,8 +39,7 @@ function Game:quit()
 end
 
 function Game.mousepressed(...)
-  if Hud:mousepressed(...) then return
-  elseif Players:mousepressed(...) then return end
+  Players:mousepressed(...)
 end
 
 function Game.mousereleased(...)
@@ -48,15 +48,12 @@ function Game.mousereleased(...)
 end
 
 function Game.keypressed(key)
-  if Hud:keypressed(key) then return
-  elseif Players:keypressed(key) then return end
-  
+  Players:keypressed(key)
   if key == 'escape' then love.event.quit() end
 end
 
 function Game.keyreleased(key)
-  if Hud:keyreleased(key) then return
-  elseif Players:keyreleased(key) then return end
+  Players:keyreleased(key)
 end
 
 function Game.resize()

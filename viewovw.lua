@@ -5,7 +5,7 @@ function mouseX()
 end
 
 function mouseY()
-  return math.floor(((love.mouse.getY() / View.scale) + View.y) + .5)
+  return math.floor((((love.mouse.getY() - View.margin) / View.scale) + View.y) + .5)
 end
 
 function View:init()
@@ -22,6 +22,7 @@ function View:init()
   self.w = 800
   self.h = 450
   self.scale = love.window.getWidth() / self.w
+  self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
 end
 
 function View:update()
@@ -43,7 +44,9 @@ function View:update()
   if self.y + self.h > map.height then self.y = map.height - self.h end
 end
 
-function View:push(map, entities, t)
+function View:push()
+  love.graphics.push()
+  love.graphics.translate(0, self.margin)
   love.graphics.push()
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
   love.graphics.scale(View.scale)
@@ -54,6 +57,18 @@ function View:pop()
   love.graphics.pop()
 end
 
+function View:letterbox()
+  love.graphics.pop()
+  love.graphics.setColor(0, 0, 0, 255)
+  love.graphics.rectangle('fill', 0, 0, love.window.getWidth(), self.margin)
+  love.graphics.rectangle('fill', 0, love.window.getHeight() - self.margin, love.window.getWidth(), self.margin)
+end
+
+function View:draw()
+  --
+end
+
 function View.resize()
   View.scale = love.window.getWidth() / View.w
+  View.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (View.h / View.w)) / 2) + .5)
 end

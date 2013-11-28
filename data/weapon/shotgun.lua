@@ -13,7 +13,7 @@ Shotgun.type = 'weapon'
 ----------------
 -- Data
 ----------------
-Shotgun.damage = 30
+Shotgun.damage = 20
 Shotgun.firerate = .65
 Shotgun.reload = 2
 Shotgun.clip = 4
