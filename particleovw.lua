@@ -3,7 +3,15 @@ Particles = {}
 Particles.particles = {}
 
 function Particles:create(type, vars)
-	local p = {}
+	local p = {
+		image = nil,
+		scale = 1,
+		alpha = 1,
+		color = {255, 255, 255},
+		x = 0,
+		y = 0,
+		angle = 0
+	}
 	
 	p.type = data.particle[type]
 	p.health = p.type.duration
@@ -23,9 +31,11 @@ function Particles:update()
 end
 
 function Particles:draw()
-	table.with(self.particles, function(p, i)
-		local interp = table.interpolate(p.type.initial, p.type.final, (p.type.duration - p.health - tickDelta) / p.type.duration)
-		love.graphics.setColor(255, 0, 0)
-		love.graphics.circle('fill', 400, 300, interp.size)
+	table.with(self.particles, function(v, i)
+		local p = table.interpolate(v.type.initial, v.type.final, (v.type.duration - v.health - tickDelta) / v.type.duration)
+		love.graphics.setColor(unpack(p.color), p.alpha)
+		if p.image then
+			love.graphics.draw(p.image, p.x, p.y, p.angle, p.scale, p.scale, p.image:getWidth() / 2, p.image:getHeight() / 2)
+		end
 	end)
 end

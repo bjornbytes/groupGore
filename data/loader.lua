@@ -27,7 +27,13 @@ data.load = function()
       class.sprites[name] = love.graphics.newImage(sprite)
     end
   end)
-  load('data/particle', 'particle')
+  load('data/particle', 'particle', function(particle)
+    for k, v in pairs(particle.initial) do
+      if type(v) == 'string' and v:match('%.png') then
+        particle.initial[k] = love.graphics.newImage(v)
+      end
+    end
+  end)
   
   gG = {}
   gg = gG
