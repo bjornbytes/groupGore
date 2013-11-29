@@ -39,6 +39,7 @@ function Players:init(tag)
   on(evtDead, self, function(self, data)
     local p = self:get(data.id)
     p.ded = 5
+    Particles:create('skull', {x = p.x, y = p.y})
   end)
   
   on(evtSpawn, self, function(self, data)

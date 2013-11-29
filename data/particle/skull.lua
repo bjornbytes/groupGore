@@ -1,7 +1,7 @@
 local Skull = {}
 
 Skull.name = 'Skull'
-Skull.code = 'skul'
+Skull.code = 'skull'
 
 Skull.duration = 5
 

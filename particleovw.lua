@@ -32,8 +32,9 @@ end
 
 function Particles:draw()
 	table.with(self.particles, function(v, i)
-		local p = table.interpolate(v.type.initial, v.type.final, (v.type.duration - v.health - tickDelta) / v.type.duration)
-		love.graphics.setColor(unpack(p.color), p.alpha)
+		local p = table.merge(table.interpolate(v.type.initial, v.type.final, (v.type.duration - v.health - tickDelta) / v.type.duration), table.copy(v))
+		local r, g, b = unpack(p.color)
+		love.graphics.setColor(r, g, b, p.alpha * 255)
 		if p.image then
 			love.graphics.draw(p.image, p.x, p.y, p.angle, p.scale, p.scale, p.image:getWidth() / 2, p.image:getHeight() / 2)
 		end
