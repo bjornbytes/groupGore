@@ -1,4 +1,4 @@
-View = {}
+View = {toDraw = {}}
 
 function mouseX()
   return math.floor(((love.mouse.getX() / View.scale) + View.x) + .5)
@@ -23,6 +23,14 @@ function View:init()
   self.h = 450
   self.scale = love.window.getWidth() / self.w
   self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
+end
+
+function View:register(x)
+  table.insert(self.toDraw, x)
+end
+
+function View:unregister(x)
+  self.toDraw = table.filter(self.toDraw, function(v) return v ~= x end)
 end
 
 function View:update()
@@ -51,6 +59,25 @@ function View:push()
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
   love.graphics.scale(View.scale)
   love.graphics.translate(-math.floor(x + .5), -math.floor(y + .5))
+end
+
+
+function View:draw()
+  self:push()
+  
+  table.sort(self.toDraw, function(a, b)
+    return a.depth < b.depth
+  end)
+
+  for k, v in ipairs(self.toDraw) do v:draw() end
+
+  Map:draw()
+  Players:draw()
+  Spells:draw()
+  Particles:draw()
+  self:pop()
+  Hud:draw()
+  self:letterbox()
 end
 
 function View:pop()

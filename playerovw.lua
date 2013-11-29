@@ -52,6 +52,7 @@ end
 function Players:activate(id)
   assert(id >= 1 and id <= 16)
   self.players[id].active = true
+  View:register(self.players[id])
   self:refresh()
 end
 

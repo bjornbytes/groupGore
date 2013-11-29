@@ -25,14 +25,7 @@ function Game:sync()
 end
 
 function Game:draw()
-  View:push()
-  Map:draw()
-  Players:draw()
-  Spells:draw()
-  Particles:draw()
-  View:pop()
-  Hud:draw()
-  View:letterbox()
+  View:draw()
 end
 
 function Game:quit()
