@@ -142,7 +142,7 @@ function Menu.mousepressed(x, y, button)
     if button == 'l' then
       local fh = self.font:getHeight()
       local ih = math.max(40, fh)
-      local iw = math.min(w(.3), 240)
+      local iw = math.max(w(.3), 240)
       if math.inside(x, y, w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih) then self:focusInput('username')
       elseif math.inside(x, y, w(.5) - (iw / 2), h(.35) + (ih / 2) + 1, iw, ih) then self:focusInput('password') end
     end
@@ -150,7 +150,7 @@ function Menu.mousepressed(x, y, button)
     if button == 'l' then
       local fh = self.font:getHeight()
       local ih = math.max(40, fh)
-      local iw = math.min(w(.3), 240)
+      local iw = math.max(w(.3), 240)
       if math.inside(x, y, w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih) then self:focusInput('ip') end
     end
   end
