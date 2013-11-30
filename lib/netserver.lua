@@ -106,15 +106,17 @@ end
 
 function NetServer:snapshot(peer)
   local players = {}
-  table.with(self.clients, function(c)
-    if c.id == peer:index() then return end
-    local p = Players:get(c.id)
-    table.insert(players, {
-      id = c.id,
-      username = c.username,
-      class = p.active and 1 or 0,
-      team = p.team or 0,
-    })
+  table.with(ovw.players.active, function(id)
+    print(id)
+    if id ~= peer:index() then
+      local p = ovw.players:get(id)
+      table.insert(players, {
+        id = id,
+        username = self.clients[id] and self.clients[id].username or 'robot',
+        class = p.active and 1 or 0,
+        team = p.team or 0,
+      })
+    end
   end)
   self:send(msgSnapshot, peer, {tick = tick, map = 'jungleCarnage', ['players'] = players})
 end

@@ -39,7 +39,7 @@ function Players:init()
   ovw.event:on(evtDead, self, function(self, data)
     local p = self:get(data.id)
     p.ded = 5
-    Particles:create('skull', {x = p.x, y = p.y})
+    if ovw.particles then ovw.particles:create('skull', {x = p.x, y = p.y}) end
   end)
   
   ovw.event:on(evtSpawn, self, function(self, data)

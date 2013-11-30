@@ -52,7 +52,7 @@ function PlayerMain:fade()
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
     return ovw.collision:checkLineWall(self.x, self.y, p.x, p.y)
   end
-  Players:with(Players.active, function(p)
+  ovw.players:with(ovw.players.active, function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
     else p.visible = math.min(p.visible + tickRate, 1) end
   end)
