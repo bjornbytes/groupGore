@@ -13,13 +13,13 @@ function Map:init(name)
       map.graphics[image] = love.graphics.newImage(dir .. file)
     end
   end
-  
-  map.walls = love.filesystem.load(dir .. 'walls.lua')(map)
-  map.grass = love.graphics.newImage('/media/graphics/grass.png')
-  for _, coords in pairs(map.walls) do
-    ovw.collision:addWall(coords.x, coords.y, coords.w, coords.h)
-  end
 
+  map.props = table.map(map.props, function(prop)
+    setmetatable(prop, {__index = data.prop[prop.kind]})
+    f.exe(prop.activate, prop)
+    return prop
+  end)
+  
   table.merge(map, self)
 end
 
@@ -35,10 +35,6 @@ function Map:draw()
       love.graphics.draw(self.graphics.background, i, j)
     end
   end
-  
-  love.graphics.setColor(0, 0, 0)
-  for _, wall in pairs(self.walls) do
-    love.graphics.rectangle('fill', wall.x, wall.y, wall.w, wall.h)
-  end
-  love.graphics.setColor(255, 255, 255)
+
+  table.with(self.props, f.ego('draw'))
 end

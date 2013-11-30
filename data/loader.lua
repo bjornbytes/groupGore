@@ -34,6 +34,7 @@ data.load = function()
       end
     end
   end)
+  load('data/prop', 'prop')
   
   gG = {}
   gg = gG
