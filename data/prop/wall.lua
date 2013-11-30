@@ -5,12 +5,12 @@ Wall.code = 'wall'
 Wall.depth = -5
 
 Wall.activate = function(self)
-	ovw.collision:addWall(self.x, self.y, self.w, self.h)
+  ovw.collision:addWall(self.x, self.y, self.w, self.h)
 end
 
 Wall.draw = function(self)
-	love.graphics.setColor(0, 0, 0, 255)
-	love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
+  love.graphics.setColor(0, 0, 0, 255)
+  love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
 end
 
 return Wall

@@ -4,27 +4,27 @@ require './lib/class'
 require './lib/linkedlist'
 require './lib/stream'
 
-require './ovw/ovwovw'
+require './ovw/ovw'
 require './ovw/menu'
 require './ovw/game'
 
-require './eventovw'
-require './mapovw'
-require './collisionovw'
-require './buffovw'
-require './viewovw'
-require './particleovw'
+require './event'
+require './map'
+require './collision'
+require './buff'
+require './view'
+require './particle'
 require './hud'
 
-require './netovw'
+require './net'
 require './tag/netclient'
 require './tag/netserver'
 
 require './player'
-require './playerovw'
+require './players'
 
 require './spell'
-require './spellovw'
+require './spells'
 
 require './server/server'
 
