@@ -17,7 +17,7 @@ function Map:init(name)
   map.walls = love.filesystem.load(dir .. 'walls.lua')(map)
   map.grass = love.graphics.newImage('/media/graphics/grass.png')
   for _, coords in pairs(map.walls) do
-    CollisionOvw:addWall(coords.x, coords.y, coords.w, coords.h)
+    ovw.collision:addWall(coords.x, coords.y, coords.w, coords.h)
   end
 
   table.merge(map, self)

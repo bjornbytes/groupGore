@@ -14,7 +14,7 @@ Shotgun.activate = function(self)
     local ang, len = i + (math.pi / 2), self.len
     
     local x2, y2 = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
-    local endx, endy = CollisionOvw:checkLineWall(self.x, self.y, x2, y2, true)
+    local endx, endy = ovw.collision:checkLineWall(self.x, self.y, x2, y2, true)
     if not endx then
       endx, endy = x2, y2
     end

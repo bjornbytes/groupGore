@@ -90,9 +90,9 @@ function Player:move()
     local dir = (dx + dy) / 2
     local newx, newy = self.x + math.cos(dir) * (self.speed * tickRate), self.y + math.sin(dir) * (self.speed * tickRate)
     
-    self.x, self.y = CollisionOvw:resolveCircleWall(newx, newy, self.size, .5)
-    self.x, self.y = CollisionOvw:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
-    CollisionOvw:refreshPlayer(self)
+    self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
+    self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
+    ovw.collision:refreshPlayer(self)
     
     if self.x < 0 then self.x = 0
     elseif self.x > ovw.map.width then self.x = ovw.map.width end

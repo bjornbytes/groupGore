@@ -1,14 +1,14 @@
-CollisionOvw = {}
+Collision = class()
 
 local size = 64
 
-CollisionOvw.grid = {}
-CollisionOvw.gridSize = size
-CollisionOvw.testCache = {}
-CollisionOvw.playerGrid = {}
-CollisionOvw.players = {}
+Collision.grid = {}
+Collision.gridSize = size
+Collision.testCache = {}
+Collision.playerGrid = {}
+Collision.players = {}
 
-function CollisionOvw:addWall(...)
+function Collision:addWall(...)
   local x, y, w, h = ...
   for i = math.floor(x / size), math.floor((x + w) / size) - 1 do
     self.grid[i] = self.grid[i] or {}
@@ -18,7 +18,7 @@ function CollisionOvw:addWall(...)
   end
 end
 
-function CollisionOvw:getTests(x, y)
+function Collision:getTests(x, y)
   x, y = math.floor(x / size), math.floor(y / size)
   if not self.testCache[x] or not self.testCache[x][y] then
     self.testCache[x] = self.testCache[x] or {}
@@ -36,7 +36,7 @@ function CollisionOvw:getTests(x, y)
   return self.testCache[x][y]
 end
 
-function CollisionOvw:checkCircleWall(cx, cy, cr)
+function Collision:checkCircleWall(cx, cy, cr)
   local tests = self:getTests(cx, cy)
   if #tests == 0 then return false end
   for _, coords in pairs(tests) do
@@ -45,7 +45,7 @@ function CollisionOvw:checkCircleWall(cx, cy, cr)
   return false
 end
 
-function CollisionOvw:checkPointWall(px, py)
+function Collision:checkPointWall(px, py)
   local tests = self:getTests(px, py)
   if #tests == 0 then return false end
   for _, coords in pairs(tests) do
@@ -54,7 +54,7 @@ function CollisionOvw:checkPointWall(px, py)
   return false
 end
 
-function CollisionOvw:checkLineWall(x1, y1, x2, y2, intersect)
+function Collision:checkLineWall(x1, y1, x2, y2, intersect)
   local l, dis, dir = 0, math.distance(x1, y1, x2, y2), math.direction(x1, y1, x2, y2) + (math.pi / 2)
   local f = intersect and math.hlorax or math.hlora
   repeat
@@ -75,7 +75,7 @@ function CollisionOvw:checkLineWall(x1, y1, x2, y2, intersect)
   return false
 end
 
-function CollisionOvw:resolveCircleWall(x, y, r, step)
+function Collision:resolveCircleWall(x, y, r, step)
   local wall = self:checkCircleWall(x, y, r)
   if not wall then return x, y end
   
@@ -123,7 +123,7 @@ function CollisionOvw:resolveCircleWall(x, y, r, step)
   return self:resolveCircleWall(x, y, r, step)
 end
 
-function CollisionOvw:resolveCirclePlayer(x, y, r, step, team)
+function Collision:resolveCirclePlayer(x, y, r, step, team)
   local players = {}
   local xx, yy = math.floor(x / size), math.floor(y / size)
   for i = -1, 1 do
@@ -158,7 +158,7 @@ function CollisionOvw:resolveCirclePlayer(x, y, r, step, team)
   return self:resolveCirclePlayer(x, y, r, step, team)
 end
 
-function CollisionOvw:refreshPlayer(p)
+function Collision:refreshPlayer(p)
   local nx, ny
   if self.players[p.id] then
     local node = self.players[p.id]

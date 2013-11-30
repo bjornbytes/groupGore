@@ -10,7 +10,7 @@ SMG.activate = function(self)
   self.len = 900
   
   local x2, y2 = self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len
-  local endx, endy = CollisionOvw:checkLineWall(self.x, self.y, x2, y2, true)
+  local endx, endy = ovw.collision:checkLineWall(self.x, self.y, x2, y2, true)
   if endx then
     self.len = math.distance(self.x, self.y, endx, endy)
   else

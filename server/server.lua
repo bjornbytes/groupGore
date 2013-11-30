@@ -4,6 +4,7 @@ Server.tag = 'server'
 
 function Server:load()
   self.event = Event()
+  self.collision = Collision()
   self.players = Players()
   self.spells = Spells()
   self.net = NetServer()
