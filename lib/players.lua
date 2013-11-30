@@ -148,9 +148,3 @@ function Players:reset()
     p:activate()
   end)
 end
-
-local dir
-dir = '/tag'
-for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-  if file:match('player.*%.lua') then love.filesystem.load(dir .. '/' .. file)() end
-end

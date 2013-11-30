@@ -228,3 +228,11 @@ timer.rot = function(val, f) if not val or val == 0 then return val end if val <
 
 -- String
 string.capitalize = function(s) s = ' ' .. s return s:gsub('(%s%l)', string.upper) end
+
+-- Class
+function class(x, ...)
+  local t = {}
+  setmetatable(t, {__index = x, __call = class})
+  if x and x.init then x.init(t, ...) end
+  return t
+end
