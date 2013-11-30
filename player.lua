@@ -28,8 +28,8 @@ function Player:create()
 end
 
 function Player:activate()
-  self.x = ovw.map.map.spawn[self.team].x
-  self.y = ovw.map.map.spawn[self.team].y
+  self.x = ovw.map.spawn[self.team].x
+  self.y = ovw.map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
   self.size = self.class.size
@@ -95,9 +95,9 @@ function Player:move()
     CollisionOvw:refreshPlayer(self)
     
     if self.x < 0 then self.x = 0
-    elseif self.x > ovw.map.map.width then self.x = ovw.map.map.width end
+    elseif self.x > ovw.map.width then self.x = ovw.map.width end
     if self.y < 0 then self.y = 0
-    elseif self.y > ovw.map.map.height then self.y = ovw.map.map.height end
+    elseif self.y > ovw.map.height then self.y = ovw.map.height end
   end
 end
 

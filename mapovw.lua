@@ -20,7 +20,7 @@ function Map:init(name)
     CollisionOvw:addWall(coords.x, coords.y, coords.w, coords.h)
   end
 
-  self.map = map
+  table.merge(map, self)
 end
 
 function Map:update()
@@ -30,14 +30,14 @@ end
 function Map:draw()
   love.graphics.reset()
   
-  for i = 0, self.map.width, self.map.graphics.background:getWidth() do
-    for j = 0, self.map.height, self.map.graphics.background:getHeight() do
-      love.graphics.draw(self.map.graphics.background, i, j)
+  for i = 0, self.width, self.graphics.background:getWidth() do
+    for j = 0, self.height, self.graphics.background:getHeight() do
+      love.graphics.draw(self.graphics.background, i, j)
     end
   end
   
   love.graphics.setColor(0, 0, 0)
-  for _, wall in pairs(self.map.walls) do
+  for _, wall in pairs(self.walls) do
     love.graphics.rectangle('fill', wall.x, wall.y, wall.w, wall.h)
   end
   love.graphics.setColor(255, 255, 255)

@@ -49,8 +49,8 @@ function View:update()
   
   if self.x < 0 then self.x = 0 end
   if self.y < 0 then self.y = 0 end
-  if self.x + self.w > ovw.map.map.width then self.x = ovw.map.map.width - self.w end
-  if self.y + self.h > ovw.map.map.height then self.y = ovw.map.map.height - self.h end
+  if self.x + self.w > ovw.map.width then self.x = ovw.map.width - self.w end
+  if self.y + self.h > ovw.map.height then self.y = ovw.map.height - self.h end
 end
 
 function View:push()
