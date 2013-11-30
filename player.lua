@@ -28,8 +28,8 @@ function Player:create()
 end
 
 function Player:activate()
-  self.x = map.spawn[self.team].x
-  self.y = map.spawn[self.team].y
+  self.x = ovw.map.map.spawn[self.team].x
+  self.y = ovw.map.map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
   self.size = self.class.size
@@ -95,9 +95,9 @@ function Player:move()
     CollisionOvw:refreshPlayer(self)
     
     if self.x < 0 then self.x = 0
-    elseif self.x > map.width then self.x = map.width end
+    elseif self.x > ovw.map.map.width then self.x = ovw.map.map.width end
     if self.y < 0 then self.y = 0
-    elseif self.y > map.height then self.y = map.height end
+    elseif self.y > ovw.map.map.height then self.y = ovw.map.map.height end
   end
 end
 
@@ -119,12 +119,12 @@ function Player:slot()
   
   local weapon = self.slots[self.input.weapon]
   if self.input.l and weapon.canFire(self, weapon) then
-    Net:emit(evtFire, {id = self.id, slot = self.input.weapon})
+    ovw.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
   end
   
   local skill = self.slots[self.input.skill]
   if self.input.r and skill.canFire(self, skill) then
-    Net:emit(evtFire, {id = self.id, slot = self.input.skill})
+    ovw.net:emit(evtFire, {id = self.id, slot = self.input.skill})
   end
 end
 

@@ -45,7 +45,7 @@ function PlayerServer:update()
   end
   
   if self.x ~= prevx or self.y ~= prevy or self.angle ~= prevangle or math.floor(self.health + .5) ~= prevhp or tick % 100 == 0 then
-    Net:emit(evtSync, {
+    ovw.net:emit(evtSync, {
       id = self.id,
       tick = tick,
       x = math.floor(self.x + .5),
@@ -71,7 +71,7 @@ function PlayerServer:hurt(data)
     self.lastHurt = data.tick
     if self.health <= 0 then
       self.ded = 5
-      Net:emit(evtDead, {id = self.id})
+      ovw.net:emit(evtDead, {id = self.id})
     end
   end
 end

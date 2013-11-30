@@ -1,19 +1,24 @@
 require 'enet'
 require './lib/util'
+require './lib/class'
 require './lib/linkedlist'
 require './lib/stream'
 
+require './ovw/ovwovw'
 require './ovw/menu'
 require './ovw/game'
 
 require './eventovw'
 require './mapovw'
 require './collisionovw'
-require './netovw'
 require './buffovw'
 require './viewovw'
 require './particleovw'
 require './hud'
+
+require './netovw'
+require './tag/netclient'
+require './tag/netserver'
 
 require './player'
 require './playerovw'
@@ -21,20 +26,22 @@ require './playerovw'
 require './spell'
 require './spellovw'
 
+require './server/server'
+
 require './data/loader'
 
 function love.load()
-  Overwatch = Menu
-  Overwatch:load()
   data.load()
-  
-  love.update = function() Overwatch:update() end
-  love.draw = function() f.exe(Overwatch.draw, Overwatch) end
-  love.sync = function() f.exe(Overwatch.sync, Overwatch) end
-  love.quit = function() f.exe(Overwatch.quit, Overwatch) end
+
+  Overwatch:add(Menu)
+
+  love.update = Overwatch.update
+  love.draw = Overwatch.draw
+  love.sync = Overwatch.sync
+  love.quit = Overwatch.quit
   
   love.handlers = {}
-  setmetatable(love.handlers, {__index = function(t, k) return Overwatch[k] or f.empty end})
+  setmetatable(love.handlers, {__index = Overwatch})
 end
 
 function love.run()

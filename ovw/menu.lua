@@ -1,4 +1,4 @@
-Menu = {}
+Menu = class()
 
 local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return love.window.getHeight() * x end
@@ -83,12 +83,7 @@ function Menu:draw()
   end
 end
 
-function Menu:update()
-  --
-end
-
-function Menu.keypressed(key)
-  local self = Menu
+function Menu:keypressed(key)
   if self.page == 'login' then
     if self.focused == 'username' then
       if #key == 1 and key:match('%w') then self.username = self.username .. key
@@ -106,14 +101,17 @@ function Menu.keypressed(key)
       end
     end
   elseif self.page == 'main' then
-    if key == 's' then love.filesystem.load('server/main.lua')() return
+    serverIp = self.ip
+    serverPort = 6061
+    
+    if key == 's' then
+      Overwatch:remove(self)
+      Overwatch:add(Server)
+      Overwatch:add(Game)
+      return
     elseif key == 'c' then 
-      serverIp = self.ip
-      serverPort = 6061
-      
-      Overwatch:unload()
-      Overwatch = Game
-      Overwatch:load()
+      Overwatch:remove(self)
+      Overwatch:add(Game)
       love.keyboard.setKeyRepeat(false)
     end
     
@@ -124,9 +122,8 @@ function Menu.keypressed(key)
         serverIp = self.ip
         serverPort = 6061
         
-        Overwatch:unload()
-        Overwatch = Game
-        Overwatch:load()
+        Overwatch:remove(self)
+        Overwatch:add(Game)
         love.keyboard.setKeyRepeat(false)
       end
     end
@@ -135,8 +132,7 @@ function Menu.keypressed(key)
   if key == 'escape' then love.event.quit() end
 end
 
-function Menu.mousepressed(x, y, button)
-  local self = Menu
+function Menu:mousepressed(x, y, button)
   self:unfocus()
   if self.page == 'login' then
     if button == 'l' then

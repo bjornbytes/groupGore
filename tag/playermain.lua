@@ -79,7 +79,7 @@ function PlayerMain:mouseHandler(x, y, button)
 end
 
 function PlayerMain:syncInput()
-  Net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
+  ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
 
 function PlayerMain:trace(data)
@@ -90,7 +90,7 @@ function PlayerMain:trace(data)
   data.y = nil
   data.angle = nil
   for i = t, tick do
-    local dst = Players.history[self.id][i]
+    local dst = ovw.players.history[self.id][i]
     if i == tick then dst = self end
     table.merge(data, dst)
   end

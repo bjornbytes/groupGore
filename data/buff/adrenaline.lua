@@ -23,7 +23,7 @@ Adrenaline.effects.haste = .7
 -- Behavior
 ----------------
 Adrenaline.update = function(self, myAdrenaline)
-	Net:emit(evtDamage, {
+	ovw.net:emit(evtDamage, {
 		id = self.id,
 		amount = Adrenaline.drain * tickRate,
 		from = self.id,

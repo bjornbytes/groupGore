@@ -1,6 +1,8 @@
-Particles = {}
+Particles = class()
 
-Particles.particles = {}
+function Particles:init()
+	self.particles = {}
+end
 
 function Particles:create(type, vars)
 	local p = {

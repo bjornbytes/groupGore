@@ -1,6 +1,8 @@
-Map = {}
+Map = class()
 
-function Map:load(name)
+function Map:init(name)
+  name = 'jungleCarnage'
+
   local dir = 'maps/' .. name .. '/'
   local map  = love.filesystem.load(dir .. name .. '.lua')()
   map.graphics = {}
@@ -17,29 +19,25 @@ function Map:load(name)
   for _, coords in pairs(map.walls) do
     CollisionOvw:addWall(coords.x, coords.y, coords.w, coords.h)
   end
-  
-  _G['map'] = map
+
+  self.map = map
 end
 
 function Map:update()
-  if not map then return end
-  
-  View:update()
+  --
 end
 
 function Map:draw()
-  if not map then return end
-  
   love.graphics.reset()
   
-  for i = 0, map.width, map.graphics.background:getWidth() do
-    for j = 0, map.height, map.graphics.background:getHeight() do
-      love.graphics.draw(map.graphics.background, i, j)
+  for i = 0, self.map.width, self.map.graphics.background:getWidth() do
+    for j = 0, self.map.height, self.map.graphics.background:getHeight() do
+      love.graphics.draw(self.map.graphics.background, i, j)
     end
   end
   
   love.graphics.setColor(0, 0, 0)
-  for _, wall in pairs(map.walls) do
+  for _, wall in pairs(self.map.walls) do
     love.graphics.rectangle('fill', wall.x, wall.y, wall.w, wall.h)
   end
   love.graphics.setColor(255, 255, 255)

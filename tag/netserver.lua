@@ -1,4 +1,4 @@
-NetServer = {}
+NetServer = Net()
 
 NetServer.signatures = {}
 NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}}
@@ -43,13 +43,13 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  local p = Players:get(event.pid)
+  local p = ovw.players:get(event.pid)
   local t = event.data.tick
   event.data.tick = nil
   for i = t, tick do
-    local state = table.copy(Players.history[p.id][i - 1])
+    local state = table.copy(ovw.players.history[p.id][i - 1])
     if state then
-      local dst = (i == tick) and p or Players.history[p.id][i]
+      local dst = (i == tick) and p or ovw.players.history[p.id][i]
       state.input = event.data
       dst.input = event.data
       state:move()
@@ -58,18 +58,22 @@ NetServer.receive[msgInput] = function(self, event)
   end
 end
 
-function NetServer:activate()
+function NetServer:init()
+  self.other = NetClient
+
   self:listen(6061)
   self.clients = {}
   self.eventBuffer = {}
   
-  on(evtJoin, self, function(self, data)
+  ovw.event:on(evtJoin, self, function(self, data)
     print(data.username .. ' has joined!')
   end)
   
-  on(evtLeave, self, function(self, data)
+  ovw.event:on(evtLeave, self, function(self, data)
     print('Player ' .. data.id .. ' has left!')
   end)
+
+  Net.init(self)
 end
 
 function NetServer:connect(event)
@@ -84,7 +88,7 @@ end
 
 function NetServer:emit(evt, data)
   table.insert(self.eventBuffer, {evt, data})
-  emit(evt, data)
+  ovw.event:emit(evt, data)
 end
 
 function NetServer:sync()

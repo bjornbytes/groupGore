@@ -1,4 +1,4 @@
-NetClient = {}
+NetClient = Net()
 
 NetClient.signatures = {}
 NetClient.signatures[msgJoin] = {{'username', 'string'}}
@@ -12,42 +12,45 @@ NetClient.signatures[msgInput] = {
 }
 
 NetClient.receive = {}
-NetClient.receive['default'] = function(self, event) emit(event.msg, event.data) end
+NetClient.receive['default'] = function(self, event) ovw.event:emit(event.msg, event.data) end
 
 NetClient.receive[msgJoin] = function(self, event)
 	myId = event.data.id
-	setmetatable(Players:get(myId), {__index = PlayerMain})
+	setmetatable(ovw.players:get(myId), {__index = PlayerMain})
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
 	table.print(event.data)
 	tick = event.data.tick
-	Map:load(event.data.map)
+	--ovw.map:load(event.data.map)
 	for i = 1, #event.data.players do
 		local p = event.data.players[i]
 		if p.class > 0 then
-			Players:activate(p.id)
-			Players:setClass(p.id, p.class, p.team)
+			ovw.players:activate(p.id)
+			ovw.players:setClass(p.id, p.class, p.team)
 		end
 	end
 end
 
-function NetClient:activate()
+function NetClient:init()
+	self.other = NetServer
 	self:connectTo(serverIp, 6061)
 	self.messageBuffer = {}
-	
-	on(evtJoin, self, function(self, data)
+
+	ovw.event:on(evtJoin, self, function(self, data)
 		print(data.username .. ' has joined!')
 	end)
 	
-	on(evtLeave, self, function(self, data)
+	ovw.event:on(evtLeave, self, function(self, data)
 		print('Player ' .. data.id .. ' has left!')
 	end)
 	
-	on(evtSync, self, function(self, data)
-		local p = Players:get(data.id)
+	ovw.event:on(evtSync, self, function(self, data)
+		local p = ovw.players:get(data.id)
 		p:trace(data)
 	end)
+
+	Net.init(self)
 end
 
 function NetClient:connect(event)

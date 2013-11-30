@@ -1,15 +1,17 @@
-Event = {}
+Event = class()
 
-Event.handlers = {}
-
-function on(event, context, fn)
-	Event.handlers[event] = Event.handlers[event] or {}
-	table.insert(Event.handlers[event], {context, fn})
+function Event:init()
+	self.handlers = {}
 end
 
-function emit(event, data)
-	if not Event.handlers[event] then return end
-	for _, t in ipairs(Event.handlers[event]) do
+function Event:on(event, context, fn)
+	self.handlers[event] = self.handlers[event] or {}
+	table.insert(self.handlers[event], {context, fn})
+end
+
+function Event:emit(event, data)
+	if not self.handlers[event] then return end
+	for _, t in ipairs(self.handlers[event]) do
 		local context, fn = unpack(t)
 		fn(context, data)
 	end

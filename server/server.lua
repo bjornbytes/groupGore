@@ -1,25 +1,29 @@
-Server = {}
+Server = class()
+
+Server.tag = 'server'
 
 function Server:load()
-  Players:init('server')
-  Net:load('server')
-  Map:load('jungleCarnage')
+  self.event = Event()
+  self.players = Players()
+  self.spells = Spells()
+  self.net = NetServer()
+  self.map = Map()
 end
 
 function Server:update()
-  Net:update()
-  Players:update()
-  Spells:update()
+  self.net:update()
+  self.players:update()
+  self.spells:update()
 end
 
 function Server:sync()
-  Net:sync()
+  self.net:sync()
 end
 
 function Server:quit()
-	if Net.host then
+	if self.net.host then
 		for i = 1, 16 do
-			if Net.host:get_peer(i) then Net.host:get_peer(i):disconnect_now() end
+			if self.net.host:get_peer(i) then self.net.host:get_peer(i):disconnect_now() end
 		end
 	end
 end

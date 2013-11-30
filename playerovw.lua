@@ -1,6 +1,6 @@
-Players = {}
+Players = class()
 
-function Players:init(tag)
+function Players:init()
   local tags = {
     client = PlayerDummy,
     server = PlayerServer
@@ -14,35 +14,35 @@ function Players:init(tag)
     self.players[i] = Player:create()
     self.players[i].id = i
     self.history[i] = {}
-    setmetatable(self.players[i], {__index = tags[tag]})
+    setmetatable(self.players[i], {__index = tags[ovw.tag]})
   end
   
-  on(evtLeave, self, function(self, data)
+  ovw.event:on(evtLeave, self, function(self, data)
     self:deactivate(data.id)
   end)
   
-  on(evtFire, self, function(self, data)
+  ovw.event:on(evtFire, self, function(self, data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
   end)
   
-  on(evtClass, self, function(self, data)
+  ovw.event:on(evtClass, self, function(self, data)
     self:setClass(data.id, data.class, data.team)
   end)
   
-  on(evtDamage, self, function(self, data)
+  ovw.event:on(evtDamage, self, function(self, data)
     local p = self:get(data.id)
     p:hurt(data)
   end)
   
-  on(evtDead, self, function(self, data)
+  ovw.event:on(evtDead, self, function(self, data)
     local p = self:get(data.id)
     p.ded = 5
     Particles:create('skull', {x = p.x, y = p.y})
   end)
   
-  on(evtSpawn, self, function(self, data)
+  ovw.event:on(evtSpawn, self, function(self, data)
     local p = self:get(data.id)
     p.ded = false
     p:activate()
@@ -52,7 +52,7 @@ end
 function Players:activate(id)
   assert(id >= 1 and id <= 16)
   self.players[id].active = true
-  View:register(self.players[id])
+  if ovw.view then ovw.view:register(self.players[id]) end
   self:refresh()
 end
 

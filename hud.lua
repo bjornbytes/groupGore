@@ -1,25 +1,25 @@
-Hud = {}
+Hud = class()
 
 function Hud:init()
-	Hud.health = {}
-	Hud.health.canvas = love.graphics.newCanvas(160, 160)
-	Hud.health.back = love.graphics.newImage('media/graphics/healthBack.png')
-	Hud.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
-	Hud.health.red = love.graphics.newImage('media/graphics/healthRed.png')
+	self.health = {}
+	self.health.canvas = love.graphics.newCanvas(160, 160)
+	self.health.back = love.graphics.newImage('media/graphics/healthBack.png')
+	self.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
+	self.health.red = love.graphics.newImage('media/graphics/healthRed.png')
 	
-	Hud.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', 12)
-	Hud.biggerFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 16)
+	self.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', 12)
+	self.biggerFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 16)
 end
 
 function Hud:update()
-	if myId and Players:get(myId).active then
+	if myId and ovw.players:get(myId).active then
 		self.health.canvas:clear()
 		self.health.canvas:renderTo(function()
 			love.graphics.setColor(255, 255, 255, 255)
 			love.graphics.draw(self.health.red, 4, 13)
 			love.graphics.setBlendMode('subtractive')
 			love.graphics.setColor(255, 255, 255, 255)
-			local p = Players:get(myId)
+			local p = ovw.players:get(myId)
 			love.graphics.arc('fill', 80, 80, 80, 0, 0 - ((2 * math.pi) * (1 - (p.health / p.maxHealth))))
 			love.graphics.setBlendMode('alpha')
 		end)
@@ -42,7 +42,7 @@ function Hud:draw()
 	love.graphics.draw(self.health.canvas, 4, 4)
 	love.graphics.draw(self.health.glass, 0, 0)
 	
-	local p = Players:get(myId)
+	local p = ovw.players:get(myId)
 	if p and p.active then
 		local wep, skl, pas = {}, {}, {}
 		for i = 1, 5 do
@@ -100,12 +100,12 @@ function Hud:draw()
 end
 
 function Hud:mousereleased(x, y, button)
-	if self:classSelect() and math.inside(x, y - View.margin, 110, 125, 64, 64) and button == 'l' then
-		Net:send(msgClass, {
+	if self:classSelect() and math.inside(x, y - ovw.view.margin, 110, 125, 64, 64) and button == 'l' then
+		ovw.net:send(msgClass, {
 			class = 1,
 			team = myId > 1 and 1 or 0
 		})
 	end
 end
 
-function Hud:classSelect() return myId and not Players:get(myId).active end
+function Hud:classSelect() return myId and not ovw.players:get(myId).active end

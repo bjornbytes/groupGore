@@ -18,7 +18,7 @@ SMG.activate = function(self)
   end
   
   local targets = {}
-  Players:with(function(p)
+  ovw.players:with(function(p)
     return p.active and p.team ~= self.owner.team and math.hloca(self.x, self.y, endx, endy, p.x, p.y, 20)
   end, function(p)
     table.insert(targets, {
@@ -29,14 +29,14 @@ SMG.activate = function(self)
   
   table.sort(targets, function(a, b) return a.dist < b.dist end)
   if targets[1] then
-    local p = Players:get(targets[1].id)
+    local p = ovw.players:get(targets[1].id)
     self.len = math.distance(self.x, self.y, p.x, p.y)
-    Net:emit(evtDamage, {id = p.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
+    ovw.net:emit(evtDamage, {id = p.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
 end
 
 SMG.update = function(self)
-  self.hp = timer.rot(self.hp, function() Spells:deactivate(self) end)
+  self.hp = timer.rot(self.hp, function() ovw.spells:deactivate(self) end)
 end
 
 SMG.draw = function(self)

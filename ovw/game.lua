@@ -1,10 +1,16 @@
-Game = {}
+Game = class()
+
+Game.tag = 'client'
 
 function Game:load()
-  Players:init('client')
-  Net:load('client')
-  View:init()
-  Hud:init()
+  self.event = Event()
+  self.net = NetClient()
+  self.players = Players()
+  self.spells = Spells()
+  self.particles = Particles()
+  self.map = Map()
+  self.view = View()
+  self.hud = Hud()
 end
 
 function Game:unload()
@@ -12,45 +18,46 @@ function Game:unload()
 end
 
 function Game:update()
-  Net:update()
-  Players:update()
-  Spells:update()
-  Particles:update()
-  Map:update()
-  Hud:update()
+  self.net:update()
+  self.players:update()
+  self.spells:update()
+  self.particles:update()
+  self.map:update()
+  self.view:update()
+  self.hud:update()
 end
 
 function Game:sync()
-  Net:sync()
+  self.net:sync()
 end
 
 function Game:draw()
-  View:draw()
+  self.view:draw()
 end
 
 function Game:quit()
-  Net:send(msgLeave)
-  Net.host:flush()
+  self.net:send(msgLeave)
+  self.net.host:flush()
 end
 
-function Game.mousepressed(...)
-  Players:mousepressed(...)
+function Game:mousepressed(...)
+  self.players:mousepressed(...)
 end
 
-function Game.mousereleased(...)
-  if Hud:mousereleased(...) then return
-  elseif Players:mousereleased(...) then return end
+function Game:mousereleased(...)
+  if self.hud:mousereleased(...) then return
+  elseif self.players:mousereleased(...) then return end
 end
 
-function Game.keypressed(key)
-  Players:keypressed(key)
+function Game:keypressed(key)
+  self.players:keypressed(key)
   if key == 'escape' then love.event.quit() end
 end
 
-function Game.keyreleased(key)
-  Players:keyreleased(key)
+function Game:keyreleased(key)
+  self.players:keyreleased(key)
 end
 
-function Game.resize()
-  View.resize()
+function Game:resize()
+  self.view:resize()
 end

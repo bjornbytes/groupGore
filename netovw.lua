@@ -1,4 +1,4 @@
-Net = {}
+Net = class()
 
 evtJoin  = 1
 evtLeave = 2
@@ -15,19 +15,9 @@ msgSnapshot = 11
 msgClass = 12
 msgInput = 13
 
-function Net:load(tag)
-	assert(tag)
-	
-	local tags = {
-		client = NetClient,
-		server = NetServer
-	}
-	
+function Net:init()
 	self.inStream = Stream()
 	self.outStream = Stream()
-	
-	setmetatable(self, {__index = tags[tag]})
-	f.exe(self.activate, self)
 end
 
 function Net:listen(port)
@@ -93,11 +83,3 @@ function Net:unpack()
 	if msg == 0 or not self.other.signatures[msg] then return false end
 	return msg, halp(self.other.signatures[msg])
 end
-
-local dir
-dir = '/tag'
-for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-  if file:match('net.*%.lua') then love.filesystem.load(dir .. '/' .. file)() end
-end
-NetClient.other = NetServer
-NetServer.other = NetClient

@@ -1,11 +1,11 @@
-View = {toDraw = {}}
+View = class()
 
 function mouseX()
-  return math.floor(((love.mouse.getX() / View.scale) + View.x) + .5)
+  return math.floor(((love.mouse.getX() / ovw.view.scale) + ovw.view.x) + .5)
 end
 
 function mouseY()
-  return math.floor((((love.mouse.getY() - View.margin) / View.scale) + View.y) + .5)
+  return math.floor((((love.mouse.getY() - ovw.view.margin) / ovw.view.scale) + ovw.view.y) + .5)
 end
 
 function View:init()
@@ -23,6 +23,7 @@ function View:init()
   self.h = 450
   self.scale = love.window.getWidth() / self.w
   self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
+  self.toDraw = {}
 end
 
 function View:register(x)
@@ -36,7 +37,7 @@ end
 function View:update()
   self.prevx = self.x
   self.prevy = self.y
-  local object = Players:get(myId)
+  local object = ovw.players:get(myId)
   if object and not object.ded then
     self.x = math.lerp(self.x, ((object.x + mouseX()) / 2) - (self.w / 2), .25)
     self.y = math.lerp(self.y, ((object.y + mouseY()) / 2) - (self.h / 2), .25)
@@ -48,8 +49,8 @@ function View:update()
   
   if self.x < 0 then self.x = 0 end
   if self.y < 0 then self.y = 0 end
-  if self.x + self.w > map.width then self.x = map.width - self.w end
-  if self.y + self.h > map.height then self.y = map.height - self.h end
+  if self.x + self.w > ovw.map.map.width then self.x = ovw.map.map.width - self.w end
+  if self.y + self.h > ovw.map.map.height then self.y = ovw.map.map.height - self.h end
 end
 
 function View:push()
@@ -57,7 +58,7 @@ function View:push()
   love.graphics.translate(0, self.margin)
   love.graphics.push()
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-  love.graphics.scale(View.scale)
+  love.graphics.scale(self.scale)
   love.graphics.translate(-math.floor(x + .5), -math.floor(y + .5))
 end
 
@@ -71,12 +72,12 @@ function View:draw()
 
   for k, v in ipairs(self.toDraw) do v:draw() end
 
-  Map:draw()
-  Players:draw()
-  Spells:draw()
-  Particles:draw()
+  ovw.map:draw()
+  ovw.players:draw()
+  ovw.spells:draw()
+  ovw.particles:draw()
   self:pop()
-  Hud:draw()
+  ovw.hud:draw()
   self:letterbox()
 end
 
@@ -91,7 +92,7 @@ function View:letterbox()
   love.graphics.rectangle('fill', 0, love.window.getHeight() - self.margin, love.window.getWidth(), self.margin)
 end
 
-function View.resize()
-  View.scale = love.window.getWidth() / View.w
-  View.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (View.h / View.w)) / 2) + .5)
+function View:resize()
+  self.scale = love.window.getWidth() / self.w
+  self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
 end
