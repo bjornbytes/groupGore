@@ -11,8 +11,10 @@ function Spells:activate(owner, kind)
   
   s.owner = type(owner) == 'number' and ovw.players:get(owner) or owner
   s.kind = type(kind) == 'number' and data.spell[kind] or kind
+  s.depth = 0
   setmetatable(s, {__index = s.kind})
   s:activate()
+  if ovw.view then ovw.view:register(s) end
   return s
 end
 

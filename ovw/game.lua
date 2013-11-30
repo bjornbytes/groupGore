@@ -9,8 +9,8 @@ function Game:load()
   self.players = Players()
   self.spells = Spells()
   self.particles = Particles()
-  self.map = Map()
   self.view = View()
+  self.map = Map()
   self.hud = Hud()
 end
 

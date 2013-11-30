@@ -2,6 +2,8 @@ local Tree = {}
 Tree.name = 'Tree'
 Tree.code = 'tree'
 
+Tree.depth = -10
+
 Tree.draw = function(self)
 	love.graphics.reset()
 	local tree = ovw.map.graphics.tree

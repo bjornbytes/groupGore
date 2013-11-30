@@ -2,6 +2,8 @@ local Wall = {}
 Wall.name = 'Wall'
 Wall.code = 'wall'
 
+Wall.depth = -5
+
 Wall.activate = function(self)
 	ovw.collision:addWall(self.x, self.y, self.w, self.h)
 end

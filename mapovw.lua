@@ -17,14 +17,18 @@ function Map:init(name)
   map.props = table.map(map.props, function(prop)
     setmetatable(prop, {__index = data.prop[prop.kind]})
     f.exe(prop.activate, prop)
+    if ovw.view then ovw.view:register(prop) end
     return prop
   end)
-  
+
   table.merge(map, self)
+
+  self.depth = 5
+  if ovw.view then ovw.view:register(self) end
 end
 
 function Map:update()
-  --
+  f.ego(self.props, f.ego('update'))
 end
 
 function Map:draw()
@@ -35,6 +39,4 @@ function Map:draw()
       love.graphics.draw(self.graphics.background, i, j)
     end
   end
-
-  table.with(self.props, f.ego('draw'))
 end

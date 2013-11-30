@@ -67,15 +67,10 @@ function View:draw()
   self:push()
   
   table.sort(self.toDraw, function(a, b)
-    return a.depth < b.depth
+    return a.depth > b.depth
   end)
 
   for k, v in ipairs(self.toDraw) do v:draw() end
-
-  ovw.map:draw()
-  ovw.players:draw()
-  ovw.spells:draw()
-  ovw.particles:draw()
   self:pop()
   ovw.hud:draw()
   self:letterbox()
