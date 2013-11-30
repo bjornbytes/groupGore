@@ -91,3 +91,9 @@ function View:resize()
   self.scale = love.window.getWidth() / self.w
   self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
 end
+
+function View:three(x, y, z)
+  z = (.8 * z) ^ (1 + (.0008 * z))
+  
+  return x - (z * ((self.x + self.w / 2 - x) / 500)), y - (z * ((self.y + self.h / 2 - y) / 500))
+end

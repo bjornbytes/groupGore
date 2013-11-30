@@ -14,21 +14,21 @@ function Map:init(name)
     end
   end
 
-  map.props = table.map(map.props, function(prop)
+  table.merge(map, self)
+
+  self.props = table.map(map.props, function(prop)
     setmetatable(prop, {__index = data.prop[prop.kind]})
-    f.exe(prop.activate, prop)
+    f.exe(prop.activate, prop, self)
     if ovw.view then ovw.view:register(prop) end
     return prop
   end)
-
-  table.merge(map, self)
 
   self.depth = 5
   if ovw.view then ovw.view:register(self) end
 end
 
 function Map:update()
-  f.ego(self.props, f.ego('update'))
+  table.with(self.props, function(p) f.exe(p.update, p) end)
 end
 
 function Map:draw()

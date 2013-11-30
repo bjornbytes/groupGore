@@ -2,7 +2,9 @@ local Tree = {}
 Tree.name = 'Tree'
 Tree.code = 'tree'
 
-Tree.depth = -10
+Tree.activate = function(self)
+  self.depth = -self.y - 100
+end
 
 Tree.draw = function(self)
 	love.graphics.reset()
