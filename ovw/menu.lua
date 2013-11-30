@@ -83,16 +83,32 @@ function Menu:draw()
   end
 end
 
-function Menu:keypressed(key)
+function Menu:textinput(character)
   if self.page == 'login' then
     if self.focused == 'username' then
-      if #key == 1 and key:match('%w') then self.username = self.username .. key
-      elseif key == 'backspace' then self.username = self.username:sub(1, -2)
-      elseif key == 'tab' then self:focusInput('password') end
+      if character:match('%w') then self.username = self.username .. character end
     elseif self.focused == 'password' then
-      if #key == 1 and key:match('%w') then self.password = self.password .. key
-      elseif key == 'backspace' then self.password = self.password:sub(1, -2)
-      elseif key == 'tab' then self:focusInput('username')
+      if character:match('%w') then self.password = self.password .. character end
+    end
+  elseif self.page == 'main' then
+    if self.focused == 'ip' then
+      if character:match('[0-9%.]') then self.ip = self.ip .. character end
+    end
+  end
+end
+
+function Menu:keypressed(key)
+  if key == 'escape' then love.event.quit() return
+  elseif key == 'backspace' and self.focused then
+    self[self.focused] = self[self.focused]:sub(1, -2)
+    return
+  end
+
+  if self.page == 'login' then
+    if self.focused == 'username' then
+      if key == 'tab' then self:focusInput('password') end
+    elseif self.focused == 'password' then
+      if key == 'tab' then self:focusInput('username')
       elseif key == 'return' then
         username = self.username
         password = self.password
@@ -101,35 +117,16 @@ function Menu:keypressed(key)
       end
     end
   elseif self.page == 'main' then
-    serverIp = self.ip
-    serverPort = 6061
-    
-    if key == 's' then
+    if key == 'return' then
+      serverIp = self.ip
+      serverPort = 6061
       Overwatch:remove(self)
-      Overwatch:add(Server)
-      Overwatch:add(Game)
-      return
-    elseif key == 'c' then 
-      Overwatch:remove(self)
+      if love.keyboard.isDown('rshift') then Overwatch:add(Server) end
       Overwatch:add(Game)
       love.keyboard.setKeyRepeat(false)
-    end
-    
-    if self.focused == 'ip' then
-      if #key == 1 and key:match('[0-9%.]') then self.ip = self.ip .. key
-      elseif key == 'backspace' then self.ip = self.ip:sub(1, -2)
-      elseif key == 'return' then
-        serverIp = self.ip
-        serverPort = 6061
-        
-        Overwatch:remove(self)
-        Overwatch:add(Game)
-        love.keyboard.setKeyRepeat(false)
-      end
+      return
     end
   end
-  
-  if key == 'escape' then love.event.quit() end
 end
 
 function Menu:mousepressed(x, y, button)
