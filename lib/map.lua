@@ -23,6 +23,13 @@ function Map:init(name)
     return prop
   end)
 
+  table.with(map.on, function(f, e)
+    print(e)
+    ovw.event:on(e, self, f)
+  end)
+
+  f.exe(self.activate, self)
+
   self.depth = 5
   if ovw.view then ovw.view:register(self) end
 end

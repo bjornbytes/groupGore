@@ -25,6 +25,38 @@ jungleCarnage.spawn[orange] = {
 
 
 ----------------
+-- Functions
+----------------
+jungleCarnage.activate = function(self)
+  self.points = {}
+  self.points[purple] = 0
+  self.points[orange] = 0
+end
+
+jungleCarnage.hud = function(self)
+  local str = 'purple: ' .. self.points[purple] .. ', orange: ' .. self.points[orange]
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.setFont(ovw.hud.font)
+  love.graphics.print(str, love.window.getWidth() / 2 - ovw.hud.font:getWidth(str) / 2, 2)
+end
+
+
+----------------
+-- Events
+----------------
+jungleCarnage.on = {}
+jungleCarnage.on[evtDead] = function(self, data)
+  local team = 1 - ovw.players:get(data.id).team
+  self.points[team] = self.points[team] + 1
+  if self.points[team] >= 5 then
+    ovw.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
+    self.points[purple] = 0
+    self.points[orange] = 0
+  end
+end
+
+
+----------------
 -- Props
 ----------------
 jungleCarnage.props = {
