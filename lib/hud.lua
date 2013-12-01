@@ -158,12 +158,14 @@ function Hud:keypressed(key)
 			end
 			self.chatting = false
 			self.chatMessage = ''
+			love.keyboard.setKeyRepeat(false)
 		end
 		return true
 	else
 		if key == 'return' then
 			self.chatting = true
 			self.chatMessage = ''
+			love.keyboard.setKeyRepeat(true)
 		end
 	end
 end
