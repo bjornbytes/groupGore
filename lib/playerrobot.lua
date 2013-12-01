@@ -1,85 +1,44 @@
 PlayerRobot = {}
-setmetatable(PlayerRobot, {__index = Player})
+setmetatable(PlayerRobot, {__index = PlayerServer})
 
 function PlayerRobot:activate()
-  self.input = {}
-  
-  self.input.w = false
-  self.input.a = false
-  self.input.s = false
-  self.input.d = false
-  
-  self.input.mx = 0
-  self.input.my = 0
-  self.input.l = false
-  self.input.r = false
-  
-  self.input.wep = 1
-  self.input.skl = 3
-  self.input.rel = false
-    
-  Player.activate(self)
+  PlayerServer.activate(self)
+
+  self.username = 'robot'
+  self.s1 = math.floor(math.random() * 300)
+  self.s2 = math.floor(math.random() * 300)
+  self.s3 = math.floor(math.random() * 300)
+  self.s4 = math.floor(math.random() * 300)
+
+  self.input.mx = self.x
+  self.input.my = self.y
 end
 
-function PlayerRobot:deactivate()
-  self.input = nil
-  
-  Player.deactivate(self)
-end
+function PlayerRobot:logic()
+  --[[
+    Variables you can set:
 
-function PlayerRobot:update()
-  local prevx, prevy, prevangle, prevhp = self.x, self.y, self.angle, math.floor(self.health + .5)
+    self.input.w, self.input.a, self.input.s, self.input.d = the WASD keys
+    self.input.mx, self.input.my = the mouse positon
+    self.input.l, self.input.r = the mouse buttons
+    self.input.wep, self.input.skl = the weapon/skill you have selected
+    self.input.rel = the reload key
+  ]]
   
-  if tick % 20 < 10 then
-    self.input.a = true
-    self.input.d = false
-  else
-    self.input.a = false
-    self.input.d = true
+  self.input.a = tick % self.s1 < self.s4 / 2
+  self.input.d = tick % self.s2 < self.s3 / 2
+  self.input.s = tick % self.s3 < self.s2 / 2
+  self.input.w = tick % self.s4 < self.s1 / 2
+
+  if tick % self.s4 == 0 then
+    self.s1 = math.floor(math.random() * 300)
+    self.s2 = math.floor(math.random() * 300)
+    self.s3 = math.floor(math.random() * 300)
+    self.s4 = math.floor(math.random() * 300)
+    self.input.mx = self.x
+    self.input.my = self.y
   end
 
-  self:time()
-  self:buff()
-  self:move()
-  self:turn()
-  self:slot()
-  
-  if self.health < self.maxHealth then
-    local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
-    if percentage > 0 then
-      percentage = (1 + (percentage * 4)) / 100
-      self.health = self.health + math.min(self.maxHealth - self.health, self.maxHealth * percentage * tickRate)
-    end
-  end
-  
-  if self.x ~= prevx or self.y ~= prevy or self.angle ~= prevangle or math.floor(self.health + .5) ~= prevhp or tick % 100 == 0 then
-    ovw.net:emit(evtSync, {
-      id = self.id,
-      tick = tick,
-      x = math.floor(self.x + .5),
-      y = math.floor(self.y + .5),
-      angle = math.floor(((math.deg(self.angle) + 360) % 360) + .5),
-      health = math.floor(self.health + .5)
-    })
-  end
-end
-
-function PlayerRobot:time()
-  self.ded = timer.rot(self.ded, function() ovw.net:emit(evtSpawn, {id = self.id}) end)
-  if self.ded == 0 then self.ded = false end
-end
-
-function PlayerRobot:spell(kind)
-  Player.spell(self, kind)
-end
-
-function PlayerRobot:hurt(data)
-  if not self.ded then
-    self.health = self.health - data.amount
-    self.lastHurt = data.tick
-    if self.health <= 0 then
-      self.ded = 5
-      ovw.net:emit(evtDead, {id = self.id})
-    end
-  end
+  self.input.mx = self.input.mx - 30 + math.random(60)
+  self.input.my = self.input.my - 30 + math.random(60)
 end

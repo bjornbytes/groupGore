@@ -35,6 +35,8 @@ function PlayerServer:update()
   self:move()
   self:turn()
   self:slot()
+
+  self:logic()
   
   if self.health < self.maxHealth and not self.ded then
     local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
@@ -74,4 +76,8 @@ function PlayerServer:hurt(data)
       ovw.net:emit(evtDead, {id = self.id})
     end
   end
+end
+
+function PlayerServer:logic()
+  -- Override by AI.
 end

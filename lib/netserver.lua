@@ -28,14 +28,19 @@ NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
 NetServer.receive[msgJoin] = function(self, event)
-  self.clients[event.pid].username = event.data.username
+  print('Server: ' .. event.data.username .. ' has joined!')
+  ovw.players:get(event.pid).username = event.data.username
   self:send(msgJoin, event.peer, {id = event.pid})
   self:emit(evtJoin, {id = event.pid, username = event.data.username})
+  self:emit(evtChat, {message = event.data.username .. ' has joined!'})
   self:snapshot(event.peer)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
+  print('Server: ' .. ovw.players:get(event.pid).username .. ' has left!')
+  self:emit(evtChat, {message = ovw.players:get(event.pid).username .. ' has left!'})
   self:emit(evtLeave, {id = event.pid, reason = 'left'})
+  self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
 end
 
@@ -60,7 +65,7 @@ NetServer.receive[msgInput] = function(self, event)
 end
 
 NetServer.receive[msgChat] = function(self, event)
-  local username = self.clients[event.pid].username
+  local username = ovw.players:get(event.pid).username
   self:emit(evtChat, {message = username .. ': ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
 end
 
@@ -68,24 +73,14 @@ function NetServer:init()
   self.other = NetClient
 
   self:listen(6061)
-  self.clients = {}
+  self.peerToPlayer = {}
   self.eventBuffer = {}
-  
-  ovw.event:on(evtJoin, self, function(self, data)
-    print('Server: ' .. data.username .. ' has joined!')
-    self:emit(evtChat, {message = data.username .. ' has joined!'})
-  end)
-  
-  ovw.event:on(evtLeave, self, function(self, data)
-    print('Server: Player ' .. data.id .. ' has left!')
-    self:emit(evtChat, {message = self.clients[data.id].username .. ' has left!'})
-  end)
 
   Net.init(self)
 end
 
 function NetServer:connect(event)
-  self.clients[event.pid] = {id = event.pid}
+  self.peerToPlayer[event.peer] = self:nextPlayerId()
 end
 
 function NetServer:send(msg, peer, data)
@@ -114,17 +109,22 @@ end
 
 function NetServer:snapshot(peer)
   local players = {}
-  table.with(ovw.players.active, function(id)
-    print(id)
-    if id ~= peer:index() then
-      local p = ovw.players:get(id)
+  for id = 1, 16 do
+    local p = ovw.players:get(id)
+    if #p.username > 0 and id ~= self.peerToPlayer[peer] then
       table.insert(players, {
         id = id,
-        username = self.clients[id] and self.clients[id].username or 'robot',
+        username = p.username,
         class = p.active and 1 or 0,
         team = p.team or 0,
       })
     end
-  end)
+  end
   self:send(msgSnapshot, peer, {tick = tick, map = 'jungleCarnage', ['players'] = players})
+end
+
+function NetServer:nextPlayerId()
+  for i = 1, 16 do
+    if #ovw.players:get(i).username == 0 then return i end
+  end
 end

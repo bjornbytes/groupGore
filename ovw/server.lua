@@ -10,8 +10,12 @@ function Server:load()
   self.net = NetServer()
   self.map = Map()
 
-  setmetatable(self.players:get(2), {__index = PlayerRobot})
-  self.players:setClass(2, 1, 1)
+  for i = 1, 8 do
+    local p = self.players:get(i)
+    setmetatable(p, {__index = PlayerRobot})
+    self.players:setClass(i, 1, i % 2)
+    p.x = p.x - 20 + (10 * i) 
+  end
 end
 
 function Server:update()

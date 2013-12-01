@@ -6,6 +6,7 @@ Player = {}
 function Player:create()
   return {
     id = nil,
+    username = '',
     class = nil,
     team = nil,
     active = false,
@@ -43,6 +44,7 @@ end
 
 function Player:deactivate()
   self.x, self.y = 0, 0
+  self.username = ''
 end
 
 function Player:update()
@@ -137,4 +139,13 @@ end
 
 function Player:hurt()
   --
+end
+
+function Player:die()
+  self.ded = 5
+  if ovw.particles then ovw.particles:create('skull', {x = self.x, y = self.y}) end
+
+  self.x, self.y = 0, 0
+  self.visible = 0
+  ovw.collision:refreshPlayer(self)
 end
