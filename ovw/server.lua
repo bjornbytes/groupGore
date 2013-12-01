@@ -9,6 +9,9 @@ function Server:load()
   self.spells = Spells()
   self.net = NetServer()
   self.map = Map()
+
+  setmetatable(self.players:get(2), {__index = PlayerRobot})
+  self.players:setClass(2, 1, 1)
 end
 
 function Server:update()
