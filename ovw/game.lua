@@ -51,12 +51,17 @@ function Game:mousereleased(...)
 end
 
 function Game:keypressed(key)
-  self.players:keypressed(key)
+  if self.hud:keypressed(key) then return
+  elseif self.players:keypressed(key) then return end
   if key == 'escape' then love.event.quit() end
 end
 
 function Game:keyreleased(key)
   self.players:keyreleased(key)
+end
+
+function Game:textinput(character)
+  return self.hud:textinput(character)
 end
 
 function Game:resize()

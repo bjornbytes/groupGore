@@ -10,6 +10,7 @@ NetClient.signatures[msgInput] = {
 	{'mx', '12bits'}, {'my', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
 	{'weapon', '3bits'}, {'skill', '3bits'}, {'reload', 'bool'}
 }
+NetClient.signatures[msgChat] = {{'message', 'string'}}
 
 NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) ovw.event:emit(event.msg, event.data) end

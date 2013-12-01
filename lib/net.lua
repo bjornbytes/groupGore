@@ -8,12 +8,14 @@ evtFire = 5
 evtDamage = 6
 evtDead = 7
 evtSpawn = 8
+evtChat = 9
 
-msgJoin  = 9
-msgLeave = 10
-msgSnapshot = 11
-msgClass = 12
-msgInput = 13
+msgJoin  = 10
+msgLeave = 11
+msgSnapshot = 12
+msgClass = 13
+msgInput = 14
+msgChat = 15
 
 function Net:init()
 	self.inStream = Stream()

@@ -1,5 +1,8 @@
 Hud = class()
 
+local function w(x) x = x or 1 return love.window.getWidth() * x end
+local function h(x) x = x or 1 return love.window.getHeight() * x end
+
 function Hud:init()
 	self.health = {}
 	self.health.canvas = love.graphics.newCanvas(160, 160)
@@ -9,6 +12,14 @@ function Hud:init()
 	
 	self.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', 12)
 	self.biggerFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 16)
+
+	self.chatting = false
+	self.chatMessage = ''
+	self.chatLog = ''
+
+	ovw.event:on(evtChat, self, function(self, data)
+		self:updateChat(data.message)
+	end)
 end
 
 function Hud:update()
@@ -27,20 +38,22 @@ function Hud:update()
 end
 
 function Hud:draw()
-	love.graphics.reset()
-	love.graphics.setFont(self.font)
+	local g = love.graphics
+
+	g.reset()
+	g.setFont(self.font)
 	
 	if not myId then
-		love.graphics.setColor(0, 0, 0)
-		love.graphics.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.printf('Connecting...', 0, love.window.getHeight() / 2 - self.font:getHeight(), love.window.getWidth(), 'center')
+		g.setColor(0, 0, 0)
+		g.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
+		g.setColor(255, 255, 255)
+		g.printf('Connecting...', 0, love.window.getHeight() / 2 - self.font:getHeight(), love.window.getWidth(), 'center')
 		return
 	end
 	
-	love.graphics.draw(self.health.back, 12, 12)
-	love.graphics.draw(self.health.canvas, 4, 4)
-	love.graphics.draw(self.health.glass, 0, 0)
+	g.draw(self.health.back, 12, 12)
+	g.draw(self.health.canvas, 4, 4)
+	g.draw(self.health.glass, 0, 0)
 	
 	local p = ovw.players:get(myId)
 	if p and p.active then
@@ -51,51 +64,64 @@ function Hud:draw()
 			else pas[#pas + 1] = p.slots[i] end
 		end
 		
-		love.graphics.setFont(self.biggerFont)
+		g.setFont(self.biggerFont)
 		local yy = 256
 		for i = 1, #wep do
-			love.graphics.setColor(10, 10, 10)
-			if p.slots[p.input.weapon] == wep[i] then love.graphics.setColor(40, 40, 40) end
-			love.graphics.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
-			love.graphics.setColor(80, 80, 80)
-			love.graphics.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
-			love.graphics.setColor(160, 160, 160)
-			love.graphics.print(wep[i].name, 16, yy + 8)
+			g.setColor(10, 10, 10)
+			if p.slots[p.input.weapon] == wep[i] then g.setColor(40, 40, 40) end
+			g.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			g.setColor(80, 80, 80)
+			g.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			g.setColor(160, 160, 160)
+			g.print(wep[i].name, 16, yy + 8)
 			yy = yy + self.biggerFont:getHeight() + 24
 		end
 		
 		yy = yy + 24
 		for i = 1, #skl do
-			love.graphics.setColor(10, 10, 10)
-			if p.slots[p.input.skill] == skl[i] then love.graphics.setColor(40, 40, 40) end
-			love.graphics.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
-			love.graphics.setColor(80, 80, 80)
-			love.graphics.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
-			love.graphics.setColor(160, 160, 160)
-			love.graphics.print(skl[i].name, 16, yy + 8)
+			g.setColor(10, 10, 10)
+			if p.slots[p.input.skill] == skl[i] then g.setColor(40, 40, 40) end
+			g.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			g.setColor(80, 80, 80)
+			g.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			g.setColor(160, 160, 160)
+			g.print(skl[i].name, 16, yy + 8)
 			yy = yy + self.biggerFont:getHeight() + 24
 		end
 		
 		yy = yy + 24
 		for i = 1, #pas do
-			love.graphics.setColor(10, 10, 10)
-			love.graphics.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
-			love.graphics.setColor(80, 80, 80)
-			love.graphics.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
-			love.graphics.setColor(160, 160, 160)
-			love.graphics.print(pas[i].name, 16, yy + 8)
+			g.setColor(10, 10, 10)
+			g.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			g.setColor(80, 80, 80)
+			g.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			g.setColor(160, 160, 160)
+			g.print(pas[i].name, 16, yy + 8)
 			yy = yy + self.biggerFont:getHeight() + 24
 		end
 	end
-	
+
+	g.setColor(0, 0, 0, 180)
+	g.rectangle('fill', 4, h() - (h(.25) + 4), w(.25), h(.25))
+	g.setFont(self.font)
+	local yy = h() - 4
+	g.setColor(255, 255, 255, 60)
+	g.line(4.5, h() - 4 - self.font:getHeight() - 4.5, 3 + w(.25), h() - 4 - self.font:getHeight() - 4.5)
+	g.setColor(255, 255, 255, 100)
+	g.print(self.chatMessage .. (self.chatting and '|' or ''), 4 + 2, math.floor(yy - self.font:getHeight() - 4.5 + 2 + .5))
+	yy = yy - self.font:getHeight() - 4.5
+
+	g.setColor(255, 255, 255, 100)
+	g.print(self.chatLog, 4 + 2, yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 2)
+
 	if self:classSelect() then
-		love.graphics.setFont(self.font)
-		love.graphics.setColor(0, 0, 0)
-		love.graphics.rectangle('fill', 100, 100, 200, 100)
-		love.graphics.setColor(255, 255, 255)
-		love.graphics.print('You must choose your class:', 110, 110)
-		love.graphics.rectangle('line', 110, 125, 64, 64)
-		love.graphics.print('BR00T', 120, 150)
+		g.setFont(self.font)
+		g.setColor(0, 0, 0)
+		g.rectangle('fill', 100, 100, 200, 100)
+		g.setColor(255, 255, 255)
+		g.print('You must choose your class:', 110, 110)
+		g.rectangle('line', 110, 125, 64, 64)
+		g.print('BR00T', 120, 150)
 	end
 end
 
@@ -106,6 +132,46 @@ function Hud:mousereleased(x, y, button)
 			team = myId > 1 and 1 or 0
 		})
 	end
+end
+
+function Hud:textinput(character)
+	if self.chatting then self.chatMessage = self.chatMessage .. character end
+end
+
+function Hud:keypressed(key)
+	if self.chatting then
+		if key == 'backspace' then self.chatMessage = self.chatMessage:sub(1, -2)
+		elseif key == 'return' then
+			if #self.chatMessage > 0 then
+				ovw.net:send(msgChat, {
+					message = self.chatMessage
+				})
+			end
+			self.chatting = false
+			self.chatMessage = ''
+		end
+		return true
+	else
+		if key == 'return' then
+			self.chatting = true
+			self.chatMessage = ''
+		end
+	end
+end
+
+function Hud:updateChat(message)
+	if #message > 0 then
+		if #self.chatLog > 0 then self.chatLog = self.chatLog .. '\n' end
+		self.chatLog = self.chatLog .. message
+	end
+
+	while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - self.font:getHeight() - 4) do
+		self.chatLog = self.chatLog:sub(2)
+	end
+end
+
+function Hud:keyreleased(key)
+	if self.chatting then return true end
 end
 
 function Hud:classSelect() return myId and not ovw.players:get(myId).active end

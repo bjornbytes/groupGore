@@ -16,6 +16,7 @@ NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
 NetServer.signatures[evtDead] = {{'id', '4bits'}}
 NetServer.signatures[evtSpawn] = {{'id', '4bits'}}
+NetServer.signatures[evtChat] = {{'message', 'string'}}
 NetServer.signatures[msgJoin] = {{'id', '4bits'}}
 NetServer.signatures[msgSnapshot] = {
   {'tick', '16bits'},
@@ -56,6 +57,11 @@ NetServer.receive[msgInput] = function(self, event)
       state:turn()
     end
   end
+end
+
+NetServer.receive[msgChat] = function(self, event)
+  local username = self.clients[event.pid].username
+  self:emit(evtChat, {message = username .. ': ' .. event.data.message})
 end
 
 function NetServer:init()
