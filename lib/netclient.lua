@@ -40,6 +40,7 @@ function NetClient:init()
 
 	ovw.event:on(evtJoin, self, function(self, data)
 		print('Client: ' .. data.username .. ' has joined!')
+		ovw.players:get(data.id).username = data.username
 	end)
 	
 	ovw.event:on(evtLeave, self, function(self, data)

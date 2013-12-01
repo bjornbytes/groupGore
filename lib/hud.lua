@@ -71,6 +71,13 @@ function Hud:draw()
 	g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
 	g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
 	g.draw(self.health.glass, 0, 0, 0, s, s)
+
+	love.graphics.setFont(self.font)
+	ovw.players:with(ovw.players.active, function(p)
+		if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
+	  elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
+		love.graphics.print(p.username, ((p.x - ovw.view.x) * ovw.view.scale) - self.font:getWidth(p.username) / 2, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
+	end)
 	
 	local p = ovw.players:get(myId)
 	if p and p.active then
@@ -138,8 +145,8 @@ function Hud:draw()
 	local debug = love.timer.getFPS() .. 'fps'
 	if ovw.net.server then
 		debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms'
-		debug = debug .. ', ' .. ovw.net.host:total_sent_data() .. 'tx'
-		debug = debug .. ', ' .. ovw.net.host:total_received_data() .. 'rx'
+		debug = debug .. ', ' .. math.floor(ovw.net.host:total_sent_data() / 1000 + .5) .. 'tx'
+		debug = debug .. ', ' .. math.floor(ovw.net.host:total_received_data() / 1000 + .5) .. 'rx'
 	end
 	g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
 
