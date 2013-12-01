@@ -86,12 +86,16 @@ function PlayerMain:trace(data)
   local t = data.tick
   data.tick = nil
   data.id = nil
-  data.x = nil
-  data.y = nil
   data.angle = nil
   for i = t, tick do
     local dst = ovw.players.history[self.id][i]
     if i == tick then dst = self end
-    table.merge(data, dst)
+    if dst then
+      if math.distance(data.x, data.y, dst.x, dst.y) < 32 then
+        table.merge(table.except(data, {'x', 'y'}), dst)
+      else
+        table.merge(data, dst)
+      end
+    end
   end
 end
