@@ -102,14 +102,18 @@ function Hud:draw()
 	end
 
 	g.setColor(0, 0, 0, 180)
-	g.rectangle('fill', 4, h() - (h(.25) + 4), w(.25), h(.25))
+	local height = h(.2)
+	if self.chatting then height = height + (self.font:getHeight() + 4.5) end
+	g.rectangle('fill', 4, h() - (height + 4), w(.25), height)
 	g.setFont(self.font)
 	local yy = h() - 4
-	g.setColor(255, 255, 255, 60)
-	g.line(4.5, h() - 4 - self.font:getHeight() - 4.5, 3 + w(.25), h() - 4 - self.font:getHeight() - 4.5)
-	g.setColor(255, 255, 255, 100)
-	g.print(self.chatMessage .. (self.chatting and '|' or ''), 4 + 2, math.floor(yy - self.font:getHeight() - 4.5 + 2 + .5))
-	yy = yy - self.font:getHeight() - 4.5
+	if self.chatting then
+		g.setColor(255, 255, 255, 60)
+		g.line(4.5, h() - 4 - self.font:getHeight() - 4.5, 3 + w(.25), h() - 4 - self.font:getHeight() - 4.5)
+		g.setColor(255, 255, 255, 100)
+		g.print(self.chatMessage .. (self.chatting and '|' or ''), 4 + 2, math.floor(yy - self.font:getHeight() - 4.5 + 2 + .5))
+		yy = yy - self.font:getHeight() - 4.5
+	end
 
 	g.setColor(255, 255, 255, 100)
 	g.print(self.chatLog, 4 + 2, yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 2)
@@ -165,7 +169,7 @@ function Hud:updateChat(message)
 		self.chatLog = self.chatLog .. message
 	end
 
-	while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - self.font:getHeight() - 4) do
+	while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.2) - 4) do
 		self.chatLog = self.chatLog:sub(2)
 	end
 end

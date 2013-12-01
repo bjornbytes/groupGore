@@ -61,7 +61,7 @@ end
 
 NetServer.receive[msgChat] = function(self, event)
   local username = self.clients[event.pid].username
-  self:emit(evtChat, {message = username .. ': ' .. event.data.message})
+  self:emit(evtChat, {message = username .. ': ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
 end
 
 function NetServer:init()
