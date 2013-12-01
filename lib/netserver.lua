@@ -73,10 +73,12 @@ function NetServer:init()
   
   ovw.event:on(evtJoin, self, function(self, data)
     print(data.username .. ' has joined!')
+    self:emit(evtChat, {message = data.username .. ' has joined!'})
   end)
   
   ovw.event:on(evtLeave, self, function(self, data)
     print('Player ' .. data.id .. ' has left!')
+    self:emit(evtChat, {message = self.clients[data.id].username .. ' has left!'})
   end)
 
   Net.init(self)
