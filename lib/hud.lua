@@ -67,9 +67,10 @@ function Hud:draw()
 		return
 	end
 	
-	g.draw(self.health.back, 12, 12)
-	g.draw(self.health.canvas, 4, 4)
-	g.draw(self.health.glass, 0, 0)
+	local s = math.min(1, h(.2) / 160)
+	g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
+	g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
+	g.draw(self.health.glass, 0, 0, 0, s, s)
 	
 	local p = ovw.players:get(myId)
 	if p and p.active then
@@ -162,7 +163,7 @@ end
 
 function Hud:keypressed(key)
 	if tick < 10 then return end
-	
+
 	if self.chatting then
 		if key == 'backspace' then self.chatMessage = self.chatMessage:sub(1, -2)
 		elseif key == 'return' then
