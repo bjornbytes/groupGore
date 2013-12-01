@@ -2,11 +2,12 @@ Particles = class()
 
 function Particles:init()
 	self.particles = {}
+	self.depth = -100
+	if ovw.view then ovw.view:register(self) end
 end
 
 function Particles:create(type, vars)
 	local p = {
-		depth = -100,
 		image = nil,
 		scale = 1,
 		alpha = 1,
@@ -22,7 +23,7 @@ function Particles:create(type, vars)
 	table.merge(vars or {}, p)
 	
 	table.insert(self.particles, p)
-	
+
 	return p
 end
 

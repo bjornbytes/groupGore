@@ -36,7 +36,7 @@ function PlayerServer:update()
   self:turn()
   self:slot()
   
-  if self.health < self.maxHealth then
+  if self.health < self.maxHealth and not self.ded then
     local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
     if percentage > 0 then
       percentage = (1 + (percentage * 4)) / 100

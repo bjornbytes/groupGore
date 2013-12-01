@@ -91,7 +91,7 @@ end
 function NetServer:send(msg, peer, data)
   self.outStream:clear()
   self:pack(msg, data)
-  peer:send(tostring(self.outStream), 0, 'unreliable')
+  peer:send(tostring(self.outStream))
 end
 
 function NetServer:emit(evt, data)
@@ -108,8 +108,8 @@ function NetServer:sync()
     self:pack(unpack(self.eventBuffer[1]))
     table.remove(self.eventBuffer, 1)
   end
-  
-  self.host:broadcast(tostring(self.outStream), 0, 'unreliable')
+
+  self.host:broadcast(tostring(self.outStream))
 end
 
 function NetServer:snapshot(peer)

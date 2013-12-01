@@ -1,7 +1,7 @@
 Hud = class()
 
 local function w(x) x = x or 1 return love.window.getWidth() * x end
-local function h(x) x = x or 1 return love.window.getHeight() * x end
+local function h(x) x = x or 1 return (love.window.getHeight() - ovw.view.margin * 2) * x end
 
 function Hud:init()
 	self.health = {}
