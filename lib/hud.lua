@@ -64,40 +64,40 @@ function Hud:draw()
 			else pas[#pas + 1] = p.slots[i] end
 		end
 		
-		g.setFont(self.biggerFont)
-		local yy = 256
+		g.setFont(self.font)
+		local yy = 200
 		for i = 1, #wep do
 			g.setColor(10, 10, 10)
 			if p.slots[p.input.weapon] == wep[i] then g.setColor(40, 40, 40) end
-			g.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			g.rectangle('fill', 0, yy, 160, self.font:getHeight() + 16)
 			g.setColor(80, 80, 80)
-			g.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			g.rectangle('line', 0 - .5, yy + .5, 160, self.font:getHeight() + 16)
 			g.setColor(160, 160, 160)
 			g.print(wep[i].name, 16, yy + 8)
-			yy = yy + self.biggerFont:getHeight() + 24
+			yy = yy + self.font:getHeight() + 24
 		end
 		
-		yy = yy + 24
+		yy = yy + 12
 		for i = 1, #skl do
 			g.setColor(10, 10, 10)
 			if p.slots[p.input.skill] == skl[i] then g.setColor(40, 40, 40) end
-			g.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			g.rectangle('fill', 0, yy, 160, self.font:getHeight() + 16)
 			g.setColor(80, 80, 80)
-			g.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			g.rectangle('line', 0 - .5, yy + .5, 160, self.font:getHeight() + 16)
 			g.setColor(160, 160, 160)
 			g.print(skl[i].name, 16, yy + 8)
-			yy = yy + self.biggerFont:getHeight() + 24
+			yy = yy + self.font:getHeight() + 24
 		end
 		
-		yy = yy + 24
+		yy = yy + 12
 		for i = 1, #pas do
 			g.setColor(10, 10, 10)
-			g.rectangle('fill', 0, yy, 160, self.biggerFont:getHeight() + 16)
+			g.rectangle('fill', 0, yy, 160, self.font:getHeight() + 16)
 			g.setColor(80, 80, 80)
-			g.rectangle('line', 0 - .5, yy + .5, 160, self.biggerFont:getHeight() + 16)
+			g.rectangle('line', 0 - .5, yy + .5, 160, self.font:getHeight() + 16)
 			g.setColor(160, 160, 160)
 			g.print(pas[i].name, 16, yy + 8)
-			yy = yy + self.biggerFont:getHeight() + 24
+			yy = yy + self.font:getHeight() + 24
 		end
 	end
 
