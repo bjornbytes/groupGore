@@ -22,7 +22,7 @@ setmetatable(Overwatch, {
 			local args = {...}
 			table.with(t.ovws, function(o)
 				ovw = o
-				if t.toRemove == ovw then
+				if k == 'update' and t.toRemove == ovw then
 					ovw:unload()
 					t.ovws = table.filter(t.ovws, function(o) return o ~= ovw end)
 				else

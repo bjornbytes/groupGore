@@ -10,8 +10,7 @@ function Hud:init()
 	self.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
 	self.health.red = love.graphics.newImage('media/graphics/healthRed.png')
 	
-	self.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', 12)
-	self.biggerFont = love.graphics.newFont('media/fonts/Ubuntu.ttf', 16)
+	self.font = love.graphics.newFont('media/fonts/Ubuntu.ttf', h() * .0175)
 
 	self.chatting = false
 	self.chatMessage = ''
@@ -80,41 +79,38 @@ function Hud:draw()
 			elseif p.slots[i].type == 'skill' then skl[#skl + 1] = p.slots[i]
 			else pas[#pas + 1] = p.slots[i] end
 		end
+
 		
+		local height = (2 * h(.01)) + (5 * (h(.02) + self.font:getHeight()))
+		local width = math.max(w(.12), self.font:getWidth('weapon name'))
 		g.setFont(self.font)
-		local yy = 200
+		local yy = h(.5) - (height / 2)
 		for i = 1, #wep do
 			g.setColor(10, 10, 10)
 			if p.slots[p.input.weapon] == wep[i] then g.setColor(40, 40, 40) end
-			g.rectangle('fill', 0, yy, 160, self.font:getHeight() + 16)
-			g.setColor(80, 80, 80)
-			g.rectangle('line', 0 - .5, yy + .5, 160, self.font:getHeight() + 16)
-			g.setColor(160, 160, 160)
-			g.print(wep[i].name, 16, yy + 8)
-			yy = yy + self.font:getHeight() + 24
+			g.rectangle('fill', 0, yy, width, self.font:getHeight() + h(.02)) g.setColor(80, 80, 80)
+			g.rectangle('line', 0 - .5, yy + .5, width, self.font:getHeight() + h(.02)) g.setColor(160, 160, 160)
+			g.print(wep[i].name, 16, yy + h(.01))
+			yy = yy + self.font:getHeight() + h(.02)
 		end
-		
-		yy = yy + 12
+	
+		yy = yy + h(.01)
 		for i = 1, #skl do
 			g.setColor(10, 10, 10)
 			if p.slots[p.input.skill] == skl[i] then g.setColor(40, 40, 40) end
-			g.rectangle('fill', 0, yy, 160, self.font:getHeight() + 16)
-			g.setColor(80, 80, 80)
-			g.rectangle('line', 0 - .5, yy + .5, 160, self.font:getHeight() + 16)
-			g.setColor(160, 160, 160)
-			g.print(skl[i].name, 16, yy + 8)
-			yy = yy + self.font:getHeight() + 24
+			g.rectangle('fill', 0, yy, width, self.font:getHeight() + h(.02)) g.setColor(80, 80, 80)
+			g.rectangle('line', 0 - .5, yy + .5, width, self.font:getHeight() + h(.02)) g.setColor(160, 160, 160)
+			g.print(skl[i].name, 16, yy + h(.01))
+			yy = yy + self.font:getHeight() + h(.02)
 		end
 		
-		yy = yy + 12
+		yy = yy + h(.01)
 		for i = 1, #pas do
 			g.setColor(10, 10, 10)
-			g.rectangle('fill', 0, yy, 160, self.font:getHeight() + 16)
-			g.setColor(80, 80, 80)
-			g.rectangle('line', 0 - .5, yy + .5, 160, self.font:getHeight() + 16)
-			g.setColor(160, 160, 160)
-			g.print(pas[i].name, 16, yy + 8)
-			yy = yy + self.font:getHeight() + 24
+			g.rectangle('fill', 0, yy, width, self.font:getHeight() + h(.02)) g.setColor(80, 80, 80)
+			g.rectangle('line', 0 - .5, yy + .5, width, self.font:getHeight() + h(.02)) g.setColor(160, 160, 160)
+			g.print(pas[i].name, 16, yy + h(.01))
+			yy = yy + self.font:getHeight() + h(.02)
 		end
 	end
 
