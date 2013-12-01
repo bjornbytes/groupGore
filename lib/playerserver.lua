@@ -57,7 +57,7 @@ function PlayerServer:update()
 end
 
 function PlayerServer:time()
-  self.ded = timer.rot(self.ded, function() Net:emit(evtSpawn, {id = self.id}) end)
+  self.ded = timer.rot(self.ded, function() ovw.net:emit(evtSpawn, {id = self.id}) end)
   if self.ded == 0 then self.ded = false end
 end
 
