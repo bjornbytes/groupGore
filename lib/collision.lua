@@ -123,7 +123,10 @@ function Collision:resolveCircleWall(x, y, r, step)
   return self:resolveCircleWall(x, y, r, step)
 end
 
-function Collision:resolveCirclePlayer(x, y, r, step, team)
+function Collision:resolveCirclePlayer(x, y, r, step, team, n)
+  n = n or 0
+  if n > 100 then return x, y end
+  
   local players = {}
   local xx, yy = math.floor(x / size), math.floor(y / size)
   for i = -1, 1 do
@@ -155,7 +158,7 @@ function Collision:resolveCirclePlayer(x, y, r, step, team)
   
   if free then return x, y end
   
-  return self:resolveCirclePlayer(x, y, r, step, team)
+  return self:resolveCirclePlayer(x, y, r, step, team, n + 1)
 end
 
 function Collision:refreshPlayer(p)

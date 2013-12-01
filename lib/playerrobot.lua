@@ -5,6 +5,7 @@ function PlayerRobot:activate()
   PlayerServer.activate(self)
 
   self.username = 'robot'
+  
   self.s1 = math.floor(math.random() * 300)
   self.s2 = math.floor(math.random() * 300)
   self.s3 = math.floor(math.random() * 300)
