@@ -97,7 +97,7 @@ function Menu:textinput(character)
   end
 end
 
-function Menu:keyreleased(key)
+function Menu:keypressed(key)
   if key == 'escape' then love.event.quit() return
   elseif key == 'backspace' and self.focused then
     self[self.focused] = self[self.focused]:sub(1, -2)
@@ -126,6 +126,8 @@ function Menu:keyreleased(key)
       tick = 1
       love.keyboard.setKeyRepeat(false)
       return
+    elseif key == 'v' and love.keyboard.isDown('lctrl') then
+      self.ip = love.system.getClipboardText()
     end
   end
 end

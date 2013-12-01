@@ -161,6 +161,8 @@ function Hud:textinput(character)
 end
 
 function Hud:keypressed(key)
+	if tick < 10 then return end
+	
 	if self.chatting then
 		if key == 'backspace' then self.chatMessage = self.chatMessage:sub(1, -2)
 		elseif key == 'return' then
