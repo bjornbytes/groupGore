@@ -6,7 +6,7 @@ end
 
 function Particles:create(type, vars)
 	local p = {
-		depth = 0,
+		depth = -100,
 		image = nil,
 		scale = 1,
 		alpha = 1,

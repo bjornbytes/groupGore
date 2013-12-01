@@ -72,12 +72,12 @@ function NetServer:init()
   self.eventBuffer = {}
   
   ovw.event:on(evtJoin, self, function(self, data)
-    print(data.username .. ' has joined!')
+    print('Server: ' .. data.username .. ' has joined!')
     self:emit(evtChat, {message = data.username .. ' has joined!'})
   end)
   
   ovw.event:on(evtLeave, self, function(self, data)
-    print('Player ' .. data.id .. ' has left!')
+    print('Server: Player ' .. data.id .. ' has left!')
     self:emit(evtChat, {message = self.clients[data.id].username .. ' has left!'})
   end)
 
@@ -91,7 +91,7 @@ end
 function NetServer:send(msg, peer, data)
   self.outStream:clear()
   self:pack(msg, data)
-  peer:send(tostring(self.outStream))
+  peer:send(tostring(self.outStream), 0, 'unreliable')
 end
 
 function NetServer:emit(evt, data)
@@ -109,7 +109,7 @@ function NetServer:sync()
     table.remove(self.eventBuffer, 1)
   end
   
-  self.host:broadcast(tostring(self.outStream))
+  self.host:broadcast(tostring(self.outStream), 0, 'unreliable')
 end
 
 function NetServer:snapshot(peer)

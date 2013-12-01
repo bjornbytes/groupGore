@@ -39,11 +39,11 @@ function NetClient:init()
 	self.messageBuffer = {}
 
 	ovw.event:on(evtJoin, self, function(self, data)
-		print(data.username .. ' has joined!')
+		print('Client: ' .. data.username .. ' has joined!')
 	end)
 	
 	ovw.event:on(evtLeave, self, function(self, data)
-		print('Player ' .. data.id .. ' has left!')
+		print('Client: Player ' .. data.id .. ' has left!')
 	end)
 	
 	ovw.event:on(evtSync, self, function(self, data)
