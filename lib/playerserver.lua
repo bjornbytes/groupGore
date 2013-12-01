@@ -17,7 +17,7 @@ function PlayerServer:activate()
   self.input.wep = 1
   self.input.skl = 3
   self.input.rel = false
-    
+  
   Player.activate(self)
 end
 

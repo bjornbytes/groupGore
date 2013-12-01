@@ -5,6 +5,16 @@ function PlayerDummy:activate()
 	Player.activate(self)
 end
 
+function PlayerDummy:draw()
+	if self.ded then return end
+	local t = tick - (interp / tickRate)
+	local previous = ovw.players.history[self.id][t - 1]
+	current = ovw.players.history[current.id][t]
+	if current and previous then
+		Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
+	end
+end
+
 function PlayerDummy:trace(data)
 	local t = data.tick
 	data.tick = nil

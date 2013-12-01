@@ -40,6 +40,14 @@ function PlayerMain:update()
   self:fade()
 end
 
+function PlayerMain:draw()
+  if self.ded then return end
+  local previous = ovw.players.history[self.id][tick - 1]
+  if previous then
+    Player.draw(table.interpolate(previous, self, tickDelta / tickRate))
+  end
+end
+
 function PlayerMain:poll()
   local prevx, prevy = self.input.mx, self.input.my
   self.input.mx, self.input.my = mouseX(), mouseY()

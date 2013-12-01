@@ -46,20 +46,19 @@ function Players:init()
     p.ded = false
     p:activate()
   end)
-
-  self.depth = -1000
-  if ovw.view then ovw.view:register(self) end
 end
 
 function Players:activate(id)
   assert(id >= 1 and id <= 16)
   self.players[id].active = true
+  if ovw.view then ovw.view:register(self.players[id]) end
   self:refresh()
 end
 
 function Players:deactivate(id)
   self.players[id].active = false
   self.players[id]:deactivate()
+  if ovw.view then ovw.view:unregister(self.players[id]) end
   self:refresh()
 end
 
@@ -86,25 +85,6 @@ function Players:update()
   self:with(self.active, function(p)
     self.history[p.id][tick] = table.copy(p)
     self.history[p.id][tick - (1 / tickRate)] = nil
-  end)
-end
-
-function Players:draw()
-  self:with(self.active, function(current)
-    if current.ded then return end
-    if current.id == myId then
-      local previous = self.history[current.id][tick - 1]
-      if previous then
-        table.interpolate(previous, current, tickDelta / tickRate):draw()
-      end
-    else
-      local t = tick - (interp / tickRate)
-      local previous = self.history[current.id][t - 1]
-      current = self.history[current.id][t]
-      if current and previous then
-        table.interpolate(previous, current, tickDelta / tickRate):draw()
-      end
-    end
   end)
 end
 

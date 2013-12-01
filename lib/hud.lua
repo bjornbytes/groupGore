@@ -136,7 +136,11 @@ function Hud:draw()
 
 	g.setColor(255, 255, 255)
 	local debug = love.timer.getFPS() .. 'fps'
-	if ovw.net.server then debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms' end
+	if ovw.net.server then
+		debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms'
+		debug = debug .. ', ' .. ovw.net.host:total_sent_data() .. 'tx'
+		debug = debug .. ', ' .. ovw.net.host:total_received_data() .. 'rx'
+	end
 	g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
 
 	if self:classSelect() then
