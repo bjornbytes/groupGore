@@ -44,7 +44,7 @@ Wall.activate = function(self, map)
 end
 
 Wall.update = function(self)
-  if ovw.view then self.depth = -self.y + (math.distance(self.x + self.w / 2, self.y + self.h / 2, ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2) / 10) end
+  if ovw.view then self.depth = -self.y + math.distance(self.x, self.y, ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2) / 10 end
 end
 
 Wall.draw = function(self)
@@ -57,28 +57,38 @@ Wall.draw = function(self)
   local llx, lly = v:three(self.x, self.y + self.h, self.z)
   local lrx, lry = v:three(self.x + self.w, self.y + self.h, self.z)
 
-  self.north:setVertex(3, urx, ury, 1, 1)
-  self.north:setVertex(4, ulx, uly, 0, 1)
-
-  self.south:setVertex(1, llx, lly, 0, 0)
-  self.south:setVertex(2, lrx, lry, 1, 0)
-
-  self.east:setVertex(1, urx, ury, 0, 0)
-  self.east:setVertex(4, lrx, lry, 0, 1)
-
-  self.west:setVertex(2, ulx, uly, 1, 0)
-  self.west:setVertex(3, llx, lly, 1, 1)
-
   self.top:setVertex(1, ulx, uly, 0, 0)
   self.top:setVertex(2, urx, ury, 1, 0)
   self.top:setVertex(3, lrx, lry, 1, 1)
   self.top:setVertex(4, llx, lly, 0, 1)
   
   love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(self.north, 0, 0)
-  love.graphics.draw(self.south, 0, 0)
-  love.graphics.draw(self.east, 0, 0)
-  love.graphics.draw(self.west, 0, 0)
+  local y2 = ovw.view.y + (ovw.view.h / 2)
+  if self.y > y2 then
+    self.north:setVertex(3, urx, ury, 1, 1)
+    self.north:setVertex(4, ulx, uly, 0, 1)
+    love.graphics.draw(self.north, 0, 0)
+  end
+
+  if self.y + self.h < y2 then
+    self.south:setVertex(1, llx, lly, 0, 0)
+    self.south:setVertex(2, lrx, lry, 1, 0)
+    love.graphics.draw(self.south, 0, 0)
+  end
+
+  local x2 = ovw.view.x + (ovw.view.w / 2)
+  if self.x > x2 then
+    self.west:setVertex(2, ulx, uly, 1, 0)
+    self.west:setVertex(3, llx, lly, 1, 1)
+    love.graphics.draw(self.west, 0, 0)
+  end
+
+  if self.x + self.w < x2 then
+    self.east:setVertex(1, urx, ury, 0, 0)
+    self.east:setVertex(4, lrx, lry, 0, 1)
+    love.graphics.draw(self.east, 0, 0)
+  end
+  
   love.graphics.draw(self.top, 0, 0)
 end
 
