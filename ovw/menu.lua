@@ -123,6 +123,7 @@ function Menu:keypressed(key)
       Overwatch:remove(self)
       if love.keyboard.isDown('rshift') then Overwatch:add(Server) end
       Overwatch:add(Game)
+      tick = 1
       love.keyboard.setKeyRepeat(false)
       return
     end

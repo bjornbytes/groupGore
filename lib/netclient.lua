@@ -60,9 +60,8 @@ function NetClient:connect(event)
 end
 
 function NetClient:disconnect(event)
-	Overwatch:unload()
-	Overwatch = Menu
-	Overwatch:load()
+	Overwatch:remove(ovw)
+	Overwatch:add(Menu)
 end
 
 function NetClient:send(msg, data)

@@ -47,7 +47,24 @@ function Hud:draw()
 		g.setColor(0, 0, 0)
 		g.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
 		g.setColor(255, 255, 255)
-		g.printf('Connecting...', 0, love.window.getHeight() / 2 - self.font:getHeight(), love.window.getWidth(), 'center')
+		local str = 'Connecting...'
+		if tick > 5 / tickRate then
+			str = str .. '\noshit'
+		end
+		if tick > 6 / tickRate then
+			str = str .. ' oshit'
+		end
+		if tick > (6 / tickRate) + 5 then
+			str = str .. ' oshit'
+		end
+		if tick > (6 / tickRate) + 10 then
+			str = str .. ' oshit'
+		end
+		if tick > 10 / tickRate then
+			str = str .. '\n'
+			str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3))
+		end
+		g.printf(str, 0, math.floor(love.window.getHeight() / 2 - self.font:getHeight()), love.window.getWidth(), 'center')
 		return
 	end
 	
