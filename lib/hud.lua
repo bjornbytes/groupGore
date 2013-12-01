@@ -118,6 +118,11 @@ function Hud:draw()
 	g.setColor(255, 255, 255, 100)
 	g.print(self.chatLog, 4 + 2, yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 2)
 
+	g.setColor(255, 255, 255)
+	local debug = love.timer.getFPS() .. 'fps'
+	if ovw.net.server then debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms' end
+	g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
+
 	if self:classSelect() then
 		g.setFont(self.font)
 		g.setColor(0, 0, 0)
