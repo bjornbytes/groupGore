@@ -64,7 +64,7 @@ jungleCarnage.props = {
     kind = 'wall',
     x = 128,
     y = 128 + 128,
-    w = 192,
+    w = 128,
     h = 64,
     z = 64
   },
@@ -86,9 +86,9 @@ jungleCarnage.props = {
   },
   {
     kind = 'wall',
-    x = jungleCarnage.width - (128 + 192),
+    x = jungleCarnage.width - (128 + 128),
     y = jungleCarnage.height - (128 + 128 + 64),
-    w = 192,
+    w = 128,
     h = 64,
     z = 64
   },
@@ -111,9 +111,9 @@ jungleCarnage.props = {
   {
     kind = 'wall',
     x = (jungleCarnage.width / 2) - 32,
-    y = (jungleCarnage.height / 2) - 32,
+    y = (jungleCarnage.height / 2) + 32,
     w = 64,
-    h = 160,
+    h = 96,
     z = 64
   },
   {
