@@ -35,7 +35,7 @@ function love.load()
   data.load()
 
   Overwatch:add(Menu)
-  Overwatch:add(Gorgeous)
+  gorgeous = Overwatch:add(Gorgeous)
 
   love.update = Overwatch.update
   love.draw = Overwatch.draw

@@ -21,6 +21,9 @@ function Menu:load()
   self.ipDefault = nil
   self.usernameDefault = self.username
   self.passwordDefault = self.password
+
+  self.message = ''
+  self.messageAlpha = 0
   
   love.window.setMode(1024, 600, {resizable = true, minwidth = 640, minheight = 480})
   love.keyboard.setKeyRepeat(true)
@@ -28,6 +31,10 @@ end
 
 function Menu:unload()
   self.bg = nil
+end
+
+function Menu:update()
+  if self.messageAlpha > 0 then self.messageAlpha = self.messageAlpha - (100 * tickRate) end
 end
 
 function Menu:draw()
@@ -60,6 +67,11 @@ function Menu:draw()
     love.graphics.print(string.rep('•', #self.password), w(.5) - (iw / 2) + (fh / 2), h(.35) - (fh / 2) + ih + 1)
     if self.focused == 'password' then
       love.graphics.line(w(.5) - (iw / 2) + (fh / 2) + self.font:getWidth(string.rep('•', #self.password)) + 1, h(.35) - (fh / 2) + ih + 1, w(.5) - (iw / 2) + (fh / 2) + self.font:getWidth(string.rep('•', #self.password)) + 1, h(.35) - (fh / 2) + ih + 1 + fh)
+    end
+
+    if self.messageAlpha > 0 then
+      love.graphics.setColor(255, 255, 255, math.min(self.messageAlpha, 255) * .6)
+      love.graphics.print(self.message, w(.5) - self.font:getWidth(self.message) / 2, h(.5))
     end
   elseif self.page == 'main' then 
     love.graphics.setFont(self.titleFont)
@@ -110,10 +122,22 @@ function Menu:keypressed(key)
     elseif self.focused == 'password' then
       if key == 'tab' then self:focusInput('username')
       elseif key == 'return' then
-        username = self.username
-        password = self.password
-        self.page = 'main'
-        self:focusInput('ip')
+        self.message = 'Checking...'
+        self.messageAlpha = 4000
+        gorgeous:send(gorgeous.msgLogin, {
+          username = self.username,
+          password = self.password
+        }, function(data)
+          if data.success then
+            username = self.username
+            password = self.password
+            self.page = 'main'
+            self:focusInput('ip')
+          else
+            self.message = 'Nope.'
+            self.messageAlpha = 400
+          end
+        end)
       end
     end
   elseif self.page == 'main' then

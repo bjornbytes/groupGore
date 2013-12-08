@@ -10,6 +10,7 @@ function Overwatch:add(obj)
 	ovw = o
 	ovw:load()
 	ovw = oldovw
+	return o
 end
 
 function Overwatch:remove(ovw)

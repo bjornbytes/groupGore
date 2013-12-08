@@ -12,24 +12,26 @@ Gorgeous.otherSignatures = {
 
 Gorgeous.receive = {}
 Gorgeous.receive[Gorgeous.msgLogin] = function(self, data)
-  if data.success then print('Login was successful!')
-  else print('Login was not successful!') end
+  print(data.success)
 end
 
 function Gorgeous:load()
   self.socket = require('socket').connect('localhost', 6060)
   
-  if not self.socket then Overwatch:remove(self) return end
+  if not self.socket then
+    print('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
+    Overwatch:remove(self)
+    gorgeous = nil
+    return
+  end
 
   self.socket:settimeout(0)
 
   self.inStream = Stream()
   self.outStream = Stream()
 
-  self:send(Gorgeous.msgLogin, {
-    username = 'tie372',
-    password = 'asdf'
-  })
+  self.seq = 1
+  self.callbacks = {}
 end
 
 function Gorgeous:unload()
@@ -43,15 +45,20 @@ function Gorgeous:update()
 
     self.inStream:clear()
     self.inStream.str = data
-    local msg, data = self:unpack()
-    if self.receive[msg] then self.receive[msg](self, data) end
+    local seq, msg, data = self:unpack()
+    f.exe(self.callbacks[seq], data)
+    self.callbacks[seq] = nil
   end
 end
 
-function Gorgeous:send(msg, data)
+function Gorgeous:send(msg, data, cb)
   self.outStream:clear()
+  self.outStream:write(self.seq, '8bits')
   self:pack(msg, data)
   self.socket:send(tostring(self.outStream))
+
+  self.callbacks[self.seq] = cb
+  self.seq = (self.seq % 255) + 1
 end
 
 function Gorgeous:pack(msg, data)
@@ -60,7 +67,8 @@ function Gorgeous:pack(msg, data)
 end
 
 function Gorgeous:unpack()
+  local seq = self.inStream:read('8bits')
   local msg = self.inStream:read('4bits')
   if msg == 0 or not self.otherSignatures[msg] then return false end
-  return msg, self.inStream:unpack(self.otherSignatures[msg])
+  return seq, msg, self.inStream:unpack(self.otherSignatures[msg])
 end
