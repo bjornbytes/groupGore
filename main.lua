@@ -6,6 +6,7 @@ require 'lib/stream'
 require 'lib/buff'
 require 'lib/collision'
 require 'lib/event'
+require 'lib/gorgeous'
 require 'lib/hud'
 require 'lib/linkedlist'
 require 'lib/map'
@@ -34,6 +35,7 @@ function love.load()
   data.load()
 
   Overwatch:add(Menu)
+  Overwatch:add(Gorgeous)
 
   love.update = Overwatch.update
   love.draw = Overwatch.draw

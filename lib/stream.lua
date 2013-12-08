@@ -126,6 +126,31 @@ function Stream:readBits(n)
 	return x
 end
 
+function Stream:pack(data, signature)
+	for _, sig in ipairs(signature) do
+		if type(sig[2]) == 'table' then
+			self:write(#data[sig[1]], '4bits')
+			for i = 1, #data[sig[1]] do self:pack(data[sig[1]][i], sig[2]) end
+		else
+			self:write(data[sig[1]], sig[2])
+		end
+	end
+end
+
+function Stream:unpack(signature)
+	local data = {}
+	for _, sig in ipairs(signature) do
+		if type(sig[2]) == 'table' then
+			local ct = self:read('4bits')
+			data[sig[1]] = {}
+			for i = 1, ct do table.insert(data[sig[1]], self:unpack(sig[2])) end
+		else
+			data[sig[1]] = self:read(sig[2])
+		end
+	end
+	return data
+end
+
 setmetatable(Stream, {
 	__call = Stream.create
 })
