@@ -18,6 +18,9 @@ end
 
 function Gorgeous:load()
   self.socket = require('socket').connect('localhost', 6060)
+  
+  if not self.socket then Overwatch:remove(self) return end
+
   self.socket:settimeout(0)
 
   self.inStream = Stream()
@@ -30,7 +33,7 @@ function Gorgeous:load()
 end
 
 function Gorgeous:unload()
-  self.socket:close()
+  if self.socket then self.socket:close() end
 end
 
 function Gorgeous:update()
