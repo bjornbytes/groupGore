@@ -16,7 +16,7 @@ function Menu:load()
   local clip = love.system.getClipboardText()
   if clip:match('^[0-9]+%.[0-9]+%.[0-9]+%.[0-9]+$') then self.ip = clip end
   
-  self.username = 'username'
+  self.username = love.filesystem.read('username') or 'username'
   self.password = 'password'
   self.ipDefault = nil
   self.usernameDefault = self.username
@@ -133,6 +133,8 @@ function Menu:keypressed(key)
             password = self.password
             self.page = 'main'
             self:focusInput('ip')
+            
+            love.filesystem.write('username', username)
           else
             self.message = 'Nope.'
             self.messageAlpha = 400
