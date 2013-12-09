@@ -16,7 +16,7 @@ Gorgeous.receive[Gorgeous.msgLogin] = function(self, data)
 end
 
 function Gorgeous:load()
-  self.socket = require('socket').connect('localhost', 6060)
+  self.socket = require('socket').connect('107.4.63.70', 6060)
   
   if not self.socket then
     print('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
