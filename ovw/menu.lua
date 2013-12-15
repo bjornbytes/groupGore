@@ -148,14 +148,28 @@ function Menu:keypressed(key)
     end
   elseif self.page == 'main' then
     if key == 'return' then
-      serverIp = self.ip
-      serverPort = 6061
-      Overwatch:remove(self)
-      if love.keyboard.isDown('rshift') then Overwatch:add(Server) end
-      Overwatch:add(Game)
-      tick = 1
-      love.keyboard.setKeyRepeat(false)
-      return
+      local function enter()
+        serverip = self.ip
+        serverPort = 6061
+        Overwatch:remove(self)
+        Overwatch:add(Game)
+        tick = 1
+        love.keyboard.setKeyRepeat(false)
+      end
+
+      if love.keyboard.isDown('rshift') then
+        gorgeous:send(gorgeous.msgCreateServer, {}, function(data)
+          if data.success then
+            Overwatch:add(Server)
+            enter()
+          else
+            self.message = 'Unable to create server.'
+            self.messageAlpha = 400
+          end
+        end)
+      else
+        enter()
+      end
     elseif key == 'v' and love.keyboard.isDown('lctrl') then
       self.ip = love.system.getClipboardText()
     end

@@ -1,13 +1,22 @@
 Gorgeous = class()
 
 Gorgeous.msgLogin = 1
+Gorgeous.msgServers = 2
+Gorgeous.msgCreateServer = 3
 
 Gorgeous.signatures = {
   [Gorgeous.msgLogin] = {{'username', 'string'}, {'password', 'string'}}
+  [Gorgeous.msgServers] = {}
+  [Gorgeous.msgCreateServer] = {}
 }
 
 Gorgeous.otherSignatures = {
   [Gorgeous.msgLogin] = {{'success', 'bool'}}
+  [Gorgeous.msgServers] = {{'servers', {
+    {'name', 'string'},
+    {'ip', 'string'}
+  }}},
+  [Gorgeous.msgCreateServer] = {{'success', 'bool'}}
 }
 
 Gorgeous.receive = {}
@@ -52,6 +61,8 @@ function Gorgeous:update()
 end
 
 function Gorgeous:send(msg, data, cb)
+  if not gorgeous then return end
+
   self.outStream:clear()
   self.outStream:write(self.seq, '8bits')
   self:pack(msg, data)
