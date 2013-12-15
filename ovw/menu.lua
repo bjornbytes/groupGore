@@ -4,8 +4,10 @@ local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return love.window.getHeight() * x end
 
 function Menu:load()
-  self.font = love.graphics.newFont('/media/fonts/Ubuntu.ttf', 16)
-  self.titleFont = love.graphics.newFont('/media/fonts/Ubuntu.ttf', 32)
+  love.window.setMode(1280, 800)
+
+  self.font = love.graphics.newFont('/media/fonts/Ubuntu.ttf', h() * .02)
+  self.titleFont = love.graphics.newFont('/media/fonts/Ubuntu.ttf', h() * .025)
   
   self.bg = love.graphics.newImage('/media/graphics/menu/bgMenu.jpeg')
   
@@ -24,8 +26,7 @@ function Menu:load()
 
   self.message = ''
   self.messageAlpha = 0
-  
-  love.window.setMode(1024, 600, {resizable = true, minwidth = 640, minheight = 480})
+
   love.keyboard.setKeyRepeat(true)
 end
 
@@ -44,18 +45,18 @@ function Menu:draw()
   love.graphics.setColor(255, 255, 255)
   love.graphics.draw(self.bg, 0, 0, 0, love.window.getWidth() / self.bg:getWidth(), love.window.getHeight() / self.bg:getHeight())
   
-  if self.page == 'login' then
+  if self.page == 'login' then    
     love.graphics.setFont(self.titleFont)
     love.graphics.setColor(108, 89, 128)
-    love.graphics.print('g', 20, 16)
+    love.graphics.print('g', h(.01), h(.01))
     love.graphics.setColor(140, 107, 84)
-    love.graphics.print('G', 20 + self.titleFont:getWidth('g'), 16)
+    love.graphics.print('G', h(.01) + self.titleFont:getWidth('g'), h(.01))
     
     love.graphics.setFont(self.font)
     local fh = self.font:getHeight()
     local ih = math.max(40, fh)
     local iw = math.max(w(.3), 240)
-    love.graphics.setColor(30, 30, 30)
+    love.graphics.setColor(20, 22, 24)
     love.graphics.rectangle('fill', w(.5) - (iw / 2), h(.35) - (ih / 2), iw, ih)
     love.graphics.rectangle('fill', w(.5) - (iw / 2), h(.35) + (ih / 2) + 1, iw, ih)
     
@@ -73,12 +74,15 @@ function Menu:draw()
       love.graphics.setColor(255, 255, 255, math.min(self.messageAlpha, 255) * .6)
       love.graphics.print(self.message, w(.5) - self.font:getWidth(self.message) / 2, h(.5))
     end
-  elseif self.page == 'main' then 
+  elseif self.page == 'main' then
+    love.graphics.setColor(0, 0, 0, 120)
+    love.graphics.rectangle('fill', 0, 0, w(), h(.05))
+    
     love.graphics.setFont(self.titleFont)
     love.graphics.setColor(108, 89, 128)
-    love.graphics.print('g', 20, 16)
+    love.graphics.print('g', h(.01), h(.01))
     love.graphics.setColor(140, 107, 84)
-    love.graphics.print('G', 20 + self.titleFont:getWidth('g'), 16)
+    love.graphics.print('G', h(.01) + self.titleFont:getWidth('g'), h(.01))
     
     love.graphics.setFont(self.font)
     local fh = self.font:getHeight()
