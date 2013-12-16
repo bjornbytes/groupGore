@@ -7,7 +7,7 @@ Gorgeous.msgCreateServer = 3
 Gorgeous.signatures = {
   [Gorgeous.msgLogin] = {{'username', 'string'}, {'password', 'string'}},
   [Gorgeous.msgServers] = {},
-  [Gorgeous.msgCreateServer] = {}
+  [Gorgeous.msgCreateServer] = {{'name', 'string'}}
 }
 
 Gorgeous.otherSignatures = {

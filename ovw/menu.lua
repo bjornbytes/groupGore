@@ -229,8 +229,7 @@ function Menu:drawInput(key, x, y)
 end
 
 function Menu:host()
-  gorgeous:send(gorgeous.msgCreateServer, {}, function(data)
-    print(data.success)
+  gorgeous:send(gorgeous.msgCreateServer, {name = username .. '\'s server'}, function(data)
     if data.success then
       Overwatch:add(Server)
       self:join()
@@ -239,7 +238,7 @@ function Menu:host()
 end
 
 function Menu:join()
-  serverip = self.ip
+  serverIp = self.ip
   serverPort = 6061
   Overwatch:remove(self)
   Overwatch:add(Game)
