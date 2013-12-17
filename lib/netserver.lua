@@ -7,6 +7,7 @@ NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', 
 NetServer.signatures[evtSync] = {
   {'id', '4bits'},
   {'tick', '16bits'},
+  {'ack', '16bits'},
   {'x', '12bits'},
   {'y', '12bits'},
   {'angle', '10bits'},
@@ -52,6 +53,7 @@ NetServer.receive[msgInput] = function(self, event)
   local p = ovw.players:get(event.pid)
   local t = event.data.tick
   event.data.tick = nil
+  p.ack = t
   for i = t, tick do
     local state = table.copy(ovw.players.history[p.id][i - 1])
     if state then

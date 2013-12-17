@@ -20,6 +20,8 @@ function PlayerMain:activate()
   
   self.visible = 1
   
+  self.lastWasd = tick
+  
   Player.activate(self)
 end
 
@@ -70,6 +72,8 @@ function PlayerMain:keyHandler(key)
   if key == 'w' or key == 'a' or key == 's' or key == 'd' then
     self.input[key] = love.keyboard.isDown(key)
     self:syncInput()
+    self.lastWasd = tick
+    if not self.input[key] then self.lastWasd = self.lastWasd - 1 end
   elseif key == 'r' then
     self.input.reload = love.keyboard.isDown(key)
     self:syncInput()
@@ -92,18 +96,27 @@ end
 
 function PlayerMain:trace(data)
   local t = data.tick
+  local ack = data.ack
   data.tick = nil
+  data.ack = nil
   data.id = nil
   data.angle = nil
-  for i = t, tick do
-    local dst = ovw.players.history[self.id][i]
-    if i == tick then dst = self end
+  
+  table.merge(data, ovw.players.history[self.id][t])
+  
+  state = table.copy(ovw.players.history[self.id][ack])
+  if not state then return end
+  
+  for i = ack + 1, tick do
+    local dst = (i == tick) and self or ovw.players.history[self.id][i]
     if dst then
-      if math.distance(data.x, data.y, dst.x, dst.y) < 32 then
-        table.merge(table.except(data, {'x', 'y'}), dst)
-      else
-        table.merge(data, dst)
+      if dst ~= self then
+        state.input = dst.input
+        state:move()
       end
+      table.merge({x = state.x, y = state.y}, dst)
     end
   end
+  
+  self.health = data.health
 end

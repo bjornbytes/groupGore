@@ -9,7 +9,7 @@ function PlayerDummy:draw()
 	if self.ded then return end
 	local t = tick - (interp / tickRate)
 	local previous = ovw.players.history[self.id][t - 1]
-	current = ovw.players.history[current.id][t]
+	local current = ovw.players.history[self.id][t]
 	if current and previous then
 		Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
 	end
