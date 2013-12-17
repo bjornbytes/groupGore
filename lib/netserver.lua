@@ -75,6 +75,7 @@ function NetServer:init()
   self:listen(6061)
   self.peerToPlayer = {}
   self.eventBuffer = {}
+  self.lastHeartbeat = tick
 
   Net.init(self)
 end
@@ -105,6 +106,11 @@ function NetServer:sync()
   end
 
   self.host:broadcast(tostring(self.outStream))
+  
+  if (tick - self.lastHeartbeat) * tickRate >= 30 then
+    gorgeous:send(gorgeous.msgServerHeartbeat)
+    self.lastHeartbeat = tick
+  end
 end
 
 function NetServer:snapshot(peer)

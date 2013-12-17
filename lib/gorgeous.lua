@@ -1,22 +1,26 @@
 Gorgeous = class()
 
 Gorgeous.msgLogin = 1
-Gorgeous.msgServers = 2
-Gorgeous.msgCreateServer = 3
+Gorgeous.msgServerList = 2
+Gorgeous.msgServerCreate = 3
+Gorgeous.msgServerDelete = 4
+Gorgeous.msgServerHeartbeat = 5
 
 Gorgeous.signatures = {
   [Gorgeous.msgLogin] = {{'username', 'string'}, {'password', 'string'}},
-  [Gorgeous.msgServers] = {},
-  [Gorgeous.msgCreateServer] = {{'name', 'string'}}
+  [Gorgeous.msgServerList] = {},
+  [Gorgeous.msgServerCreate] = {{'name', 'string'}},
+  [Gorgeous.msgServerDelete] = {},
+  [Gorgeous.msgServerHeartbeat] = {}
 }
 
 Gorgeous.otherSignatures = {
   [Gorgeous.msgLogin] = {{'success', 'bool'}},
-  [Gorgeous.msgServers] = {{'servers', {
+  [Gorgeous.msgServerList] = {{'servers', {
     {'name', 'string'},
     {'ip', 'string'}
   }}},
-  [Gorgeous.msgCreateServer] = {{'success', 'bool'}}
+  [Gorgeous.msgServerCreate] = {{'success', 'bool'}}
 }
 
 Gorgeous.receive = {}

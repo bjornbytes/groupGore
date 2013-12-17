@@ -115,7 +115,12 @@ function Menu:mousepressed(x, y, button)
   elseif self.page == 'main' then
     if button == 'l' then
       if math.inside(x, y, w() - h(.0125) - h(.025), h(.0125), h(.025), h(.025)) then love.event.push('quit') end
-      if self:testButton(1, 1, x, y) then self.page = 'findServer' end
+      if self:testButton(1, 1, x, y) then
+        --self.page = 'findServer'
+        gorgeous:send(gorgeous.msgServerList, {}, function(data)
+          table.print(data)
+        end)
+      end
       if self:testButton(1, 2, x, y) then self:host() end
     end
   end
@@ -229,7 +234,7 @@ function Menu:drawInput(key, x, y)
 end
 
 function Menu:host()
-  gorgeous:send(gorgeous.msgCreateServer, {name = username .. '\'s server'}, function(data)
+  gorgeous:send(gorgeous.msgServerCreate, {name = username .. '\'s server'}, function(data)
     if data.success then
       Overwatch:add(Server)
       self:join()
