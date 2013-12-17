@@ -18,6 +18,8 @@ function PlayerServer:activate()
   self.input.skl = 3
   self.input.rel = false
   
+  self.ack = tick
+  
   Player.activate(self)
 end
 
@@ -50,6 +52,7 @@ function PlayerServer:update()
     ovw.net:emit(evtSync, {
       id = self.id,
       tick = tick,
+      ack = self.ack,
       x = math.floor(self.x + .5),
       y = math.floor(self.y + .5),
       angle = math.floor(((math.deg(self.angle) + 360) % 360) + .5),
