@@ -5,13 +5,15 @@ Gorgeous.msgServerList = 2
 Gorgeous.msgServerCreate = 3
 Gorgeous.msgServerDelete = 4
 Gorgeous.msgServerHeartbeat = 5
+Gorgeous.msgMatchmake = 6
 
 Gorgeous.signatures = {
   [Gorgeous.msgLogin] = {{'username', 'string'}, {'password', 'string'}},
   [Gorgeous.msgServerList] = {},
   [Gorgeous.msgServerCreate] = {{'name', 'string'}},
   [Gorgeous.msgServerDelete] = {},
-  [Gorgeous.msgServerHeartbeat] = {}
+  [Gorgeous.msgServerHeartbeat] = {},
+  [Gorgeous.msgMatchmake] = {}
 }
 
 Gorgeous.otherSignatures = {
@@ -20,7 +22,8 @@ Gorgeous.otherSignatures = {
     {'name', 'string'},
     {'ip', 'string'}
   }}},
-  [Gorgeous.msgServerCreate] = {{'success', 'bool'}}
+  [Gorgeous.msgServerCreate] = {{'success', 'bool'}},
+  [Gorgeous.msgMatchmake] = {{'ip', 'string'}, {'name', 'string'}}
 }
 
 Gorgeous.receive = {}

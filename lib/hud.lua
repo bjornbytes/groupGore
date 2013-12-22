@@ -87,7 +87,6 @@ function Hud:draw()
 			elseif p.slots[i].type == 'skill' then skl[#skl + 1] = p.slots[i]
 			else pas[#pas + 1] = p.slots[i] end
 		end
-
 		
 		local height = (2 * h(.01)) + (5 * (h(.02) + self.font:getHeight()))
 		local width = math.max(w(.12), self.font:getWidth('weapon name'))
