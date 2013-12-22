@@ -21,8 +21,6 @@ function PlayerMain:activate()
   self.visible = 1
   
   self.lastWasd = tick
-  self.drift = 32
-  self.driftThreshold = 32
   
   Player.activate(self)
 end
@@ -104,33 +102,9 @@ function PlayerMain:trace(data)
   data.id = nil
   data.angle = nil
   
-  local correctDrift = true
-  if correctDrift then
-    local state = table.copy(ovw.players.history[self.id][t])
-    if not state then return end
-    
-    local d = math.distance(data.x, data.y, state.x, state.y)
-    self.drift = math.max(math.lerp(self.drift, d, .01), 4)
-    if self.lastWasd <= ack and d > self.driftThreshold then
-      for i = t, tick do
-        local dst = (i == tick) and self or ovw.players.history[self.id][i]
-        table.merge(data, dst)
-      end
-      self.driftThreshold = self.driftThreshold * 2
-    else
-      local dst = ovw.players.history[self.id][t]
-      table.merge(table.interpolate({x = data.x, y = data.y}, {x = dst.x, y = dst.y}, .5), dst)
-      for i = t, ack do
-        table.merge({x = dst.x, y = dst.y}, ovw.players.history[self.id][i])
-      end
-      self.driftThreshold = self.driftThreshold - .1
-    end
-    self.driftThreshold = math.max(self.driftThreshold, (self.drift * 1.6))
-  else
-    table.merge(data, ovw.players.history[self.id][t])
-  end
+  table.merge(data, ovw.players.history[self.id][t])
   
-  state = table.copy(ovw.players.history[self.id][ack])
+  local state = table.copy(ovw.players.history[self.id][math.max(ack, tick - (1 / tickRate) + 1)])
   if not state then return end
   
   for i = ack + 1, tick do
