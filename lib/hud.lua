@@ -96,7 +96,14 @@ function Hud:draw()
   ovw.players:with(ovw.players.active, function(p)
     if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
     elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
-    love.graphics.print(p.username, ((p.x - ovw.view.x) * ovw.view.scale) - self.font:getWidth(p.username) / 2, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
+    d.printCentered(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
+
+    g.setColor(0, 0, 0, 128)
+    g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, 80, 10)
+    g.setColor(100, 0, 0, 128)
+    g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, (p.health / p.maxHealth) * 80, 10)
+    g.setColor(100, 0, 0, 255)
+    d.rectCentered('line', (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 45, 80, 10) 
   end)
   
   local p = ovw.players:get(myId)
