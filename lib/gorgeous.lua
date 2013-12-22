@@ -34,11 +34,12 @@ end
 function Gorgeous:load()
   self.socket = require('socket').tcp()
   self.socket:settimeout(3)
-  self.socket:connect('107.4.63.70', 6060)
+  local _, err = self.socket:connect('107.4.63.70', 6060)
   
-  if not self.socket then
+  if err then
     print('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
     Overwatch:remove(self)
+    self.socket = nil
     return
   end
 
