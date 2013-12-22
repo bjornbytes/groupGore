@@ -19,9 +19,10 @@ Shotgun.firerate = .65
 Shotgun.reload = 2
 Shotgun.clip = 4
 Shotgun.ammo = 16
-
-Shotgun.dx = 9
-Shotgun.dy = 24
+Shotgun.dx = 8
+Shotgun.dy = 92
+Shotgun.tipx = 4
+Shotgun.tipy = 77
 
 
 ----------------
@@ -51,7 +52,7 @@ Shotgun.canFire = function(self, myShotgun)
 end
 
 Shotgun.fire = function(self, myShotgun)
-  ovw.spells:activate(self.id, data.spell.shotgunShell)
+  ovw.spells:activate(self.id, data.spell.shotgun)
   
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1
@@ -62,7 +63,7 @@ Shotgun.draw = function(self, myShotgun)
   local dir = self.angle
   local dx = myShotgun.dx
   local dy = myShotgun.dy
-  love.graphics.draw(myShotgun.image, self.x + (dx * math.cos(dir)) - (dy * math.sin(dir)), self.y + (dx * math.sin(dir)) + (dy * math.cos(dir)), dir, 1, 1, 3, 11)
+  love.graphics.draw(myShotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, myShotgun.tipx, myShotgun.tipy)
 end
 
 return Shotgun

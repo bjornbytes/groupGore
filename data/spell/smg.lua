@@ -6,6 +6,11 @@ SMG.activate = function(self)
   self.hp = SMG.hp
   self.x = self.owner.x
   self.y = self.owner.y
+  
+  local dir = self.owner.angle
+  self.x = self.x + math.dx(data.weapon.smg.dx, dir) - math.dy(data.weapon.smg.dy, dir)
+  self.y = self.y + math.dy(data.weapon.smg.dx, dir) + math.dx(data.weapon.smg.dy, dir)
+  
   self.angle = self.owner.angle + (math.pi / 2)
   self.len = 900
   

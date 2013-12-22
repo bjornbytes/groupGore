@@ -1,12 +1,17 @@
-local ShotgunShell = {}
-ShotgunShell.code = 'shotgunShell'
+local Shotgun = {}
+Shotgun.code = 'shotgun'
 
-ShotgunShell.hp = .1
+Shotgun.hp = .1
 
-ShotgunShell.activate = function(self)
-  self.hp = ShotgunShell.hp
+Shotgun.activate = function(self)
+  self.hp = Shotgun.hp
   self.x = self.owner.x
   self.y = self.owner.y
+  
+  local dir = self.owner.angle
+  self.x = self.x + math.dx(data.weapon.shotgun.dx, dir) - math.dy(data.weapon.shotgun.dy, dir)
+  self.y = self.y + math.dy(data.weapon.shotgun.dx, dir) + math.dx(data.weapon.shotgun.dy, dir)
+  
   self.len = 600
   self.bullets = {}
   
@@ -33,7 +38,7 @@ ShotgunShell.activate = function(self)
     if targets[1] then
       local p = ovw.players:get(targets[1].id)
       len = math.distance(self.x, self.y, p.x, p.y)
-      ovw.net:emit(evtDamage, {id = p.id, amount = data.weapon.ShotgunShell.damage, from = self.owner.id, tick = tick})
+      ovw.net:emit(evtDamage, {id = p.id, amount = data.weapon.shotgun.damage, from = self.owner.id, tick = tick})
     end
     
     table.insert(self.bullets, {
@@ -44,16 +49,16 @@ ShotgunShell.activate = function(self)
   end
 end
 
-ShotgunShell.update = function(self)
+Shotgun.update = function(self)
   self.hp = timer.rot(self.hp, function() ovw.spells:deactivate(self) end)
 end
 
-ShotgunShell.draw = function(self)
-  love.graphics.setColor(255, 255, 255, (self.hp / ShotgunShell.hp) * 255)
+Shotgun.draw = function(self)
+  love.graphics.setColor(255, 255, 255, (self.hp / Shotgun.hp) * 255)
   for _, bullet in pairs(self.bullets) do
     love.graphics.line(self.x, self.y, bullet.endx, bullet.endy)
   end
   love.graphics.setColor(255, 255, 255, 255)
 end
 
-return ShotgunShell
+return Shotgun

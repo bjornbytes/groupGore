@@ -19,9 +19,10 @@ SMG.firerate = .15
 SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 240
-
-SMG.dx = 9
-SMG.dy = 24
+SMG.dx = 10
+SMG.dy = 84
+SMG.tipx = 4
+SMG.tipy = 70
 
 
 ----------------
@@ -61,7 +62,7 @@ SMG.draw = function(self, mySMG)
   local dir = self.angle
   local dx = mySMG.dx
   local dy = mySMG.dy
-  love.graphics.draw(mySMG.image, self.x + (dx * math.cos(dir)) - (dy * math.sin(dir)), self.y + (dx * math.sin(dir)) + (dy * math.cos(dir)), dir, 1, 1, 3, 11)
+  love.graphics.draw(mySMG.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, mySMG.tipx, mySMG.tipy)
 end
 
 return SMG
