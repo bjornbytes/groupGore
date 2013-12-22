@@ -5,6 +5,7 @@ require 'lib/stream'
 
 require 'lib/buff'
 require 'lib/collision'
+require 'lib/draw'
 require 'lib/event'
 require 'lib/gorgeous'
 require 'lib/hud'

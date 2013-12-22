@@ -18,7 +18,9 @@ data.load = function()
   purple = 0
   orange = 1
 
-  load('data/weapon', 'weapon')
+  load('data/weapon', 'weapon', function(weapon)
+    if weapon.image then weapon.image = love.graphics.newImage(weapon.image) end
+  end)
   load('data/skill', 'skill')
   load('data/buff', 'buff')
   load('data/spell', 'spell')

@@ -13,11 +13,15 @@ Shotgun.type = 'weapon'
 ----------------
 -- Data
 ----------------
+Shotgun.image = 'media/graphics/shotgun.png'
 Shotgun.damage = 20
 Shotgun.firerate = .65
 Shotgun.reload = 2
 Shotgun.clip = 4
 Shotgun.ammo = 16
+
+Shotgun.dx = 9
+Shotgun.dy = 24
 
 
 ----------------
@@ -47,11 +51,18 @@ Shotgun.canFire = function(self, myShotgun)
 end
 
 Shotgun.fire = function(self, myShotgun)
-  ovw.spells:activate(self.id, data.spell.shotgun)
+  ovw.spells:activate(self.id, data.spell.shotgunShell)
   
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1
   if myShotgun.clip == 0 then myShotgun.timers.reload = Shotgun.reload end
+end
+
+Shotgun.draw = function(self, myShotgun)
+  local dir = self.angle
+  local dx = myShotgun.dx
+  local dy = myShotgun.dy
+  love.graphics.draw(myShotgun.image, self.x + (dx * math.cos(dir)) - (dy * math.sin(dir)), self.y + (dx * math.sin(dir)) + (dy * math.cos(dir)), dir, 1, 1, 3, 11)
 end
 
 return Shotgun

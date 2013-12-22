@@ -13,11 +13,15 @@ SMG.type = 'weapon'
 ----------------
 -- Data
 ----------------
+SMG.image = 'media/graphics/smg.png'
 SMG.damage = 14
 SMG.firerate = .15
 SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 240
+
+SMG.dx = 9
+SMG.dy = 24
 
 
 ----------------
@@ -51,6 +55,13 @@ SMG.fire = function(self, mySMG)
   mySMG.timers.shoot = mySMG.firerate
   mySMG.clip = mySMG.clip - 1
   if mySMG.clip == 0 then mySMG.timers.reload = SMG.reload end
+end
+
+SMG.draw = function(self, mySMG)
+  local dir = self.angle
+  local dx = mySMG.dx
+  local dy = mySMG.dy
+  love.graphics.draw(mySMG.image, self.x + (dx * math.cos(dir)) - (dy * math.sin(dir)), self.y + (dx * math.sin(dir)) + (dy * math.cos(dir)), dir, 1, 1, 3, 11)
 end
 
 return SMG

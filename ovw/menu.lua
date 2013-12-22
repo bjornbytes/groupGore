@@ -1,18 +1,10 @@
 Menu = class()
 
 local g = love.graphics
+local d = Draw
 local col = g.setColor
 local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return love.window.getHeight() * x end
-local function drawRectangleCenter(style, x, y, w, h)
-  local ox, oy = math.floor(x - (w / 2)), math.floor(y - (h / 2))
-  g.rectangle(style, ox, oy, w, h)
-end
-local function printCenter(str, x, y, h, v)
-  local xx = x - ((h or (h == nil)) and (g.getFont():getWidth(str) / 2) or 0)
-  local yy = y - ((v or (v == nil)) and (g.getFont():getHeight() / 2) or 0)
-  g.print(str, xx, yy)
-end
 
 function Menu:load()
   love.window.setMode(1280, 800, {borderless = false, resizable = true})
@@ -125,6 +117,7 @@ function Menu:mousepressed(x, y, button)
     if button == 'l' then
       if math.inside(x, y, 4, 4, 20, 20) then self:host() end
       if self:testButton(x, y, w(.5), h(.5) - (self.boxHeight / 2) + (.25 * self.boxHeight)) then self:play() end
+      if self:testButton(x, y, w(.5), h(.5) - (self.boxHeight / 2) + (.75 * self.boxHeight)) then love.event.push('quit') end
     end
   end
 end
@@ -164,7 +157,7 @@ Menu.drawPage['login'] = function(self)
     self:drawInput('username', w2, h(.5) - (self.boxHeight / 2) + (.33 * self.boxHeight))
     self:drawInput('password', w2, h(.5) - (self.boxHeight / 2) + (.67 * self.boxHeight))
   else
-    printCenter('Can\'t connect to gorgeous =(', w(.5), h(.5))
+    d.printCentered('Can\'t connect to gorgeous =(', w(.5), h(.5))
   end
 end
 
@@ -178,7 +171,6 @@ Menu.drawPage['main'] = function(self)
   self:drawIcons()
   
   self:drawButton('Play', w(.5), h(.5) - (self.boxHeight / 2) + (.25 * self.boxHeight))
-  self:drawButton('Stats', w(.5), h(.5) - (self.boxHeight / 2) + (.5 * self.boxHeight))
   self:drawButton('Exit', w(.5), h(.5) - (self.boxHeight / 2) + (.75 * self.boxHeight))
 end
 
@@ -200,9 +192,9 @@ end
 
 function Menu:drawBox()
   col(0, 0, 0, 140)
-  drawRectangleCenter('fill', w(.5), h(.5), self.boxWidth, self.boxHeight)
+  d.rectCentered('fill', w(.5), h(.5), self.boxWidth, self.boxHeight)
   col(255, 255, 255, 40)
-  drawRectangleCenter('line', w(.5), h(.5), self.boxWidth, self.boxHeight)
+  d.rectCentered('line', w(.5), h(.5), self.boxWidth, self.boxHeight)
   self:drawLogo()
 end
 
@@ -226,11 +218,11 @@ end
 function Menu:drawButton(str, x, y)
   g.setFont(self.buttonFont)
   col(51, 49, 54, 160)
-  drawRectangleCenter('fill', x, y, w(.15), h(.08))
+  d.rectCentered('fill', x, y, w(.15), h(.08))
   col(51, 49, 54, 255)
-  drawRectangleCenter('line', x, y, w(.15), h(.08))
+  d.rectCentered('line', x, y, w(.15), h(.08))
   col(255, 255, 255, 200)
-  printCenter(str, x, y)
+  d.printCentered(str, x, y)
 end
 
 function Menu:testButton(mx, my, x, y)
@@ -242,9 +234,9 @@ function Menu:drawInput(key, x, y)
   local iw, ih = w(.2), fh * 1.6
   
   col(51, 49, 54, 160)
-  drawRectangleCenter('fill', x, y, iw, ih)
+  d.rectCentered('fill', x, y, iw, ih)
   col(51, 49, 54, 255)
-  drawRectangleCenter('line', x, y, iw, ih)
+  d.rectCentered('line', x, y, iw, ih)
   
   col(140, 107, 84)
   local str = self[key]
