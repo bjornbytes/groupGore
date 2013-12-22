@@ -26,6 +26,7 @@ setmetatable(Overwatch, {
 				if k == 'update' and t.toRemove == ovw then
 					ovw:unload()
 					t.ovws = table.filter(t.ovws, function(o) return o ~= ovw end)
+					o = nil
 				else
 					if o[k] then o[k](o, unpack(args)) end
 				end

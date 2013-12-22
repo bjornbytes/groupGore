@@ -36,6 +36,7 @@ function love.load()
 
   Overwatch:add(Menu)
   gorgeous = Overwatch:add(Gorgeous)
+  if not gorgeous.socket then gorgeous = nil end
 
   love.update = Overwatch.update
   love.draw = Overwatch.draw

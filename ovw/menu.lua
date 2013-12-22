@@ -35,9 +35,6 @@ function Menu:load()
   self.ipDefault = nil
   self.usernameDefault = self.username
   self.passwordDefault = self.password
-
-  self.message = ''
-  self.messageAlpha = 0
   
   self.buttons = {}
   
@@ -56,7 +53,6 @@ function Menu:unload()
 end
 
 function Menu:update()
-  if self.messageAlpha > 0 then self.messageAlpha = self.messageAlpha - (100 * tickRate) end
   self.prevBoxWidth = self.boxWidth
   self.prevBoxHeight = self.boxHeight
   self.boxWidth = math.lerp(self.boxWidth, self.targetBoxWidth, .25)
@@ -96,8 +92,6 @@ function Menu:keypressed(key)
     elseif self.focused == 'password' then
       if key == 'tab' then self:focusInput('username')
       elseif key == 'return' then
-        self.message = 'Checking...'
-        self.messageAlpha = 4000
         gorgeous:send(gorgeous.msgLogin, {
           username = self.username,
           password = self.password
@@ -109,9 +103,6 @@ function Menu:keypressed(key)
             self:focusInput('ip')
             
             love.filesystem.write('username', username)
-          else
-            self.message = 'Nope.'
-            self.messageAlpha = 400
           end
         end)
       end
@@ -167,15 +158,13 @@ Menu.drawPage['login'] = function(self)
   
   self:drawBackground()
   self:drawBox()
-  
-  g.setFont(self.smallFont)
-  self:drawInput('username', w2, h(.5) - (self.boxHeight / 2) + (.33 * self.boxHeight))
-  self:drawInput('password', w2, h(.5) - (self.boxHeight / 2) + (.67 * self.boxHeight))
-  --drawRectangleCenter('fill', w2, h(.5) - (h(.65) / 2) + (.75 * h(.65)), w(.08), ih)
 
-  if self.messageAlpha > 0 then
-    col(255, 255, 255, math.min(self.messageAlpha, 255) * .6)
-    printCenter(self.message, w2, h(.5))
+  g.setFont(self.smallFont)
+  if gorgeous then  
+    self:drawInput('username', w2, h(.5) - (self.boxHeight / 2) + (.33 * self.boxHeight))
+    self:drawInput('password', w2, h(.5) - (self.boxHeight / 2) + (.67 * self.boxHeight))
+  else
+    printCenter('Can\'t connect to gorgeous =(', w(.5), h(.5))
   end
 end
 
