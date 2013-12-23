@@ -25,9 +25,6 @@ function PlayerMain:activate()
   self.xDebt = 0
   self.yDebt = 0
   
-  self.targetX = self.x
-  self.targetY = self.y
-  
   Player.activate(self)
 end
 
@@ -43,8 +40,10 @@ function PlayerMain:update()
   if (self.xDebt > 0 or self.yDebt > 0) and self.speed > 0 then
     for i = tick - (1 / tickRate), tick do
       local state = (i == tick) and self or ovw.players.history[self.id][i]
-      state.x = state.x + (self.xDebt / 10)
-      state.y = state.y + (self.yDebt / 10)
+      if state then
+        state.x = state.x + (self.xDebt / 10)
+        state.y = state.y + (self.yDebt / 10)
+      end
     end
     self.xDebt = self.xDebt - (self.xDebt / 10)
     self.yDebt = self.yDebt - (self.yDebt / 10)
@@ -118,31 +117,7 @@ function PlayerMain:trace(data)
   data.id = nil
   data.angle = nil
   
-  local correctDrift = true
-  if correctDrift then
-    self.targetX = data.x
-    self.targetY = data.y
-    
-    local state = table.copy(ovw.players.history[self.id][t])
-    if not state then return end
-    
-    local d = math.distance(data.x, data.y, state.x, state.y)
-    self.xDebt = data.x - state.x
-    self.yDebt = data.y - state.y
-    if d > 64 then
-      for i = t, tick do
-        local dst = (i == tick) and self or ovw.players.history[self.id][i]
-        table.merge(data, dst)
-      end
-      self.xDebt = 0
-      self.yDebt = 0
-      return
-    else
-      table.merge(data, ovw.players.history[self.id][t])
-    end
-  else
-    table.merge(data, ovw.players.history[self.id][t])
-  end
+  table.merge(data, ovw.players.history[self.id][t])
   
   local state = table.copy(ovw.players.history[self.id][math.max(ack, tick - (1 / tickRate) + 1)])
   if not state then return end
