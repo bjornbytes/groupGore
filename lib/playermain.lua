@@ -22,11 +22,9 @@ function PlayerMain:activate()
   
   self.lastWasd = tick
   
-  self.xDebt = 0
-  self.yDebt = 0
-  
-  self.targetX = 0
-  self.targetY = 0
+  self.debtX = 0
+  self.debtY = 0
+  self.debtSmooth = 16
   
   Player.activate(self)
 end
@@ -40,16 +38,16 @@ end
 function PlayerMain:update()
   if self.ded then return end
   
-  if (self.xDebt ~= 0 or self.yDebt ~= 0) and self.speed > 0 then
-    for i = tick - (1 / tickRate), tick do
+  if (self.debtX ~= 0 or self.debtY ~= 0) and self.speed > 0 then
+    for i = tick - (.5 / tickRate), tick do
       local state = (i == tick) and self or ovw.players.history[self.id][i]
       if state then
-        state.x = state.x + (self.xDebt / 10)
-        state.y = state.y + (self.yDebt / 10)
+        state.x = state.x + (self.debtX / self.debtSmooth)
+        state.y = state.y + (self.debtY / self.debtSmooth)
       end
     end
-    self.xDebt = self.xDebt - (self.xDebt / 10)
-    self.yDebt = self.yDebt - (self.yDebt / 10)
+    self.debtX = self.debtX - (self.debtX / self.debtSmooth)
+    self.debtY = self.debtY - (self.debtY / self.debtSmooth)
   end
   
   self:poll()
@@ -120,8 +118,6 @@ function PlayerMain:trace(data)
   data.id = nil
   data.angle = nil
 
-  self.targetX = data.x
-  self.targetY = data.y
   local state = ovw.players.history[self.id][t]
   if not state then return end
   
@@ -130,19 +126,22 @@ function PlayerMain:trace(data)
       local dst = (i == tick) and self or ovw.players.history[self.id][i]
       table.merge(data, dst)
     end
-    self.xDebt = 0
-    self.yDebt = 0
+    self.debtX = 0
+    self.debtY = 0
     return
   else
-    self.xDebt = (data.x - state.x)
-    self.yDebt = (data.y - state.y)
+    if self.lastWasd <= ack then
+      self.debtX = (data.x - state.x)
+      self.debtY = (data.y - state.y)
+    end
     table.merge(data, state)
   end
   
-  local state = table.copy(ovw.players.history[self.id][math.max(ack, tick - (1 / tickRate) + 1)])
+  local idx = math.max(ack, tick - (1 / tickRate) + 1)
+  local state = table.copy(ovw.players.history[self.id][idx])
   if not state then return end
   
-  for i = ack + 1, tick do
+  for i = idx + 1, tick do
     local dst = (i == tick) and self or ovw.players.history[self.id][i]
     if dst then
       if dst ~= self then
