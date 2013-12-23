@@ -10,7 +10,7 @@ function Hud:init()
   self.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
   self.health.red = love.graphics.newImage('media/graphics/healthRed.png')
   
-  self.font = love.graphics.newFont('media/fonts/aeroMatics.ttf', h() * .0175)
+  self.font = love.graphics.newFont('media/fonts/aeroMatics.ttf', h() * .02)
 
   self.chatting = false
   self.chatMessage = ''
@@ -122,7 +122,7 @@ function Hud:draw()
   end
 
   g.setColor(0, 0, 0, 180)
-  local height = h(.2)
+  local height = h(.25)
   if self.chatting then height = height + (self.font:getHeight() + 4.5) end
   g.rectangle('fill', 4, h() - (height + 4), w(.25), height)
   g.setFont(self.font)
@@ -202,7 +202,7 @@ function Hud:updateChat(message)
     self.chatLog = self.chatLog .. message
   end
 
-  while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.2) - 4) do
+  while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - 4) do
     self.chatLog = self.chatLog:sub(2)
   end
 end

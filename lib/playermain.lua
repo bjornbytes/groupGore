@@ -25,6 +25,9 @@ function PlayerMain:activate()
   self.xDebt = 0
   self.yDebt = 0
   
+  self.targetX = 0
+  self.targetY = 0
+  
   Player.activate(self)
 end
 
@@ -37,7 +40,7 @@ end
 function PlayerMain:update()
   if self.ded then return end
   
-  if (self.xDebt > 0 or self.yDebt > 0) and self.speed > 0 then
+  if (self.xDebt ~= 0 or self.yDebt ~= 0) and self.speed > 0 then
     for i = tick - (1 / tickRate), tick do
       local state = (i == tick) and self or ovw.players.history[self.id][i]
       if state then
@@ -116,8 +119,25 @@ function PlayerMain:trace(data)
   data.ack = nil
   data.id = nil
   data.angle = nil
+
+  self.targetX = data.x
+  self.targetY = data.y
+  local state = ovw.players.history[self.id][t]
+  if not state then return end
   
-  table.merge(data, ovw.players.history[self.id][t])
+  if math.distance(data.x, data.y, state.x, state.y) > 64 then
+    for i = t, tick do
+      local dst = (i == tick) and self or ovw.players.history[self.id][i]
+      table.merge(data, dst)
+    end
+    self.xDebt = 0
+    self.yDebt = 0
+    return
+  else
+    self.xDebt = (data.x - state.x)
+    self.yDebt = (data.y - state.y)
+    table.merge(data, state)
+  end
   
   local state = table.copy(ovw.players.history[self.id][math.max(ack, tick - (1 / tickRate) + 1)])
   if not state then return end
