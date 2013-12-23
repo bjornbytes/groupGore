@@ -15,6 +15,8 @@ function Hud:init()
   self.chatting = false
   self.chatMessage = ''
   self.chatLog = ''
+  
+  self.skillBg = love.graphics.newImage('media/graphics/skills.png')
 
   ovw.event:on(evtChat, self, function(self, data)
     self:updateChat(data.message)
@@ -110,43 +112,12 @@ function Hud:draw()
   
   local p = ovw.players:get(myId)
   if p and p.active then
-    local wep, skl, pas = {}, {}, {}
+    g.draw(self.skillBg, w(.5), 0, 0, 1, 1, self.skillBg:getWidth() / 2, 0)
     for i = 1, 5 do
-      if p.slots[i].type == 'weapon' then wep[#wep + 1] = p.slots[i]
-      elseif p.slots[i].type == 'skill' then skl[#skl + 1] = p.slots[i]
-      else pas[#pas + 1] = p.slots[i] end
-    end
-    
-    local height = (2 * h(.01)) + (5 * (h(.02) + self.font:getHeight()))
-    local width = math.max(w(.12), self.font:getWidth('weapon name'))
-    g.setFont(self.font)
-    local yy = h(.5) - (height / 2)
-    for i = 1, #wep do
-      g.setColor(10, 10, 10)
-      if p.slots[p.input.weapon] == wep[i] then g.setColor(40, 40, 40) end
-      g.rectangle('fill', 0, yy, width, self.font:getHeight() + h(.02)) g.setColor(80, 80, 80)
-      g.rectangle('line', 0 - .5, yy + .5, width, self.font:getHeight() + h(.02)) g.setColor(160, 160, 160)
-      g.print(wep[i].name, 16, yy + h(.01))
-      yy = yy + self.font:getHeight() + h(.02)
-    end
-  
-    yy = yy + h(.01)
-    for i = 1, #skl do
-      g.setColor(10, 10, 10)
-      if p.slots[p.input.skill] == skl[i] then g.setColor(40, 40, 40) end
-      g.rectangle('fill', 0, yy, width, self.font:getHeight() + h(.02)) g.setColor(80, 80, 80)
-      g.rectangle('line', 0 - .5, yy + .5, width, self.font:getHeight() + h(.02)) g.setColor(160, 160, 160)
-      g.print(skl[i].name, 16, yy + h(.01))
-      yy = yy + self.font:getHeight() + h(.02)
-    end
-    
-    yy = yy + h(.01)
-    for i = 1, #pas do
-      g.setColor(10, 10, 10)
-      g.rectangle('fill', 0, yy, width, self.font:getHeight() + h(.02)) g.setColor(80, 80, 80)
-      g.rectangle('line', 0 - .5, yy + .5, width, self.font:getHeight() + h(.02)) g.setColor(160, 160, 160)
-      g.print(pas[i].name, 16, yy + h(.01))
-      yy = yy + self.font:getHeight() + h(.02)
+      g.setColor(100, 100, 100)
+      if p.input.weapon == i or p.input.skill == i then g.setColor(180, 180, 180) end
+      if p.slots[i].type == 'passive' then g.setColor(100, 50, 50) end
+      d.rectCentered('line', w(.5) - w(.1265) + (w(.0629) * (i - 1)), h(.1), w(.042), w(.042), true)
     end
   end
 

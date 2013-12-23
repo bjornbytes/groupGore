@@ -2,8 +2,9 @@ Draw = {}
 
 local g = love.graphics
 
-function Draw.rectCentered(style, x, y, w, h)
-  local ox, oy = math.floor(x - (w / 2)), math.floor(y - (h / 2))
+function Draw.rectCentered(style, x, y, w, h, pix)
+  local ox, oy = math.round(x - (w / 2)), math.round(y - (h / 2))
+  if pix then ox = ox + .5 oy = oy + .5 end
   g.rectangle(style, ox, oy, w, h)
 end
 
