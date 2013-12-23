@@ -2,6 +2,8 @@ Hud = class()
 
 local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return (love.window.getHeight() - ovw.view.margin * 2) * x end
+local g = love.graphics
+local d = Draw
 
 function Hud:init()
   self.health = {}
@@ -39,9 +41,6 @@ function Hud:update()
 end
 
 function Hud:draw()
-  local g = love.graphics
-  local d = Draw
-
   g.reset()
   g.setFont(self.font)
   
@@ -101,53 +100,30 @@ function Hud:draw()
     d.printCentered(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
 
     if not p.ded then
-      g.setColor(0, 0, 0, 128)
+      g.setColor(0, 0, 0, 128 * p.visible)
       g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, 80, 10)
-      g.setColor(100, 0, 0, 128)
+      g.setColor(100, 0, 0, 128 * p.visible)
       g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, (p.health / p.maxHealth) * 80, 10)
-      g.setColor(100, 0, 0, 255)
+      g.setColor(100, 0, 0, 255 * p.visible)
       d.rectCentered('line', (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 45, 80, 10)
     end
   end)
   
   local p = ovw.players:get(myId)
   if p and p.active then
-    g.draw(self.skillBg, w(.5), 0, 0, 1, 1, self.skillBg:getWidth() / 2, 0)
+    g.draw(self.skillBg, w(.5), h(.01), 0, w(.35) / self.skillBg:getWidth(), w(.35) / self.skillBg:getWidth(), self.skillBg:getWidth() / 2, 0)
     for i = 1, 5 do
       g.setColor(100, 100, 100)
       if p.input.weapon == i or p.input.skill == i then g.setColor(180, 180, 180) end
       if p.slots[i].type == 'passive' then g.setColor(100, 50, 50) end
-      d.rectCentered('line', w(.5) - w(.1265) + (w(.0629) * (i - 1)), h(.1), w(.042), w(.042), true)
+      d.rectCentered('line', w(.5) - w(.1250) + (w(.0620) * (i - 1)), h(.08), w(.042), w(.042), true)
     end
   end
 
-  g.setColor(0, 0, 0, 180)
-  local height = h(.25)
-  if self.chatting then height = height + (self.font:getHeight() + 4.5) end
-  g.rectangle('fill', 4, h() - (height + 4), w(.25), height)
-  g.setFont(self.font)
-  local yy = h() - 4
-  if self.chatting then
-    g.setColor(255, 255, 255, 60)
-    g.line(4.5, h() - 4 - self.font:getHeight() - 4.5, 3 + w(.25), h() - 4 - self.font:getHeight() - 4.5)
-    g.setColor(255, 255, 255, 100)
-    g.print(self.chatMessage .. (self.chatting and '|' or ''), 4 + 2, math.floor(yy - self.font:getHeight() - 4.5 + 2 + .5))
-    yy = yy - self.font:getHeight() - 4.5
-  end
-
-  g.setColor(255, 255, 255, 100)
-  g.print(self.chatLog, 4 + 2, yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 2)
-
   if ovw.map.hud then ovw.map:hud() end
-
-  g.setColor(255, 255, 255)
-  local debug = love.timer.getFPS() .. 'fps'
-  if ovw.net.server then
-    debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms'
-    debug = debug .. ', ' .. math.floor(ovw.net.host:total_sent_data() / 1000 + .5) .. 'tx'
-    debug = debug .. ', ' .. math.floor(ovw.net.host:total_received_data() / 1000 + .5) .. 'rx'
-  end
-  g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
+  
+  self:drawChat()
+  self:drawDebug()
 end
 
 function Hud:mousereleased(x, y, button)
@@ -196,19 +172,53 @@ function Hud:keypressed(key)
   end
 end
 
+function Hud:keyreleased(key)
+  if self.chatting then return true end
+end
+
+function Hud:drawChat()
+  local height = h(.25) + 2
+  if self.chatting then height = height + (self.font:getHeight() + 6.5) end
+  g.setColor(0, 0, 0, 180)
+  g.rectangle('fill', 4, h() - (height + 4), w(.25), height)
+  g.setColor(30, 30, 30, 180)
+  g.rectangle('line', 4, h() - (height + 4), w(.25), height)
+  g.setFont(self.font)
+  local yy = h() - 4
+  if self.chatting then
+    g.setColor(255, 255, 255, 60)
+    g.line(4.5, h() - 4 - self.font:getHeight() - 6.5, 3 + w(.25), h() - 4 - self.font:getHeight() - 6.5)
+    g.setColor(255, 255, 255, 180)
+    g.print(self.chatMessage .. (self.chatting and '|' or ''), 4 + 4, math.round(yy - self.font:getHeight() - 5.5 + 2))
+    yy = yy - self.font:getHeight() - 6.5
+  end
+
+  if self.chatText then
+    self.chatText:draw(4 + 4, math.round(yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 4))
+  end
+end
+
+function Hud:drawDebug()
+  g.setColor(255, 255, 255)
+  local debug = love.timer.getFPS() .. 'fps'
+  if ovw.net.server then
+    debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms'
+    debug = debug .. ', ' .. math.floor(ovw.net.host:total_sent_data() / 1000 + .5) .. 'tx'
+    debug = debug .. ', ' .. math.floor(ovw.net.host:total_received_data() / 1000 + .5) .. 'rx'
+  end
+  g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
+end
+
 function Hud:updateChat(message)
   if #message > 0 then
     if #self.chatLog > 0 then self.chatLog = self.chatLog .. '\n' end
     self.chatLog = self.chatLog .. message
   end
 
-  while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - 4) do
+  while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - 2) do
     self.chatLog = self.chatLog:sub(2)
   end
-end
-
-function Hud:keyreleased(key)
-  if self.chatting then return true end
+  self.chatText = rich.new({self.chatLog, nil, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
 end
 
 function Hud:classSelect() return myId and not ovw.players:get(myId).active end

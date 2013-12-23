@@ -13,8 +13,8 @@ function View:init()
   table.sort(modes, function(a, b) return a.width > b.width end)
   while modes[#modes].width ~= modes[1].width do table.remove(modes, #modes) end
   table.sort(modes, function(a, b) return a.width * a.height > b.width * b.height end)
-  -- love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true, vsync = true})
-  love.window.setMode(1280, 800, {fullscreen = false, borderless = false, vsync = true})
+  love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true, vsync = true})
+  -- love.window.setMode(1280, 800, {fullscreen = false, borderless = false, vsync = true})
   
   self.x = 0
   self.prevx = 0
