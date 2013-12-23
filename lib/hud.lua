@@ -98,12 +98,14 @@ function Hud:draw()
     elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
     d.printCentered(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
 
-    g.setColor(0, 0, 0, 128)
-    g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, 80, 10)
-    g.setColor(100, 0, 0, 128)
-    g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, (p.health / p.maxHealth) * 80, 10)
-    g.setColor(100, 0, 0, 255)
-    d.rectCentered('line', (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 45, 80, 10) 
+    if not p.ded then
+      g.setColor(0, 0, 0, 128)
+      g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, 80, 10)
+      g.setColor(100, 0, 0, 128)
+      g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, (p.health / p.maxHealth) * 80, 10)
+      g.setColor(100, 0, 0, 255)
+      d.rectCentered('line', (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 45, 80, 10)
+    end
   end)
   
   local p = ovw.players:get(myId)

@@ -30,7 +30,7 @@ function PlayerServer:deactivate()
 end
 
 function PlayerServer:update()
-  local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
+  local prevx, prevy, prevangle = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360)
   
   self:time()
   self:buff()
@@ -48,7 +48,7 @@ function PlayerServer:update()
     end
   end
   
-  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy or math.round((math.deg(self.angle) + 360) % 360) ~= prevangle or math.round(self.health) ~= prevhp or tick % 100 == 0 then
+  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy or math.round((math.deg(self.angle) + 360) % 360) ~= prevangle or tick % 100 == 0 then
     ovw.net:emit(evtSync, {
       id = self.id,
       tick = tick,

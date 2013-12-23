@@ -21,8 +21,12 @@ function PlayerMain:activate()
   self.visible = 1
   
   self.lastWasd = tick
-  self.drift = 16
-  self.driftThreshold = 32
+  
+  self.xDebt = 0
+  self.yDebt = 0
+  
+  self.targetX = self.x
+  self.targetY = self.y
   
   Player.activate(self)
 end
@@ -35,6 +39,16 @@ end
 
 function PlayerMain:update()
   if self.ded then return end
+  
+  if (self.xDebt > 0 or self.yDebt > 0) and self.speed > 0 then
+    for i = tick - 10, tick do
+      local state = (i == tick) and self or ovw.players.history[self.id][i]
+      state.x = state.x + (self.xDebt / 10)
+      state.y = state.y + (self.yDebt / 10)
+    end
+    self.xDebt = self.xDebt - (self.xDebt / 10)
+    self.yDebt = self.yDebt - (self.yDebt / 10)
+  end
   
   self:poll()
   self:buff()
@@ -106,26 +120,26 @@ function PlayerMain:trace(data)
   
   local correctDrift = true
   if correctDrift then
+    self.targetX = data.x
+    self.targetY = data.y
+    
     local state = table.copy(ovw.players.history[self.id][t])
     if not state then return end
     
     local d = math.distance(data.x, data.y, state.x, state.y)
-    self.drift = math.max(math.lerp(self.drift, d, .01), 4)
-    if self.lastWasd <= ack and d > self.driftThreshold then
+    self.xDebt = data.x - state.x
+    self.yDebt = data.y - state.y
+    if d > 64 then
       for i = t, tick do
         local dst = (i == tick) and self or ovw.players.history[self.id][i]
         table.merge(data, dst)
       end
-      self.driftThreshold = self.driftThreshold * 2
+      self.xDebt = 0
+      self.yDebt = 0
+      return
     else
-      local dst = ovw.players.history[self.id][t]
-      table.merge(table.interpolate({x = data.x, y = data.y}, {x = dst.x, y = dst.y}, .5), dst)
-      for i = t, ack do
-        table.merge({x = dst.x, y = dst.y}, ovw.players.history[self.id][i])
-      end
-      self.driftThreshold = self.driftThreshold - .1
+      table.merge(data, ovw.players.history[self.id][t])
     end
-    self.driftThreshold = math.max(self.driftThreshold, (self.drift * 1.6))
   else
     table.merge(data, ovw.players.history[self.id][t])
   end
