@@ -18,7 +18,7 @@ function Menu:load()
   self.page = 'login'
   self.focused = nil
 
-  self.ip = '10.0.0.3'
+  self.ip = '127.0.0.1'
   local clip = love.system.getClipboardText()
   if clip:match('^[0-9]+%.[0-9]+%.[0-9]+%.[0-9]+$') then self.ip = clip end
   
