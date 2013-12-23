@@ -90,9 +90,12 @@ function Stream:readString()
 		self.byteLen = nil
 	end
 	local len = self.str:byte(1)
-	self.str = self.str:sub(2)
-	local res = self.str:sub(1, len)
-	self.str = self.str:sub(len + 1)
+	local res = ''
+	if len then
+		self.str = self.str:sub(2)
+		res = self.str:sub(1, len)
+		self.str = self.str:sub(len + 1)
+	end
 	return res
 end
 
