@@ -18,7 +18,6 @@ function Player:create()
     health = 0,
     maxSpeed = 0,
     maxHealth = 0,
-    lastHurt = 0,
     size = 0,
     depth = 0,
     anchor = nil,
