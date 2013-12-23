@@ -41,7 +41,7 @@ function PlayerMain:update()
   if self.ded then return end
   
   if (self.xDebt > 0 or self.yDebt > 0) and self.speed > 0 then
-    for i = tick - 10, tick do
+    for i = tick - (1 / tickRate), tick do
       local state = (i == tick) and self or ovw.players.history[self.id][i]
       state.x = state.x + (self.xDebt / 10)
       state.y = state.y + (self.yDebt / 10)
