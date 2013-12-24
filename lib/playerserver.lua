@@ -44,7 +44,7 @@ function PlayerServer:update()
   if self.health < self.maxHealth and not self.ded then
     local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
     if percentage > 0 then
-      percentage = (1 + (percentage * 4)) / 100
+      percentage = (1 + (percentage * 7)) / 100
       self.health = self.health + math.min(self.maxHealth - self.health, self.maxHealth * percentage * tickRate)
     end
   end
@@ -97,7 +97,7 @@ function PlayerServer:hurt(data)
       local assists = {}
       if playerHurt[1][2] > 0 then
         table.insert(assists, playerHurt[1][1])
-        if playerHurt[2][2] > 0 then table.insert(assists, playerHurt[2][1]) end
+        if playerHurt[2][2] > 0 then table.insert(assists, {id = playerHurt[2][1]}) end
       end
 
       ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists)
