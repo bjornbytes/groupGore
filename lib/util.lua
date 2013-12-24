@@ -219,6 +219,7 @@ f = {}
 f.empty = function() end
 f.exe = function(x, ...) if x then x(...) end end
 f.ego = function(f) return function(x, ...) x[f](x, ...) end end
+f.egoexe = function(f) return function(x, ...) if x[f] then x[f](x, ...) end end end
 
 -- Timing
 timer = {}

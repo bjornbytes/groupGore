@@ -139,7 +139,8 @@ function Hud:draw()
 	g.setColor(255, 255, 255, 100)
 	g.print(self.chatLog, 4 + 2, yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 2)
 
-	if ovw.map.hud then ovw.map:hud() end
+	f.exe(ovw.map.hud, ovw.map.hud)
+	table.with(p.slots, f.egoexe('hud'))
 
 	g.setColor(255, 255, 255)
 	local debug = love.timer.getFPS() .. 'fps'
