@@ -6,11 +6,11 @@ data.load = function()
     for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
       if file:match('%.lua') then
         local obj = love.filesystem.load(dir .. '/' .. file)()
+        obj = f.exe(fn, obj) or obj
         obj.id = id
         data[type][id] = obj
         data[type][obj.code] = obj
         id = id + 1
-        f.exe(fn, obj)
       end
     end
   end
