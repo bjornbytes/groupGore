@@ -14,7 +14,7 @@ NetServer.signatures[evtSync] = {
 }
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
-NetServer.signatures[evtDead] = {{'id', '4bits'}}
+NetServer.signatures[evtDead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}}
 NetServer.signatures[evtSpawn] = {{'id', '4bits'}}
 NetServer.signatures[evtChat] = {{'message', 'string'}}
 NetServer.signatures[msgJoin] = {{'id', '4bits'}}

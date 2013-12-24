@@ -44,7 +44,7 @@ function Players:init()
   ovw.event:on(evtSpawn, self, function(self, data)
     local p = self:get(data.id)
     p.ded = false
-    p:activate()
+    p:spawn()
   end)
 end
 

@@ -17,6 +17,9 @@ function PlayerServer:activate()
   self.input.wep = 1
   self.input.skl = 3
   self.input.rel = false
+
+  self.hurtHistory = {}
+  self.helpHistory = {}
   
   Player.activate(self)
 end
@@ -69,13 +72,44 @@ end
 
 function PlayerServer:hurt(data)
   if not self.ded then
+    self.hurtFrom[data.from] = (self.hurtFrom[data.from] or 0) + data.amount
+    while #self.hurtHistory > 0 and self.hurtHistory[1].tick < tick - (10 / tickRate) do
+      table.remove(self.hurtHistory, 1)
+    end
+    table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount})
     self.health = self.health - data.amount
     self.lastHurt = data.tick
     if self.health <= 0 then
       self.ded = 5
-      ovw.net:emit(evtDead, {id = self.id})
+      local playerHurt = {}
+      for i = 1, 16 do playerHurt[i] = {i, 0} end
+      playerHurt[data.from][2] = -1
+      for i, v in ipairs(self.hurtHistory) do
+        if i ~= data.from then
+          playerHurt[i][2] = playerHurt[i][2] + v.amount * (1 - ((data.tick - v.tick) / (10 / tickRate)))
+        end
+      end
+      
+      table.sort(playerHurt, function(a, b)
+        return a[2] > b[2]
+      end)
+
+      local assists = {}
+      if playerHurt[1][2] > 0 then
+        table.insert(assists, playerHurt[1][1])
+        if playerHurt[2][2] > 0 then table.insert(assists, playerHurt[2][1]) end
+      end
+
+      ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists)
     end
   end
+end
+
+function PlayerServer:spawn()
+  table.clear(self.hurtFrom)
+  table.clear(self.helpFrom)
+
+  Player.spawn(self)
 end
 
 function PlayerServer:logic()

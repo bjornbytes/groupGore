@@ -149,3 +149,7 @@ function Player:die()
   self.visible = 0
   ovw.collision:refreshPlayer(self)
 end
+
+function Player:spawn()
+  self:activate()
+end
