@@ -1,4 +1,4 @@
-NetServer = Net()
+NetServer = extend(Net)
 
 NetServer.signatures = {}
 NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}}

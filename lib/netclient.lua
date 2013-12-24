@@ -1,4 +1,4 @@
-NetClient = Net()
+NetClient = extend(Net)
 
 NetClient.signatures = {}
 NetClient.signatures[msgJoin] = {{'username', 'string'}}

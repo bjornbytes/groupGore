@@ -217,9 +217,10 @@ end
 -- Functions
 f = {}
 f.empty = function() end
-f.exe = function(x, ...) if x then x(...) end end
+f.exe = function(x, ...) if x then return x(...) end end
 f.ego = function(f) return function(x, ...) x[f](x, ...) end end
 f.egoexe = function(f) return function(x, ...) if x[f] then x[f](x, ...) end end end
+f.val = function(x) return type(x) == 'function' and x or function() return x end end
 
 -- Timing
 timer = {}
@@ -232,8 +233,13 @@ string.capitalize = function(s) s = ' ' .. s return s:gsub('(%s%l)', string.uppe
 
 -- Class
 function class(x, ...)
+  local t = extend(x)
+  if t.init then t:init(...) end
+  return t
+end
+
+function extend(x)
   local t = {}
   setmetatable(t, {__index = x, __call = class})
-  if x and x.init then x.init(t, ...) end
   return t
 end
