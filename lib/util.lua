@@ -1,6 +1,10 @@
 -- Math
+function math.sign(x) return x > 0 and 1 or x < 0 and -1 or 0 end
+function math.round(x) return math.sign(x) >= 0 and math.floor(x + .5) or math.ceil(x - .5) end
 function math.lerp(x1, x2, z) return x1 + (x2 - x1) * z end
 function math.anglerp(d1, d2, z) return d1 + (math.anglediff(d1, d2) * z) end
+function math.dx(len, dir) return len * math.cos(dir) end
+function math.dy(len, dir) return len * math.sin(dir) end
 function math.distance(x1, y1, x2, y2) return ((x2 - x1) ^ 2 + (y2 - y1) ^ 2) ^ .5 end
 function math.direction(x1, y1, x2, y2) return -math.atan2(x2 - x1, y2 - y1) end
 function math.inside(px, py, rx, ry, rw, rh) return px >= rx and px <= rx + rw and py >= ry and py <= ry + rh end

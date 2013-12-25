@@ -1,22 +1,29 @@
 Gorgeous = class()
 
 Gorgeous.msgLogin = 1
-Gorgeous.msgServers = 2
-Gorgeous.msgCreateServer = 3
+Gorgeous.msgServerList = 2
+Gorgeous.msgServerCreate = 3
+Gorgeous.msgServerDelete = 4
+Gorgeous.msgServerHeartbeat = 5
+Gorgeous.msgMatchmake = 6
 
 Gorgeous.signatures = {
   [Gorgeous.msgLogin] = {{'username', 'string'}, {'password', 'string'}},
-  [Gorgeous.msgServers] = {},
-  [Gorgeous.msgCreateServer] = {}
+  [Gorgeous.msgServerList] = {},
+  [Gorgeous.msgServerCreate] = {{'name', 'string'}},
+  [Gorgeous.msgServerDelete] = {},
+  [Gorgeous.msgServerHeartbeat] = {},
+  [Gorgeous.msgMatchmake] = {}
 }
 
 Gorgeous.otherSignatures = {
   [Gorgeous.msgLogin] = {{'success', 'bool'}},
-  [Gorgeous.msgServers] = {{'servers', {
+  [Gorgeous.msgServerList] = {{'servers', {
     {'name', 'string'},
     {'ip', 'string'}
   }}},
-  [Gorgeous.msgCreateServer] = {{'success', 'bool'}}
+  [Gorgeous.msgServerCreate] = {{'success', 'bool'}},
+  [Gorgeous.msgMatchmake] = {{'ip', 'string'}, {'name', 'string'}}
 }
 
 Gorgeous.receive = {}
@@ -25,12 +32,14 @@ Gorgeous.receive[Gorgeous.msgLogin] = function(self, data)
 end
 
 function Gorgeous:load()
-  self.socket = require('socket').connect('107.4.63.70', 6060)
+  self.socket = require('socket').tcp()
+  self.socket:settimeout(3)
+  local _, err = self.socket:connect('107.4.63.70', 6060)
   
-  if not self.socket then
+  if err then
     print('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
     Overwatch:remove(self)
-    gorgeous = nil
+    self.socket = nil
     return
   end
 

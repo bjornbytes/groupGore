@@ -13,11 +13,18 @@ Shotgun.type = 'weapon'
 ----------------
 -- Data
 ----------------
+Shotgun.image = 'media/graphics/shotgun.png'
 Shotgun.damage = 20
 Shotgun.firerate = .65
 Shotgun.reload = 2
 Shotgun.clip = 4
 Shotgun.ammo = 16
+Shotgun.spread = .06
+Shotgun.count = 4
+Shotgun.dx = 8
+Shotgun.dy = 92
+Shotgun.tipx = 4
+Shotgun.tipy = 77
 
 
 ----------------
@@ -52,6 +59,13 @@ Shotgun.fire = function(self, myShotgun)
   myShotgun.timers.shoot = myShotgun.firerate
   myShotgun.clip = myShotgun.clip - 1
   if myShotgun.clip == 0 then myShotgun.timers.reload = Shotgun.reload end
+end
+
+Shotgun.draw = function(self, myShotgun)
+  local dir = self.angle
+  local dx = myShotgun.dx
+  local dy = myShotgun.dy
+  love.graphics.draw(myShotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, myShotgun.tipx, myShotgun.tipy)
 end
 
 return Shotgun

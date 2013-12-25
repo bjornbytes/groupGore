@@ -7,10 +7,15 @@ Shotgun.activate = function(self)
   self.hp = Shotgun.hp
   self.x = self.owner.x
   self.y = self.owner.y
+  
+  local dir = self.owner.angle
+  self.x = self.x + math.dx(data.weapon.shotgun.dx, dir) - math.dy(data.weapon.shotgun.dy, dir)
+  self.y = self.y + math.dy(data.weapon.shotgun.dx, dir) + math.dx(data.weapon.shotgun.dy, dir)
+  
   self.len = 600
   self.bullets = {}
   
-  for i = self.owner.angle - .1, self.owner.angle + .1, .0625 do
+  for i = self.owner.angle - data.weapon.shotgun.spread, self.owner.angle + data.weapon.shotgun.spread + (.001), (2 * data.weapon.shotgun.spread / (data.weapon.shotgun.count - 1)) do
     local ang, len = i + (math.pi / 2), self.len
     
     local x2, y2 = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len

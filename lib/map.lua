@@ -24,7 +24,6 @@ function Map:init(name)
   end)
 
   table.each(map.on, function(f, e)
-    print(e)
     ovw.event:on(e, self, f)
   end)
 

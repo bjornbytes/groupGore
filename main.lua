@@ -5,6 +5,7 @@ require 'lib/stream'
 
 require 'lib/buff'
 require 'lib/collision'
+require 'lib/draw'
 require 'lib/event'
 require 'lib/gorgeous'
 require 'lib/hud'
@@ -20,6 +21,7 @@ require 'lib/playermain'
 require 'lib/playerserver'
 require 'lib/playerrobot'
 require 'lib/players'
+require 'lib/richtext'
 require 'lib/spell'
 require 'lib/spells'
 require 'lib/view'
@@ -36,6 +38,7 @@ function love.load()
 
   Overwatch:add(Menu)
   gorgeous = Overwatch:add(Gorgeous)
+  if not gorgeous.socket then gorgeous = nil end
 
   love.update = Overwatch.update
   love.draw = Overwatch.draw

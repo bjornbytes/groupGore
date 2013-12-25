@@ -7,6 +7,7 @@ NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', 
 NetServer.signatures[evtSync] = {
   {'id', '4bits'},
   {'tick', '16bits'},
+  {'ack', '16bits'},
   {'x', '12bits'},
   {'y', '12bits'},
   {'angle', '10bits'},
@@ -32,13 +33,13 @@ NetServer.receive[msgJoin] = function(self, event)
   ovw.players:get(event.pid).username = event.data.username
   self:send(msgJoin, event.peer, {id = event.pid})
   self:emit(evtJoin, {id = event.pid, username = event.data.username})
-  self:emit(evtChat, {message = event.data.username .. ' has joined!'})
+  self:emit(evtChat, {message = '{white}' .. event.data.username .. ' has joined!'})
   self:snapshot(event.peer)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
   print('Server: ' .. ovw.players:get(event.pid).username .. ' has left!')
-  self:emit(evtChat, {message = ovw.players:get(event.pid).username .. ' has left!'})
+  self:emit(evtChat, {message = '{white}' .. ovw.players:get(event.pid).username .. ' has left!'})
   self:emit(evtLeave, {id = event.pid, reason = 'left'})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
@@ -52,6 +53,7 @@ NetServer.receive[msgInput] = function(self, event)
   local p = ovw.players:get(event.pid)
   local t = event.data.tick
   event.data.tick = nil
+  p.ack = t
   for i = t, tick do
     local state = table.copy(ovw.players.history[p.id][i - 1])
     if state then
@@ -66,7 +68,8 @@ end
 
 NetServer.receive[msgChat] = function(self, event)
   local username = ovw.players:get(event.pid).username
-  self:emit(evtChat, {message = username .. ': ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
+  local color = ovw.players:get(event.pid).team == 0 and 'purple' or 'orange'
+  self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
 end
 
 function NetServer:init()
@@ -75,6 +78,7 @@ function NetServer:init()
   self:listen(6061)
   self.peerToPlayer = {}
   self.eventBuffer = {}
+  self.lastHeartbeat = tick
 
   Net.init(self)
 end
@@ -105,6 +109,11 @@ function NetServer:sync()
   end
 
   self.host:broadcast(tostring(self.outStream))
+  
+  if (tick - self.lastHeartbeat) * tickRate >= 30 then
+    gorgeous:send(gorgeous.msgServerHeartbeat)
+    self.lastHeartbeat = tick
+  end
 end
 
 function NetServer:snapshot(peer)

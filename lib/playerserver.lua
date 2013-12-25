@@ -21,6 +21,10 @@ function PlayerServer:activate()
   self.hurtHistory = {}
   self.helpHistory = {}
   
+  self.ack = tick
+  
+  self.lastHurt = tick
+  
   Player.activate(self)
 end
 
@@ -31,7 +35,7 @@ function PlayerServer:deactivate()
 end
 
 function PlayerServer:update()
-  local prevx, prevy, prevangle, prevhp = self.x, self.y, self.angle, math.floor(self.health + .5)
+  local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
   
   self:time()
   self:move()
@@ -48,14 +52,15 @@ function PlayerServer:update()
     end
   end
   
-  if self.x ~= prevx or self.y ~= prevy or self.angle ~= prevangle or math.floor(self.health + .5) ~= prevhp or tick % 100 == 0 then
+  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy or math.round((math.deg(self.angle) + 360) % 360) ~= prevangle or math.round(self.health) ~= prevhp or tick - self.lastHurt <= 1 or tick % 100 == 0 then
     ovw.net:emit(evtSync, {
       id = self.id,
       tick = tick,
-      x = math.floor(self.x + .5),
-      y = math.floor(self.y + .5),
-      angle = math.floor(((math.deg(self.angle) + 360) % 360) + .5),
-      health = math.floor(self.health + .5)
+      ack = self.ack,
+      x = math.round(self.x),
+      y = math.round(self.y),
+      angle = math.round((math.deg(self.angle) + 360) % 360),
+      health = math.round(self.health)
     })
   end
 end

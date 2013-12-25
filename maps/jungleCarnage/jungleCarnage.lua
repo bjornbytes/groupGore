@@ -37,7 +37,7 @@ jungleCarnage.hud = function(self)
   local str = 'purple: ' .. self.points[purple] .. ', orange: ' .. self.points[orange]
   love.graphics.setColor(255, 255, 255)
   love.graphics.setFont(ovw.hud.font)
-  love.graphics.print(str, love.window.getWidth() / 2 - ovw.hud.font:getWidth(str) / 2, 2)
+  love.graphics.print(str, love.window.getWidth() / 2 - ovw.hud.font:getWidth(str) / 2, love.window.getHeight() - (2 * ovw.view.margin) - ovw.hud.font:getHeight())
 end
 
 
