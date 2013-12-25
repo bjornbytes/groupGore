@@ -76,11 +76,10 @@ end
 
 function PlayerServer:hurt(data)
   if not self.ded then
-    self.hurtFrom[data.from] = (self.hurtFrom[data.from] or 0) + data.amount
     while #self.hurtHistory > 0 and self.hurtHistory[1].tick < tick - (10 / tickRate) do
       table.remove(self.hurtHistory, 1)
     end
-    table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount})
+    table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount, from = data.from})
     self.health = self.health - data.amount
     self.lastHurt = data.tick
     if self.health <= 0 then
@@ -88,8 +87,9 @@ function PlayerServer:hurt(data)
       local playerHurt = {}
       for i = 1, 16 do playerHurt[i] = {i, 0} end
       playerHurt[data.from][2] = -1
+      playerHurt[self.id][2] = -1
       for i, v in ipairs(self.hurtHistory) do
-        if i ~= data.from then
+        if v.from ~= data.from and v.from ~= self.id then
           playerHurt[i][2] = playerHurt[i][2] + v.amount * (1 - ((data.tick - v.tick) / (10 / tickRate)))
         end
       end
@@ -110,8 +110,8 @@ function PlayerServer:hurt(data)
 end
 
 function PlayerServer:spawn()
-  table.clear(self.hurtFrom)
-  table.clear(self.helpFrom)
+  table.clear(self.hurtHistory)
+  table.clear(self.helpHistory)
 
   Player.spawn(self)
 end

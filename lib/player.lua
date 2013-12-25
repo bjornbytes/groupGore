@@ -138,6 +138,7 @@ end
 function Player:die()
   self.ded = 5
   if ovw.particles then ovw.particles:create('skull', {x = self.x, y = self.y}) end
+  ovw.buffs:removeAll(self.id)
 
   self.x, self.y = 0, 0
   self.visible = 0

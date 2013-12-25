@@ -4,6 +4,7 @@ require 'lib/util'
 require 'lib/stream'
 
 require 'lib/buff'
+require 'lib/buffs'
 require 'lib/collision'
 require 'lib/draw'
 require 'lib/event'
