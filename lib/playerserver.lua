@@ -34,7 +34,6 @@ function PlayerServer:update()
   local prevx, prevy, prevangle, prevhp = self.x, self.y, self.angle, math.floor(self.health + .5)
   
   self:time()
-  self:buff()
   self:move()
   self:turn()
   self:slot()
@@ -100,7 +99,7 @@ function PlayerServer:hurt(data)
         if playerHurt[2][2] > 0 then table.insert(assists, {id = playerHurt[2][1]}) end
       end
 
-      ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists)
+      ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
     end
   end
 end

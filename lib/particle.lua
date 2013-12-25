@@ -28,14 +28,14 @@ function Particles:create(type, vars)
 end
 
 function Particles:update()
-	table.with(self.particles, function(p, i)
+	table.each(self.particles, function(p, i)
 		p.health = p.health - tickRate
 		if p.health <= 0 then table.remove(self.particles, i) end
 	end)
 end
 
 function Particles:draw()
-	table.with(self.particles, function(v, i)
+	table.each(self.particles, function(v, i)
 		local p = table.merge(table.interpolate(v.type.initial, v.type.final, (v.type.duration - v.health - tickDelta) / v.type.duration), table.copy(v))
 		local r, g, b = unpack(p.color)
 		love.graphics.setColor(r, g, b, p.alpha * 255)

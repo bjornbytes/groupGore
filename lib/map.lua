@@ -23,7 +23,7 @@ function Map:init(name)
     return prop
   end)
 
-  table.with(map.on, function(f, e)
+  table.each(map.on, function(f, e)
     print(e)
     ovw.event:on(e, self, f)
   end)
@@ -35,7 +35,7 @@ function Map:init(name)
 end
 
 function Map:update()
-  table.with(self.props, function(p) f.exe(p.update, p) end)
+  table.each(self.props, function(p) f.exe(p.update, p) end)
 end
 
 function Map:draw()

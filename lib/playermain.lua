@@ -33,7 +33,6 @@ function PlayerMain:update()
   if self.ded then return end
   
   self:poll()
-  self:buff()
   self:move()
   self:turn()
   self:slot()

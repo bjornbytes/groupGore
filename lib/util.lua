@@ -43,10 +43,11 @@ function math.hlolax(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action 
   return x, y
 end
 function math.hlora(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action (boolean).
-  return math.hlola(x1, y1, x2, y2, rx, ry, rx + rw, ry)
-    or math.hlola(x1, y1, x2, y2, rx, ry, rx, ry + rh)
-    or math.hlola(x1, y1, x2, y2, rx + rw, ry, rx + rw, ry + rh)
-    or math.hlola(x1, y1, x2, y2, rx, ry + rh, rx + rw, ry + rh)
+  local rxw, ryh = rx + rw, ry + rh
+  return math.hlola(x1, y1, x2, y2, rx, ry, rxw, ry)
+      or math.hlola(x1, y1, x2, y2, rx, ry, rx, ryh)
+      or math.hlola(x1, y1, x2, y2, rxw, ry, rxw, ryh)
+      or math.hlola(x1, y1, x2, y2, rx, ryh, rxw, ryh)
 end
 function math.hlorax(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action (closest intersection point).
   local ps = {}
@@ -61,6 +62,8 @@ function math.hlorax(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle ac
 end
 
 -- Table
+all = pairs
+local all = all
 function table.eq(t1, t2)
   if type(t1) ~= type(t2) then return false end
   if type(t1) ~= 'table' then return t1 == t2 end
@@ -98,20 +101,20 @@ function table.except(t, ks)
   return res
 end
 
-function table.with(t, f)
+function table.each(t, f)
   if not t then return end
   for k, v in pairs(t) do f(v, k) end
 end
 
-function table.iwith(t, f)
-  if not t then return end
-  for k, v in ipairs(t) do f(v, k) end
+function table.with(t, k, exe)
+  local f = exe and f.egoexe or f.ego
+  return table.each(t, f(k))
 end
 
 function table.map(t, f)
   if not t then return end
   local res = {}
-  table.with(t, function(v, k) res[k] = f(v, k) end)
+  table.each(t, function(v, k) res[k] = f(v, k) end)
   return res
 end
 
@@ -120,7 +123,7 @@ function table.filter(t, f)
 end
 
 function table.clear(t, v)
-  table.with(t, function(_, k) t[k] = v end)
+  table.each(t, function(_, k) t[k] = v end)
 end
 
 function table.merge(t1, t2)
@@ -150,7 +153,7 @@ end
 
 function table.count(t)
   local ct = 0
-  table.with(t, function() ct = ct + 1 end)
+  table.each(t, function() ct = ct + 1 end)
   return ct
 end
 
@@ -160,13 +163,16 @@ function table.print(t, n)
   if t == nil then print('nil') end
   if type(t) ~= 'table' then io.write(tostring(t)) io.write('\n')
   else
+    local empty = true
     for k, v in pairs(t) do
+      empty = false
       io.write(string.rep('\t', n))
       io.write(k)
       if type(v) == 'table' then io.write('\n')
       else io.write('\t') end
       table.print(v, n + 1)
     end
+    if empty then io.write('{}\n') end
   end
 end
 

@@ -23,8 +23,7 @@ function Player:create()
     depth = 0,
     anchor = nil,
     visible = 0,
-    slots = {{}, {}, {}, {}, {}},
-    buffs = {}
+    slots = {{}, {}, {}, {}, {}}
   }
 end
 
@@ -39,7 +38,6 @@ function Player:activate()
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
-  table.clear(self.buffs)
 end
 
 function Player:deactivate()
@@ -127,13 +125,6 @@ function Player:slot()
   local skill = self.slots[self.input.skill]
   if self.input.r and skill.canFire(self, skill) then
     ovw.net:emit(evtFire, {id = self.id, slot = self.input.skill})
-  end
-end
-
-function Player:buff()
-  if self.ded then return end
-  for _, buff in pairs(self.buffs) do
-    f.exe(buff.update, self, buff)
   end
 end
 

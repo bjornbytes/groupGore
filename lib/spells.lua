@@ -24,9 +24,9 @@ function Spells:deactivate(s)
 end
 
 function Spells:update()
-  table.with(self.spells, f.ego('update'))
+  table.with(self.spells, 'update')
 end
 
 function Spells:draw()
-  table.with(self.spells, f.ego('draw'))
+  table.with(self.spells, 'draw')
 end

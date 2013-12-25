@@ -20,7 +20,9 @@ data.load = function()
 
   load('data/weapon', 'weapon')
   load('data/skill', 'skill')
-  load('data/buff', 'buff')
+  load('data/buff', 'buff', function(data)
+    return table.merge(data, extend(Buff))
+  end)
   load('data/spell', 'spell')
   load('data/class', 'class', function(class)
     for name, sprite in pairs(class.sprites) do

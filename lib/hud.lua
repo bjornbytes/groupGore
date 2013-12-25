@@ -73,7 +73,7 @@ function Hud:draw()
 	g.draw(self.health.glass, 0, 0, 0, s, s)
 
 	love.graphics.setFont(self.font)
-	ovw.players:with(ovw.players.active, function(p)
+	ovw.players:each(ovw.players.active, function(p)
 		if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
 	  elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
 		love.graphics.print(p.username, ((p.x - ovw.view.x) * ovw.view.scale) - self.font:getWidth(p.username) / 2, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
@@ -140,7 +140,7 @@ function Hud:draw()
 	g.print(self.chatLog, 4 + 2, yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 2)
 
 	f.exe(ovw.map.hud, ovw.map.hud)
-	table.with(p.slots, f.egoexe('hud'))
+	table.each(p.slots, f.egoexe('hud'))
 
 	g.setColor(255, 255, 255)
 	local debug = love.timer.getFPS() .. 'fps'

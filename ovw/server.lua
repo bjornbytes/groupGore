@@ -7,6 +7,7 @@ function Server:load()
   self.collision = Collision()
   self.players = Players()
   self.spells = Spells()
+  self.buffs = Buffs()
   self.net = NetServer()
   self.map = Map()
 
@@ -20,6 +21,7 @@ end
 
 function Server:update()
   self.net:update()
+  self.buffs:update()
   self.players:update()
   self.spells:update()
 end

@@ -21,7 +21,7 @@ setmetatable(Overwatch, {
 	__index = function(t, k)
 		return function(...)
 			local args = {...}
-			table.with(t.ovws, function(o)
+			table.each(t.ovws, function(o)
 				ovw = o
 				if k == 'update' and t.toRemove == ovw then
 					ovw:unload()

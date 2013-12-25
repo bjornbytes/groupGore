@@ -13,22 +13,8 @@ Adrenaline.hide = false
 ----------------
 -- Data
 ----------------
-Adrenaline.drain = 20
-
 Adrenaline.effects = {}
-Adrenaline.effects.haste = .7
-
-
-----------------
--- Behavior
-----------------
-Adrenaline.update = function(self, myAdrenaline)
-	ovw.net:emit(evtDamage, {
-		id = self.id,
-		amount = Adrenaline.drain * tickRate,
-		from = self.id,
-		tick = tick
-	})
-end
+Adrenaline.effects.haste = function(self) return (1 - (self.health / self.maxHealth)) * self.maxSpeed end
+Adrenaline.effects.dot = 20
 
 return Adrenaline
