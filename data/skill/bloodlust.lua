@@ -13,9 +13,12 @@ Bloodlust.type = 'passive'
 ----------------
 -- Behavior
 ----------------
-Bloodlust.on = {}
-Bloodlust.on['kill'] = function(self)
-	Buff:add(self, data.buff.bloodlust)
+Bloodlust.activate = function(self, myBloodlust)
+  ovw.event:on(evtDead, self, function(self, data)
+    if data.kill == self.id then
+      ovw.buff:add(data.buff.bloodlust, self.id, self.id)
+    end
+  end)
 end
 
 return Bloodlust

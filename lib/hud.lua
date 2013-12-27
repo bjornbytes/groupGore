@@ -111,12 +111,14 @@ function Hud:draw()
   
   local p = ovw.players:get(myId)
   if p and p.active then
+    g.setColor(255, 255, 255, 255)
     g.draw(self.skillBg, w(.5), h(.01), 0, w(.35) / self.skillBg:getWidth(), w(.35) / self.skillBg:getWidth(), self.skillBg:getWidth() / 2, 0)
     for i = 1, 5 do
       g.setColor(100, 100, 100)
       if p.input.weapon == i or p.input.skill == i then g.setColor(180, 180, 180) end
       if p.slots[i].type == 'passive' then g.setColor(100, 50, 50) end
       d.rectCentered('line', w(.5) - w(.1250) + (w(.0620) * (i - 1)), h(.08), w(.042), w(.042), true)
+      f.exe(p.slots[i].hud, p, p.slots[i])
     end
   end
 

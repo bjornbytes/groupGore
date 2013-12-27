@@ -13,19 +13,9 @@ Bloodlust.hide = false
 ----------------
 -- Data
 ----------------
-Bloodlust.healRate = 25
+Bloodlust.duration = 6
 
-
-----------------
--- Behavior
-----------------
-Bloodlust.activate = function(self, myBloodlust)
-	myBloodlust.hp = 5
-end
-
-Bloodlust.update = function(self, myBloodlust)
-	myBloodlust.hp = timer.rot(myBloodlust.hp, function() Buff:remove(self, data.buff.bloodlust) end)
-	self.health = math.min(self.health + (Bloodlust.healRate * tickRate), self.maxHealth)
-end
+Bloodlust.effects = {}
+Bloodlust.effects.hot = 15
 
 return Bloodlust

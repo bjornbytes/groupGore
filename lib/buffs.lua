@@ -13,7 +13,7 @@ function Buffs:add(kind, source, target)
   return buff
 end
 
-function Buffs:removeAll(id)
+function Buffs:removeByTarget(id)
   self.buffs = table.filter(self.buffs, function(b) return b.target ~= id end)
 end
 
@@ -47,6 +47,8 @@ function Buffs:apply(buff)
         buff.undo.maxSpeed = -val
       elseif effect == 'dot' then
         ovw.net:emit(evtDamage, {id = target.id, amount = val * tickRate, from = source.id, tick = tick})
+      elseif effect == 'hot' then
+        target:heal(val * tickRate)
       end
     end)
   end)
