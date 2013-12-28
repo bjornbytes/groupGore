@@ -12,6 +12,7 @@ SMG.activate = function(self)
   self.y = self.y + math.dy(data.weapon.smg.dx, dir) + math.dx(data.weapon.smg.dy, dir)
   
   self.angle = self.owner.angle + (math.pi / 2)
+  self.angle = self.angle - (data.weapon.smg.spread / 2) + (2 * math.random() * data.weapon.smg.spread)
   self.len = 900
   
   local x2, y2 = self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len

@@ -19,6 +19,7 @@ SMG.firerate = .15
 SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 240
+SMG.spread = .08
 SMG.dx = 10
 SMG.dy = 84
 SMG.tipx = 4
