@@ -10,11 +10,20 @@ function Buffs:add(kind, source, target)
   buff.target = target
 
   table.insert(self.buffs, buff)
+
+  source = ovw.players:get(buff.source)
+  target = ovw.players:get(buff.target)
+  table.each(buff.effects, function(val, effect)    
+    if effect == 'shield' and target.shields then
+      table.insert(target.shields, table.copy(val))
+    end
+  end)
+
   return buff
 end
 
-function Buffs:removeByTarget(id)
-  self.buffs = table.filter(self.buffs, function(b) return b.target ~= id end)
+function Buffs:remove(target, code)
+  self.buffs = table.filter(self.buffs, function(b) return b.target ~= target and (code and (b.code ~= code) or true) end)
 end
 
 function Buffs:update()
@@ -37,19 +46,15 @@ end
 function Buffs:apply(buff)
   local source = ovw.players:get(buff.source)
   local target = ovw.players:get(buff.target)
-  table.each(buff.effects, function(vals, effect)
-    if type(vals) ~= 'table' then vals = {vals} end
-    table.each(vals, function(val)
-      if type(val) == 'function' then val = val(target) end
-      
-      if effect == 'haste' then
-        target.maxSpeed = target.maxSpeed + val
-        buff.undo.maxSpeed = -val
-      elseif effect == 'dot' then
-        ovw.net:emit(evtDamage, {id = target.id, amount = val * tickRate, from = source.id, tick = tick})
-      elseif effect == 'hot' then
-        target:heal(val * tickRate)
-      end
-    end)
+  table.each(buff.effects, function(val, effect)
+    if effect == 'haste' then
+      val = target.maxSpeed * val
+      target.maxSpeed = target.maxSpeed + val
+      buff.undo.maxSpeed = -val
+    elseif effect == 'dot' then
+      ovw.net:emit(evtDamage, {id = target.id, amount = val * tickRate, from = source.id, tick = tick})
+    elseif effect == 'hot' then
+      target:heal({amount = val * tickRate})
+    end
   end)
 end

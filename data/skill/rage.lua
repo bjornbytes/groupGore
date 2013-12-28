@@ -13,7 +13,7 @@ Rage.type = 'skill'
 ----------------
 -- Meta
 ----------------
-Rage.max = 50
+Rage.max = 200
 
 
 ----------------
@@ -23,7 +23,8 @@ function Rage.activate(self, myRage)
   myRage.amount = 0
   myRage.active = false
   ovw.event:on(evtDamage, self, function(self, data)
-    if data.from == self.id then
+    table.print(data)
+    if data.from == self.id and ovw.players:get(data.id).team ~= self.team then
       myRage.amount = math.min(myRage.amount + data.amount, myRage.max)
     end
   end)

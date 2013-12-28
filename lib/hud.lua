@@ -93,21 +93,7 @@ function Hud:draw()
   g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
   g.draw(self.health.glass, 0, 0, 0, s, s)
 
-  love.graphics.setFont(self.font)
-  ovw.players:with(ovw.players.active, function(p)
-    if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
-    elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
-    d.printCentered(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
-
-    if not p.ded then
-      g.setColor(0, 0, 0, 128 * p.visible)
-      g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, 80, 10)
-      g.setColor(100, 0, 0, 128 * p.visible)
-      g.rectangle('fill', ((p.x - ovw.view.x) * ovw.view.scale) - 40, ((p.y - ovw.view.y) * ovw.view.scale) - 50, (p.health / p.maxHealth) * 80, 10)
-      g.setColor(100, 0, 0, 255 * p.visible)
-      d.rectCentered('line', (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 45, 80, 10)
-    end
-  end)
+  self:drawPlayerDetails()
   
   local p = ovw.players:get(myId)
   if p and p.active then
@@ -176,6 +162,34 @@ end
 
 function Hud:keyreleased(key)
   if self.chatting then return true end
+end
+
+function Hud:drawPlayerDetails()
+  love.graphics.setFont(self.font)
+  ovw.players:with(ovw.players.active, function(p)
+    if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
+    elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
+    d.printCentered(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
+
+    if not p.ded then
+      local x0 = ((p.x - ovw.view.x) * ovw.view.scale) - 40
+      local y0 = ((p.y - ovw.view.y) * ovw.view.scale) - 50
+      local healthWidth, shieldWidth = (p.health / p.maxHealth) * 80, (p.shield / p.maxHealth) * 80
+      local totalWidth = math.max(healthWidth + shieldWidth, 80)
+
+      g.setColor(0, 0, 0, 128 * p.visible) -- Dark background
+      g.rectangle('fill', x0, y0, totalWidth, 10)
+      
+      g.setColor(100, 0, 0, 128 * p.visible) -- Health
+      g.rectangle('fill', x0, y0, healthWidth, 10)
+      
+      g.setColor(220, 220, 220, 128 * p.visible) -- Shield
+      g.rectangle('fill', x0 + healthWidth, y0, shieldWidth, 10)
+      
+      g.setColor(100, 0, 0, 255 * p.visible) -- Frame
+      g.rectangle('line', x0, y0, totalWidth, 10)
+    end
+  end)
 end
 
 function Hud:drawChat()

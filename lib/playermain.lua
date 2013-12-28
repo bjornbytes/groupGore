@@ -152,4 +152,5 @@ function PlayerMain:trace(data)
   end
   
   self.health = data.health
+  self.shield = data.shield
 end

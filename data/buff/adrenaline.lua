@@ -14,7 +14,7 @@ Adrenaline.hide = false
 -- Data
 ----------------
 Adrenaline.effects = {}
-Adrenaline.effects.haste = function(self) return self.maxSpeed * .6 end
+Adrenaline.effects.haste = .6
 Adrenaline.effects.dot = 20
 
 return Adrenaline

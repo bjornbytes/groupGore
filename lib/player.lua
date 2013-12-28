@@ -16,8 +16,10 @@ function Player:create()
     angle = 0,
     speed = 0,
     health = 0,
+    shield = 0,
     maxSpeed = 0,
     maxHealth = 0,
+    lifesteal = 0,
     size = 0,
     depth = 0,
     anchor = nil,
@@ -37,6 +39,7 @@ function Player:activate()
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
+  table.print(getmetatable(self.slots))
 end
 
 function Player:deactivate()
@@ -135,10 +138,14 @@ function Player:hurt()
   --
 end
 
+function Player:heal()
+  --
+end
+
 function Player:die()
   self.ded = 5
   if ovw.particles then ovw.particles:create('skull', {x = self.x, y = self.y}) end
-  ovw.buffs:removeByTarget(self.id)
+  ovw.buffs:remove(self.id)
 
   self.x, self.y = 0, 0
   self.visible = 0

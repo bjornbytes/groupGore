@@ -18,13 +18,14 @@ function PlayerServer:activate()
   self.input.skl = 3
   self.input.rel = false
 
+  self.shields = {}
+
   self.hurtHistory = {}
   self.helpHistory = {}
   
   self.ack = tick
-  
   self.lastHurt = tick
-  
+
   Player.activate(self)
 end
 
@@ -48,11 +49,13 @@ function PlayerServer:update()
     local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
     if percentage > 0 then
       percentage = (1 + (percentage * 7)) / 100
-      self.health = self.health + math.min(self.maxHealth - self.health, self.maxHealth * percentage * tickRate)
+      self:heal({amount = self.maxHealth * percentage * tickRate})
     end
   end
   
   if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy or math.round((math.deg(self.angle) + 360) % 360) ~= prevangle or math.round(self.health) ~= prevhp or tick - self.lastHurt <= 1 or tick % 100 == 0 then
+    local shield = 0
+    table.each(self.shields, function(s) shield = shield + s.health end)
     ovw.net:emit(evtSync, {
       id = self.id,
       tick = tick,
@@ -60,7 +63,8 @@ function PlayerServer:update()
       x = math.round(self.x),
       y = math.round(self.y),
       angle = math.round((math.deg(self.angle) + 360) % 360),
-      health = math.round(self.health)
+      health = math.round(self.health),
+      shield = math.round(shield)
     })
   end
 end
@@ -75,14 +79,18 @@ function PlayerServer:spell(kind)
 end
 
 function PlayerServer:hurt(data)
-  if not self.ded then
-    while #self.hurtHistory > 0 and self.hurtHistory[1].tick < tick - (10 / tickRate) do
-      table.remove(self.hurtHistory, 1)
-    end
-    table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount, from = data.from})
-    self.health = self.health - data.amount
-    self.lastHurt = data.tick
-    if self.health <= 0 then
+  if self.ded then return end
+
+  local target = self.shields[1] or self
+
+  while #self.hurtHistory > 0 and self.hurtHistory[1].tick < tick - (10 / tickRate) do
+    table.remove(self.hurtHistory, 1)
+  end
+  table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount, from = data.from})
+  target.health = math.max(target.health - data.amount, 0)
+  self.lastHurt = data.tick
+  if target.health <= 0 then
+    if target == self then
       self.ded = 5
       local playerHurt = {}
       for i = 1, 16 do playerHurt[i] = {i, 0} end
@@ -105,8 +113,15 @@ function PlayerServer:hurt(data)
       end
 
       ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
+    else
+      f.exe(self.shields[1].callback, self) 
+      table.remove(self.shields, 1)
     end
   end
+end
+
+function PlayerServer:heal(data)
+  self.health = math.min(self.health + data.amount, self.maxHealth)
 end
 
 function PlayerServer:spawn()

@@ -11,7 +11,8 @@ NetServer.signatures[evtSync] = {
   {'x', '12bits'},
   {'y', '12bits'},
   {'angle', '10bits'},
-  {'health', '10bits'}
+  {'health', '10bits'},
+  {'shield', '10bits'}
 }
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
@@ -121,10 +122,11 @@ function NetServer:snapshot(peer)
   for id = 1, 16 do
     local p = ovw.players:get(id)
     if #p.username > 0 and id ~= self.peerToPlayer[peer] then
+      print('thing: ' .. (p.active and p.class.id or 0))
       table.insert(players, {
         id = id,
         username = p.username,
-        class = p.active and 1 or 0,
+        class = p.active and p.class.id or 0,
         team = p.team or 0,
       })
     end

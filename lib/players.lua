@@ -32,8 +32,12 @@ function Players:init()
   end)
   
   ovw.event:on(evtDamage, self, function(self, data)
-    local p = self:get(data.id)
-    p:hurt(data)
+    local to, from = self:get(data.id), self:get(data.from)
+    to:hurt(data)
+    local oldAmt = data.amount
+    data.amount = data.amount * from.lifesteal
+    from:heal(data)
+    data.amount = oldAmt
   end)
   
   ovw.event:on(evtDead, self, function(self, data)
