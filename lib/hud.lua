@@ -215,7 +215,7 @@ function Hud:drawChat()
 end
 
 function Hud:drawDebug()
-  g.setColor(255, 255, 255)
+  g.setColor(255, 255, 255, 100)
   local debug = love.timer.getFPS() .. 'fps'
   if ovw.net.server then
     debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms'
