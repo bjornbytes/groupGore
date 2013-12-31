@@ -39,7 +39,6 @@ function Player:activate()
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
-  table.print(getmetatable(self.slots))
 end
 
 function Player:deactivate()

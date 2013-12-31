@@ -3,7 +3,6 @@ Hud = class()
 local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return (love.window.getHeight() - ovw.view.margin * 2) * x end
 local g = love.graphics
-local d = Draw
 
 function Hud:init()
   self.health = {}
@@ -44,40 +43,17 @@ function Hud:draw()
   g.reset()
   g.setFont(self.font)
   
-  if not myId then
-    g.setColor(0, 0, 0)
-    g.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
-    g.setColor(255, 255, 255)
-    local str = 'Connecting...'
-    if tick > 5 / tickRate then
-      str = str .. '\noshit'
-    end
-    if tick > 6 / tickRate then
-      str = str .. ' oshit'
-    end
-    if tick > (6 / tickRate) + 5 then
-      str = str .. ' oshit'
-    end
-    if tick > (6 / tickRate) + 10 then
-      str = str .. ' oshit'
-    end
-    if tick > 10 / tickRate then
-      str = str .. '\n'
-      str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3))
-    end
-    g.printf(str, 0, math.floor(love.window.getHeight() / 2 - self.font:getHeight()), love.window.getWidth(), 'center')
-    return
-  end
+  if not myId then return self:connecting() end
   
   if self:classSelect() then
     g.setFont(self.font)
     g.setColor(0, 0, 0, 140)
-    d.rectCentered('fill', w(.5), h(.5), w(.9), h(.82))
+    Gooey.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
     g.setColor(255, 255, 255, 40)
-    d.rectCentered('line', w(.5), h(.5), w(.9), h(.82))
+    Gooey.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
     
     g.setColor(255, 255, 255, 180)
-    d.printCentered('Choose Class:', w(.5), h(.12))
+    Gooey.printCenter('Choose Class:', w(.5), h(.12))
     local x = w(.5) - (w(.9) / 2) + w(.05)
     local y = h(.5) - (h(.82) / 2) + w(.05)
     for i = 1, #data.class do
@@ -98,14 +74,8 @@ function Hud:draw()
   local p = ovw.players:get(myId)
   if p and p.active then
     g.setColor(255, 255, 255, 255)
-    g.draw(self.skillBg, w(.5), h(.01), 0, w(.35) / self.skillBg:getWidth(), w(.35) / self.skillBg:getWidth(), self.skillBg:getWidth() / 2, 0)
-    for i = 1, 5 do
-      g.setColor(100, 100, 100)
-      if p.input.weapon == i or p.input.skill == i then g.setColor(180, 180, 180) end
-      if p.slots[i].type == 'passive' then g.setColor(100, 50, 50) end
-      d.rectCentered('line', w(.5) - w(.1250) + (w(.0620) * (i - 1)), h(.08), w(.042), w(.042), true)
-      f.exe(p.slots[i].hud, p, p.slots[i])
-    end
+    g.setFont(self.font)
+    Gooey.printCenter(math.ceil(p.health), h(.1), h(.1))
   end
 
   if ovw.map.hud then ovw.map:hud() end
@@ -164,12 +134,36 @@ function Hud:keyreleased(key)
   if self.chatting then return true end
 end
 
+function Hud:connecting()
+  g.setColor(0, 0, 0)
+  g.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
+  g.setColor(255, 255, 255)
+  local str = 'Connecting...'
+  if tick > 5 / tickRate then
+    str = str .. '\noshit'
+  end
+  if tick > 6 / tickRate then
+    str = str .. ' oshit'
+  end
+  if tick > (6 / tickRate) + 5 then
+    str = str .. ' oshit'
+  end
+  if tick > (6 / tickRate) + 10 then
+    str = str .. ' oshit'
+  end
+  if tick > 10 / tickRate then
+    str = str .. '\n'
+    str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3))
+  end
+  g.printf(str, 0, math.floor(love.window.getHeight() / 2 - self.font:getHeight()), love.window.getWidth(), 'center')
+end
+
 function Hud:drawPlayerDetails()
   love.graphics.setFont(self.font)
   ovw.players:with(ovw.players.active, function(p)
     if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
     elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
-    d.printCentered(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
+    Gooey.printCenter(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
 
     if not p.ded then
       local x0 = ((p.x - ovw.view.x) * ovw.view.scale) - 40

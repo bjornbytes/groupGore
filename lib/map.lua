@@ -27,7 +27,16 @@ function Map:init(name)
     ovw.event:on(e, self, f)
   end)
 
+  self.canvas = love.graphics.newCanvas(300, 300)
+
+  self.points = {}
+  self.points[purple] = 0
+  self.points[orange] = 0
+  self.pointLimit = 5
+
   f.exe(self.activate, self)
+
+  self:score()
 
   self.depth = 5
   if ovw.view then ovw.view:register(self) end
@@ -45,4 +54,27 @@ function Map:draw()
       love.graphics.draw(self.graphics.background, i, j)
     end
   end
+end
+
+function Map:hud()
+  local s = (love.window.getHeight() * .1) / self.canvas:getWidth()
+  love.graphics.draw(self.canvas, love.window:getWidth() / 2 - (self.canvas:getWidth() / 2 * s), love.window.getHeight() * .01, 0, s, s)
+end
+
+function Map:score(team)
+  if team then self.points[team] = self.points[team] + 1 end
+  self.canvas:clear()
+  self.canvas:renderTo(function()
+    love.graphics.setColor(190, 160, 220)
+    local w2 = self.canvas:getWidth() / 2
+    love.graphics.arc('fill', w2, w2, w2 - 1, math.pi * 0.5, math.pi * 1.5)
+    love.graphics.setColor(240, 160, 140)
+    love.graphics.arc('fill', w2, w2, w2 - 1, math.pi * 1.5, math.pi * 2.5)
+    love.graphics.setBlendMode('subtractive')
+    love.graphics.setColor(255, 255, 255)
+    love.graphics.circle('fill', w2, w2, w2 - (w2 * .3))
+    love.graphics.arc('fill', w2, w2, w2, (math.pi * 0.5) + (math.pi * (self.points[purple] / self.pointLimit)), math.pi * 1.5)
+    love.graphics.arc('fill', w2, w2, w2, math.pi * 1.5, (math.pi * 2.5) - (math.pi * (self.points[orange] / self.pointLimit)))
+    love.graphics.setBlendMode('alpha')
+  end)
 end

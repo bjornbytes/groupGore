@@ -51,10 +51,12 @@ function Buffs:apply(buff)
       val = target.maxSpeed * val
       target.maxSpeed = target.maxSpeed + val
       buff.undo.maxSpeed = -val
-    elseif effect == 'dot' then
-      ovw.net:emit(evtDamage, {id = target.id, amount = val * tickRate, from = source.id, tick = tick})
-    elseif effect == 'hot' then
-      target:heal({amount = val * tickRate})
+    elseif effect == 'dot' and (not buff.dotTick or tick - buff.dotTick > (.5 / tickRate)) then
+      ovw.net:emit(evtDamage, {id = target.id, amount = val * .5, from = source.id, tick = tick})
+      buff.dotTick = tick
+    elseif effect == 'hot' and (not buff.hotTick or tick - buff.hotTick > (.5 / tickRate)) then
+      target:heal({amount = val * .5})
+      buff.hotTick = tick
     end
   end)
 end

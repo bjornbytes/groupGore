@@ -7,8 +7,12 @@ local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return love.window.getHeight() * x end
 
 function Menu:load()
-  love.window.setMode(1280, 800, {borderless = false, resizable = true})
-  
+  do
+    local w, h = love.window.getDesktopDimensions()
+    w, h = w * .8, h * .8
+    love.window.setMode(w, h, {borderless = false, resizable = true})
+  end
+
   self.bigFont = g.newFont('media/fonts/coolvetica.ttf', h() * .08)
   self.smallFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .025)
   self.buttonFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .04)
@@ -116,8 +120,8 @@ function Menu:mousepressed(x, y, button)
   elseif self.page == 'main' then
     if button == 'l' then
       if math.inside(x, y, 4, 4, 20, 20) then self:host() end
-      if self:testButton(x, y, w(.5), h(.5) - (self.boxHeight / 2) + (.25 * self.boxHeight)) then self:play() end
-      if self:testButton(x, y, w(.5), h(.5) - (self.boxHeight / 2) + (.75 * self.boxHeight)) then love.event.push('quit') end
+      if self:testButton(x, y, w(.5), h(.5) - (self.boxHeight / 2) + (.2 * self.boxHeight)) then self:play() end
+      if self:testButton(x, y, w(.5), h(.5) - (self.boxHeight / 2) + (.8 * self.boxHeight)) then love.event.push('quit') end
     end
   end
 end
@@ -157,21 +161,23 @@ Menu.drawPage['login'] = function(self)
     self:drawInput('username', w2, h(.5) - (self.boxHeight / 2) + (.33 * self.boxHeight))
     self:drawInput('password', w2, h(.5) - (self.boxHeight / 2) + (.67 * self.boxHeight))
   else
-    d.printCentered('Can\'t connect to gorgeous =(', w(.5), h(.5))
+    Gooey.printCenter('Can\'t connect to gorgeous =(', w(.5), h(.5))
   end
 end
 
 Menu.drawPage['main'] = function(self)
-  self.targetBoxWidth = w(.9)
+  self.targetBoxWidth = w()
   self.targetBoxHeight = h(.82)
 
   self:drawBackground()
   self:drawBox()
   self:drawUsername()
-  self:drawIcons()
+  --[[self:drawIcons()
   
-  self:drawButton('Play', w(.5), h(.5) - (self.boxHeight / 2) + (.25 * self.boxHeight))
-  self:drawButton('Exit', w(.5), h(.5) - (self.boxHeight / 2) + (.75 * self.boxHeight))
+  self:drawButton('Play', w(.5), h(.5) - (self.boxHeight / 2) + (.2 * self.boxHeight))
+  self:drawButton('Stats', w(.5), h(.5) - (self.boxHeight / 2) + (.4 * self.boxHeight))
+  self:drawButton('Options', w(.5), h(.5) - (self.boxHeight / 2) + (.6 * self.boxHeight))
+  self:drawButton('Exit', w(.5), h(.5) - (self.boxHeight / 2) + (.8 * self.boxHeight))]]
 end
 
 function Menu:drawBackground()
@@ -184,17 +190,17 @@ function Menu:drawLogo()
   local x = w(.5) + (self.boxWidth / 2) - g.getFont():getWidth('groupGore')
   local y = h(.5) - (self.boxHeight / 2) - g.getFont():getAscent() - 1
   col(108, 89, 128)
-  g.print('group', x, y)
+  g.print('group', x - 20, y)
   col(140, 107, 84)
-  g.print('Gore', x + g.getFont():getWidth('group'), y)
+  g.print('Gore', x + g.getFont():getWidth('group') - 20, y)
   y = y + 120
 end
 
 function Menu:drawBox()
   col(0, 0, 0, 140)
-  d.rectCentered('fill', w(.5), h(.5), self.boxWidth, self.boxHeight)
+  Gooey.rectangleCenter('fill', w(.5), h(.5), self.boxWidth, self.boxHeight)
   col(255, 255, 255, 40)
-  d.rectCentered('line', w(.5), h(.5), self.boxWidth, self.boxHeight)
+  Gooey.rectangleCenter('line', w(.5), h(.5), self.boxWidth, self.boxHeight)
   self:drawLogo()
 end
 
@@ -218,11 +224,11 @@ end
 function Menu:drawButton(str, x, y)
   g.setFont(self.buttonFont)
   col(51, 49, 54, 160)
-  d.rectCentered('fill', x, y, w(.15), h(.08))
+  Gooey.rectangleCenter('fill', x, y, w(.15), h(.08))
   col(51, 49, 54, 255)
-  d.rectCentered('line', x, y, w(.15), h(.08))
+  Gooey.rectangleCenter('line', x, y, w(.15), h(.08))
   col(255, 255, 255, 200)
-  d.printCentered(str, x, y)
+  Gooey.printCenter(str, x, y)
 end
 
 function Menu:testButton(mx, my, x, y)
@@ -234,9 +240,9 @@ function Menu:drawInput(key, x, y)
   local iw, ih = w(.2), fh * 1.6
   
   col(51, 49, 54, 160)
-  d.rectCentered('fill', x, y, iw, ih)
+  Gooey.rectangleCenter('fill', x, y, iw, ih)
   col(51, 49, 54, 255)
-  d.rectCentered('line', x, y, iw, ih)
+  Gooey.rectangleCenter('line', x, y, iw, ih)
   
   col(140, 107, 84)
   local str = self[key]
