@@ -149,8 +149,8 @@ jungleCarnage.props = {
   },
   {
     kind = 'tree',
-    x = 350,
-    y = 350
+    x = jungleCarnage.width * .5,
+    y = jungleCarnage.height * .5
   }
 }
 
