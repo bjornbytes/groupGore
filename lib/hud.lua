@@ -16,6 +16,8 @@ function Hud:init()
   self.chatting = false
   self.chatMessage = ''
   self.chatLog = ''
+  self.chatTimer = 0
+  self.chatOffset = -w(.25) - 4
   
   self.skillBg = love.graphics.newImage('media/graphics/skills.png')
 
@@ -37,6 +39,10 @@ function Hud:update()
       love.graphics.setBlendMode('alpha')
     end)
   end
+
+  self.chatTimer = timer.rot(self.chatTimer, f.empty)
+  if self.chatting then self.chatTimer = 2 end
+  self.chatOffset = math.lerp(self.chatOffset, (self.chatTimer == 0) and -w(.25) - 4 or 0, .25)
 end
 
 function Hud:draw()
@@ -190,21 +196,21 @@ function Hud:drawChat()
   local height = h(.25) + 2
   if self.chatting then height = height + (self.font:getHeight() + 6.5) end
   g.setColor(0, 0, 0, 180)
-  g.rectangle('fill', 4, h() - (height + 4), w(.25), height)
+  g.rectangle('fill', 4 + self.chatOffset, h() - (height + 4), w(.25), height)
   g.setColor(30, 30, 30, 180)
-  g.rectangle('line', 4, h() - (height + 4), w(.25), height)
+  g.rectangle('line', 4 + self.chatOffset, h() - (height + 4), w(.25), height)
   g.setFont(self.font)
   local yy = h() - 4
   if self.chatting then
     g.setColor(255, 255, 255, 60)
-    g.line(4.5, h() - 4 - self.font:getHeight() - 6.5, 3 + w(.25), h() - 4 - self.font:getHeight() - 6.5)
+    g.line(4.5 + self.chatOffset, h() - 4 - self.font:getHeight() - 6.5, 3 + w(.25) + self.chatOffset, h() - 4 - self.font:getHeight() - 6.5)
     g.setColor(255, 255, 255, 180)
-    g.print(self.chatMessage .. (self.chatting and '|' or ''), 4 + 4, math.round(yy - self.font:getHeight() - 5.5 + 2))
+    g.printf(self.chatMessage .. (self.chatting and '|' or ''), 4 + 4 + self.chatOffset, math.round(yy - self.font:getHeight() - 5.5 + 2), w(.25), 'left')
     yy = yy - self.font:getHeight() - 6.5
   end
 
   if self.chatText then
-    self.chatText:draw(4 + 4, math.round(yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25)))) - 4))
+    self.chatText:draw(4 + 4 + self.chatOffset, math.round(yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25) - 2))) - 4))
   end
 end
 
@@ -228,7 +234,8 @@ function Hud:updateChat(message)
   while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - 2) do
     self.chatLog = self.chatLog:sub(2)
   end
-  self.chatText = rich.new({self.chatLog, nil, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
+  self.chatText = rich.new({self.chatLog, w(.25) - 2, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
+  self.chatTimer = 2
 end
 
 function Hud:classSelect() return myId and not ovw.players:get(myId).active end

@@ -58,7 +58,15 @@ end
 
 function Map:hud()
   local s = (love.window.getHeight() * .1) / self.canvas:getWidth()
-  love.graphics.draw(self.canvas, love.window:getWidth() / 2 - (self.canvas:getWidth() / 2 * s), love.window.getHeight() * .01, 0, s, s)
+  local x = love.window:getWidth() / 2 - (self.canvas:getWidth() / 2 * s)
+  love.graphics.draw(self.canvas, x, love.window.getHeight() * .01, 0, s, s)
+  love.graphics.setColor(255, 255, 255)
+  local w2 = (self.canvas:getWidth() / 2)
+  w2 = (w2 - (w2 * .3)) * s
+  x = love.window.getWidth() / 2
+  local y = love.window.getHeight() * .01 + (self.canvas:getHeight() * s / 2) - (love.graphics.getFont():getHeight('M') / 2)
+  love.graphics.printf(self.points[purple], x - (w2 * .75), y, w2 * .75, 'left')
+  love.graphics.printf(self.points[orange], x, y, w2 * .75, 'right')
 end
 
 function Map:score(team)
