@@ -26,7 +26,7 @@ function Adrenaline.activate(self, myAdrenaline)
 end
 
 function Adrenaline.update(self, myAdrenaline)
-  myAdrenaline.cooldown = timer.rot(myAdrenaline.cooldown, f.empty)
+  myAdrenaline.cooldown = timer.rot(myAdrenaline.cooldown)
 end
 
 function Adrenaline.canFire(self, myAdrenaline)

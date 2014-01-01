@@ -39,7 +39,7 @@ SMG.activate = function(self, mySMG)
 end
 
 SMG.update = function(self, mySMG)
-  mySMG.timers.shoot = timer.rot(mySMG.timers.shoot, f.empty)
+  mySMG.timers.shoot = timer.rot(mySMG.timers.shoot)
   mySMG.timers.reload = timer.rot(mySMG.timers.reload, function()
     local amt = math.min(SMG.clip, mySMG.ammo)
     mySMG.clip = amt

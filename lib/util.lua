@@ -247,9 +247,7 @@ f.val = function(x) return type(x) == 'function' and x or function() return x en
 -- Timers
 ----------------
 timer = {}
-timer.start = function() _t1 = love.timer.getMicroTime() end
-timer.delta = function() return love.timer.getMicroTime() - _t1 end
-timer.rot = function(val, f) if not val or val == 0 then return val end if val < tickRate then f() return 0 end return val - tickRate end
+timer.rot = function(val, fn) if not val or val == 0 then return val end if val < tickRate then f.exe(fn) return 0 end return val - tickRate end
 
 
 ----------------

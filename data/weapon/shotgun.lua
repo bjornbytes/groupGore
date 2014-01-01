@@ -40,7 +40,7 @@ Shotgun.activate = function(self, myShotgun)
 end
 
 Shotgun.update = function(self, myShotgun)
-  myShotgun.timers.shoot = timer.rot(myShotgun.timers.shoot, f.empty)
+  myShotgun.timers.shoot = timer.rot(myShotgun.timers.shoot)
   myShotgun.timers.reload = timer.rot(myShotgun.timers.reload, function()
     local amt = math.min(Shotgun.clip, myShotgun.ammo)
     myShotgun.clip = amt

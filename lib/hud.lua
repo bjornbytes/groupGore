@@ -18,11 +18,31 @@ function Hud:init()
   self.chatLog = ''
   self.chatTimer = 0
   self.chatOffset = -w(.25) - 4
+
+  self.killfeed = {}
+  self.killfeedAlpha = 0
   
   self.skillBg = love.graphics.newImage('media/graphics/skills.png')
 
   ovw.event:on(evtChat, self, function(self, data)
     self:updateChat(data.message)
+  end)
+
+  ovw.event:on(evtDead, self, function(self, data)
+    while #self.killfeed > 3 do table.remove(self.killfeed, 1) end
+    if #self.killfeed == 3 then
+      for i = 2, #self.killfeed do self.killfeed[i].targetY = self.killfeed[i].targetY + h(.05) + 4 end
+      self.killfeed[1].targetX = w()
+    else
+      for i = 1, #self.killfeed do self.killfeed[i].targetY = self.killfeed[i].targetY + h(.05) + 4 end
+    end
+    local t = table.copy(data)
+    t.x = w()
+    t.y = 4
+    t.targetX = w() - w(.14) - 4
+    t.targetY = 4
+    table.insert(self.killfeed, t)
+    self.killfeedAlpha = 4
   end)
 end
 
@@ -40,9 +60,17 @@ function Hud:update()
     end)
   end
 
-  self.chatTimer = timer.rot(self.chatTimer, f.empty)
+  self.chatTimer = timer.rot(self.chatTimer)
   if self.chatting then self.chatTimer = 2 end
   self.chatOffset = math.lerp(self.chatOffset, (self.chatTimer == 0) and -w(.25) - 4 or 0, .25)
+
+  for i = 1, #self.killfeed do
+    local k = self.killfeed[i]
+    k.x = math.lerp(k.x, k.targetX, .25)
+    k.y = math.lerp(k.y, k.targetY, .25)
+  end
+
+  self.killfeedAlpha = timer.rot(self.killfeedAlpha)
 end
 
 function Hud:draw()
@@ -77,6 +105,11 @@ function Hud:draw()
 
   self:drawPlayerDetails()
   self:drawBuffs()
+  love.graphics.setColor(0, 0, 0, 200 * math.min(self.killfeedAlpha, 1))
+  for i = 1, #self.killfeed do
+    local k = self.killfeed[i]
+    love.graphics.rectangle('fill', k.x, k.y, w(.14), h(.05))
+  end
   
   local p = ovw.players:get(myId)
   if p and p.active then
