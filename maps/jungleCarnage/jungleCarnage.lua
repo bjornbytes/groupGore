@@ -43,6 +43,7 @@ jungleCarnage.on[evtDead] = function(self, data)
     ovw.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
     self.points[purple] = 0
     self.points[orange] = 0
+    self:score()
   end
 end
 

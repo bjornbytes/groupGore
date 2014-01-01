@@ -1,4 +1,26 @@
+----------------
+-- Class
+----------------
+function new(x, ...)
+  local t = extend(x)
+  if t.init then
+    t:init(...)
+  end
+  return t
+end
+
+function extend(x)
+  local t = {}
+  setmetatable(t, {__index = x, __call = new})
+  return t
+end
+
+function class() return extend() end
+
+
+----------------
 -- Math
+----------------
 function math.sign(x) return x > 0 and 1 or x < 0 and -1 or 0 end
 function math.round(x) return math.sign(x) >= 0 and math.floor(x + .5) or math.ceil(x - .5) end
 function math.clamp(x, l, h) return math.min(math.max(x, l), h) end
@@ -17,6 +39,7 @@ function math.hcora(cx, cy, cr, rx, ry, rw, rh) -- Hot circle on rectangle actio
   if cdx <= hw or cdy <= hh then return true end
   return (cdx - hw) ^ 2 + (cdy - hh) ^ 2 <= (cr ^ 2)
 end
+
 function math.hloca(x1, y1, x2, y2, cx, cy, cr) -- Hot line on circle action.
   local dx, dy = (x2 - x1), (y2 - y1)
   local a2 = math.abs(dx * (cy - y1) - dy * (cx - x1))
@@ -27,16 +50,19 @@ function math.hloca(x1, y1, x2, y2, cx, cy, cr) -- Hot line on circle action.
   if t < 0 then return false end
   return l > t - ((cr ^ 2 - h ^ 2) ^ .5)
 end
+
 function math.hcoca(x1, y1, r1, x2, y2, r2) -- Hot circle on circle action.
   local dx, dy, r = x2 - x1, y2 - y1, r1 + r2
   return (dx * dx) + (dy * dy) < r * r
 end
+
 function math.hlola(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action (boolean).
   local function s(x1, y1, x2, y2, x3, y3)
     return (y3 - y1) * (x2 - x1) > (y2 - y1) * (x3 - x1)
   end
   return s(x1, y1, x3, y3, x4, y4) ~= s(x2, y2, x3, y3, x4, y4) and s(x1, y1, x2, y2, x3, y3) ~= s(x1, y1, x2, y2, x4, y4)
 end
+
 function math.hlolax(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action (intersection point).
   local a1, b1, a2, b2 = y2 - y1, x1 - x2, y4 - y3, x3 - x4
   local c1, c2 = a1 * x1 + b1 * y1, a2 * x3 + b2 * y3
@@ -47,6 +73,7 @@ function math.hlolax(x1, y1, x2, y2, x3, y3, x4, y4) -- Hot line on line action 
   if y < math.min(y1, y2) or y > math.max(y1, y2) or y < math.min(y3, y4) or y > math.max(y3, y4) then return false end
   return x, y
 end
+
 function math.hlora(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action (boolean).
   local rxw, ryh = rx + rw, ry + rh
   return math.hlola(x1, y1, x2, y2, rx, ry, rxw, ry)
@@ -54,6 +81,7 @@ function math.hlora(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle act
       or math.hlola(x1, y1, x2, y2, rxw, ry, rxw, ryh)
       or math.hlola(x1, y1, x2, y2, rx, ryh, rxw, ryh)
 end
+
 function math.hlorax(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle action (closest intersection point).
   local ps = {}
   ps[1] = {math.hlolax(x1, y1, x2, y2, rx, ry, rx + rw, ry)}
@@ -66,9 +94,11 @@ function math.hlorax(x1, y1, x2, y2, rx, ry, rw, rh) -- Hot line on rectangle ac
   return unpack(ps[ds[1][2]])
 end
 
+
+----------------
 -- Table
+----------------
 all = pairs
-local all = all
 function table.eq(t1, t2)
   if type(t1) ~= type(t2) then return false end
   if type(t1) ~= 'table' then return t1 == t2 end
@@ -149,11 +179,6 @@ function table.interpolate(t1, t2, z)
     end
   end
   return interp
-end 
-
-function table.deltas(t1, t2)
-  if not t1 or not t2 then return t2 end
-  return table.filter(t2, function(v, k) return v ~= t1[k] end)
 end
 
 function table.count(t)
@@ -181,25 +206,11 @@ function table.print(t, n)
   end
 end
 
+
+----------------
 -- Byte
+----------------
 byte = {}
-function byte.pack(...)
-  local x = 0
-  for i = 1, #arg do
-    if arg[i] > 0 then x = x + (2 ^ (i - 1)) end
-  end
-  return x
-end
-
-function byte.unpack(x)
-  local t = {}
-  while x > 0 do
-    table.insert(t, x % 2)
-    x = math.floor(x / 2)
-  end
-  return t
-end
-
 function byte.extract(x, a, b)
   b = b or a
   x = x % (2 ^ (b + 1))
@@ -212,20 +223,18 @@ end
 function byte.insert(x, y, a, b)
   local res = x
   for i = a, b do
-    res = (byte.extract(y, i - a) == byte.extract(x, i)) and res or (byte.extract(y, i - a) == 1 and res + (2 ^ i) or res - (2 ^ i))
+    local e = byte.extract(y, i - a)
+    if e ~= byte.extract(x, i) then
+      res = (e == 1) and res + (2 ^ i) or res - (2 ^ i)
+    end
   end
   return res
 end
 
-function byte.explode(x, l)
-  local res = {}
-  for i = 0, l - 1 do
-    res[i + 1] = byte.extract(x, i)
-  end
-  return unpack(res)
-end
 
+----------------
 -- Functions
+----------------
 f = {}
 f.empty = function() end
 f.exe = function(x, ...) if x then return x(...) end end
@@ -233,24 +242,17 @@ f.ego = function(f) return function(x, ...) x[f](x, ...) end end
 f.egoexe = function(f) return function(x, ...) if x[f] then x[f](x, ...) end end end
 f.val = function(x) return type(x) == 'function' and x or function() return x end end
 
--- Timing
+
+----------------
+-- Timers
+----------------
 timer = {}
 timer.start = function() _t1 = love.timer.getMicroTime() end
 timer.delta = function() return love.timer.getMicroTime() - _t1 end
 timer.rot = function(val, f) if not val or val == 0 then return val end if val < tickRate then f() return 0 end return val - tickRate end
 
+
+----------------
 -- String
+----------------
 string.capitalize = function(s) s = ' ' .. s return s:gsub('(%s%l)', string.upper) end
-
--- Class
-function class(x, ...)
-  local t = extend(x)
-  if t.init then t:init(...) end
-  return t
-end
-
-function extend(x)
-  local t = {}
-  setmetatable(t, {__index = x, __call = class})
-  return t
-end

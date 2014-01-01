@@ -1,7 +1,7 @@
 Menu = class()
 
 local g = love.graphics
-local d = Draw
+--local d = Draw
 local col = g.setColor
 local function w(x) x = x or 1 return love.window.getWidth() * x end
 local function h(x) x = x or 1 return love.window.getHeight() * x end
@@ -40,6 +40,10 @@ function Menu:load()
   self.targetBoxHeight = self.boxHeight
   self.prevBoxWidth = self.boxWidth
   self.prevBoxHeight = self.boxHeight
+
+  --[[g:align('center', 'middle')
+  g:push(self.boxLeft, self.boxTop)
+  g:layout(1, 4, self.boxWidth, self.boxHeight)]]
 
   love.keyboard.setKeyRepeat(true)
 end

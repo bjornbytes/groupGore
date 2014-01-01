@@ -40,22 +40,30 @@ function Gooey:update()
   table.each(self.interps, function(v) v.current = math.lerp(v.current, v.target, .25) end)
 end
 
-function Gooey:draw()
-  if self.background and self.background.type and self.background:type() == 'Image' then
-    g.draw(self.background, 0, 0, 0, w() / self.background:getWidth(), h() / self.background:getHeight())
+function Gooey:background(obj, mode)
+  if not obj then return end
+
+  if not obj.type then love.graphics.setColor(obj)
+  elseif obj.type() == 'Image' then
+    mode = mode or 'stretch'
+    if mode == 'stretch' then
+      g.draw(self.background, 0, 0, 0, w() / self.background:getWidth(), h() / self.background:getHeight())
+    end
   end
 end
 
 function Gooey:push(x, y)
-  --
+  love.graphics.push()
+  love.graphics.translate(-x, -y)
 end
 
 function Gooey:pop()
-  --
+  love.graphics.pop()
 end
 
 function Gooey:align(h, v)
-  --
+  self.align.h = h
+  self.align.v = v or self.align.v
 end
 
 function Gooey:layout(x, y, w, h)

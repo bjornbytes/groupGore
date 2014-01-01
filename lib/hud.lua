@@ -76,6 +76,7 @@ function Hud:draw()
   g.draw(self.health.glass, 0, 0, 0, s, s)
 
   self:drawPlayerDetails()
+  self:drawBuffs()
   
   local p = ovw.players:get(myId)
   if p and p.active then
@@ -145,22 +146,11 @@ function Hud:connecting()
   g.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
   g.setColor(255, 255, 255)
   local str = 'Connecting...'
-  if tick > 5 / tickRate then
-    str = str .. '\noshit'
-  end
-  if tick > 6 / tickRate then
-    str = str .. ' oshit'
-  end
-  if tick > (6 / tickRate) + 5 then
-    str = str .. ' oshit'
-  end
-  if tick > (6 / tickRate) + 10 then
-    str = str .. ' oshit'
-  end
-  if tick > 10 / tickRate then
-    str = str .. '\n'
-    str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3))
-  end
+  if tick > 5 / tickRate then str = str .. '\noshit' end
+  if tick > 6 / tickRate then str = str .. ' oshit' end
+  if tick > (6 / tickRate) + 5 then str = str .. ' oshit' end
+  if tick > (6 / tickRate) + 10 then str = str .. ' oshit' end
+  if tick > 10 / tickRate then str = str .. '\n' str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3)) end
   g.printf(str, 0, math.floor(love.window.getHeight() / 2 - self.font:getHeight()), love.window.getWidth(), 'center')
 end
 
@@ -190,6 +180,20 @@ function Hud:drawPlayerDetails()
       g.rectangle('line', x0, y0, totalWidth, 10)
     end
   end)
+end
+
+function Hud:drawBuffs()
+  local p = ovw.players:get(myId)
+  if p and p.active then
+    love.graphics.setColor(255, 255, 255)
+    local xx = h(.2) + h(.02)
+    table.each(ovw.buffs.buffs, function(b)
+      if b.target == p.id then
+        g.rectangle('line', xx, h(.02), w(.02), w(.02))
+        xx = xx + w(.025)
+      end
+    end)
+  end
 end
 
 function Hud:drawChat()
