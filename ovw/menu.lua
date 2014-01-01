@@ -20,18 +20,14 @@ function Menu:load()
   self.bg = g.newImage('/media/graphics/menu/bgMenu.jpeg')
   
   self.page = 'login'
-  self.focused = nil
-
-  self.ip = '127.0.0.1'
-  local clip = love.system.getClipboardText()
-  if clip:match('^[0-9]+%.[0-9]+%.[0-9]+%.[0-9]+$') then self.ip = clip end
   
   self.username = love.filesystem.read('username') or 'username'
   self.password = 'password'
-  self.ipDefault = nil
+  self.ip = '127.0.0.1'
   self.usernameDefault = self.username
   self.passwordDefault = self.password
-  
+  self.focused = nil
+
   self.buttons = {}
   
   self.boxWidth = w(.26875)
@@ -46,6 +42,7 @@ function Menu:load()
   g:layout(1, 4, self.boxWidth, self.boxHeight)]]
 
   love.keyboard.setKeyRepeat(true)
+  if self.username ~= 'username' then self:focusInput('password') end
 end
 
 function Menu:unload()
@@ -100,8 +97,7 @@ function Menu:keypressed(key)
             username = self.username
             password = self.password
             self.page = 'main'
-            self:focusInput('ip')
-            
+
             love.filesystem.write('username', username)
           end
         end)
@@ -261,13 +257,13 @@ function Menu:host()
   gorgeous:send(gorgeous.msgServerCreate, {name = username .. '\'s server'}, function(data)
     if data.success then
       Overwatch:add(Server)
-      self:join()
+      self:join('localhost')
     end
   end)
 end
 
-function Menu:join()
-  serverIp = self.ip
+function Menu:join(ip)
+  serverIp = ip
   serverPort = 6061
   Overwatch:remove(self)
   Overwatch:add(Game)
@@ -277,11 +273,7 @@ end
 
 function Menu:play()
   gorgeous:send(gorgeous.msgMatchmake, {}, function(data)
-    if #data.ip > 0 then
-      self.ip = data.ip
-      self:join()
-    else
-      print('No servers running :[')
-    end
+    if #data.ip > 0 then self:join(data.ip)
+    else print('No servers running :[') end
   end)
 end

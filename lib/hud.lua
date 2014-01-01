@@ -10,6 +10,7 @@ function Hud:init()
   self.health.back = love.graphics.newImage('media/graphics/healthBack.png')
   self.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
   self.health.red = love.graphics.newImage('media/graphics/healthRed.png')
+  self.health.val = 0
   
   self.font = love.graphics.newFont('media/fonts/aeroMatics.ttf', h() * .02)
 
@@ -48,14 +49,16 @@ end
 
 function Hud:update()
   if myId and ovw.players:get(myId).active then
+    local p = ovw.players:get(myId)
+    self.health.val = math.lerp(self.health.val, p.health, .25)
     self.health.canvas:clear()
     self.health.canvas:renderTo(function()
       love.graphics.setColor(255, 255, 255, 255)
       love.graphics.draw(self.health.red, 4, 13)
       love.graphics.setBlendMode('subtractive')
       love.graphics.setColor(255, 255, 255, 255)
-      local p = ovw.players:get(myId)
-      love.graphics.arc('fill', 80, 80, 80, 0, 0 - ((2 * math.pi) * (1 - (p.health / p.maxHealth))))
+      local theet = -((2 * math.pi) * (1 - (self.health.val / p.maxHealth)))
+      love.graphics.arc('fill', 80, 80, 80, 0, theet)
       love.graphics.setBlendMode('alpha')
     end)
   end
