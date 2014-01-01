@@ -103,6 +103,8 @@ function Menu:keypressed(key)
         end)
       end
     end
+  elseif self.page == 'main' then
+    if key == 'return' then self:host() end
   end
 end
 

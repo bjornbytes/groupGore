@@ -165,7 +165,16 @@ function Hud:keypressed(key)
     end
     return true
   else
-    if key == 'return' then
+    if self:classSelect() then
+      for i = 1, #data.class do
+        if key == tostring(i) then
+          ovw.net:send(msgClass, {
+            class = i,
+            team = myId > 1 and 1 or 0
+          })
+        end
+      end
+    elseif key == 'return' then
       self.chatting = true
       self.chatMessage = ''
       love.keyboard.setKeyRepeat(true)
