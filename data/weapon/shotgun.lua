@@ -14,7 +14,7 @@ Shotgun.type = 'weapon'
 -- Data
 ----------------
 Shotgun.image = 'media/graphics/shotgun.png'
-Shotgun.damage = 20
+Shotgun.damage = 30
 Shotgun.firerate = .65
 Shotgun.reload = 2
 Shotgun.clip = 4

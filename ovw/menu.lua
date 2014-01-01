@@ -172,12 +172,12 @@ Menu.drawPage['main'] = function(self)
   self:drawBackground()
   self:drawBox()
   self:drawUsername()
-  --[[self:drawIcons()
+  self:drawIcons()
   
   self:drawButton('Play', w(.5), h(.5) - (self.boxHeight / 2) + (.2 * self.boxHeight))
   self:drawButton('Stats', w(.5), h(.5) - (self.boxHeight / 2) + (.4 * self.boxHeight))
   self:drawButton('Options', w(.5), h(.5) - (self.boxHeight / 2) + (.6 * self.boxHeight))
-  self:drawButton('Exit', w(.5), h(.5) - (self.boxHeight / 2) + (.8 * self.boxHeight))]]
+  self:drawButton('Exit', w(.5), h(.5) - (self.boxHeight / 2) + (.8 * self.boxHeight))
 end
 
 function Menu:drawBackground()
@@ -190,9 +190,9 @@ function Menu:drawLogo()
   local x = w(.5) + (self.boxWidth / 2) - g.getFont():getWidth('groupGore')
   local y = h(.5) - (self.boxHeight / 2) - g.getFont():getAscent() - 1
   col(108, 89, 128)
-  g.print('group', x - 20, y)
+  g.print('group', x - 2, y)
   col(140, 107, 84)
-  g.print('Gore', x + g.getFont():getWidth('group') - 20, y)
+  g.print('Gore', x + g.getFont():getWidth('group') - 2, y)
   y = y + 120
 end
 

@@ -38,7 +38,10 @@ Shotgun.activate = function(self)
     if targets[1] then
       local p = ovw.players:get(targets[1].id)
       len = math.distance(self.x, self.y, p.x, p.y)
-      ovw.net:emit(evtDamage, {id = p.id, amount = data.weapon.shotgun.damage, from = self.owner.id, tick = tick})
+      local n, f = self.len * .25, self.len * .75
+      local l, h = data.weapon.shotgun.damage * .4, data.weapon.shotgun.damage * 1
+      local damage = l + ((h - l) * ((f - math.clamp(len, n, f)) / f))
+      ovw.net:emit(evtDamage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
     end
     
     table.insert(self.bullets, {
