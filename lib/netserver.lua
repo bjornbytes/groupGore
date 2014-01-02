@@ -12,7 +12,8 @@ NetServer.signatures[evtSync] = {
   {'y', '12bits'},
   {'angle', '10bits'},
   {'health', '10bits'},
-  {'shield', '10bits'}
+  {'shield', '10bits'},
+  delta = {'x', 'y', 'angle', 'health', 'shield'}
 }
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
