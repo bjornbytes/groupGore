@@ -49,7 +49,6 @@ SMG.draw = function(self)
   local alpha = self.hp / .12
   love.graphics.setColor(255, 255, 255, alpha * 255)
   love.graphics.line(self.x, self.y, self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len)
-  love.graphics.setColor(255, 255, 255, 255)
 end
 
 return SMG

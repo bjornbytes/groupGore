@@ -61,7 +61,6 @@ Shotgun.draw = function(self)
   for _, bullet in pairs(self.bullets) do
     love.graphics.line(self.x, self.y, bullet.endx, bullet.endy)
   end
-  love.graphics.setColor(255, 255, 255, 255)
 end
 
 return Shotgun
