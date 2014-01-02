@@ -23,7 +23,8 @@ function Hud:init()
   self.killfeed = {}
   self.killfeedAlpha = 0
 
-  self.slotFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .0175)
+  self.slotSmallFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .018)
+  self.slotFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .025)
   self.slotFrameLeft = {}
   self.slotFrameRight = {}
   self.slotWidth = {}
@@ -40,7 +41,7 @@ function Hud:init()
     end)
 
     self.slotFrameRight[i]:renderTo(function()
-      g.setColor(0, 0, 0)
+      g.setColor(30, 30, 30)
       g.arc('fill', 0, w(.02), w(.02), -math.pi * .5, math.pi * .5)
       g.setBlendMode('subtractive')
       g.arc('fill', 0, w(.02), w(.012), -math.pi * .5, math.pi * .5)
@@ -97,7 +98,7 @@ function Hud:update()
   self.killfeedAlpha = timer.rot(self.killfeedAlpha)
   for i = 1, 5 do
     self.slotWidth[i] = math.lerp(self.slotWidth[i], self.targetSlotWidth[i], .25)
-    if p and p.active and (p.input.weapon == i or p.input.skill == i) then self.targetSlotWidth[i] = w(.08)
+    if p and p.active and (p.input.weapon == i or p.input.skill == i) then self.targetSlotWidth[i] = w(.1)
     else self.targetSlotWidth[i] = 0 end
   end
 end
@@ -250,23 +251,32 @@ function Hud:drawHealthbar()
 end
 
 function Hud:drawSlots()
-  g.setFont(self.slotFont)
-  for i = 1, 5 do
-    local y = h(.3) + ((i - 1) * w(.045))
-    g.setColor(0, 0, 0, 200)
-    g.rectangle('fill', w(.03), y - w(.02) + w(.004), self.slotWidth[i], w(.04) - w(.008))
-    g.setColor(120, 0, 0, 255)
-    g.circle('fill', w(.03), y, w(.0175))
-    g.setColor(140, 140, 140)
-    g.line(w(.03), y - w(.02) + w(.004), w(.03) + self.slotWidth[i], y - w(.02) + w(.004))
-    g.line(w(.03), y + w(.02) - w(.004), w(.03) + self.slotWidth[i], y + w(.02) - w(.004))
-    g.setColor(255, 255, 255)
-    g.draw(self.slotFrameLeft[i], w(.03) - w(.02), y - w(.02))
-    g.draw(self.slotFrameRight[i], w(.03) + self.slotWidth[i], y - w(.02))
-    g.setColor(255, 255, 255)
-    Gooey.printCenter(i, w(.03) - w(.02) + w(.004), y)
+  local p = ovw.players:get(myId)
+  if p and p.active then
+    for i = 1, 5 do
+      local y = h(.3) + ((i - 1) * w(.045))
+      g.setColor(0, 0, 0, 200)
+      g.rectangle('fill', w(.03), y - w(.02) + w(.004), self.slotWidth[i], w(.04) - w(.008))
+      g.arc('fill', w(.03) + self.slotWidth[i], y - w(.02) + w(.004) + w(.016), w(.0175), math.pi * -.5, math.pi * .5)
+      g.setColor(255, 255, 255)
+      if self.slotWidth[i] > 0 then
+        g.setFont(self.slotFont)
+        g.print(p.slots[i].name, w(.03) + (w(.025) * (self.slotWidth[i] / w(.1))), y - (g.getFont():getHeight() / 2), 0, self.slotWidth[i] / w(.1), 1)
+      end
+      g.setColor(120, 0, 0, 255)
+      g.circle('fill', w(.03), y, w(.0175))
+      g.setColor(140, 140, 140)
+      g.line(w(.03), y - w(.02) + w(.004), w(.03) + self.slotWidth[i], y - w(.02) + w(.004))
+      g.line(w(.03), y + w(.02) - w(.004), w(.03) + self.slotWidth[i], y + w(.02) - w(.004))
+      g.setColor(255, 255, 255)
+      g.draw(self.slotFrameLeft[i], w(.03) - w(.02), y - w(.02))
+      g.draw(self.slotFrameRight[i], w(.03) + self.slotWidth[i], y - w(.02))
+      g.setColor(255, 255, 255)
+      g.setFont(self.slotSmallFont)
+      Gooey.printCenter(i, w(.03) - w(.02) + w(.004), y)
+    end
+    g.setFont(self.font)
   end
-  g.setFont(self.font)
 end
 
 function Hud:drawBuffs()
