@@ -42,8 +42,6 @@ function Players:init()
   
   ovw.event:on(evtDead, self, function(self, data)
     local p = self:get(data.id)
-    print('Assists:')
-    table.print(data.assists)
     p:die()
   end)
   

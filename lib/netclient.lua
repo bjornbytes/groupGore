@@ -21,7 +21,6 @@ NetClient.receive[msgJoin] = function(self, event)
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
-  table.print(event.data)
   tick = event.data.tick
   --ovw.map:load(event.data.map)
   for i = 1, #event.data.players do
@@ -39,12 +38,7 @@ function NetClient:init()
   self.messageBuffer = {}
 
   ovw.event:on(evtJoin, self, function(self, data)
-    print('Client: ' .. data.username .. ' has joined!')
     ovw.players:get(data.id).username = data.username
-  end)
-  
-  ovw.event:on(evtLeave, self, function(self, data)
-    print('Client: Player ' .. data.id .. ' has left!')
   end)
   
   ovw.event:on(evtSync, self, function(self, data)

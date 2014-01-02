@@ -23,7 +23,6 @@ function Rage.activate(self, myRage)
   myRage.amount = 0
   myRage.active = false
   ovw.event:on(evtDamage, self, function(self, data)
-    table.print(data)
     if data.from == self.id and ovw.players:get(data.id).team ~= self.team then
       myRage.amount = math.min(myRage.amount + data.amount, myRage.max)
     end

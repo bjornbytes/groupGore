@@ -6,13 +6,13 @@ local g = love.graphics
 
 function Hud:init()
   self.health = {}
-  self.health.canvas = love.graphics.newCanvas(160, 160)
-  self.health.back = love.graphics.newImage('media/graphics/healthBack.png')
-  self.health.glass = love.graphics.newImage('media/graphics/healthGlass.png')
-  self.health.red = love.graphics.newImage('media/graphics/healthRed.png')
+  self.health.canvas = g.newCanvas(160, 160)
+  self.health.back = g.newImage('media/graphics/healthBack.png')
+  self.health.glass = g.newImage('media/graphics/healthGlass.png')
+  self.health.red = g.newImage('media/graphics/healthRed.png')
   self.health.val = 0
   
-  self.font = love.graphics.newFont('media/fonts/aeroMatics.ttf', h() * .02)
+  self.font = g.newFont('media/fonts/aeroMatics.ttf', h() * .02)
 
   self.chatting = false
   self.chatMessage = ''
@@ -22,8 +22,34 @@ function Hud:init()
 
   self.killfeed = {}
   self.killfeedAlpha = 0
-  
-  self.skillBg = love.graphics.newImage('media/graphics/skills.png')
+
+  self.slotFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .0175)
+  self.slotFrameLeft = {}
+  self.slotFrameRight = {}
+  self.slotWidth = {}
+  self.targetSlotWidth = {}
+  for i = 1, 5 do
+    self.slotFrameLeft[i] = g.newCanvas(w(.02), w(.04))
+    self.slotFrameRight[i] = g.newCanvas(w(.02), w(.04))
+    self.slotFrameLeft[i]:renderTo(function()
+      g.setColor(0, 0, 0)
+      g.arc('fill', w(.02), w(.02), w(.02), math.pi * .5, math.pi * 1.5)
+      g.setBlendMode('subtractive')
+      g.arc('fill', w(.02), w(.02), w(.012), math.pi * .5, math.pi * 1.5)
+      g.setBlendMode('alpha')
+    end)
+
+    self.slotFrameRight[i]:renderTo(function()
+      g.setColor(0, 0, 0)
+      g.arc('fill', 0, w(.02), w(.02), -math.pi * .5, math.pi * .5)
+      g.setBlendMode('subtractive')
+      g.arc('fill', 0, w(.02), w(.012), -math.pi * .5, math.pi * .5)
+      g.setBlendMode('alpha')
+    end)
+
+    self.slotWidth[i] = 0
+    self.targetSlotWidth[i] = 0
+  end
 
   ovw.event:on(evtChat, self, function(self, data)
     self:updateChat(data.message)
@@ -31,15 +57,11 @@ function Hud:init()
 
   ovw.event:on(evtDead, self, function(self, data)
     while #self.killfeed > 3 do table.remove(self.killfeed, 1) end
-    if #self.killfeed == 3 then
-      for i = 2, #self.killfeed do self.killfeed[i].targetY = self.killfeed[i].targetY + h(.05) + 4 end
-      self.killfeed[1].targetX = w()
-    else
-      for i = 1, #self.killfeed do self.killfeed[i].targetY = self.killfeed[i].targetY + h(.05) + 4 end
-    end
+    if #self.killfeed == 3 then self.killfeed[1].targetX = w() end
+    for i = 1, #self.killfeed do self.killfeed[i].targetY = self.killfeed[i].targetY + h(.05) + 4 end
     local t = table.copy(data)
     t.x = w()
-    t.y = 4
+    t.y = -h(.05)
     t.targetX = w() - w(.14) - 4
     t.targetY = 4
     table.insert(self.killfeed, t)
@@ -48,18 +70,17 @@ function Hud:init()
 end
 
 function Hud:update()
-  if myId and ovw.players:get(myId).active then
-    local p = ovw.players:get(myId)
+  local p = ovw.players:get(myId)
+  if p and p.active then
     self.health.val = math.lerp(self.health.val, p.health, .25)
     self.health.canvas:clear()
     self.health.canvas:renderTo(function()
-      love.graphics.setColor(255, 255, 255, 255)
-      love.graphics.draw(self.health.red, 4, 13)
-      love.graphics.setBlendMode('subtractive')
-      love.graphics.setColor(255, 255, 255, 255)
-      local theet = -((2 * math.pi) * (1 - (self.health.val / p.maxHealth)))
-      love.graphics.arc('fill', 80, 80, 80, 0, theet)
-      love.graphics.setBlendMode('alpha')
+      g.setColor(255, 255, 255, 255)
+      g.draw(self.health.red, 4, 13)
+      g.setBlendMode('subtractive')
+      g.setColor(255, 255, 255, 255)
+      g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (self.health.val / p.maxHealth))))
+      g.setBlendMode('alpha')
     end)
   end
 
@@ -74,6 +95,11 @@ function Hud:update()
   end
 
   self.killfeedAlpha = timer.rot(self.killfeedAlpha)
+  for i = 1, 5 do
+    self.slotWidth[i] = math.lerp(self.slotWidth[i], self.targetSlotWidth[i], .25)
+    if p and p.active and (p.input.weapon == i or p.input.skill == i) then self.targetSlotWidth[i] = w(.08)
+    else self.targetSlotWidth[i] = 0 end
+  end
 end
 
 function Hud:draw()
@@ -81,50 +107,16 @@ function Hud:draw()
   g.setFont(self.font)
   
   if not myId then return self:connecting() end
-  
-  if self:classSelect() then
-    g.setFont(self.font)
-    g.setColor(0, 0, 0, 140)
-    Gooey.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
-    g.setColor(255, 255, 255, 40)
-    Gooey.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
-    
-    g.setColor(255, 255, 255, 180)
-    Gooey.printCenter('Choose Class:', w(.5), h(.12))
-    local x = w(.5) - (w(.9) / 2) + w(.05)
-    local y = h(.5) - (h(.82) / 2) + w(.05)
-    for i = 1, #data.class do
-      g.rectangle('line', x, y, w(.06), w(.06))
-      x = x + w(.08)
-      if i % 4 == 0 then x = w(.5) - (w(.9) / 2) + w(.05) y = y + w(.08) end
-    end
-    return
-  end
-  
-  local s = math.min(1, h(.2) / 160)
-  g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
-  g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
-  g.draw(self.health.glass, 0, 0, 0, s, s)
+  if self:classSelect() then return self:drawClassSelect() end
 
   self:drawPlayerDetails()
+  self:drawHealthbar()
+  self:drawSlots()
   self:drawBuffs()
-  love.graphics.setColor(0, 0, 0, 200 * math.min(self.killfeedAlpha, 1))
-  for i = 1, #self.killfeed do
-    local k = self.killfeed[i]
-    love.graphics.rectangle('fill', k.x, k.y, w(.14), h(.05))
-  end
-  
-  local p = ovw.players:get(myId)
-  if p and p.active then
-    g.setColor(255, 255, 255, 255)
-    g.setFont(self.font)
-    Gooey.printCenter(math.ceil(p.health), h(.1), h(.1))
-  end
-
-  if ovw.map.hud then ovw.map:hud() end
-  
+  self:drawKillfeed()
   self:drawChat()
   self:drawDebug()
+  f.exe(ovw.map.hud, ovw.map)
 end
 
 function Hud:mousereleased(x, y, button)
@@ -199,11 +191,29 @@ function Hud:connecting()
   g.printf(str, 0, math.floor(love.window.getHeight() / 2 - self.font:getHeight()), love.window.getWidth(), 'center')
 end
 
+function Hud:drawClassSelect()
+  g.setFont(self.font)
+  g.setColor(0, 0, 0, 140)
+  Gooey.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
+  g.setColor(255, 255, 255, 40)
+  Gooey.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
+  
+  g.setColor(255, 255, 255, 180)
+  Gooey.printCenter('Choose Class:', w(.5), h(.12))
+  local x = w(.5) - (w(.9) / 2) + w(.05)
+  local y = h(.5) - (h(.82) / 2) + w(.05)
+  for i = 1, #data.class do
+    g.rectangle('line', x, y, w(.06), w(.06))
+    x = x + w(.08)
+    if i % 4 == 0 then x = w(.5) - (w(.9) / 2) + w(.05) y = y + w(.08) end
+  end
+end
+
 function Hud:drawPlayerDetails()
-  love.graphics.setFont(self.font)
+  g.setFont(self.font)
   ovw.players:with(ovw.players.active, function(p)
-    if p.team == purple then love.graphics.setColor(190, 160, 220, p.visible * 255)
-    elseif p.team == orange then love.graphics.setColor(240, 160, 140, p.visible * 255) end
+    if p.team == purple then g.setColor(190, 160, 220, p.visible * 255)
+    elseif p.team == orange then g.setColor(240, 160, 140, p.visible * 255) end
     Gooey.printCenter(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
 
     if not p.ded then
@@ -215,22 +225,54 @@ function Hud:drawPlayerDetails()
       g.setColor(0, 0, 0, 128 * p.visible) -- Dark background
       g.rectangle('fill', x0, y0, totalWidth, 10)
       
-      g.setColor(100, 0, 0, 128 * p.visible) -- Health
-      g.rectangle('fill', x0, y0, healthWidth, 10)
+      g.setColor(200, 0, 0, 128 * p.visible) -- Health
+      g.rectangle('fill', x0 + .5, y0 + .5, healthWidth - 1, 10 - 1)
       
       g.setColor(220, 220, 220, 128 * p.visible) -- Shield
       g.rectangle('fill', x0 + healthWidth, y0, shieldWidth, 10)
       
-      g.setColor(100, 0, 0, 255 * p.visible) -- Frame
+      g.setColor(150, 0, 0, 255 * p.visible) -- Frame
       g.rectangle('line', x0, y0, totalWidth, 10)
     end
   end)
 end
 
+function Hud:drawHealthbar()
+  local p = ovw.players:get(myId)
+  if p and p.active then
+    local s = math.min(1, h(.2) / 160)
+    g.setColor(255, 255, 255)
+    g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
+    g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
+    g.draw(self.health.glass, 0, 0, 0, s, s)
+    Gooey.printCenter(math.ceil(p.health), h(.1), h(.1))
+  end
+end
+
+function Hud:drawSlots()
+  g.setFont(self.slotFont)
+  for i = 1, 5 do
+    local y = h(.3) + ((i - 1) * w(.045))
+    g.setColor(0, 0, 0, 200)
+    g.rectangle('fill', w(.03), y - w(.02) + w(.004), self.slotWidth[i], w(.04) - w(.008))
+    g.setColor(120, 0, 0, 255)
+    g.circle('fill', w(.03), y, w(.0175))
+    g.setColor(140, 140, 140)
+    g.line(w(.03), y - w(.02) + w(.004), w(.03) + self.slotWidth[i], y - w(.02) + w(.004))
+    g.line(w(.03), y + w(.02) - w(.004), w(.03) + self.slotWidth[i], y + w(.02) - w(.004))
+    g.setColor(255, 255, 255)
+    g.draw(self.slotFrameLeft[i], w(.03) - w(.02), y - w(.02))
+    g.draw(self.slotFrameRight[i], w(.03) + self.slotWidth[i], y - w(.02))
+    g.setColor(255, 255, 255)
+    Gooey.printCenter(i, w(.03) - w(.02) + w(.004), y)
+  end
+  g.setFont(self.font)
+end
+
 function Hud:drawBuffs()
   local p = ovw.players:get(myId)
   if p and p.active then
-    love.graphics.setColor(255, 255, 255)
+    g.setColor(255, 255, 255)
     local xx = h(.2) + h(.02)
     table.each(ovw.buffs.buffs, function(b)
       if b.target == p.id then
@@ -238,6 +280,26 @@ function Hud:drawBuffs()
         xx = xx + w(.025)
       end
     end)
+  end
+end
+
+function Hud:drawKillfeed()
+  local alpha = math.min(self.killfeedAlpha, 1)
+  for i = 1, #self.killfeed do
+    local k = self.killfeed[i]
+    g.setColor(0, 0, 0, 200 * alpha)
+    g.rectangle('fill', k.x, k.y, w(.14), h(.05))
+
+    local yy = h(.025) - (g.getFont():getHeight() / 2)
+    local killer = ovw.players:get(k.kill)
+    if killer.team == purple then g.setColor(190, 160, 220, 255 * alpha)
+    else g.setColor(240, 160, 140, 255 * alpha) end
+    g.print(killer.username, k.x + 8, k.y + yy)
+
+    local victim = ovw.players:get(k.id)
+    if victim.team == purple then g.setColor(190, 160, 220, 255 * alpha)
+    else g.setColor(240, 160, 140, 255 * alpha) end
+    g.print(victim.username, k.x + w(.14) - g.getFont():getWidth(victim.username) - 9, k.y + yy)
   end
 end
 

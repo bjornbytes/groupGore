@@ -30,7 +30,6 @@ NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
 NetServer.receive[msgJoin] = function(self, event)
-  print('Server: ' .. event.data.username .. ' has joined!')
   ovw.players:get(event.pid).username = event.data.username
   self:send(msgJoin, event.peer, {id = event.pid})
   self:emit(evtJoin, {id = event.pid, username = event.data.username})
@@ -39,7 +38,6 @@ NetServer.receive[msgJoin] = function(self, event)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
-  print('Server: ' .. ovw.players:get(event.pid).username .. ' has left!')
   self:emit(evtChat, {message = '{white}' .. ovw.players:get(event.pid).username .. ' has left!'})
   self:emit(evtLeave, {id = event.pid, reason = 'left'})
   self.peerToPlayer[event.peer] = nil
@@ -122,7 +120,6 @@ function NetServer:snapshot(peer)
   for id = 1, 16 do
     local p = ovw.players:get(id)
     if #p.username > 0 and id ~= self.peerToPlayer[peer] then
-      print('thing: ' .. (p.active and p.class.id or 0))
       table.insert(players, {
         id = id,
         username = p.username,
