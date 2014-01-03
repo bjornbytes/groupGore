@@ -12,6 +12,7 @@ function Game:load()
   self.buffs = Buffs()
   self.particles = Particles()
   self.map = Map()
+  self.editor = Editor()
   self.hud = Hud()
 end
 
@@ -26,6 +27,7 @@ function Game:update()
   self.spells:update()
   self.particles:update()
   self.map:update()
+  self.editor:update()
   self.view:update()
   self.hud:update()
 end
@@ -44,7 +46,8 @@ function Game:quit()
 end
 
 function Game:mousepressed(...)
-  self.players:mousepressed(...)
+  if self.editor:mousepressed(...) then return
+  elseif self.players:mousepressed(...) then return end
 end
 
 function Game:mousereleased(...)

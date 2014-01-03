@@ -183,6 +183,8 @@ function Hud:keypressed(key)
       self.chatting = true
       self.chatMessage = ''
       love.keyboard.setKeyRepeat(true)
+    elseif key == '`' then
+      ovw.editor.active = not ovw.editor.active
     end
   end
 end

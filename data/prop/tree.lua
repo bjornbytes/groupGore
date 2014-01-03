@@ -19,4 +19,8 @@ Tree.draw = function(self)
 	love.graphics.draw(tree, x, y, 0, .5, .5, tree:getWidth() / 2, tree:getHeight() / 2)
 end
 
+Tree.boundingBox = function(self)
+  return self.x - 32, self.y - 32, 64, 64
+end
+
 return Tree

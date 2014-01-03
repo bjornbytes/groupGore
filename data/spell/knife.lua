@@ -5,6 +5,9 @@ Knife.hp = .1
 Knife.radius = 10
 
 Knife.activate = function(self)
+  self.x = self.owner.x
+  self.y = self.owner.y
+  
   -- Deal damage.
   -- ovw.spells:deactivate(self)
 end

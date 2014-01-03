@@ -92,4 +92,8 @@ Wall.draw = function(self)
   love.graphics.draw(self.top, 0, 0)
 end
 
+Wall.boundingBox = function(self)
+  return self.x, self.y, self.w, self.h
+end
+
 return Wall
