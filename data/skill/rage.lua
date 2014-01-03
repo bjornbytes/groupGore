@@ -49,4 +49,8 @@ function Rage.fire(self, myRage)
   end
 end
 
+function Rage.value(myRage)
+  return myRage.amount / myRage.max
+end
+
 return Rage

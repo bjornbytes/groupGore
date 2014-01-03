@@ -19,6 +19,16 @@ Bloodlust.activate = function(self, myBloodlust)
       ovw.buffs:add(gg.buff.bloodlust, self.id, self.id)
     end
   end)
+
+  myBloodlust.time = 0
+end
+
+Bloodlust.update = function(self, myBloodlust)
+  myBloodlust.time = timer.rot(myBloodlust.time)
+end
+
+Bloodlust.value = function(myBloodlust)
+  return myBloodlust.time / data.buff.bloodlust.duration
 end
 
 return Bloodlust

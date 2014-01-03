@@ -68,4 +68,8 @@ Shotgun.draw = function(self, myShotgun)
   love.graphics.draw(myShotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, myShotgun.tipx, myShotgun.tipy)
 end
 
+Shotgun.value = function(myShotgun)
+  return myShotgun.timers.reload > 0 and 1 - (myShotgun.timers.reload / Shotgun.reload) or myShotgun.clip / Shotgun.clip
+end
+
 return Shotgun

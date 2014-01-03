@@ -41,7 +41,7 @@ function Hud:init()
     end)
 
     self.slotFrameRight[i]:renderTo(function()
-      g.setColor(30, 30, 30)
+      g.setColor(90, 0, 0)
       g.arc('fill', 0, w(.02), w(.02), -math.pi * .5, math.pi * .5)
       g.setBlendMode('subtractive')
       g.arc('fill', 0, w(.02), w(.012), -math.pi * .5, math.pi * .5)
@@ -83,6 +83,18 @@ function Hud:update()
       g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (self.health.val / p.maxHealth))))
       g.setBlendMode('alpha')
     end)
+
+    for i = 1, 5 do
+      self.slotFrameRight[i]:clear()
+      self.slotFrameRight[i]:renderTo(function()
+        g.setColor(90, 0, 0)
+        local val = p.slots[i].value and p.slots[i].value(p.slots[i]) or 1
+        g.arc('fill', 0, w(.02), w(.02), math.pi * .5, (math.pi * .5) - (val * math.pi))
+        g.setBlendMode('subtractive')
+        g.arc('fill', 0, w(.02), w(.012), math.pi * .5, (math.pi * .5) - (val * math.pi))
+        g.setBlendMode('alpha')
+      end)
+    end
   end
 
   self.chatTimer = timer.rot(self.chatTimer)

@@ -15,6 +15,7 @@ Roll.type = 'skill'
 ----------------
 Roll.target = 'none'
 Roll.cooldown = 5
+Roll.chargeCooldown = .5
 Roll.charges = 2
 
 
@@ -28,7 +29,9 @@ end
 
 function Roll.update(self, myRoll)
   myRoll.cooldown = timer.rot(myRoll.cooldown, function()
-    myRoll.charges = Roll.charges
+    if myRoll.charges == 0 then
+      myRoll.charges = Roll.charges
+    end
   end)
 end
 
@@ -39,7 +42,8 @@ end
 function Roll.fire(self, myRoll)
   ovw.spells:activate(self.id, data.spell.roll)
   myRoll.charges = myRoll.charges - 1
-  if myRoll.charges == 0 then myRoll.cooldown = Roll.cooldown end
+  if myRoll.charges == 0 then myRoll.cooldown = Roll.cooldown
+  else myRoll.cooldown = Roll.chargeCooldown end
 end
 
 return Roll
