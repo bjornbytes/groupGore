@@ -11,8 +11,9 @@ function Hud:init()
   self.health.glass = g.newImage('media/graphics/healthGlass.png')
   self.health.red = g.newImage('media/graphics/healthRed.png')
   self.health.val = 0
+  self.health.prevVal = 0
   
-  self.font = g.newFont('media/fonts/aeroMatics.ttf', h() * .02)
+  self.font = g.newFont('media/fonts/aeromatics.ttf', h() * .02)
 
   self.chatting = false
   self.chatMessage = ''
@@ -23,8 +24,8 @@ function Hud:init()
   self.killfeed = {}
   self.killfeedAlpha = 0
 
-  self.slotSmallFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .018)
-  self.slotFont = g.newFont('media/fonts/aeroMatics.ttf', h() * .025)
+  self.slotSmallFont = g.newFont('media/fonts/aeromatics.ttf', h() * .018)
+  self.slotFont = g.newFont('media/fonts/aeromatics.ttf', h() * .025)
   self.slotFrameLeft = {}
   self.slotFrameRight = {}
   self.slotWidth = {}
@@ -73,6 +74,7 @@ end
 function Hud:update()
   local p = ovw.players:get(myId)
   if p and p.active then
+    self.health.prevVal = self.health.val
     self.health.val = math.lerp(self.health.val, p.health, .25)
     self.health.canvas:clear()
     self.health.canvas:renderTo(function()
@@ -80,7 +82,7 @@ function Hud:update()
       g.draw(self.health.red, 4, 13)
       g.setBlendMode('subtractive')
       g.setColor(255, 255, 255, 255)
-      g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (self.health.val / p.maxHealth))))
+      g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (math.lerp(self.health.prevVal, self.health.val, tickDelta / tickRate) / p.maxHealth))))
       g.setBlendMode('alpha')
     end)
 
