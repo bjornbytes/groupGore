@@ -53,19 +53,31 @@ function PlayerServer:update()
     end
   end
   
-  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy or math.round((math.deg(self.angle) + 360) % 360) ~= prevangle or math.round(self.health) ~= prevhp or tick - self.lastHurt <= 1 or tick % 100 == 0 then
+  local data, flag = {}, false
+  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy then
+    data.x = math.round(self.x)
+    data.y = math.round(self.y)
+    flag = true
+  end
+
+  if math.round((math.deg(self.angle) + 360) % 360) ~= prevangle then
+    data.angle = math.round((math.deg(self.angle) + 360) % 360)
+    flag = true
+  end
+  
+  if math.round(self.health) ~= prevhp  or tick - self.lastHurt <= 1 then
     local shield = 0
     table.each(self.shields, function(s) shield = shield + s.health end)
-    ovw.net:emit(evtSync, {
-      id = self.id,
-      tick = tick,
-      ack = self.ack,
-      x = math.round(self.x),
-      y = math.round(self.y),
-      angle = math.round((math.deg(self.angle) + 360) % 360),
-      health = math.round(self.health),
-      shield = math.round(shield)
-    })
+    data.health = math.round(self.health)
+    data.shield = math.round(shield)
+    flag = true
+  end
+  
+  if flag then
+    data.id = self.id
+    data.tick = tick
+    data.ack = self.ack
+    ovw.net:emit(evtSync, data)
   end
 end
 

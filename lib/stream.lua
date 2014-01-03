@@ -130,28 +130,38 @@ function Stream:readBits(n)
 end
 
 function Stream:pack(data, signature)
+	local keys
 	if signature.delta then
+		keys = {}
 		for _, key in ipairs(signature.delta) do
 			if type(key) == 'table' then
 				local has = 0
 				for i = 1, #key do
-					if data[key[i]] ~= nil then has = has + 1 end
+					if data[key[i]] ~= nil then
+						keys[key[i]] = true
+						has = has + 1
+					else
+						keys[key[i]] = false
+					end
 				end
 				if has == 0 then self:write(0, '1bit')
 				elseif has == #key then self:write(1, '1bit')
 				else error('Only part of message delta group "' .. table.concat(key, ', ') .. '" was provided.') end
 			else
 				self:write(data[key] ~= nil and 1 or 0, '1bit')
+				keys[key] = data[key] ~= nil and true or false
 			end
 		end
 	end
 
 	for _, sig in ipairs(signature) do
-		if type(sig[2]) == 'table' then
-			self:write(#data[sig[1]], '4bits')
-			for i = 1, #data[sig[1]] do self:pack(data[sig[1]][i], sig[2]) end
-		else
-			self:write(data[sig[1]], sig[2])
+		if not keys or keys[sig[1]] ~= false then
+			if type(sig[2]) == 'table' then
+				self:write(#data[sig[1]], '4bits')
+				for i = 1, #data[sig[1]] do self:pack(data[sig[1]][i], sig[2]) end
+			else
+				self:write(data[sig[1]], sig[2])
+			end
 		end
 	end
 end

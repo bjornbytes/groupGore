@@ -98,6 +98,6 @@ function love.run()
     love.draw()
     love.graphics.present()
     
-    love.timer.sleep(.0125)
+    love.timer.sleep(.006)
   end
 end

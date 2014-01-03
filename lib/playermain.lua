@@ -117,40 +117,42 @@ function PlayerMain:trace(data)
   data.id = nil
   data.angle = nil
 
-  local state = ovw.players.history[self.id][t]
-  if not state then return end
-  
-  if math.distance(data.x, data.y, state.x, state.y) > 64 then
-    for i = t, tick do
-      local dst = (i == tick) and self or ovw.players.history[self.id][i]
-      table.merge(data, dst)
-    end
-    self.debtX = 0
-    self.debtY = 0
-    return
-  else
-    if self.lastWasd <= ack then
-      self.debtX = (data.x - state.x)
-      self.debtY = (data.y - state.y)
-    end
-    table.merge(data, state)
-  end
-  
-  local idx = math.max(ack, tick - (1 / tickRate) + 1)
-  local state = table.copy(ovw.players.history[self.id][idx])
-  if not state then return end
-  
-  for i = idx + 1, tick do
-    local dst = (i == tick) and self or ovw.players.history[self.id][i]
-    if dst then
-      if dst ~= self then
-        state.input = dst.input
-        state:move()
+  if data.x and data.y then
+    local state = ovw.players.history[self.id][t]
+    if not state then return end
+    
+    if math.distance(data.x, data.y, state.x, state.y) > 64 then
+      for i = t, tick do
+        local dst = (i == tick) and self or ovw.players.history[self.id][i]
+        table.merge(data, dst)
       end
-      table.merge({x = state.x, y = state.y}, dst)
+      self.debtX = 0
+      self.debtY = 0
+      return
+    else
+      if self.lastWasd <= ack then
+        self.debtX = (data.x - state.x)
+        self.debtY = (data.y - state.y)
+      end
+      table.merge(data, state)
+    end
+    
+    local idx = math.max(ack, tick - (1 / tickRate) + 1)
+    local state = table.copy(ovw.players.history[self.id][idx])
+    if not state then return end
+    
+    for i = idx + 1, tick do
+      local dst = (i == tick) and self or ovw.players.history[self.id][i]
+      if dst then
+        if dst ~= self then
+          state.input = dst.input
+          state:move()
+        end
+        table.merge({x = state.x, y = state.y}, dst)
+      end
     end
   end
   
-  self.health = data.health
-  self.shield = data.shield
+  self.health = data.health or self.health
+  self.shield = data.shield or self.shield
 end
