@@ -26,6 +26,9 @@ function PlayerServer:activate()
   self.ack = tick
   self.lastHurt = tick
 
+  self.auxMoveX = 0
+  self.auxMoveY = 0
+
   Player.activate(self)
 end
 

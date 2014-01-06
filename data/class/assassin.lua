@@ -29,8 +29,8 @@ Assassin.slots = {}
 
 Assassin.slots[1] = data.weapon.knife
 Assassin.slots[2] = data.skill.roll
-Assassin.slots[3] = data.skill.bloodlust
-Assassin.slots[4] = data.skill.bloodlust
+Assassin.slots[3] = data.skill.backstab
+Assassin.slots[4] = data.skill.nimble
 Assassin.slots[5] = data.skill.shadowform
 
 return Assassin

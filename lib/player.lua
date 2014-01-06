@@ -59,6 +59,11 @@ function Player:draw()
   elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
   love.graphics.draw(self.class.sprites.body, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
   love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
+  if self.xxx then
+    love.graphics.setColor(255, 255, 255, 128)
+    love.graphics.draw(self.class.sprites.body, self.xxx, self.yyy, self.angle, 1, 1, self.anchor.x, self.anchor.y)
+    love.graphics.draw(self.class.sprites.head, self.xxx, self.yyy, self.angle, 1, 1, self.anchor.x, self.anchor.y)
+  end
   if self.input then
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
     f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
@@ -82,28 +87,33 @@ function Player:move()
     self.speed = 0
   end
   
-  if self.speed == 0 then return end
+  if self.speed == 0 and self.auxMoveX == 0 and self.auxMoveY == 0 then return end
   
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
 
+  local newx, newy = self.x, self.y
   if dx or dy then
     if not dx then dx = dy end
     if not dy then dy = dx end
     if dx == right and dy == down then dx = 0 end
     
     local dir = (dx + dy) / 2
-    local newx, newy = self.x + math.cos(dir) * (self.speed * tickRate), self.y + math.sin(dir) * (self.speed * tickRate)
-    
-    self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
-    self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
-    ovw.collision:refreshPlayer(self)
-    
-    if self.x < 0 then self.x = 0
-    elseif self.x > ovw.map.width then self.x = ovw.map.width end
-    if self.y < 0 then self.y = 0
-    elseif self.y > ovw.map.height then self.y = ovw.map.height end
+    newx, newy = newx + math.cos(dir) * (self.speed * tickRate), newy + math.sin(dir) * (self.speed * tickRate)
   end
+
+  if self.auxMoveX ~= 0 or self.auxMoveY ~= 0 then
+    newx, newy = newx + self.auxMoveX, newy + self.auxMoveY
+  end
+
+  self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
+  self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
+  ovw.collision:refreshPlayer(self)
+  
+  if self.x < 0 then self.x = 0
+  elseif self.x > ovw.map.width then self.x = ovw.map.width end
+  if self.y < 0 then self.y = 0
+  elseif self.y > ovw.map.height then self.y = ovw.map.height end
 end
 
 function Player:turn()

@@ -25,6 +25,12 @@ function PlayerMain:activate()
   self.debtX = 0
   self.debtY = 0
   self.debtSmooth = 16
+
+  self.auxMoveX = 0
+  self.auxMoveY = 0
+
+  self.xxx = 0
+  self.yyy = 0
   
   Player.activate(self)
 end
@@ -118,6 +124,7 @@ function PlayerMain:trace(data)
   data.angle = nil
 
   if data.x and data.y then
+    self.xxx, self.yyy = data.x, data.y
     local state = ovw.players.history[self.id][t]
     if not state then return end
     
@@ -146,6 +153,8 @@ function PlayerMain:trace(data)
       if dst then
         if dst ~= self then
           state.input = dst.input
+          state.auxMoveX = dst.auxMoveX
+          state.auxMoveY = dst.auxMoveY
           state:move()
         end
         table.merge({x = state.x, y = state.y}, dst)
