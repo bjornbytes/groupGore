@@ -82,7 +82,7 @@ function Player:move()
     self.speed = 0
   end
   
-  if self.speed == 0 and self.auxMoveX == 0 and self.auxMoveY == 0 then return end
+  if self.speed == 0 and #self.auxVex == 0 then return end
   
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end

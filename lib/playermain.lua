@@ -24,7 +24,7 @@ function PlayerMain:activate()
   
   self.debtX = 0
   self.debtY = 0
-  self.debtSmooth = 16
+  self.debtSmooth = 10
 
   self.auxVex = {}
 
@@ -124,7 +124,7 @@ function PlayerMain:trace(data)
     if not state then return end
     
     if math.distance(data.x, data.y, state.x, state.y) > 64 then
-      for i = t, tick do
+      for i = t - 2, tick do
         local dst = (i == tick) and self or ovw.players.history[self.id][i]
         table.merge(data, dst)
       end
@@ -148,6 +148,7 @@ function PlayerMain:trace(data)
       if dst then
         if dst ~= self then
           state.input = dst.input
+          state.auxVex = dst.auxVex
           state:move()
         end
         table.merge({x = state.x, y = state.y}, dst)
