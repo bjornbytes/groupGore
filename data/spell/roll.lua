@@ -6,7 +6,7 @@ Roll.distance = 100
 
 Roll.activate = function(self)
   self.hp = Roll.hp
-  self.angle = self.owner.angle + (math.pi / 2)
+  self.angle = self.owner.angle
   table.insert(self.owner.auxVex, {speed = self.distance / self.hp, angle = self.angle, t = self.hp})
 end
 

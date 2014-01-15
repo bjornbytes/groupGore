@@ -16,7 +16,7 @@ Shotgun.activate = function(self)
   self.bullets = {}
   
   for i = self.owner.angle - data.weapon.shotgun.spread, self.owner.angle + data.weapon.shotgun.spread + (.001), (2 * data.weapon.shotgun.spread / (data.weapon.shotgun.count - 1)) do
-    local ang, len = i + (math.pi / 2), self.len
+    local ang, len = i, self.len
     
     local x2, y2 = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
     local endx, endy = ovw.collision:checkLineWall(self.x, self.y, x2, y2, true)

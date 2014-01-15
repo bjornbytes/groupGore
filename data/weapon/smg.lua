@@ -20,10 +20,10 @@ SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 240
 SMG.spread = .03
-SMG.dx = 10
-SMG.dy = 84
-SMG.tipx = 4
-SMG.tipy = 70
+SMG.dx = 84
+SMG.dy = -10
+SMG.tipx = 70
+SMG.tipy = 4
 
 
 ----------------

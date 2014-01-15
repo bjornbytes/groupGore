@@ -14,8 +14,8 @@ Assassin.size = 18
 -- Media
 ----------------
 Assassin.anchor = {}
-Assassin.anchor.x = 55
-Assassin.anchor.y = 35
+Assassin.anchor.x = 38
+Assassin.anchor.y = 65
 
 Assassin.sprites = {}
 Assassin.sprites.head = 'media/graphics/bruteHead.png'

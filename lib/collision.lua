@@ -55,7 +55,7 @@ function Collision:checkPointWall(px, py)
 end
 
 function Collision:checkLineWall(x1, y1, x2, y2, intersect)
-  local l, dis, dir = 0, math.distance(x1, y1, x2, y2), math.direction(x1, y1, x2, y2) + (math.pi / 2)
+  local l, dis, dir = 0, math.distance(x1, y1, x2, y2), math.direction(x1, y1, x2, y2)
   local f = intersect and math.hlorax or math.hlora
   repeat
     local ex, ey = x1 + math.cos(dir) * l, y1 + math.sin(dir) * l

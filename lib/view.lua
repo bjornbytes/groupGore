@@ -40,7 +40,7 @@ function View:update()
   self.prevy = self.y
   local object = ovw.players:get(myId)
   if object and not object.ded then
-    local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY()) + math.pi / 2
+    local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY())
     dis = dis / 4
     self.x = math.lerp(self.x, (object.x + math.cos(dir) * dis) - (self.w / 2), .5)
     self.y = math.lerp(self.y, (object.y + math.sin(dir) * dis) - (self.h / 2), .5)

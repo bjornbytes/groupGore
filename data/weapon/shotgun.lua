@@ -21,10 +21,10 @@ Shotgun.clip = 4
 Shotgun.ammo = 16
 Shotgun.spread = .06
 Shotgun.count = 4
-Shotgun.dx = 8
-Shotgun.dy = 92
-Shotgun.tipx = 4
-Shotgun.tipy = 77
+Shotgun.dx = 92
+Shotgun.dy = -8
+Shotgun.tipx = 77
+Shotgun.tipy = 4
 
 
 ----------------
