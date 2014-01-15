@@ -59,11 +59,6 @@ function Player:draw()
   elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
   love.graphics.draw(self.class.sprites.body, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
   love.graphics.draw(self.class.sprites.head, self.x, self.y, self.angle, 1, 1, self.anchor.x, self.anchor.y)
-  if self.xxx then
-    love.graphics.setColor(255, 255, 255, 128)
-    love.graphics.draw(self.class.sprites.body, self.xxx, self.yyy, self.angle, 1, 1, self.anchor.x, self.anchor.y)
-    love.graphics.draw(self.class.sprites.head, self.xxx, self.yyy, self.angle, 1, 1, self.anchor.x, self.anchor.y)
-  end
   if self.input then
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
     f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
@@ -102,9 +97,13 @@ function Player:move()
     newx, newy = newx + math.cos(dir) * (self.speed * tickRate), newy + math.sin(dir) * (self.speed * tickRate)
   end
 
-  if self.auxMoveX ~= 0 or self.auxMoveY ~= 0 then
-    newx, newy = newx + self.auxMoveX, newy + self.auxMoveY
+  for i = 1, #self.auxVex do
+    newx = newx + math.dx(self.auxVex[i].speed * tickRate, self.auxVex[i].angle)
+    newy = newy + math.dy(self.auxVex[i].speed * tickRate, self.auxVex[i].angle)
+    self.auxVex[i].t = self.auxVex[i].t - tickRate
   end
+
+  self.auxVex = table.filter(self.auxVex, function(v) return v.t > 0 end)
 
   self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
   self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
