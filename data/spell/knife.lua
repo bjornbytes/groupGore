@@ -5,9 +5,8 @@ Knife.hp = .1
 Knife.radius = 10
 
 Knife.activate = function(self)
-	self.angle = self.owner.angle
-  self.x = self.owner.x + math.dx(20, self.angle)
-  self.y = self.owner.y + math.dy(20, self.angle)
+  self.x = self.owner.x + math.dx(30, self.owner.angle)
+  self.y = self.owner.y + math.dy(30, self.owner.angle)
   
   -- Deal damage.
   -- ovw.spells:deactivate(self)

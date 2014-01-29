@@ -262,7 +262,7 @@ function Hud:drawHealthbar()
     g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
     g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
     g.draw(self.health.glass, 0, 0, 0, s, s)
-    Gooey.printCenter(math.ceil(p.health), h(.1), h(.1))
+    Gooey.printCenter(math.ceil(p.health), (4 * s) + (s * self.health.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.health.canvas:getHeight() / 2))
   end
 end
 

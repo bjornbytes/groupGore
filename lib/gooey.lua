@@ -10,6 +10,7 @@ getmetatable(Gooey).__index = love.graphics
 function Gooey:init()
   self.align = {h = 'left', v = 'top'}
   self.fonts = {}
+  self.images = {}
   self.inputs = {}
   self.focused = nil
 end
@@ -75,6 +76,11 @@ function Gooey:font(name, size)
   end
 
   self.setFont(self.fonts[name][size])
+end
+
+function Gooey:image(name)
+  self.images[name] = self.images[name] or love.graphics.newImage('media/graphics/' .. name .. '.png')
+  return self.images[name]
 end
 
 function Gooey:addInput(name, default)
