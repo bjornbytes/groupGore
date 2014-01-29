@@ -82,11 +82,11 @@ function Collision:resolveCircleWall(x, y, r, step)
   wall = {x = wall[1], y = wall[2], w = wall[3], h = wall[4]}
   if x < wall.x then
     if y < wall.y then
-      local d = math.direction(x, y, wall.x, wall.y) + math.pi * .5
+      local d = math.direction(x, y, wall.x, wall.y)
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
     elseif y > wall.y + wall.h then
-      local d = math.direction(x, y, wall.x, wall.y + wall.h) + math.pi * .5
+      local d = math.direction(x, y, wall.x, wall.y + wall.h)
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
     else
@@ -96,11 +96,11 @@ function Collision:resolveCircleWall(x, y, r, step)
     end
   elseif x > wall.x + wall.w then
     if y < wall.y then
-      local d = math.direction(x, y, wall.x + wall.w, wall.y) + math.pi * .5
+      local d = math.direction(x, y, wall.x + wall.w, wall.y)
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
     elseif y > wall.y + wall.h then
-      local d = math.direction(x, y, wall.x + wall.w, wall.y + wall.h) + math.pi * .5
+      local d = math.direction(x, y, wall.x + wall.w, wall.y + wall.h)
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
     else
@@ -114,7 +114,7 @@ function Collision:resolveCircleWall(x, y, r, step)
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
     else
-      local d = 1.5 * math.pi
+      local d = math.pi * 1.5
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
     end
