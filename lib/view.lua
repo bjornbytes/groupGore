@@ -13,8 +13,8 @@ function View:init()
   table.sort(modes, function(a, b) return a.width > b.width end)
   while modes[#modes].width ~= modes[1].width do table.remove(modes, #modes) end
   table.sort(modes, function(a, b) return a.width * a.height > b.width * b.height end)
-  love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true, vsync = true})
-  -- love.window.setMode(800, 600, {fullscreen = false, borderless = false, vsync = true, resizable = true})
+  -- love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true, vsync = false})
+  love.window.setMode(1600, 900, {fullscreen = false, borderless = false, vsync = false, resizable = true})
   
   self.x = 0
   self.prevx = 0
@@ -23,6 +23,7 @@ function View:init()
   self.w = 800
   self.h = 450
   self.scale = love.window.getWidth() / self.w
+  self.prevscale = self.scale
   self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
   self.toDraw = {}
 end
@@ -38,16 +39,19 @@ end
 function View:update()
   self.prevx = self.x
   self.prevy = self.y
-  local object = ovw.players:get(myId)
-  if object and not object.ded then
-    local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY())
-    dis = dis / 4
-    self.x = math.lerp(self.x, (object.x + math.cos(dir) * dis) - (self.w / 2), .5)
-    self.y = math.lerp(self.y, (object.y + math.sin(dir) * dis) - (self.h / 2), .5)
-    if object.x - self.x > (self.w * .80) then self.x = object.x - (self.w * .80) end
-    if object.y - self.y > (self.h * .80) then self.y = object.y - (self.h * .80) end
-    if (self.x + self.w) - object.x > (self.w * .80) then self.x = object.x + (self.w * .80) - self.w end
-    if (self.y + self.h) - object.y > (self.h * .80) then self.y = object.y + (self.h * .80) - self.h end
+  self.prevscale = self.scale
+  if ovw.players then
+    local object = ovw.players:get(myId)
+    if object and not object.ded then
+      local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY())
+      dis = dis / 4
+      self.x = math.lerp(self.x, (object.x + math.cos(dir) * dis) - (self.w / 2), .5)
+      self.y = math.lerp(self.y, (object.y + math.sin(dir) * dis) - (self.h / 2), .5)
+      if object.x - self.x > (self.w * .80) then self.x = object.x - (self.w * .80) end
+      if object.y - self.y > (self.h * .80) then self.y = object.y - (self.h * .80) end
+      if (self.x + self.w) - object.x > (self.w * .80) then self.x = object.x + (self.w * .80) - self.w end
+      if (self.y + self.h) - object.y > (self.h * .80) then self.y = object.y + (self.h * .80) - self.h end
+    end
   end
   
   if self.x < 0 then self.x = 0 end
@@ -61,8 +65,8 @@ function View:push()
   love.graphics.translate(0, self.margin)
   love.graphics.push()
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-  love.graphics.scale(self.scale)
-  love.graphics.translate(-math.floor(x + .5), -math.floor(y + .5))
+  love.graphics.scale(math.lerp(self.prevscale, self.scale, tickDelta / tickRate))
+  love.graphics.translate(-x, -y)
 end
 
 
@@ -75,7 +79,7 @@ function View:draw()
 
   for k, v in ipairs(self.toDraw) do v:draw() end
   self:pop()
-  ovw.hud:draw()
+  if ovw.hud then ovw.hud:draw() end
   self:letterbox()
 end
 

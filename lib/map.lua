@@ -24,7 +24,7 @@ function Map:init(name)
   end)
 
   table.each(map.on, function(f, e)
-    ovw.event:on(e, self, f)
+    if ovw.event then ovw.event:on(e, self, f) end
   end)
 
   self.canvas = love.graphics.newCanvas(300, 300)

@@ -82,7 +82,12 @@ function Menu:keypressed(key)
       end
     end
   elseif self.page == 'main' then
-    if key == 'return' then self:host() end
+    if key == 'return' then self:host()
+    elseif key == 'e' then
+      Overwatch:remove(self)
+      Overwatch:add(Editor)
+      love.keyboard.setKeyRepeat(false)
+    end
   end
 end
 

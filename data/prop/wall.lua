@@ -3,7 +3,7 @@ Wall.name = 'Wall'
 Wall.code = 'wall'
 
 Wall.activate = function(self, map)
-  ovw.collision:addWall(self.x, self.y, self.w, self.h)
+  if ovw.collision then ovw.collision:addWall(self.x, self.y, self.w, self.h) end
 
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},
@@ -92,8 +92,25 @@ Wall.draw = function(self)
   love.graphics.draw(self.top, 0, 0)
 end
 
-Wall.boundingBox = function(self)
+Wall.editor = {}
+Wall.editor.boundingBox = function(self)
   return self.x, self.y, self.w, self.h
+end
+
+Wall.editor.dragTo = function(self, x, y)
+  self.x, self.y = x, y
+  
+  self.north:setVertex(1, self.x, self.y, 0, 0)
+  self.north:setVertex(2, self.x + self.w, self.y, 1, 0)
+
+  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
+  self.south:setVertex(4, self.x, self.y + self.h, 0, 1)
+
+  self.east:setVertex(2, self.x + self.w, self.y, 1, 0)
+  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
+
+  self.west:setVertex(1, self.x, self.y, 0, 0)
+  self.west:setVertex(4, self.x, self.y + self.h, 0, 1)
 end
 
 return Wall

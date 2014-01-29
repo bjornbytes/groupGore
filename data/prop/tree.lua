@@ -19,8 +19,15 @@ Tree.draw = function(self)
 	love.graphics.draw(tree, x, y, 0, .5, .5, tree:getWidth() / 2, tree:getHeight() / 2)
 end
 
-Tree.boundingBox = function(self)
-  return self.x - 32, self.y - 32, 64, 64
+Tree.editor = {}
+Tree.editor.boundingBox = function(self)
+  local tree = ovw.map.graphics.tree
+  local w, h = tree:getWidth() / 2, tree:getHeight() / 2
+  return self.x - (w / 2), self.y - (h / 2), w, h
+end
+
+Tree.editor.dragTo = function(self, x, y)
+  self.x, self.y = x, y
 end
 
 return Tree

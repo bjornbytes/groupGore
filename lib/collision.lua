@@ -9,11 +9,13 @@ Collision.playerGrid = {}
 Collision.players = {}
 
 function Collision:addWall(...)
+  local rect = {...}
   local x, y, w, h = ...
   for i = math.floor(x / size), math.floor((x + w) / size) - 1 do
     self.grid[i] = self.grid[i] or {}
     for j = math.floor(y / size), math.floor((y + h) / size) - 1 do
-      self.grid[i][j] = {...}
+      self.grid[i][j] = self.grid[i][j] or {}
+      table.insert(self.grid[i][j], rect)
     end
   end
 end
@@ -26,8 +28,9 @@ function Collision:getTests(x, y)
     for i = -1, 1 do
       for j = -1, 1 do
         if self.grid[x + i] and self.grid[x + i][y + j] then
-          if not table.has(self.testCache[x][y], self.grid[x + i][y + j], true) then
-            table.insert(self.testCache[x][y], self.grid[x + i][y + j])
+          table.print(self.grid[x + i][y + j])
+          for k = 1, #self.grid[x + i][y + j] do
+            table.insert(self.testCache[x][y], self.grid[x + i][y + j][k])
           end
         end
       end
