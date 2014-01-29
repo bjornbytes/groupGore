@@ -65,8 +65,7 @@ end
 function Editor:update()
   if self.dragging then
     local x, y = self.dragging.x, self.dragging.y
-    local tx = math.round((mouseX() - self.dragOffsetX) / self.gridSize) * self.gridSize
-    local ty = math.round((mouseY() - self.dragOffsetY) / self.gridSize) * self.gridSize
+    local tx, ty = self:snap(mouseX() - self.dragOffsetX, mouseY() - self.dragOffsetY)
     if x ~= tx or y ~= ty then
       invoke(self.dragging, 'dragTo', tx, ty)
     end
@@ -74,8 +73,7 @@ function Editor:update()
   
   if self.scaling then
     local mx, my = mouseX(), mouseY()
-    local winc = math.round((mx - self.scaleOriginX) / self.gridSize) * self.gridSize
-    local hinc = math.round((my - self.scaleOriginY) / self.gridSize) * self.gridSize
+    local winc, hinc = self:snap(mx - self.scaleOriginX, my - self.scaleOriginY)
     if true then
       local ox, oy = self.scaleAnchor[1] + (self.scaleAnchor[3] / 2), self.scaleAnchor[2] + (self.scaleAnchor[4] / 2)
       invoke(self.scaling, 'scale', self.scaleHandleX, self.scaleHandleY, winc, hinc, unpack(self.scaleAnchor))
@@ -160,4 +158,9 @@ end
 function Editor:mousereleased(x, y, button)
   self.dragging = nil
   self.scaling = nil
+end
+
+function Editor:snap(x, y)
+  if love.keyboard.isDown('lalt') then return x, y end
+  return math.round(x / self.gridSize) * self.gridSize, math.round(y / self.gridSize) * self.gridSize
 end
