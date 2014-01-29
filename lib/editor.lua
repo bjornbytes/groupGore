@@ -14,13 +14,18 @@ function Editor:load()
   self.yVel = 0
   self.maxSpeed = 20
   
-  self.scale = self.view.scale
-  self.scaleTargetX = 0
-  self.scaleTargetY = 0
+  self.targetScale = self.view.scale
   
   self.dragging = nil
   self.dragOffsetX = 0
   self.dragOffsetY = 0
+  
+  self.scaling = nil
+  self.scaleAnchor = nil
+  self.scaleOriginX = 0
+  self.scaleOriginY = 0
+  self.scaleHandleX = 0
+  self.scaleHandleY = 0
   
   self.grid = {
     depth = -10000,
@@ -36,8 +41,20 @@ function Editor:load()
       end
 
       table.each(self.map.props, function(p)
-        love.graphics.setColor(0, 255, 255, self.dragging == p and 200 or 50)
-        love.graphics.rectangle('line', invoke(p, 'boundingBox'))
+        love.graphics.setColor(0, 255, 255, (self.dragging == p or self.scaling == p) and 200 or 50)
+        if self.scaling then
+          local x, y, w, h = invoke(p, 'boundingBox')
+          love.graphics.line(x, y, x + 16, y)
+          love.graphics.line(x, y, x, y + 16)
+          love.graphics.line(x + w - 16, y, x + w, y)
+          love.graphics.line(x + w, y, x + w, y + 16)
+          love.graphics.line(x, y + h - 16, x, y + h)
+          love.graphics.line(x, y + h, x + 16, y + h)
+          love.graphics.line(x + w - 16, y + h, x + w, y + h)
+          love.graphics.line(x + w, y + h - 16, x + w, y + h)
+        else
+          love.graphics.rectangle('line', invoke(p, 'boundingBox'))
+        end
       end)
     end
   }
@@ -55,6 +72,16 @@ function Editor:update()
     end
   end
   
+  if self.scaling then
+    local mx, my = mouseX(), mouseY()
+    local winc = math.round((mx - self.scaleOriginX) / self.gridSize) * self.gridSize
+    local hinc = math.round((my - self.scaleOriginY) / self.gridSize) * self.gridSize
+    if true then
+      local ox, oy = self.scaleAnchor[1] + (self.scaleAnchor[3] / 2), self.scaleAnchor[2] + (self.scaleAnchor[4] / 2)
+      invoke(self.scaling, 'scale', self.scaleHandleX, self.scaleHandleY, winc, hinc, unpack(self.scaleAnchor))
+    end
+  end
+    
   if love.keyboard.isDown('w') then
     self.yVel = math.lerp(self.yVel, -self.maxSpeed, .25)
   elseif love.keyboard.isDown('s') then
@@ -73,12 +100,12 @@ function Editor:update()
     
   self.view:update()
   
-  self.view.x = self.view.x + (self.xVel / (self.scale / 1.5))
-  self.view.y = self.view.y + (self.yVel / (self.scale / 1.5))
+  self.view.x = self.view.x + (self.xVel / (self.targetScale / 1.5))
+  self.view.y = self.view.y + (self.yVel / (self.targetScale / 1.5))
   
   local prevw, prevh = self.view.w, self.view.h
   local xf, yf = love.mouse.getX() / love.window.getWidth(), love.mouse.getY() / love.window.getHeight()
-  self.view.scale = math.round(math.lerp(self.view.scale, self.scale, .25) / .01) * .01
+  self.view.scale = math.round(math.lerp(self.view.scale, self.targetScale, .25) / .01) * .01
   self.view.w = love.window.getWidth() / self.view.scale
   self.view.h = love.window.getHeight() / self.view.scale
   self.view.x = self.view.x + (prevw - self.view.w) * xf
@@ -96,6 +123,11 @@ function Editor:draw()
   self.view:draw()
 end
 
+function Editor:keypressed(key)
+  if key == '[' then self.gridSize = math.max(self.gridSize / 2, 8)
+  elseif key == ']' then self.gridSize = math.min(self.gridSize * 2, 256) end
+end
+
 function Editor:mousepressed(x, y, button)
   if button == 'l' then
     table.each(self.map.props, function(p)
@@ -106,13 +138,26 @@ function Editor:mousepressed(x, y, button)
         self.dragOffsetY = mouseY() - y
       end
     end)
+  elseif button == 'r' then
+    table.each(self.map.props, function(p)
+      local x, y, w, h = invoke(p, 'boundingBox')
+      if math.inside(mouseX(), mouseY(), x, y, w, h) then
+        self.scaling = p
+        self.scaleHandleX = mouseX() > x + (w / 2) and 1 or -1
+        self.scaleHandleY = mouseY() > y + (h / 2) and 1 or -1
+        self.scaleOriginX = mouseX()
+        self.scaleOriginY = mouseY()
+        self.scaleAnchor = {x, y, w, h}
+      end
+    end)
   elseif button == 'wu' then
-    self.scale = math.min(self.scale + .2, 8)
+    self.targetScale = math.min(self.targetScale + .2, 8)
   elseif button == 'wd' then
-    self.scale = math.max(self.scale - .2, 1)
+    self.targetScale = math.max(self.targetScale - .2, 1)
   end
 end
 
 function Editor:mousereleased(x, y, button)
   self.dragging = nil
+  self.scaling = nil
 end

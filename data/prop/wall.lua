@@ -113,4 +113,26 @@ Wall.editor.dragTo = function(self, x, y)
   self.west:setVertex(4, self.x, self.y + self.h, 0, 1)
 end
 
+Wall.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
+  self.x, self.y = ox, oy
+  self.w, self.h = ow, oh
+  
+  self.w = self.w + (ew * math.sign(hx))
+  self.h = self.h + (eh * math.sign(hy))
+  if hx < 0 then self.x = self.x + ew end
+  if hy < 0 then self.y = self.y + eh end
+  
+  self.north:setVertex(1, self.x, self.y, 0, 0)
+  self.north:setVertex(2, self.x + self.w, self.y, 1, 0)
+
+  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
+  self.south:setVertex(4, self.x, self.y + self.h, 0, 1)
+
+  self.east:setVertex(2, self.x + self.w, self.y, 1, 0)
+  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
+
+  self.west:setVertex(1, self.x, self.y, 0, 0)
+  self.west:setVertex(4, self.x, self.y + self.h, 0, 1)
+end
+
 return Wall
