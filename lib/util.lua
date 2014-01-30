@@ -241,6 +241,7 @@ f.exe = function(x, ...) if x then return x(...) end end
 f.ego = function(f) return function(x, ...) x[f](x, ...) end end
 f.egoexe = function(f) return function(x, ...) if x[f] then x[f](x, ...) end end end
 f.val = function(x) return type(x) == 'function' and x or function() return x end end
+f.cur = function(fn, x) return function(y) return fn(x, y) end end
 
 
 ----------------
