@@ -198,6 +198,14 @@ function Editor:keypressed(key)
       if self.findPropStr == self.findPropPrev then self.findPropStr = ''
       else self.findPropStr = self.findPropStr:sub(1, -2) end
     end,
+    ['delete'] = function()
+      table.each(ovw.map.props, function(p)
+        if math.inside(mouseX(), mouseY(), invoke(p, 'boundingBox')) then
+          ovw.view:unregister(p)
+          ovw.map.props = table.filter(ovw.map.props, function(prop) return p ~= prop end)
+        end
+      end)
+    end,
     ['['] = function() self.gridSize = math.max(self.gridSize / 2, 8) end,
     [']'] = function() self.gridSize = math.min(self.gridSize * 2, 256) end
   }

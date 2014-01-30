@@ -33,7 +33,9 @@ function View:register(x)
 end
 
 function View:unregister(x)
-  self.toDraw = table.filter(self.toDraw, function(v) return v ~= x end)
+  for i = 1, #self.toDraw do
+    if self.toDraw[i] == x then table.remove(self.toDraw, i) return end
+  end
 end
 
 function View:update()
