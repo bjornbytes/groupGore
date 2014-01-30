@@ -8,6 +8,13 @@ function Editor:load()
   
   self.gridSize = 32
   self.findProp = false
+  self.findPropX = 0
+  self.findPropY = 0
+  self.findPropDstX = 0
+  self.findPropDstY = 0
+  self.findPropStr = ''
+  self.findPropPrev = 'wall'
+  self.findPropPrevPrev = 'wall'
   
   self.x = 0
   self.y = 0
@@ -61,6 +68,14 @@ function Editor:load()
   }
   
   self.view:register(self.grid)
+
+  self.gooey = Gooey()
+
+  self.props = {}
+  for _, v in ipairs(data.prop) do
+    table.insert(self.props, v.code)
+  end
+  table.sort(self.props)
 end
 
 function Editor:update()
@@ -80,27 +95,29 @@ function Editor:update()
       invoke(self.scaling, 'scale', self.scaleHandleX, self.scaleHandleY, winc, hinc, unpack(self.scaleAnchor))
     end
   end
-    
-  if love.keyboard.isDown('w') then
-    self.yVel = math.lerp(self.yVel, -self.maxSpeed, .25)
-  elseif love.keyboard.isDown('s') then
-    self.yVel = math.lerp(self.yVel, self.maxSpeed, .25)
-  else
-    self.yVel = math.lerp(self.yVel, 0, .1)
-  end
   
-  if love.keyboard.isDown('a') then
-    self.xVel = math.lerp(self.xVel, -self.maxSpeed, .25)
-  elseif love.keyboard.isDown('d') then
-    self.xVel = math.lerp(self.xVel, self.maxSpeed, .25)
-  else
-    self.xVel = math.lerp(self.xVel, 0, .1)
-  end
-    
   self.view:update()
+
+  if not self.findProp then
+    if love.keyboard.isDown('w') then
+      self.yVel = math.lerp(self.yVel, -self.maxSpeed, .25)
+    elseif love.keyboard.isDown('s') then
+      self.yVel = math.lerp(self.yVel, self.maxSpeed, .25)
+    else
+      self.yVel = math.lerp(self.yVel, 0, .1)
+    end
+    
+    if love.keyboard.isDown('a') then
+      self.xVel = math.lerp(self.xVel, -self.maxSpeed, .25)
+    elseif love.keyboard.isDown('d') then
+      self.xVel = math.lerp(self.xVel, self.maxSpeed, .25)
+    else
+      self.xVel = math.lerp(self.xVel, 0, .1)
+    end
   
-  self.view.x = self.view.x + (self.xVel / (self.targetScale / 1.5))
-  self.view.y = self.view.y + (self.yVel / (self.targetScale / 1.5))
+    self.view.x = self.view.x + (self.xVel / (self.targetScale / 1.5))
+    self.view.y = self.view.y + (self.yVel / (self.targetScale / 1.5))
+  end
   
   local prevw, prevh = self.view.w, self.view.h
   local xf, yf = love.mouse.getX() / love.window.getWidth(), love.mouse.getY() / love.window.getHeight()
@@ -120,30 +137,79 @@ end
 
 function Editor:draw()
   self.view:draw()
+
+  if self.findProp then
+    self.gooey:font('aeroMatics', 2)
+    love.graphics.setColor(0, 0, 0, 160)
+    local w = math.max(160, love.graphics.getFont():getWidth(self.findPropStr))
+    local h = (love.graphics.getFont():getHeight() + 4) * (#self.props + 1) + 6
+    local x, y = self.findPropX + 10, self.findPropY + 10
+    if x + w > love.window.getWidth() then x = love.window.getWidth() - w end
+    if y + h > love.window.getHeight() then y = love.window.getHeight() - h end
+    love.graphics.rectangle('fill', x, y, w, h)
+
+    love.graphics.setColor(255, 255, 255, self.findPropStr == self.findPropPrev and 100 or 200)
+    love.graphics.print(self.findPropStr, x + 4, y + 2)
+
+    love.graphics.setColor(255, 255, 255, 80)
+    local yy = y + love.graphics.getFont():getHeight() + 6
+    love.graphics.line(x, yy, x + w, yy)
+    yy = yy + 6
+    for i = 1, #self.props do
+      local p = self.props[i]
+      love.graphics.print(p, x + 4, yy)
+      yy = yy + love.graphics.getFont():getHeight() + 2
+    end
+  end
 end
 
 function Editor:keypressed(key)
   local handlers = {
     ['escape'] = function() love.event.push('quit') end,
     ['return'] = function()
-      if not self.findProp then self.findProp = true return end
+      if not self.findProp then
+        self.findProp = true
+        self.findPropX = love.mouse.getX()
+        self.findPropY = love.mouse.getY()
+        self.findPropDstX, self.findPropDstY = self:snap(mouseX(), mouseY())
+        self.findPropStr = self.findPropPrev
 
-      table.insert(ovw.map.props, ovw.map:initProp({
-        kind = 'wall',
-        x = mouseX(),
-        y = mouseY(),
-        w = 64,
-        h = 64,
-        z = 64
-      }))
+        self.xVel = 0
+        self.yVel = 0
+        return
+      end
+
+      if data.prop[self.findPropStr] then
+        table.insert(ovw.map.props, ovw.map:initProp({
+          kind = self.findPropStr,
+          x = self.findPropDstX,
+          y = self.findPropDstY,
+          w = 64,
+          h = 64,
+          z = 64
+        }))
+        self.findPropPrevPrev = self.findPropStr
+      end
 
       self.findProp = false
+      self.findPropPrev = self.findPropPrevPrev
+    end,
+    ['backspace'] = function()
+      if self.findPropStr == self.findPropPrev then self.findPropStr = ''
+      else self.findPropStr = self.findPropStr:sub(1, -2) end
     end,
     ['['] = function() self.gridSize = math.max(self.gridSize / 2, 8) end,
     [']'] = function() self.gridSize = math.min(self.gridSize * 2, 256) end
   }
 
   return f.exe(handlers[key])
+end
+
+function Editor:textinput(char)
+  if self.findProp then
+    if self.findPropStr == self.findPropPrev then self.findPropStr = '' self.findPropPrev = '' end
+    self.findPropStr = self.findPropStr .. char
+  end
 end
 
 function Editor:mousepressed(x, y, button)
