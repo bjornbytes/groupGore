@@ -125,7 +125,7 @@ Menu.drawPage['login'] = function(self)
   g.background(self.bg)
   self:drawBox()
 
-  g:font('aeromatics', 2.5)
+  g:font('aeroMatics', 2.5)
   if gorgeous then  
     g:drawInput('username', w2, h(.5) - (self.boxHeight / 2) + (.33 * self.boxHeight))
     g:drawInput('password', w2, h(.5) - (self.boxHeight / 2) + (.67 * self.boxHeight))
@@ -171,7 +171,7 @@ end
 
 function Menu:drawUsername()
   local g = self.gooey
-  g:font('aeromatics', 2.5)
+  g:font('aeroMatics', 2.5)
   g.setColor(255, 255, 255, 255)
   local x = w(.5) - (self.boxWidth / 2)
   local y = h(.5) - (self.boxHeight / 2) - g.getFont():getAscent() - 1
@@ -190,7 +190,7 @@ end
 
 function Menu:drawButton(str, x, y)
   local g = self.gooey
-  g:font('aeromatics', 4)
+  g:font('aeroMatics', 4)
   g.setColor(100, 0, 0, 50)
   g.rectangleCenter('fill', x, y, w(.15), h(.08))
   g.setColor(200, 50, 50, 150)
