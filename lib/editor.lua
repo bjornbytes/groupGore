@@ -7,6 +7,7 @@ function Editor:load()
   self.map = Map()
   
   self.gridSize = 32
+  self.findProp = false
   
   self.x = 0
   self.y = 0
@@ -122,8 +123,27 @@ function Editor:draw()
 end
 
 function Editor:keypressed(key)
-  if key == '[' then self.gridSize = math.max(self.gridSize / 2, 8)
-  elseif key == ']' then self.gridSize = math.min(self.gridSize * 2, 256) end
+  local handlers = {
+    ['escape'] = function() love.event.push('quit') end,
+    ['return'] = function()
+      if not self.findProp then self.findProp = true return end
+
+      table.insert(ovw.map.props, ovw.map:initProp({
+        kind = 'wall',
+        x = mouseX(),
+        y = mouseY(),
+        w = 64,
+        h = 64,
+        z = 64
+      }))
+
+      self.findProp = false
+    end,
+    ['['] = function() self.gridSize = math.max(self.gridSize / 2, 8) end,
+    [']'] = function() self.gridSize = math.min(self.gridSize * 2, 256) end
+  }
+
+  return f.exe(handlers[key])
 end
 
 function Editor:mousepressed(x, y, button)

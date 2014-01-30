@@ -16,12 +16,7 @@ function Map:init(name)
 
   table.merge(map, self)
 
-  self.props = table.map(map.props, function(prop)
-    setmetatable(prop, {__index = data.prop[prop.kind]})
-    f.exe(prop.activate, prop, self)
-    if ovw.view then ovw.view:register(prop) end
-    return prop
-  end)
+  self.props = table.map(map.props, f.cur(self.initProp, self))
 
   table.each(map.on, function(f, e)
     if ovw.event then ovw.event:on(e, self, f) end
@@ -85,4 +80,11 @@ function Map:score(team)
     love.graphics.arc('fill', w2, w2, w2, math.pi * 1.5, (math.pi * 2.5) - (math.pi * (self.points[orange] / self.pointLimit)))
     love.graphics.setBlendMode('alpha')
   end)
+end
+
+function Map:initProp(prop)
+  setmetatable(prop, {__index = data.prop[prop.kind]})
+  f.exe(prop.activate, prop, self)
+  if ovw.view then ovw.view:register(prop) end
+  return prop
 end
