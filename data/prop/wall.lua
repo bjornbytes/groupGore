@@ -100,17 +100,17 @@ end
 Wall.editor.dragTo = function(self, x, y)
   self.x, self.y = x, y
   
-  self.north:setVertex(1, self.x, self.y, 0, 0)
-  self.north:setVertex(2, self.x + self.w, self.y, 1, 0)
+  self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
+  self.north:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
 
-  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
-  self.south:setVertex(4, self.x, self.y + self.h, 0, 1)
+  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
+  self.south:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
 
-  self.east:setVertex(2, self.x + self.w, self.y, 1, 0)
-  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
+  self.east:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
+  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
 
-  self.west:setVertex(1, self.x, self.y, 0, 0)
-  self.west:setVertex(4, self.x, self.y + self.h, 0, 1)
+  self.west:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
+  self.west:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
 end
 
 Wall.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
@@ -122,17 +122,17 @@ Wall.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
   if hx < 0 then self.x = self.x + ew end
   if hy < 0 then self.y = self.y + eh end
   
-  self.north:setVertex(1, self.x, self.y, 0, 0)
-  self.north:setVertex(2, self.x + self.w, self.y, 1, 0)
+  self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0)
+  self.north:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
 
-  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
-  self.south:setVertex(4, self.x, self.y + self.h, 0, 1)
+  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
+  self.south:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
 
-  self.east:setVertex(2, self.x + self.w, self.y, 1, 0)
-  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1)
+  self.east:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
+  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
 
-  self.west:setVertex(1, self.x, self.y, 0, 0)
-  self.west:setVertex(4, self.x, self.y + self.h, 0, 1)
+  self.west:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
+  self.west:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
 end
 
 return Wall
