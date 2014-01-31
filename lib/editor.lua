@@ -207,7 +207,18 @@ function Editor:keypressed(key)
       end)
     end,
     ['['] = function() self.gridSize = math.max(self.gridSize / 2, 8) end,
-    [']'] = function() self.gridSize = math.min(self.gridSize * 2, 256) end
+    [']'] = function() self.gridSize = math.min(self.gridSize * 2, 256) end,
+    ['s'] = function()
+      if love.keyboard.isDown('lctrl') then
+        local str = 'return {'
+        table.each(ovw.map.props, function(p)
+          str = str .. invoke(p, 'save') .. ','
+        end)
+        str = str .. '}'
+        love.filesystem.createDirectory('maps/' .. ovw.map.code)
+        print(love.filesystem.write('maps/' .. ovw.map.code .. '/props.lua', str))
+      end
+    end
   }
 
   return f.exe(handlers[key])

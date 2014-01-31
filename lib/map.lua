@@ -1,11 +1,25 @@
 Map = class()
 
+local function safeLoad(file)
+  local ok, chunk, result
+  ok, chunk = pcall(love.filesystem.load, file)
+  if not ok then print(chunk) return nil end
+  
+  ok, result = pcall(chunk)
+  if not ok then print(result) return nil end
+  
+  return result
+end
+
 function Map:init(name)
   name = 'jungleCarnage'
 
+  self.code = name
+
   local dir = 'maps/' .. name .. '/'
-  local map  = love.filesystem.load(dir .. name .. '.lua')()
+  local map = safeLoad(dir .. name .. '.lua')
   map.graphics = {}
+  map.props = {}
   
   for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
     if file:match('%.png$') then
@@ -14,8 +28,9 @@ function Map:init(name)
     end
   end
 
+  table.merge(safeLoad(dir .. 'props.lua'), map.props)
   table.merge(map, self)
-
+  
   self.props = table.map(map.props, f.cur(self.initProp, self))
 
   table.each(map.on, function(f, e)

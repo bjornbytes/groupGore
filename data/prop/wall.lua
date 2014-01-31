@@ -135,4 +135,15 @@ Wall.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
   self.west:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
 end
 
+Wall.editor.save = function(self)
+  return [[{
+    kind = 'wall',
+    x = ]] .. self.x .. [[,
+    y = ]] .. self.y .. [[,
+    w = ]] .. self.w .. [[,
+    h = ]] .. self.h .. [[,
+    z = ]] .. self.z .. [[
+  }]]
+end
+
 return Wall

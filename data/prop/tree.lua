@@ -39,4 +39,13 @@ Tree.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
   self.scale = (ow / self.image:getWidth()) + (((ew + eh) / 2) / ow)
 end
 
+Tree.editor.save = function(self)
+  return [[{
+    kind = 'tree',
+    x = ]] .. self.x .. [[,
+    y = ]] .. self.y .. [[,
+    scale = ]] .. self.scale .. [[
+  }]]
+end
+
 return Tree
