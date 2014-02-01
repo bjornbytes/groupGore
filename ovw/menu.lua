@@ -6,7 +6,8 @@ local function h(x) x = x or 1 return love.window.getHeight() * x end
 function Menu:load()
   do
     local w, h = love.window.getDesktopDimensions()
-    w, h = w * .8, h * .8
+    if w < 1320 or h < 850 then w, h = 800, 600
+    else w, h = 1280, 800 end
     love.window.setMode(w, h, {borderless = false, resizable = true})
   end
 
@@ -162,7 +163,7 @@ end
 
 function Menu:drawBox()
   local g = self.gooey
-  g.setColor(0, 2, 4, 140)
+  g.setColor(10, 12, 14, 160)
   g.rectangleCenter('fill', w(.5), h(.5), self.boxWidth, self.boxHeight)
   g.setColor(255, 255, 255, 40)
   g.rectangleCenter('line', w(.5), h(.5), self.boxWidth, self.boxHeight)
@@ -190,11 +191,10 @@ end
 
 function Menu:drawButton(str, x, y)
   local g = self.gooey
-  g:font('aeroMatics', 4)
-  g.setColor(100, 0, 0, 50)
-  g.rectangleCenter('fill', x, y, w(.15), h(.08))
-  g.setColor(200, 50, 50, 150)
-  g.rectangleCenter('line', x, y, w(.15), h(.08))
+  local b = g:image('menu/button')
+  g:font('aeroMatics', 2)
+  g.setColor(255, 255, 255)
+  g.draw(b, x, y, 0, 1, 1, b:getWidth() / 2, b:getHeight() / 2)
   g.setColor(255, 255, 255, 200)
   g.printCenter(str, x, y)
 end
