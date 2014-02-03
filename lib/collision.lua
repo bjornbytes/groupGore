@@ -28,7 +28,6 @@ function Collision:getTests(x, y)
     for i = -1, 1 do
       for j = -1, 1 do
         if self.grid[x + i] and self.grid[x + i][y + j] then
-          table.print(self.grid[x + i][y + j])
           for k = 1, #self.grid[x + i][y + j] do
             table.insert(self.testCache[x][y], self.grid[x + i][y + j][k])
           end
@@ -152,7 +151,7 @@ function Collision:resolveCirclePlayer(x, y, r, step, team, n)
   for i = 1, #players do
     local player = players[i]
     if math.hcoca(x, y, r, player.x, player.y, r) then
-      local d = math.direction(x, y, player.x, player.y) + (math.pi / 2)
+      local d = math.direction(x, y, player.x, player.y)
       x = x - math.cos(d) * step
       y = y - math.sin(d) * step
       free = false

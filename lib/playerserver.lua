@@ -75,7 +75,7 @@ function PlayerServer:update()
     flag = true
   end
   
-  if flag then
+  if flag or math.random() < .02 then
     data.id = self.id
     data.tick = tick
     data.ack = self.ack

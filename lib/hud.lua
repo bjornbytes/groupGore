@@ -231,11 +231,13 @@ function Hud:drawPlayerDetails()
   ovw.players:with(ovw.players.active, function(p)
     if p.team == purple then g.setColor(190, 160, 220, p.visible * 255)
     elseif p.team == orange then g.setColor(240, 160, 140, p.visible * 255) end
-    Gooey.printCenter(p.username, (p.x - ovw.view.x) * ovw.view.scale, ((p.y - ovw.view.y) * ovw.view.scale) - 60)
+    local vx, vy = math.lerp(ovw.view.prevx, ovw.view.x, tickDelta / tickRate), math.lerp(ovw.view.prevy, ovw.view.y, tickDelta / tickRate)
+    local px, py = p:drawPosition()
+    Gooey.printCenter(p.username, (px - vx) * ovw.view.scale, ((py - vy) * ovw.view.scale) - 60)
 
     if not p.ded then
-      local x0 = ((p.x - ovw.view.x) * ovw.view.scale) - 40
-      local y0 = ((p.y - ovw.view.y) * ovw.view.scale) - 50
+      local x0 = ((px - vx) * ovw.view.scale) - 40
+      local y0 = ((py - vy) * ovw.view.scale) - 50
       local healthWidth, shieldWidth = (p.health / p.maxHealth) * 80, (p.shield / p.maxHealth) * 80
       local totalWidth = math.max(healthWidth + shieldWidth, 80)
 

@@ -15,11 +15,23 @@ function PlayerDummy:draw()
 	end
 end
 
+function PlayerDummy:drawPosition()
+	local t = tick - (interp / tickRate)
+	local prev, cur = ovw.players.history[self.id][t - 1], ovw.players.history[self.id][t]
+	if prev then
+		prev, cur = {x = prev.x, y = prev.y}, {x = cur.x, y = cur.y}
+		local interp = table.interpolate(prev, cur, tickDelta / tickRate)
+		return interp.x, interp.y
+	end
+	
+	return 0, 0
+end
+
 function PlayerDummy:trace(data)
 	local t = data.tick
 	data.tick = nil
 	data.id = nil
-	data.angle = math.rad(data.angle)
+	if data.angle then data.angle = math.rad(data.angle) end
 	for i = t, tick do
 		local dst = ovw.players.history[self.id][i]
 		if i == tick then dst = self end
