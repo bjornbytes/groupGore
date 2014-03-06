@@ -33,7 +33,7 @@ end
 
 function Gorgeous:load()
   self.socket = require('socket').tcp()
-  self.socket:settimeout(3)
+  self.socket:settimeout(1)
   local _, err = self.socket:connect('127.0.0.1', 6060)--107.4.63.70', 6060)
   
   if err then
@@ -57,7 +57,7 @@ function Gorgeous:unload()
 end
 
 function Gorgeous:update()
-  while true do
+  while self.socket do
     local data = self.socket:receive()
     if not data then break end
 

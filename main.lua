@@ -1,44 +1,14 @@
-require 'enet'
-
 require 'lib/util'
-require 'lib/stream'
-
-require 'lib/buff'
-require 'lib/buffs'
-require 'lib/collision'
-require 'lib/editor'
-require 'lib/event'
-require 'lib/fx'
-require 'lib/gooey'
-require 'lib/gorgeous'
-require 'lib/hud'
-require 'lib/linkedlist'
-require 'lib/map'
-require 'lib/net'
-require 'lib/netclient'
-require 'lib/netserver'
-require 'lib/particle'
-require 'lib/player'
-require 'lib/playerdummy'
-require 'lib/playermain'
-require 'lib/playerserver'
-require 'lib/playerrobot'
-require 'lib/players'
-require 'lib/richtext'
-require 'lib/spell'
-require 'lib/spells'
-require 'lib/view'
-
-require 'ovw/game'
-require 'ovw/menu'
+require 'lib/require'
 require 'ovw/ovw'
-require 'ovw/server'
 
-require 'data/loader'
 
 function love.load()
+  if #Overwatch.ovws == 0 then Overwatch:add(Require, 'enet', 'lib', 'ovw', 'data/loader') end
+  
   data.load()
 
+  Overwatch:clear()
   Overwatch:add(Menu)
   gorgeous = Overwatch:add(Gorgeous)
   if not gorgeous.socket then gorgeous = nil end

@@ -8,7 +8,7 @@ function Menu:load()
     local w, h = love.window.getDesktopDimensions()
     if w < 1320 or h < 850 then w, h = 800, 600
     else w, h = 1280, 800 end
-    love.window.setMode(w, h, {borderless = false, resizable = true})
+    --love.window.setMode(w, h, {borderless = false, resizable = true})
   end
 
   self.gooey = Gooey()
@@ -22,35 +22,13 @@ function Menu:load()
   g:addInput('username', username)
   g:addInput('password', 'password')
   
-  self.boxWidth = w(.26875)
-  self.boxHeight = h(.285)
-  self.targetBoxWidth = self.boxWidth
-  self.targetBoxHeight = self.boxHeight
-  self.prevBoxWidth = self.boxWidth
-  self.prevBoxHeight = self.boxHeight
-
   love.keyboard.setKeyRepeat(true)
   if username ~= 'username' then g:focus('password') end
 end
 
-function Menu:unload()
-  self.bg = nil
-end
-
-function Menu:update()
-  self.prevBoxWidth = self.boxWidth
-  self.prevBoxHeight = self.boxHeight
-  self.boxWidth = math.lerp(self.boxWidth, self.targetBoxWidth, .25)
-  self.boxHeight = math.lerp(self.boxHeight, self.targetBoxHeight, .25)
-end
-
 function Menu:draw()
-  local bw, bh = self.boxWidth, self.boxHeight
-  self.boxWidth = math.lerp(self.prevBoxWidth, self.boxWidth, tickDelta / tickRate)
-  self.boxHeight = math.lerp(self.prevBoxHeight, self.boxHeight, tickDelta / tickRate)
   if self.page then self.drawPage[self.page](self) end
   if self.modalType then self.drawModal[self.modalType](self) end
-  self.boxWidth, self.boxHeight = bw, bh
 end
 
 function Menu:textinput(character)
@@ -120,17 +98,7 @@ Menu.drawPage['login'] = function(self)
   local fh = h() * .025
   local ih, iw = fh * 1.6, w(.2)
   
-  self.targetBoxWidth = w(.26875)
-  self.targetBoxHeight = h(.285)
-  
   g.background(self.bg)
-  self:drawBox()
-
-  g:font('aeroMatics', 2.5)
-  if gorgeous then  
-    g:drawInput('username', w2, h(.5) - (self.boxHeight / 2) + (.33 * self.boxHeight))
-    g:drawInput('password', w2, h(.5) - (self.boxHeight / 2) + (.67 * self.boxHeight))
-  end
 end
 
 Menu.drawPage['main'] = function(self)
@@ -139,14 +107,8 @@ Menu.drawPage['main'] = function(self)
   self.targetBoxHeight = h(.82)
 
   g.background(self.bg)
-  self:drawBox()
   self:drawUsername()
   self:drawIcons()
-  
-  self:drawButton('Play', w(.5), h(.5) - (self.boxHeight / 2) + (.2 * self.boxHeight))
-  self:drawButton('Stats', w(.5), h(.5) - (self.boxHeight / 2) + (.4 * self.boxHeight))
-  self:drawButton('Options', w(.5), h(.5) - (self.boxHeight / 2) + (.6 * self.boxHeight))
-  self:drawButton('Exit', w(.5), h(.5) - (self.boxHeight / 2) + (.8 * self.boxHeight))
 end
 
 function Menu:drawLogo()
@@ -159,15 +121,6 @@ function Menu:drawLogo()
   g.setColor(140, 107, 84)
   g.print('Gore', x + g.getFont():getWidth('group') - 2, y)
   y = y + 120
-end
-
-function Menu:drawBox()
-  local g = self.gooey
-  g.setColor(10, 12, 14, 160)
-  g.rectangleCenter('fill', w(.5), h(.5), self.boxWidth, self.boxHeight)
-  g.setColor(255, 255, 255, 40)
-  g.rectangleCenter('line', w(.5), h(.5), self.boxWidth, self.boxHeight)
-  self:drawLogo()
 end
 
 function Menu:drawUsername()

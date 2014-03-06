@@ -3,18 +3,22 @@ Overwatch = {
 	toRemove = {}
 }
 
-function Overwatch:add(obj)
+function Overwatch:add(obj, ...)
 	local oldovw = ovw
-	local o = obj()
+	local o = obj(...)
 	table.insert(self.ovws, o)
 	ovw = o
-	ovw:load()
+	f.exe(ovw.load, ovw, ...)
 	ovw = oldovw
 	return o
 end
 
 function Overwatch:remove(ovw)
 	self.toRemove = ovw
+end
+
+function Overwatch:clear()
+	table.each(self.ovws, f.cur(self.remove, self))
 end
 
 setmetatable(Overwatch, {
