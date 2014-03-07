@@ -19,8 +19,6 @@ function Require:init(...)
   end
 
   table.each({...}, load)
-  
-  print(data)
 end
 
 function Require:update()

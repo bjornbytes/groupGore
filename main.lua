@@ -2,7 +2,6 @@ require 'lib/util'
 require 'lib/require'
 require 'ovw/ovw'
 
-
 function love.load()
   if #Overwatch.ovws == 0 then Overwatch:add(Require, 'enet', 'lib', 'ovw', 'data/loader') end
   

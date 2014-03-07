@@ -14,7 +14,7 @@ function Menu:load()
   self.gooey = Gooey()
   local g = self.gooey
 
-  self.bg = g.newImage('/media/graphics/menu/bgMenu.jpeg')
+  self.bg = g.newImage('/media/graphics/menu/ggbg.png')
   
   self.page = 'login'
   
@@ -99,6 +99,20 @@ Menu.drawPage['login'] = function(self)
   local ih, iw = fh * 1.6, w(.2)
   
   g.background(self.bg)
+  
+  g:font('aeroMatics', 8)
+  g.setColor(160, 160, 200)
+  g.printCenter('groupGore', w(.8), h(.09))
+  
+  g.setColor(0, 0, 0, 80)
+  g.rectangle('fill', 0, h(.2), w(), h(.1))
+  g.rectangle('fill', 0, h(.75), w(), h(.25))
+  
+  g:font('aeroMatics', 6)
+  g.setColor(200, 200, 200)
+  g.print('Username', w(.1), h(.4))
+  g.print('Password', w(.1), h(.5))
+  g.print('Login', w(.1), h(.6))
 end
 
 Menu.drawPage['main'] = function(self)
