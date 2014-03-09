@@ -1,4 +1,4 @@
-require('lib/require')('enet', 'lib/util', 'lib', 'ovw', 'data/loader')
+require('lib/require')('enet', 'lib/util', 'lib/ovw', 'lib', 'ovw', 'data/loader')
 
 function love.load()
   setmetatable(love, {__index = Overwatch})
