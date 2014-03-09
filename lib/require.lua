@@ -1,43 +1,19 @@
-Require = class()
-
-function Require:init(...)
-  self.files = {}
-  
+return function(...)
   local function load(path)
     if love.filesystem.isDirectory(path) then
-      return table.each(love.filesystem.getDirectoryItems(path), function(file)
+      for _, file in pairs(love.filesystem.getDirectoryItems(path)) do
         load(path .. '/' .. file)
-      end)
+      end
+      
+      return
     end
     
     if not love.filesystem.exists(path) then path = path .. '.lua' end
-    if love.filesystem.exists(path) and not table.has(self.files, items) then
-      local file = {filename = path, modified = love.filesystem.getLastModified(path)}
-      table.insert(self.files, file)
+    
+    if love.filesystem.exists(path) then
       require(path:gsub('%.lua', ''))
     end
   end
 
-  table.each({...}, load)
-end
-
-function Require:update()
-  table.each(self.files, function(file)
-    if file.modified < love.filesystem.getLastModified(file.filename) then
-      self:reload(file)
-      love.load()
-    end
-  end)
-end
-
-function Require:reload(file)
-  file.modified = love.filesystem.getLastModified(file.filename)
-  local success, chunk, result
-  success, chunk = pcall(love.filesystem.load, file.filename)
-  if success then
-    success, result = pcall(chunk)
-    if not success then print('file modification caused error') end
-  else
-    print('love.filesystem.load failed')
-  end
+  for _, path in pairs({...}) do load(path) end
 end
