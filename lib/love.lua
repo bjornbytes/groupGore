@@ -37,7 +37,7 @@ function love.run()
     end
 
     syncDelta = syncDelta + delta
-    if syncDelta >= syncRate then
+    if syncDelta >= syncRate and love.sync then
       love.sync()
       syncDelta = 0
     end
@@ -48,4 +48,16 @@ function love.run()
     
     love.timer.sleep(.001)
   end
+end
+
+function love.graphics.rectangleCenter(style, x, y, w, h, pix)
+  local ox, oy = math.round(x - (w / 2)), math.round(y - (h / 2))
+  if pix then ox = ox + .5 oy = oy + .5 end
+  love.graphics.rectangle(style, ox, oy, w, h)
+end
+
+function love.graphics.printCenter(str, x, y, h, v)
+  local xx = x - ((h or (h == nil)) and (love.graphics.getFont():getWidth(str) / 2) or 0)
+  local yy = y - ((v or (v == nil)) and (love.graphics.getFont():getHeight() / 2) or 0)
+  love.graphics.print(str, xx, yy)
 end

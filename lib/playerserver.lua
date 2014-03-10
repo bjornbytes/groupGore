@@ -1,7 +1,7 @@
 PlayerServer = {}
 setmetatable(PlayerServer, {__index = Player})
 
-function PlayerServer:activate()
+function PlayerServer:activate(...)
   self.input = {}
   
   self.input.w = false
@@ -28,7 +28,7 @@ function PlayerServer:activate()
 
   self.auxVex = {}
 
-  Player.activate(self)
+  Player.activate(self, ...)
 end
 
 function PlayerServer:deactivate()
@@ -79,12 +79,12 @@ function PlayerServer:update()
     data.id = self.id
     data.tick = tick
     data.ack = self.ack
-    ovw.net:emit(evtSync, data)
+    self.overwatch.net:emit(evtSync, data)
   end
 end
 
 function PlayerServer:time()
-  self.ded = timer.rot(self.ded, function() ovw.net:emit(evtSpawn, {id = self.id}) end)
+  self.ded = timer.rot(self.ded, function() self.overwatch.net:emit(evtSpawn, {id = self.id}) end)
   if self.ded == 0 then self.ded = false end
 end
 
@@ -126,7 +126,7 @@ function PlayerServer:hurt(data)
         if playerHurt[2][2] > 0 then table.insert(assists, {id = playerHurt[2][1]}) end
       end
 
-      ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
+      self.overwatch.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
     else
       f.exe(self.shields[1].callback, self) 
       table.remove(self.shields, 1)

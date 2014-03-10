@@ -3,7 +3,7 @@ Spells = class()
 function Spells:init()
   self.spells = {}
   self.depth = -100
-  if ovw.view then ovw.view:register(self) end
+  if self.overwatch.view then self.overwatch.view:register(self) end
 end
 
 function Spells:activate(owner, kind)

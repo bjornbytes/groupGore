@@ -8,11 +8,9 @@ return function(...)
       return
     end
     
-    if not love.filesystem.exists(path) then path = path .. '.lua' end
+    if not love.filesystem.exists(path) and love.filesystem.exists(path .. '.lua') then path = path .. '.lua' end
     
-    if love.filesystem.exists(path) then
-      require(path:gsub('%.lua', ''))
-    end
+    require(path:gsub('%.lua', ''))
   end
 
   for _, path in pairs({...}) do load(path) end

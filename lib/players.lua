@@ -1,6 +1,7 @@
 Players = class()
 
 function Players:init()
+  print(self.overwatch)
   local tags = {
     client = PlayerDummy,
     server = PlayerServer
@@ -14,24 +15,24 @@ function Players:init()
     self.players[i] = Player:create()
     self.players[i].id = i
     self.history[i] = {}
-    setmetatable(self.players[i], {__index = tags[ovw.tag]})
+    setmetatable(self.players[i], {__index = tags[self.overwatch.tag]})
   end
   
-  ovw.event:on(evtLeave, self, function(self, data)
+  self.overwatch.event:on(evtLeave, self, function(self, data)
     self:deactivate(data.id)
   end)
   
-  ovw.event:on(evtFire, self, function(self, data)
+  self.overwatch.event:on(evtFire, self, function(self, data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
   end)
   
-  ovw.event:on(evtClass, self, function(self, data)
+  self.overwatch.event:on(evtClass, self, function(self, data)
     self:setClass(data.id, data.class, data.team)
   end)
   
-  ovw.event:on(evtDamage, self, function(self, data)
+  self.overwatch.event:on(evtDamage, self, function(self, data)
     local to, from = self:get(data.id), self:get(data.from)
     to:hurt(data)
     local oldAmt = data.amount
@@ -40,12 +41,12 @@ function Players:init()
     data.amount = oldAmt
   end)
   
-  ovw.event:on(evtDead, self, function(self, data)
+  self.overwatch.event:on(evtDead, self, function(self, data)
     local p = self:get(data.id)
     p:die()
   end)
   
-  ovw.event:on(evtSpawn, self, function(self, data)
+  self.overwatch.event:on(evtSpawn, self, function(self, data)
     local p = self:get(data.id)
     p.ded = false
     p:spawn()
@@ -55,7 +56,7 @@ end
 function Players:activate(id)
   assert(id >= 1 and id <= 16)
   self.players[id].active = true
-  if ovw.view then ovw.view:register(self.players[id]) end
+  if self.overwatch.view then self.overwatch.view:register(self.players[id]) end
   self:refresh()
 end
 
@@ -87,7 +88,7 @@ end
 function Players:update()
   self:with(self.active, f.ego('update'))
   self:with(self.active, function(p)
-    self.history[p.id][tick] = table.copy(p)
+    self.history[p.id][tick] = p:getData()
     self.history[p.id][tick - (1 / tickRate)] = nil
   end)
 end
@@ -116,7 +117,7 @@ function Players:setClass(id, class, team)
   p.class = data.class[class]
   p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
-  p:activate()
+  p:activate(self.overwatch)
 end
 
 function Players:refresh()
@@ -130,6 +131,6 @@ end
 
 function Players:reset()
   Players:with(self.active, function(p)
-    p:activate()
+    p:activate(self.overwatch)
   end)
 end

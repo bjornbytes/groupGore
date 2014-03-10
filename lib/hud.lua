@@ -1,7 +1,7 @@
 Hud = class()
 
 local function w(x) x = x or 1 return love.window.getWidth() * x end
-local function h(x) x = x or 1 return (love.window.getHeight() - ovw.view.margin * 2) * x end
+local function h(x) x = x or 1 return (love.window.getHeight() - love:getComponent(Game).view.margin * 2) * x end
 local g = love.graphics
 
 function Hud:init()
@@ -53,11 +53,11 @@ function Hud:init()
     self.targetSlotWidth[i] = 0
   end
 
-  ovw.event:on(evtChat, self, function(self, data)
+  self.overwatch.event:on(evtChat, self, function(self, data)
     self:updateChat(data.message)
   end)
 
-  ovw.event:on(evtDead, self, function(self, data)
+  self.overwatch.event:on(evtDead, self, function(self, data)
     while #self.killfeed > 3 do table.remove(self.killfeed, 1) end
     if #self.killfeed == 3 then self.killfeed[1].targetX = w() end
     for i = 1, #self.killfeed do self.killfeed[i].targetY = self.killfeed[i].targetY + h(.05) + 4 end
@@ -72,7 +72,7 @@ function Hud:init()
 end
 
 function Hud:update()
-  local p = ovw.players:get(myId)
+  local p = self.overwatch.players:get(myId)
   if p and p.active then
     self.health.prevVal = self.health.val
     self.health.val = math.lerp(self.health.val, p.health, .25)
@@ -131,16 +131,16 @@ function Hud:draw()
   self:drawKillfeed()
   self:drawChat()
   self:drawDebug()
-  f.exe(ovw.map.hud, ovw.map)
+  f.exe(self.overwatch.map.hud, self.overwatch.map)
 end
 
 function Hud:mousereleased(x, y, button)
   if self:classSelect() and button == 'l' then
     local rx = w(.5) - (w(.9) / 2) + w(.05)
-    local ry = h(.5) - (h(.82) / 2) + w(.05) + ovw.view.margin
+    local ry = h(.5) - (h(.82) / 2) + w(.05) + self.overwatch.view.margin
     for i = 1, #data.class do
       if math.inside(x, y, rx, ry, w(.06), w(.06)) then
-        ovw.net:send(msgClass, {
+        self.overwatch.net:send(msgClass, {
           class = i,
           team = myId > 1 and 1 or 0
         })
@@ -162,7 +162,7 @@ function Hud:keypressed(key)
     if key == 'backspace' then self.chatMessage = self.chatMessage:sub(1, -2)
     elseif key == 'return' then
       if #self.chatMessage > 0 then
-        ovw.net:send(msgChat, {
+        self.overwatch.net:send(msgChat, {
           message = self.chatMessage
         })
       end
@@ -175,7 +175,7 @@ function Hud:keypressed(key)
     if self:classSelect() then
       for i = 1, #data.class do
         if key == tostring(i) then
-          ovw.net:send(msgClass, {
+          self.overwatch.net:send(msgClass, {
             class = i,
             team = myId > 1 and 1 or 0
           })
@@ -185,8 +185,6 @@ function Hud:keypressed(key)
       self.chatting = true
       self.chatMessage = ''
       love.keyboard.setKeyRepeat(true)
-    elseif key == '`' then
-      ovw.editor.active = not ovw.editor.active
     end
   end
 end
@@ -211,12 +209,12 @@ end
 function Hud:drawClassSelect()
   g.setFont(self.font)
   g.setColor(0, 0, 0, 140)
-  Gooey.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
+  g.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
   g.setColor(255, 255, 255, 40)
-  Gooey.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
+  g.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
   
   g.setColor(255, 255, 255, 180)
-  Gooey.printCenter('Choose Class:', w(.5), h(.12))
+  g.printCenter('Choose Class:', w(.5), h(.12))
   local x = w(.5) - (w(.9) / 2) + w(.05)
   local y = h(.5) - (h(.82) / 2) + w(.05)
   for i = 1, #data.class do
@@ -228,16 +226,16 @@ end
 
 function Hud:drawPlayerDetails()
   g.setFont(self.font)
-  ovw.players:with(ovw.players.active, function(p)
+  self.overwatch.players:with(self.overwatch.players.active, function(p)
     if p.team == purple then g.setColor(190, 160, 220, p.visible * 255)
     elseif p.team == orange then g.setColor(240, 160, 140, p.visible * 255) end
-    local vx, vy = math.lerp(ovw.view.prevx, ovw.view.x, tickDelta / tickRate), math.lerp(ovw.view.prevy, ovw.view.y, tickDelta / tickRate)
+    local vx, vy = math.lerp(self.overwatch.view.prevx, self.overwatch.view.x, tickDelta / tickRate), math.lerp(self.overwatch.view.prevy, self.overwatch.view.y, tickDelta / tickRate)
     local px, py = p:drawPosition()
-    Gooey.printCenter(p.username, (px - vx) * ovw.view.scale, ((py - vy) * ovw.view.scale) - 60)
+    g.printCenter(p.username, (px - vx) * self.overwatch.view.scale, ((py - vy) * self.overwatch.view.scale) - 60)
 
     if not p.ded then
-      local x0 = ((px - vx) * ovw.view.scale) - 40
-      local y0 = ((py - vy) * ovw.view.scale) - 50
+      local x0 = ((px - vx) * self.overwatch.view.scale) - 40
+      local y0 = ((py - vy) * self.overwatch.view.scale) - 50
       local healthWidth, shieldWidth = (p.health / p.maxHealth) * 80, (p.shield / p.maxHealth) * 80
       local totalWidth = math.max(healthWidth + shieldWidth, 80)
 
@@ -257,19 +255,19 @@ function Hud:drawPlayerDetails()
 end
 
 function Hud:drawHealthbar()
-  local p = ovw.players:get(myId)
+  local p = self.overwatch.players:get(myId)
   if p and p.active then
     local s = math.min(1, h(.2) / 160)
     g.setColor(255, 255, 255)
     g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
     g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
     g.draw(self.health.glass, 0, 0, 0, s, s)
-    Gooey.printCenter(math.ceil(p.health), (4 * s) + (s * self.health.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.health.canvas:getHeight() / 2))
+    g.printCenter(math.ceil(p.health), (4 * s) + (s * self.health.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.health.canvas:getHeight() / 2))
   end
 end
 
 function Hud:drawSlots()
-  local p = ovw.players:get(myId)
+  local p = self.overwatch.players:get(myId)
   if p and p.active then
     for i = 1, 5 do
       local y = h(.3) + ((i - 1) * w(.045))
@@ -291,18 +289,18 @@ function Hud:drawSlots()
       g.draw(self.slotFrameRight[i], w(.03) + self.slotWidth[i], y - w(.02))
       g.setColor(255, 255, 255)
       g.setFont(self.slotSmallFont)
-      Gooey.printCenter(i, w(.03) - w(.02) + w(.004), y)
+      g.printCenter(i, w(.03) - w(.02) + w(.004), y)
     end
     g.setFont(self.font)
   end
 end
 
 function Hud:drawBuffs()
-  local p = ovw.players:get(myId)
+  local p = self.overwatch.players:get(myId)
   if p and p.active then
     g.setColor(255, 255, 255)
     local xx = h(.2) + h(.02)
-    table.each(ovw.buffs.buffs, function(b)
+    table.each(self.overwatch.buffs.buffs, function(b)
       if b.target == p.id then
         g.rectangle('line', xx, h(.02), w(.02), w(.02))
         xx = xx + w(.025)
@@ -319,12 +317,12 @@ function Hud:drawKillfeed()
     g.rectangle('fill', k.x, k.y, w(.14), h(.05))
 
     local yy = h(.025) - (g.getFont():getHeight() / 2)
-    local killer = ovw.players:get(k.kill)
+    local killer = self.overwatch.players:get(k.kill)
     if killer.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
     g.print(killer.username, k.x + 8, k.y + yy)
 
-    local victim = ovw.players:get(k.id)
+    local victim = self.overwatch.players:get(k.id)
     if victim.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
     g.print(victim.username, k.x + w(.14) - g.getFont():getWidth(victim.username) - 9, k.y + yy)
@@ -356,10 +354,10 @@ end
 function Hud:drawDebug()
   g.setColor(255, 255, 255, 100)
   local debug = love.timer.getFPS() .. 'fps'
-  if ovw.net.server then
-    debug = debug .. ', ' .. ovw.net.server:round_trip_time() .. 'ms'
-    debug = debug .. ', ' .. math.floor(ovw.net.host:total_sent_data() / 1000 + .5) .. 'tx'
-    debug = debug .. ', ' .. math.floor(ovw.net.host:total_received_data() / 1000 + .5) .. 'rx'
+  if self.overwatch.net.server then
+    debug = debug .. ', ' .. self.overwatch.net.server:round_trip_time() .. 'ms'
+    debug = debug .. ', ' .. math.floor(self.overwatch.net.host:total_sent_data() / 1000 + .5) .. 'tx'
+    debug = debug .. ', ' .. math.floor(self.overwatch.net.host:total_received_data() / 1000 + .5) .. 'rx'
   end
   g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
 end
@@ -377,4 +375,4 @@ function Hud:updateChat(message)
   self.chatTimer = 2
 end
 
-function Hud:classSelect() return myId and not ovw.players:get(myId).active end
+function Hud:classSelect() return myId and not self.overwatch.players:get(myId).active end

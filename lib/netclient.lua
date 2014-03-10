@@ -14,21 +14,20 @@ NetClient.signatures[msgInput] = {
 NetClient.signatures[msgChat] = {{'message', 'string'}}
 
 NetClient.receive = {}
-NetClient.receive['default'] = function(self, event) ovw.event:emit(event.msg, event.data) end
+NetClient.receive['default'] = function(self, event) self.overwatch.event:emit(event.msg, event.data) end
 
 NetClient.receive[msgJoin] = function(self, event)
   myId = event.data.id
-  setmetatable(ovw.players:get(myId), {__index = PlayerMain})
+  setmetatable(self.overwatch.players:get(myId), {__index = PlayerMain})
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
   tick = event.data.tick
-  --ovw.map:load(event.data.map)
   for i = 1, #event.data.players do
     local p = event.data.players[i]
     if p.class > 0 then
-      ovw.players:activate(p.id)
-      ovw.players:setClass(p.id, p.class, p.team)
+      self.overwatch.players:activate(p.id)
+      self.overwatch.players:setClass(p.id, p.class, p.team)
     end
   end
 end
@@ -38,12 +37,12 @@ function NetClient:init()
   self:connectTo(serverIp, 6061)
   self.messageBuffer = {}
 
-  ovw.event:on(evtJoin, self, function(self, data)
-    ovw.players:get(data.id).username = data.username
+  self.overwatch.event:on(evtJoin, self, function(self, data)
+    self.overwatch.players:get(data.id).username = data.username
   end)
   
-  ovw.event:on(evtSync, self, function(self, data)
-    local p = ovw.players:get(data.id)
+  self.overwatch.event:on(evtSync, self, function(self, data)
+    local p = self.overwatch.players:get(data.id)
     p:trace(data)
   end)
 

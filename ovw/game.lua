@@ -1,37 +1,19 @@
-Game = class()
+Game = extend(Overwatch)
 
 Game.tag = 'client'
 
-function Game:load()
+function Game:init()
   self.event = Event()
-  self.net = NetClient()
-  self.view = View()
   self.collision = Collision()
-  self.players = Players()
-  self.spells = Spells()
-  self.buffs = Buffs()
-  self.particles = Particles()
-  self.map = Map()
-  self.hud = Hud()
-end
-
-function Game:unload()
-  --
-end
-
-function Game:update()
-  self.net:update()
-  self.buffs:update()
-  self.players:update()
-  self.spells:update()
-  self.particles:update()
-  self.map:update()
-  self.view:update()
-  self.hud:update()
-end
-
-function Game:sync()
-  self.net:sync()
+  
+  self.net = self:addComponent(NetClient)
+  self.buffs = self:addComponent(Buffs)
+  self.players = self:addComponent(Players)
+  self.spells = self:addComponent(Spells)
+  self.particles = self:addComponent(Particles)
+  self.view = self:addComponent(View)
+  self.map = self:addComponent(Map)
+  self.hud = self:addComponent(Hud)
 end
 
 function Game:draw()
@@ -39,11 +21,11 @@ function Game:draw()
 end
 
 function Game:quit()
-  self.net:send(msgLeave)
-  self.net.host:flush()
+  --self.net:send(msgLeave)
+  --self.net.host:flush()
 end
 
-function Game:mousepressed(...)
+--[[function Game:mousepressed(...)
   if self.players:mousepressed(...) then return end
 end
 
@@ -68,4 +50,4 @@ end
 
 function Game:resize()
   self.view:resize()
-end
+end]]
