@@ -67,6 +67,19 @@ function PlayerMain:draw()
   if current and previous then
     Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
   end
+  
+  --[[local server
+  for i = 1, #Overwatch.ovws do
+    local o = Overwatch.ovws[i]
+    if o and o.tag and o.tag == 'server' then
+      server = o
+      break
+    end
+  end
+  
+  if server then
+    Player.draw(server.players:get(self.id))
+  end]]
 end
 
 function PlayerMain:drawPosition()
@@ -150,8 +163,10 @@ function PlayerMain:trace(data)
         self.debtX = (data.x - state.x)
         self.debtY = (data.y - state.y)
       end
-      table.merge(data, state)
+      
     end
+    
+    table.merge(data, state)
     
     local idx = math.max(ack, tick - (1 / tickRate) + 1)
     local state = table.copy(ovw.players.history[self.id][idx])

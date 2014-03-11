@@ -54,15 +54,18 @@ NetServer.receive[msgInput] = function(self, event)
   local t = event.data.tick
   event.data.tick = nil
   p.ack = t
-  for i = t, tick do
-    local state = table.copy(ovw.players.history[p.id][i - 1])
-    if state then
-      local dst = (i == tick) and p or ovw.players.history[p.id][i]
-      state.input = event.data
-      dst.input = event.data
+
+  local state = table.copy(ovw.players.history[p.id][t])
+  state.input = event.data
+  for i = t + 1, tick do
+    local dst = (i == tick) and p or ovw.players.history[p.id][i]
+    if dst ~= p then
       state:move()
       state:turn()
+    else
+      dst.input = state.input
     end
+    table.merge({x = state.x, y = state.y, angle = state.angle}, dst)
   end
 end
 

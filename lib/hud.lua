@@ -80,15 +80,6 @@ function Hud:update()
   if p and p.active then
     self.health.prevVal = self.health.val
     self.health.val = math.lerp(self.health.val, p.health, .25)
-    self.health.canvas:clear()
-    self.health.canvas:renderTo(function()
-      g.setColor(255, 255, 255, 255)
-      g.draw(self.health.red, 4, 13)
-      g.setBlendMode('subtractive')
-      g.setColor(255, 255, 255, 255)
-      g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (math.lerp(self.health.prevVal, self.health.val, tickDelta / tickRate) / p.maxHealth))))
-      g.setBlendMode('alpha')
-    end)
 
     for i = 1, 5 do
       self.slotFrameRight[i]:clear()
@@ -144,12 +135,10 @@ function Hud:mousereleased(x, y, button)
   if self:classSelect() and button == 'l' then
     for i = 1, #data.class do
       if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
-        ovw.net:send(msgClass, {
+        return ovw.net:send(msgClass, {
           class = i,
           team = self.classSelectTeam
         })
-        
-        return
       end
     end
     
@@ -288,6 +277,16 @@ end
 
 function Hud:drawHealthbar()
   local p = ovw.players:get(myId)
+  self.health.canvas:clear()
+  self.health.canvas:renderTo(function()
+    g.setColor(255, 255, 255, 255)
+    g.draw(self.health.red, 4, 13)
+    g.setBlendMode('subtractive')
+    g.setColor(255, 255, 255, 255)
+    g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (math.lerp(self.health.prevVal, self.health.val, tickDelta / tickRate) / p.maxHealth))))
+    g.setBlendMode('alpha')
+  end)
+  
   if p and p.active then
     local s = math.min(1, h(.2) / 160)
     g.setColor(255, 255, 255)

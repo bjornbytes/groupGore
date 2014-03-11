@@ -56,6 +56,7 @@ function Player:draw()
   love.graphics.draw(self.class.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
   if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)
   elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
+  if self.hurtHistory then love.graphics.setColor(255, 255, 255, 200) end
   love.graphics.draw(self.class.sprite, self.x, self.y, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
   if self.input then
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])

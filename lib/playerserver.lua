@@ -14,9 +14,9 @@ function PlayerServer:activate()
   self.input.l = false
   self.input.r = false
   
-  self.input.wep = 1
-  self.input.skl = 3
-  self.input.rel = false
+  self.input.weapon = 1
+  self.input.skill = 3
+  self.input.reload = false
 
   self.shields = {}
 
