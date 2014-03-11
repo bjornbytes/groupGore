@@ -1,8 +1,8 @@
 PlayerRobot = {}
 setmetatable(PlayerRobot, {__index = PlayerServer})
 
-function PlayerRobot:activate(...)
-  PlayerServer.activate(self, ...)
+function PlayerRobot:activate()
+  PlayerServer.activate(self)
 
   self.username = 'robot'
   

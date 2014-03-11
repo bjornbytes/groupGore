@@ -1,8 +1,8 @@
 PlayerDummy = {}
 setmetatable(PlayerDummy, {__index = Player})
 
-function PlayerDummy:activate(...)
-	Player.activate(self, ...)
+function PlayerDummy:activate()
+	Player.activate(self)
 end
 
 function PlayerDummy:draw()

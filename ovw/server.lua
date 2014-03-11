@@ -1,18 +1,15 @@
-Server = extend(Overwatch)
+Server = class()
 
 Server.tag = 'server'
 
-function Server:init()
+function Server:load()
   self.event = Event()
   self.collision = Collision()
-  
-  self.players = self:addComponent(Players)
-  self.spells = self:addComponent(Spells)
-  self.buffs = self:addComponent(Buffs)
-  self.net = self:addComponent(NetServer, {priority = 2})
-  self.map = self:addComponent(Map)
-  
-  self:bindComponents()
+  self.players = Players()
+  self.spells = Spells()
+  self.buffs = Buffs()
+  self.net = NetServer()
+  self.map = Map()
 
   for i = 1, 0 do
     local p = self.players:get(i)
@@ -20,6 +17,17 @@ function Server:init()
     self.players:setClass(i, 1, i % 2)
     p.x = p.x - 20 + (10 * i) 
   end
+end
+
+function Server:update()
+  self.net:update()
+  self.buffs:update()
+  self.players:update()
+  self.spells:update()
+end
+
+function Server:sync()
+  self.net:sync()
 end
 
 function Server:quit()

@@ -31,7 +31,7 @@ NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
 NetServer.receive[msgJoin] = function(self, event)
-  self.overwatch.players:get(event.pid).username = event.data.username
+  ovw.players:get(event.pid).username = event.data.username
   self:send(msgJoin, event.peer, {id = event.pid})
   self:emit(evtJoin, {id = event.pid, username = event.data.username})
   self:emit(evtChat, {message = '{white}' .. event.data.username .. ' has joined!'})
@@ -39,7 +39,7 @@ NetServer.receive[msgJoin] = function(self, event)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
-  self:emit(evtChat, {message = '{white}' .. self.overwatch.players:get(event.pid).username .. ' has left!'})
+  self:emit(evtChat, {message = '{white}' .. ovw.players:get(event.pid).username .. ' has left!'})
   self:emit(evtLeave, {id = event.pid, reason = 'left'})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
@@ -50,15 +50,14 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  local p = self.overwatch.players:get(event.pid)
+  local p = ovw.players:get(event.pid)
   local t = event.data.tick
   event.data.tick = nil
   p.ack = t
   for i = t, tick do
-    local state = table.copy(self.overwatch.players.history[p.id][i - 1])
-    state.overwatch = self.overwatch
+    local state = table.copy(ovw.players.history[p.id][i - 1])
     if state then
-      local dst = (i == tick) and p or self.overwatch.players.history[p.id][i]
+      local dst = (i == tick) and p or ovw.players.history[p.id][i]
       state.input = event.data
       dst.input = event.data
       state:move()
@@ -68,8 +67,8 @@ NetServer.receive[msgInput] = function(self, event)
 end
 
 NetServer.receive[msgChat] = function(self, event)
-  local username = self.overwatch.players:get(event.pid).username
-  local color = self.overwatch.players:get(event.pid).team == 0 and 'purple' or 'orange'
+  local username = ovw.players:get(event.pid).username
+  local color = ovw.players:get(event.pid).team == 0 and 'purple' or 'orange'
   self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
 end
 
@@ -96,7 +95,7 @@ end
 
 function NetServer:emit(evt, data)
   table.insert(self.eventBuffer, {evt, data})
-  self.overwatch.event:emit(evt, data)
+  ovw.event:emit(evt, data)
 end
 
 function NetServer:sync()
@@ -120,7 +119,7 @@ end
 function NetServer:snapshot(peer)
   local players = {}
   for id = 1, 16 do
-    local p = self.overwatch.players:get(id)
+    local p = ovw.players:get(id)
     if #p.username > 0 and id ~= self.peerToPlayer[peer] then
       table.insert(players, {
         id = id,
@@ -135,6 +134,6 @@ end
 
 function NetServer:nextPlayerId()
   for i = 1, 16 do
-    if #self.overwatch.players:get(i).username == 0 then return i end
+    if #ovw.players:get(i).username == 0 then return i end
   end
 end

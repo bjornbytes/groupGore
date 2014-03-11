@@ -31,7 +31,7 @@ Gorgeous.receive[Gorgeous.msgLogin] = function(self, data)
   print(data.success)
 end
 
-function Gorgeous:init()
+function Gorgeous:load()
   self.socket = require('socket').tcp()
   self.socket:settimeout(1)
   local _, err = self.socket:connect('127.0.0.1', 6060)--107.4.63.70', 6060)
@@ -52,7 +52,7 @@ function Gorgeous:init()
   self.callbacks = {}
 end
 
-function Gorgeous:destroy()
+function Gorgeous:unload()
   if self.socket then self.socket:close() end
 end
 
@@ -70,6 +70,8 @@ function Gorgeous:update()
 end
 
 function Gorgeous:send(msg, data, cb)
+  if not gorgeous then return end
+
   self.outStream:clear()
   self.outStream:write(self.seq, '8bits')
   self:pack(msg, data)

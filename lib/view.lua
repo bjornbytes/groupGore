@@ -1,11 +1,11 @@
 View = class()
 
 function mouseX()
-  return math.floor(((love.mouse.getX() / love:getComponent(Game).view.scale) + love:getComponent(Game).view.x) + .5)
+  return math.floor(((love.mouse.getX() / ovw.view.scale) + ovw.view.x) + .5)
 end
 
 function mouseY()
-  return math.floor((((love.mouse.getY() - love:getComponent(Game).view.margin) / love:getComponent(Game).view.scale) + love:getComponent(Game).view.y) + .5)
+  return math.floor((((love.mouse.getY() - ovw.view.margin) / ovw.view.scale) + ovw.view.y) + .5)
 end
 
 function View:init()
@@ -42,8 +42,8 @@ function View:update()
   self.prevx = self.x
   self.prevy = self.y
   self.prevscale = self.scale
-  if self.overwatch.players then
-    local object = self.overwatch.players:get(myId)
+  if ovw.players then
+    local object = ovw.players:get(myId)
     if object and not object.ded then
       local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY())
       dis = dis / 4
@@ -58,8 +58,8 @@ function View:update()
   
   if self.x < 0 then self.x = 0 end
   if self.y < 0 then self.y = 0 end
-  if self.x + self.w > self.overwatch.map.width then self.x = self.overwatch.map.width - self.w end
-  if self.y + self.h > self.overwatch.map.height then self.y = self.overwatch.map.height - self.h end
+  if self.x + self.w > ovw.map.width then self.x = ovw.map.width - self.w end
+  if self.y + self.h > ovw.map.height then self.y = ovw.map.height - self.h end
 end
 
 function View:push()
@@ -81,7 +81,7 @@ function View:draw()
 
   for k, v in ipairs(self.toDraw) do v:draw() end
   self:pop()
-  if self.overwatch.hud then self.overwatch.hud:draw() end
+  if ovw.hud then ovw.hud:draw() end
   self:letterbox()
 end
 

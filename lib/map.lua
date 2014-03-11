@@ -34,7 +34,7 @@ function Map:init(name)
   self.props = table.map(map.props, f.cur(self.initProp, self))
 
   table.each(map.on, function(f, e)
-    if self.overwatch.event then self.overwatch.event:on(e, self, f) end
+    if ovw.event then ovw.event:on(e, self, f) end
   end)
 
   self.canvas = love.graphics.newCanvas(300, 300)
@@ -49,7 +49,7 @@ function Map:init(name)
   self:score()
 
   self.depth = 5
-  if self.overwatch.view then self.overwatch.view:register(self) end
+  if ovw.view then ovw.view:register(self) end
 end
 
 function Map:update()
@@ -100,6 +100,6 @@ end
 function Map:initProp(prop)
   setmetatable(prop, {__index = data.prop[prop.kind]})
   f.exe(prop.activate, prop, self)
-  if self.overwatch.view then self.overwatch.view:register(prop) end
+  if ovw.view then ovw.view:register(prop) end
   return prop
 end

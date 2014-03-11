@@ -3,8 +3,7 @@ Wall.name = 'Wall'
 Wall.code = 'wall'
 
 Wall.activate = function(self, map)
-  self.overwatch = map.overwatch
-  if self.overwatch.collision then self.overwatch.collision:addWall(self.x, self.y, self.w, self.h) end
+  if ovw.collision then ovw.collision:addWall(self.x, self.y, self.w, self.h) end
 
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},
@@ -45,15 +44,14 @@ Wall.activate = function(self, map)
 end
 
 Wall.update = function(self)
-  local view = self.overwatch.view
-  if view then self.depth = -1000 + math.distance(view.x + view.w / 2, view.y + view.h / 2, self.x, self.y) end
+  if ovw.view then self.depth = -1000 + math.distance(ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2, self.x, self.y) end
 end
 
 Wall.draw = function(self)
   love.graphics.setColor(0, 0, 0, 255)
   --love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
   
-  local v = self.overwatch.view
+  local v = ovw.view
   local ulx, uly = v:three(self.x, self.y, self.z)
   local urx, ury = v:three(self.x + self.w, self.y, self.z)
   local llx, lly = v:three(self.x, self.y + self.h, self.z)
@@ -65,7 +63,7 @@ Wall.draw = function(self)
   self.top:setVertex(4, llx, lly, 0, 1)
   
   love.graphics.setColor(255, 255, 255)
-  local y2 = self.overwatch.view.y + (self.overwatch.view.h / 2)
+  local y2 = ovw.view.y + (ovw.view.h / 2)
   if self.y > y2 then
     self.north:setVertex(3, urx, ury, 1, 1)
     self.north:setVertex(4, ulx, uly, 0, 1)
@@ -78,7 +76,7 @@ Wall.draw = function(self)
     love.graphics.draw(self.south, 0, 0)
   end
 
-  local x2 = self.overwatch.view.x + (self.overwatch.view.w / 2)
+  local x2 = ovw.view.x + (ovw.view.w / 2)
   if self.x > x2 then
     self.west:setVertex(2, ulx, uly, 1, 0)
     self.west:setVertex(3, llx, lly, 1, 1)

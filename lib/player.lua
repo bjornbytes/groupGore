@@ -28,10 +28,9 @@ function Player:create()
   }
 end
 
-function Player:activate(ovw)
-  self.overwatch = ovw
-  self.x = self.overwatch.map.spawn[self.team].x
-  self.y = self.overwatch.map.spawn[self.team].y
+function Player:activate()
+  self.x = ovw.map.spawn[self.team].x
+  self.y = ovw.map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
   self.size = self.class.size
@@ -64,14 +63,6 @@ function Player:draw()
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
     f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
   end
-end
-
-function Player:getData() -- wow...
-  local oldovw = self.overwatch
-  self.overwatch = nil
-  local res = table.copy(self)
-  self.overwatch = oldovw
-  return res
 end
 
 
@@ -114,14 +105,14 @@ function Player:move()
 
   self.auxVex = table.filter(self.auxVex, function(v) return v.t > 0 end)
 
-  self.x, self.y = self.overwatch.collision:resolveCircleWall(newx, newy, self.size, .5)
-  self.x, self.y = self.overwatch.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
-  self.overwatch.collision:refreshPlayer(self)
+  self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
+  self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
+  ovw.collision:refreshPlayer(self)
   
   if self.x < 0 then self.x = 0
-  elseif self.x > self.overwatch.map.width then self.x = self.overwatch.map.width end
+  elseif self.x > ovw.map.width then self.x = ovw.map.width end
   if self.y < 0 then self.y = 0
-  elseif self.y > self.overwatch.map.height then self.y = self.overwatch.map.height end
+  elseif self.y > ovw.map.height then self.y = ovw.map.height end
 end
 
 function Player:turn()
@@ -142,12 +133,12 @@ function Player:slot()
   
   local weapon = self.slots[self.input.weapon]
   if self.input.l and weapon.canFire(self, weapon) then
-    self.overwatch.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
+    ovw.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
   end
   
   local skill = self.slots[self.input.skill]
   if self.input.r and skill.canFire(self, skill) then
-    self.overwatch.net:emit(evtFire, {id = self.id, slot = self.input.skill})
+    ovw.net:emit(evtFire, {id = self.id, slot = self.input.skill})
   end
 end
 
@@ -161,12 +152,12 @@ end
 
 function Player:die()
   self.ded = 5
-  if self.overwatch.particles then self.overwatch.particles:create('skull', {x = self.x, y = self.y}) end
-  self.overwatch.buffs:remove(self.id)
+  if ovw.particles then ovw.particles:create('skull', {x = self.x, y = self.y}) end
+  ovw.buffs:remove(self.id)
 
   self.x, self.y = 0, 0
   self.visible = 0
-  self.overwatch.collision:refreshPlayer(self)
+  ovw.collision:refreshPlayer(self)
 end
 
 function Player:spawn()

@@ -3,7 +3,7 @@ Particles = class()
 function Particles:init()
 	self.particles = {}
 	self.depth = -10000
-	if self.overwatch.view then self.overwatch.view:register(self) end
+	if ovw.view then ovw.view:register(self) end
 end
 
 function Particles:create(type, vars)

@@ -1,7 +1,7 @@
 PlayerMain = {}
 setmetatable(PlayerMain, {__index = Player})
 
-function PlayerMain:activate(...)
+function PlayerMain:activate()
   self.input = {}
   
   self.input.w = false
@@ -28,7 +28,7 @@ function PlayerMain:activate(...)
 
   self.auxVex = {}
 
-  Player.activate(self, ...)
+  Player.activate(self)
 end
 
 function PlayerMain:deactivate()
@@ -42,7 +42,7 @@ function PlayerMain:update()
   
   if (self.debtX ~= 0 or self.debtY ~= 0) and self.speed > 0 then
     for i = tick - (.5 / tickRate), tick do
-      local state = (i == tick) and self or self.overwatch.players.history[self.id][i]
+      local state = (i == tick) and self or ovw.players.history[self.id][i]
       if state then
         state.x = state.x + (self.debtX / self.debtSmooth)
         state.y = state.y + (self.debtY / self.debtSmooth)
@@ -62,8 +62,8 @@ end
 function PlayerMain:draw()
   if self.ded then return end
   local t = tick - 1
-  local previous = self.overwatch.players.history[self.id][t - 1]
-  local current = self.overwatch.players.history[self.id][t]
+  local previous = ovw.players.history[self.id][t - 1]
+  local current = ovw.players.history[self.id][t]
   if current and previous then
     Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
   end
@@ -71,7 +71,7 @@ end
 
 function PlayerMain:drawPosition()
   local t = tick - 1
-  local prev, cur = self.overwatch.players.history[self.id][t - 1], self.overwatch.players.history[self.id][t]
+  local prev, cur = ovw.players.history[self.id][t - 1], ovw.players.history[self.id][t]
   if prev then
     prev, cur = {x = prev.x, y = prev.y}, {x = cur.x, y = cur.y}
     local interp = table.interpolate(prev, cur, tickDelta / tickRate)
@@ -91,9 +91,9 @@ function PlayerMain:fade()
   local function shouldFade(p)
     if p.team == self.team then return false end
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
-    return self.overwatch.collision:checkLineWall(self.x, self.y, p.x, p.y)
+    return ovw.collision:checkLineWall(self.x, self.y, p.x, p.y)
   end
-  self.overwatch.players:with(self.overwatch.players.active, function(p)
+  ovw.players:with(ovw.players.active, function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
     else p.visible = math.min(p.visible + tickRate, 1) end
   end)
@@ -122,7 +122,7 @@ function PlayerMain:mouseHandler(x, y, button)
 end
 
 function PlayerMain:syncInput()
-  self.overwatch.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
+  ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
 
 function PlayerMain:trace(data)
@@ -134,12 +134,12 @@ function PlayerMain:trace(data)
   data.angle = nil
 
   if data.x and data.y then
-    local state = self.overwatch.players.history[self.id][t]
+    local state = ovw.players.history[self.id][t]
     if not state then return end
     
     if math.distance(data.x, data.y, state.x, state.y) > 64 then
       for i = t - 2, tick do
-        local dst = (i == tick) and self or self.overwatch.players.history[self.id][i]
+        local dst = (i == tick) and self or ovw.players.history[self.id][i]
         table.merge(data, dst)
       end
       self.debtX = 0
@@ -154,12 +154,11 @@ function PlayerMain:trace(data)
     end
     
     local idx = math.max(ack, tick - (1 / tickRate) + 1)
-    local state = table.copy(self.overwatch.players.history[self.id][idx])
+    local state = table.copy(ovw.players.history[self.id][idx])
     if not state then return end
-    state.overwatch = self.overwatch
     
     for i = idx + 1, tick do
-      local dst = (i == tick) and self or self.overwatch.players.history[self.id][i]
+      local dst = (i == tick) and self or ovw.players.history[self.id][i]
       if dst then
         if dst ~= self then
           state.input = dst.input
