@@ -211,12 +211,12 @@ end
 function Hud:drawClassSelect()
   g.setFont(self.font)
   g.setColor(0, 0, 0, 140)
-  Gooey.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
+  g.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
   g.setColor(255, 255, 255, 40)
-  Gooey.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
+  g.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
   
   g.setColor(255, 255, 255, 180)
-  Gooey.printCenter('Choose Class:', w(.5), h(.12))
+  g.printCenter('Choose Class:', w(.5), h(.12))
   local x = w(.5) - (w(.9) / 2) + w(.05)
   local y = h(.5) - (h(.82) / 2) + w(.05)
   for i = 1, #data.class do
@@ -233,7 +233,7 @@ function Hud:drawPlayerDetails()
     elseif p.team == orange then g.setColor(240, 160, 140, p.visible * 255) end
     local vx, vy = math.lerp(ovw.view.prevx, ovw.view.x, tickDelta / tickRate), math.lerp(ovw.view.prevy, ovw.view.y, tickDelta / tickRate)
     local px, py = p:drawPosition()
-    Gooey.printCenter(p.username, (px - vx) * ovw.view.scale, ((py - vy) * ovw.view.scale) - 60)
+    g.printCenter(p.username, (px - vx) * ovw.view.scale, ((py - vy) * ovw.view.scale) - 60)
 
     if not p.ded then
       local x0 = ((px - vx) * ovw.view.scale) - 40
@@ -264,7 +264,7 @@ function Hud:drawHealthbar()
     g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
     g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
     g.draw(self.health.glass, 0, 0, 0, s, s)
-    Gooey.printCenter(math.ceil(p.health), (4 * s) + (s * self.health.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.health.canvas:getHeight() / 2))
+    g.printCenter(math.ceil(p.health), (4 * s) + (s * self.health.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.health.canvas:getHeight() / 2))
   end
 end
 
@@ -291,7 +291,7 @@ function Hud:drawSlots()
       g.draw(self.slotFrameRight[i], w(.03) + self.slotWidth[i], y - w(.02))
       g.setColor(255, 255, 255)
       g.setFont(self.slotSmallFont)
-      Gooey.printCenter(i, w(.03) - w(.02) + w(.004), y)
+      g.printCenter(i, w(.03) - w(.02) + w(.004), y)
     end
     g.setFont(self.font)
   end
