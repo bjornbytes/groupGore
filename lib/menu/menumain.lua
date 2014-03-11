@@ -5,8 +5,8 @@ function MenuMain:init()
 end
 
 function MenuMain:load()
-  ovw.ribbon.count = 5
-  ovw.ribbon.margin = h(.09)
+  ovw.ribbon.count = 3
+  ovw.ribbon.margin = h(.1)
 end
 
 function MenuMain:mousepressed(x, y, button)
@@ -14,7 +14,7 @@ function MenuMain:mousepressed(x, y, button)
   
   if ribbon == 1 then self:host()
   elseif ribbon == 2 then self:play()
-  elseif ribbon == 5 then love.event.quit() end
+  elseif ribbon == 3 then love.event.quit() end
 end
 
 function MenuMain:draw()
@@ -25,12 +25,9 @@ function MenuMain:draw()
   g.setFont(self.font)
   g.setColor(160, 160, 160)
   
-  local margin = h(.09)
-  g.printCenter('Host Game', w(.05), anchor - 2 * margin, false, true)
-  g.printCenter('Join Game', w(.05), anchor - margin, false, true)
-  g.printCenter('Stats', w(.05), anchor, false, true)
-  g.printCenter('Options', w(.05), anchor + margin, false, true)
-  g.printCenter('Exit', w(.05), anchor + 2 * margin, false, true)
+  g.printCenter('Host Game', w(.05), anchor - ovw.ribbon.margin, false, true)
+  g.printCenter('Join Game', w(.05), anchor, false, true)
+  g.printCenter('Exit', w(.05), anchor + ovw.ribbon.margin, false, true)
 end
 
 function MenuMain:host()

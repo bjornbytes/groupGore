@@ -153,8 +153,17 @@ function Hud:mousereleased(x, y, button)
       end
     end
     
-    if math.inside(x, y, w(.08), h(.106), w(.24) + self.classSelectFont:getWidth(self.classSelectTeam and 'purple' or 'orange'), self.classSelectFont:getHeight()) then
+    local font = self.classSelectFont
+    local str = self.classSelectTeam and 'purple' or 'orange'
+    if math.inside(x, y, w(.08), h(.106), w(.24) + font:getWidth(str), font:getHeight()) then
       self.classSelectTeam = 1 - self.classSelectTeam
+    elseif math.inside(x, y, w(.08), h(1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
+      ovw.net:send(msgLeave)
+      Overwatch:remove(ovw)
+      Overwatch:add(Menu)
+    elseif math.inside(x, y, w(.08), h(1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
+      ovw.net:send(msgLeave)
+      love.event.quit()
     end
   end
 end
@@ -233,6 +242,8 @@ function Hud:drawClassSelect()
   g.setColor(128, 128, 128)
   g.print('Team', w(.08), h(.106))
   g.print('Class', w(.08), h(.213))
+  g.print('Disconnect', w(.08), h(1 - .213) - g.getFont():getHeight())
+  g.print('Exit', w(.08), h(1 - .106) - g.getFont():getHeight())
   
   g.setColor(self.classSelectTeam == purple and {190, 160, 220} or {240, 160, 140})
   g.print(self.classSelectTeam == purple and 'purple' or 'orange', w(.32), h(.106))
@@ -392,6 +403,8 @@ function Hud:updateChat(message)
   while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - 2) do
     self.chatLog = self.chatLog:sub(2)
   end
+  
+  g.setFont(self.font)
   self.chatText = rich.new({self.chatLog, w(.25) - 2, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
   self.chatTimer = 2
 end
