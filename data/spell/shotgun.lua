@@ -9,8 +9,14 @@ Shotgun.activate = function(self)
   self.y = self.owner.y
   
   local dir = self.owner.angle
-  self.x = self.x + math.dx(data.weapon.shotgun.dx, dir) - math.dy(data.weapon.shotgun.dy, dir)
-  self.y = self.y + math.dy(data.weapon.shotgun.dx, dir) + math.dx(data.weapon.shotgun.dy, dir)
+  
+  local dx, dy = self.owner.class.handx, self.owner.class.handy
+  self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
+  self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
+  
+  dx, dy = data.weapon.shotgun.tipx, data.weapon.shotgun.tipy
+  self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
+  self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
   
   self.len = 600
   self.bullets = {}

@@ -14,14 +14,15 @@ function View:init()
   while modes[#modes].width ~= modes[1].width do table.remove(modes, #modes) end
   table.sort(modes, function(a, b) return a.width * a.height > b.width * b.height end)
   -- love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true, vsync = false})
-  love.window.setMode(1280, 800, {fullscreen = false, borderless = false, vsync = false, resizable = true})
+  -- love.window.setMode(1280, 800, {fullscreen = false, borderless = false, vsync = false, resizable = true})
+  love.window.setMode(800, 600, {fullscreen = false, borderless = false, vsync = false, resizable = true})
   
   self.x = 0
   self.prevx = 0
   self.y = 0
   self.prevy = 0
   self.w = 800
-  self.h = 450
+  self.h = 600
   self.scale = love.window.getWidth() / self.w
   self.prevscale = self.scale
   self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)

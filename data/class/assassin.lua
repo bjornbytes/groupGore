@@ -13,13 +13,11 @@ Assassin.size = 18
 ----------------
 -- Media
 ----------------
-Assassin.anchor = {}
-Assassin.anchor.x = 38
-Assassin.anchor.y = 65
-
-Assassin.sprites = {}
-Assassin.sprites.head = 'media/graphics/bruteHead.png'
-Assassin.sprites.body = 'media/graphics/bruteBody.png'
+Assassin.anchorx = 15
+Assassin.anchory = 17
+Assassin.handx = 22
+Assassin.handy = 0
+Assassin.sprite = 'media/graphics/assassin.png'
 
 
 ----------------

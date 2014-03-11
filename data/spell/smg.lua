@@ -8,8 +8,14 @@ SMG.activate = function(self)
   self.y = self.owner.y
   
   local dir = self.owner.angle
-  self.x = self.x + math.dx(data.weapon.smg.dx, dir) - math.dy(data.weapon.smg.dy, dir)
-  self.y = self.y + math.dy(data.weapon.smg.dx, dir) + math.dx(data.weapon.smg.dy, dir)
+  
+  local dx, dy = self.owner.class.handx, self.owner.class.handy
+  self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
+  self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
+  
+  dx, dy = data.weapon.smg.tipx, data.weapon.smg.tipy
+  self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
+  self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
   
   self.angle = self.owner.angle
   self.angle = self.angle - (data.weapon.smg.spread / 2) + (2 * math.random() * data.weapon.smg.spread)

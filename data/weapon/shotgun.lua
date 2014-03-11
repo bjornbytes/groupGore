@@ -21,10 +21,10 @@ Shotgun.clip = 4
 Shotgun.ammo = 16
 Shotgun.spread = .06
 Shotgun.count = 4
-Shotgun.dx = 92
-Shotgun.dy = -8
-Shotgun.tipx = 77
-Shotgun.tipy = 4
+Shotgun.anchorx = 14
+Shotgun.anchory = 4
+Shotgun.tipx = 29
+Shotgun.tipy = 0
 
 
 ----------------
@@ -63,9 +63,9 @@ end
 
 Shotgun.draw = function(self, myShotgun)
   local dir = self.angle
-  local dx = myShotgun.dx
-  local dy = myShotgun.dy
-  love.graphics.draw(myShotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, myShotgun.tipx, myShotgun.tipy)
+  local dx = self.class.handx
+  local dy = self.class.handy
+  love.graphics.draw(myShotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, myShotgun.anchorx, myShotgun.anchory)
 end
 
 Shotgun.value = function(myShotgun)

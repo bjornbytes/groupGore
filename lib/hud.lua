@@ -14,6 +14,10 @@ function Hud:init()
   self.health.prevVal = 0
   
   self.font = g.newFont('media/fonts/aeromatics.ttf', h() * .02)
+  
+  self.classSelectTeam = purple
+  self.classSelectAngle = 0
+  self.classSelectFont = g.newFont('media/fonts/BebasNeue.ttf', h() * .065)
 
   self.chatting = false
   self.chatMessage = ''
@@ -115,6 +119,8 @@ function Hud:update()
     if p and p.active and (p.input.weapon == i or p.input.skill == i) then self.targetSlotWidth[i] = w(.1)
     else self.targetSlotWidth[i] = 0 end
   end
+  
+  self.classSelectAngle = (self.classSelectAngle + .65 * tickRate) % (2 * math.pi)
 end
 
 function Hud:draw()
@@ -136,17 +142,19 @@ end
 
 function Hud:mousereleased(x, y, button)
   if self:classSelect() and button == 'l' then
-    local rx = w(.5) - (w(.9) / 2) + w(.05)
-    local ry = h(.5) - (h(.82) / 2) + w(.05) + ovw.view.margin
     for i = 1, #data.class do
-      if math.inside(x, y, rx, ry, w(.06), w(.06)) then
+      if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
         ovw.net:send(msgClass, {
           class = i,
-          team = myId > 1 and 1 or 0
+          team = self.classSelectTeam
         })
+        
+        return
       end
-      rx = rx + w(.08)
-      if i % 4 == 0 then rx = w(.5) - (w(.9) / 2) + w(.05) ry = ry + w(.08) end
+    end
+    
+    if math.inside(x, y, w(.08), h(.106), w(.24) + self.classSelectFont:getWidth(self.classSelectTeam and 'purple' or 'orange'), self.classSelectFont:getHeight()) then
+      self.classSelectTeam = 1 - self.classSelectTeam
     end
   end
 end
@@ -210,19 +218,30 @@ end
 
 function Hud:drawClassSelect()
   g.setFont(self.font)
-  g.setColor(0, 0, 0, 140)
-  g.rectangleCenter('fill', w(.5), h(.5), w(.9), h(.82))
-  g.setColor(255, 255, 255, 40)
-  g.rectangleCenter('line', w(.5), h(.5), w(.9), h(.82))
+  g.setColor(0, 0, 0, 153)
+  g.rectangle('fill', 0, 0, w(), h())
   
-  g.setColor(255, 255, 255, 180)
-  g.printCenter('Choose Class:', w(.5), h(.12))
-  local x = w(.5) - (w(.9) / 2) + w(.05)
-  local y = h(.5) - (h(.82) / 2) + w(.05)
+  g.setColor(0, 0, 0, 89)
+  g.rectangle('fill', w(.08), h(.313), w(.46), h(.35))
+  g.rectangle('fill', w(.55), h(.313), w(.37), h(.58))
+  
+  g.setColor(255, 255, 255, 25)
+  g.rectangle('line', w(.08), h(.313), w(.46), h(.35))
+  g.rectangle('line', w(.55), h(.313), w(.37), h(.58))
+  
+  g.setFont(self.classSelectFont)
+  g.setColor(128, 128, 128)
+  g.print('Team', w(.08), h(.106))
+  g.print('Class', w(.08), h(.213))
+  
+  g.setColor(self.classSelectTeam == purple and {190, 160, 220} or {240, 160, 140})
+  g.print(self.classSelectTeam == purple and 'purple' or 'orange', w(.32), h(.106))
+  
   for i = 1, #data.class do
-    g.rectangle('line', x, y, w(.06), w(.06))
-    x = x + w(.08)
-    if i % 4 == 0 then x = w(.5) - (w(.9) / 2) + w(.05) y = y + w(.08) end
+    g.setColor(255, 255, 255, 25)
+    g.rectangle('line', w(.09) * i, h(.326), w(.08), w(.08))
+    g.setColor(255, 255, 255)
+    g.draw(data.class[i].sprite, w(.09) * i + w(.04), h(.326) + w(.04), self.classSelectAngle, 1, 1, data.class[i].anchorx, data.class[i].anchory)
   end
 end
 

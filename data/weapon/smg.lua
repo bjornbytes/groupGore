@@ -20,10 +20,10 @@ SMG.reload = 1.6
 SMG.clip = 12
 SMG.ammo = 240
 SMG.spread = .03
-SMG.dx = 84
-SMG.dy = -10
-SMG.tipx = 70
-SMG.tipy = 4
+SMG.anchorx = 15
+SMG.anchory = 7
+SMG.tipx = 14
+SMG.tipy = 0
 
 
 ----------------
@@ -61,9 +61,9 @@ end
 
 SMG.draw = function(self, mySMG)
   local dir = self.angle
-  local dx = mySMG.dx
-  local dy = mySMG.dy
-  love.graphics.draw(mySMG.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, mySMG.tipx, mySMG.tipy)
+  local dx = self.class.handx
+  local dy = self.class.handy
+  love.graphics.draw(mySMG.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, mySMG.anchorx, mySMG.anchory)
 end
 
 SMG.value = function(mySMG)
