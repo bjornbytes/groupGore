@@ -8,8 +8,8 @@ NetClient.signatures[msgInput] = {
   {'tick', '16bits'},
   {'w', 'bool'}, {'a', 'bool'}, {'s', 'bool'}, {'d', 'bool'},
   {'mx', '12bits'}, {'my', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
-  {'weapon', '3bits'}, {'skill', '3bits'}, {'reload', 'bool'},
-  delta = {{'w', 'a', 's', 'd'}, 'mx', 'my', 'weapon', 'l', 'r', 'skill', 'reload'}
+  {'weapon', '3bits'}, {'skill', '3bits'}, {'reload', 'bool'}
+  --delta = {{'w', 'a', 's', 'd'}, 'mx', 'my', 'weapon', 'l', 'r', 'skill', 'reload'}
 }
 NetClient.signatures[msgChat] = {{'message', 'string'}}
 
@@ -26,6 +26,7 @@ NetClient.receive[msgSnapshot] = function(self, event)
   --ovw.map:load(event.data.map)
   for i = 1, #event.data.players do
     local p = event.data.players[i]
+    ovw.players:get(p.id).username = p.username
     if p.class > 0 then
       ovw.players:activate(p.id)
       ovw.players:setClass(p.id, p.class, p.team)

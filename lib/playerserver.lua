@@ -41,9 +41,9 @@ function PlayerServer:update()
   local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
   
   self:time()
-  self:move()
-  self:turn()
-  self:slot()
+  --self:move()
+  --self:turn()
+  --self:slot()
 
   self:logic()
   
@@ -55,32 +55,20 @@ function PlayerServer:update()
     end
   end
   
-  local data, flag = {}, false
-  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy then
-    data.x = math.round(self.x)
-    data.y = math.round(self.y)
-    flag = true
-  end
+  local data = {}
+  data.x = math.round(self.x)
+  data.y = math.round(self.y)
+  data.angle = math.round((math.deg(self.angle) + 360) % 360)
 
-  if math.round((math.deg(self.angle) + 360) % 360) ~= prevangle then
-    data.angle = math.round((math.deg(self.angle) + 360) % 360)
-    flag = true
-  end
-  
-  if math.round(self.health) ~= prevhp  or tick - self.lastHurt <= 1 then
-    local shield = 0
-    table.each(self.shields, function(s) shield = shield + s.health end)
-    data.health = math.round(self.health)
-    data.shield = math.round(shield)
-    flag = true
-  end
-  
-  if flag or math.random() < .02 then
-    data.id = self.id
-    data.tick = tick
-    data.ack = self.ack
-    ovw.net:emit(evtSync, data)
-  end
+  local shield = 0
+  table.each(self.shields, function(s) shield = shield + s.health end)
+  data.health = math.round(self.health)
+  data.shield = math.round(shield)
+
+  data.id = self.id
+  data.tick = tick
+  data.ack = self.ack
+  ovw.net:emit(evtSync, data)
 end
 
 function PlayerServer:time()

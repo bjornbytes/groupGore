@@ -53,9 +53,16 @@ NetServer.receive[msgInput] = function(self, event)
   local p = ovw.players:get(event.pid)
   local t = event.data.tick
   event.data.tick = nil
-  p.ack = t
+  
+  if t > p.ack then
+    p.ack = t
+    p.input = event.data
+    p:move()
+    p:turn()
+    p:slot()
+  end
 
-  local state = table.copy(ovw.players.history[p.id][t])
+  --[[local state = table.copy(ovw.players.history[p.id][t])
   state.input = event.data
   for i = t + 1, tick do
     local dst = (i == tick) and p or ovw.players.history[p.id][i]
@@ -66,7 +73,7 @@ NetServer.receive[msgInput] = function(self, event)
       dst.input = state.input
     end
     table.merge({x = state.x, y = state.y, angle = state.angle}, dst)
-  end
+  end]]
 end
 
 NetServer.receive[msgChat] = function(self, event)

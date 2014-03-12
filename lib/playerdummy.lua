@@ -32,10 +32,5 @@ function PlayerDummy:trace(data)
 	data.tick = nil
 	data.id = nil
 	if data.angle then data.angle = math.rad(data.angle) end
-	for i = t, tick do
-		local dst = ovw.players.history[self.id][i]
-		if i == tick then dst = self end
-		table.merge(data, dst)
-		ovw.collision:refreshPlayer(self)
-	end
+	table.merge(data, self)--ovw.players.history[self.id][t])
 end

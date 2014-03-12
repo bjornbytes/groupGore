@@ -19,12 +19,6 @@ function PlayerMain:activate()
   self.input.reload = false
   
   self.visible = 1
-  
-  self.lastWasd = tick
-  
-  self.debtX = 0
-  self.debtY = 0
-  self.debtSmooth = 10
 
   self.auxVex = {}
 
@@ -40,46 +34,38 @@ end
 function PlayerMain:update()
   if self.ded then return end
   
-  if (self.debtX ~= 0 or self.debtY ~= 0) and self.speed > 0 then
-    for i = tick - (.5 / tickRate), tick do
-      local state = (i == tick) and self or ovw.players.history[self.id][i]
-      if state then
-        state.x = state.x + (self.debtX / self.debtSmooth)
-        state.y = state.y + (self.debtY / self.debtSmooth)
-      end
-    end
-    self.debtX = self.debtX - (self.debtX / self.debtSmooth)
-    self.debtY = self.debtY - (self.debtY / self.debtSmooth)
-  end
-  
   self:poll()
   self:move()
   self:turn()
   self:slot()
   self:fade()
+  
+  ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
 
 function PlayerMain:draw()
   if self.ded then return end
-  local t = tick - 1
+  local t = tick
   local previous = ovw.players.history[self.id][t - 1]
   local current = ovw.players.history[self.id][t]
   if current and previous then
     Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
   end
   
-  --[[local server
-  for i = 1, #Overwatch.ovws do
-    local o = Overwatch.ovws[i]
-    if o and o.tag and o.tag == 'server' then
-      server = o
-      break
+  if love.keyboard.isDown(' ') then
+    local server
+    for i = 1, #Overwatch.ovws do
+      local o = Overwatch.ovws[i]
+      if o and o.tag and o.tag == 'server' then
+        server = o
+        break
+      end
+    end
+    
+    if server then
+      Player.draw(server.players:get(self.id))
     end
   end
-  
-  if server then
-    Player.draw(server.players:get(self.id))
-  end]]
 end
 
 function PlayerMain:drawPosition()
@@ -95,9 +81,7 @@ function PlayerMain:drawPosition()
 end
 
 function PlayerMain:poll()
-  local prevx, prevy = self.input.mx, self.input.my
   self.input.mx, self.input.my = mouseX(), mouseY()
-  if prevx ~= self.input.mx or prevy ~= self.input.my then self:syncInput() end
 end
 
 function PlayerMain:fade()
@@ -115,27 +99,17 @@ end
 function PlayerMain:keyHandler(key)
   if key == 'w' or key == 'a' or key == 's' or key == 'd' then
     self.input[key] = love.keyboard.isDown(key)
-    self:syncInput()
-    self.lastWasd = tick
-    if not self.input[key] then self.lastWasd = self.lastWasd - 1 end
   elseif key == 'r' then
     self.input.reload = love.keyboard.isDown(key)
-    self:syncInput()
   elseif key:match('^[1-5]$') and love.keyboard.isDown(key) then
     key = tonumber(key)
     local slotType = self.slots[key].type
     if self.input[slotType] ~= key then self.input[slotType] = key end
-    self:syncInput()
   end
 end
 
 function PlayerMain:mouseHandler(x, y, button)
   self.input[button] = love.mouse.isDown(button)
-  self:syncInput()
-end
-
-function PlayerMain:syncInput()
-  ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
 
 function PlayerMain:trace(data)
@@ -147,32 +121,12 @@ function PlayerMain:trace(data)
   data.angle = nil
 
   if data.x and data.y then
-    local state = ovw.players.history[self.id][t]
+    table.merge(data, ovw.players.history[self.id][t])
+    
+    local state = table.copy(ovw.players.history[self.id][ack])
     if not state then return end
     
-    if math.distance(data.x, data.y, state.x, state.y) > 64 then
-      for i = t - 2, tick do
-        local dst = (i == tick) and self or ovw.players.history[self.id][i]
-        table.merge(data, dst)
-      end
-      self.debtX = 0
-      self.debtY = 0
-      return
-    else
-      if self.lastWasd <= ack then
-        self.debtX = (data.x - state.x)
-        self.debtY = (data.y - state.y)
-      end
-      
-    end
-    
-    table.merge(data, state)
-    
-    local idx = math.max(ack, tick - (1 / tickRate) + 1)
-    local state = table.copy(ovw.players.history[self.id][idx])
-    if not state then return end
-    
-    for i = idx + 1, tick do
+    for i = ack + 1, tick do
       local dst = (i == tick) and self or ovw.players.history[self.id][i]
       if dst then
         if dst ~= self then
