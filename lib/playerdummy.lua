@@ -2,7 +2,6 @@ PlayerDummy = {}
 setmetatable(PlayerDummy, {__index = Player})
 
 function PlayerDummy:activate()
-	self.lastUpdate = tick
 	Player.activate(self)
 end
 
@@ -33,5 +32,7 @@ function PlayerDummy:trace(data)
 	data.tick = nil
 	data.id = nil
 	if data.angle then data.angle = math.rad(data.angle) end
-	table.merge(data, self)--ovw.players.history[self.id][t])
+	local dst = (t == tick) and self or ovw.players.history[self.id][t]
+	table.merge(data, dst)
+	if dst ~= self then table.merge(data, self) end
 end

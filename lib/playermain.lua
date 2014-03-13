@@ -20,8 +20,6 @@ function PlayerMain:activate()
   
   self.visible = 1
 
-  self.lastUpdate = tick
-
   Player.activate(self)
 end
 
@@ -139,6 +137,4 @@ function PlayerMain:trace(data)
     table.merge({x = state.x, y = state.y}, ovw.players.history[self.id][tick - 1])
   end
   table.merge({x = state.x, y = state.y}, self)
-
-  self.lastUpdate = math.max(self.lastUpdate, t)
 end
