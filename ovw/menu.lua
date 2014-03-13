@@ -13,10 +13,6 @@ function Menu:load()
   self:changePage(self.login)
 end
 
-function Menu:unload()
-  print('nooo')
-end
-
 function Menu:draw()
   self.background:draw()
   self.ribbon:draw()
