@@ -2,6 +2,7 @@ PlayerDummy = {}
 setmetatable(PlayerDummy, {__index = Player})
 
 function PlayerDummy:activate()
+	self.lastUpdate = tick
 	Player.activate(self)
 end
 

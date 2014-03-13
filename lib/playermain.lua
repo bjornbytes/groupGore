@@ -22,6 +22,8 @@ function PlayerMain:activate()
 
   self.auxVex = {}
 
+  self.lastUpdate = tick
+
   Player.activate(self)
 end
 
@@ -120,25 +122,31 @@ function PlayerMain:trace(data)
   data.id = nil
   data.angle = nil
 
-  if data.x and data.y then
-    table.merge(data, ovw.players.history[self.id][t])
-    
-    local state = table.copy(ovw.players.history[self.id][ack])
-    if not state then return end
-    
-    for i = ack + 1, tick do
-      local dst = (i == tick) and self or ovw.players.history[self.id][i]
-      if dst then
-        if dst ~= self then
-          state.input = dst.input
-          state.auxVex = dst.auxVex
-          state:move()
-        end
-        table.merge({x = state.x, y = state.y}, dst)
-      end
-    end
-  end
-  
   self.health = data.health or self.health
   self.shield = data.shield or self.shield
+
+  if not data.x or not data.y then
+    local hist = ovw.players.history[self.id][self.lastUpdate]
+    if not hist then return end
+    data.x, data.y = hist.x, hist.y
+  end
+
+  table.merge(data, ovw.players.history[self.id][t])
+  
+  local state = table.copy(ovw.players.history[self.id][ack])
+  if not state then return end
+  
+  for i = ack + 1, tick do
+    local dst = (i == tick) and self or ovw.players.history[self.id][i]
+    if dst then
+      if dst ~= self then
+        state.input = dst.input
+        state.auxVex = dst.auxVex
+        state:move()
+      end
+      table.merge({x = state.x, y = state.y}, dst)
+    end
+  end
+
+  self.lastUpdate = math.max(self.lastUpdate, t)
 end

@@ -41,10 +41,6 @@ function PlayerServer:update()
   local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
   
   self:time()
-  --self:move()
-  --self:turn()
-  --self:slot()
-
   self:logic()
   
   if self.health < self.maxHealth and not self.ded then
@@ -56,9 +52,14 @@ function PlayerServer:update()
   end
   
   local data = {}
-  data.x = math.round(self.x)
-  data.y = math.round(self.y)
-  data.angle = math.round((math.deg(self.angle) + 360) % 360)
+  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy then
+    data.x = math.round(self.x)
+    data.y = math.round(self.y)
+  end
+
+  if math.round((math.deg(self.angle) + 360) % 360) ~= prevangle then
+    data.angle = math.round((math.deg(self.angle) + 360) % 360)
+  end
 
   local shield = 0
   table.each(self.shields, function(s) shield = shield + s.health end)
@@ -131,6 +132,19 @@ function PlayerServer:spawn()
   table.clear(self.helpHistory)
 
   Player.spawn(self)
+end
+
+function PlayerServer:trace(data)
+  local t = data.tick
+  data.tick = nil
+  
+  if t > self.ack then
+    self.ack = t
+    self.input = data
+    self:move()
+    self:turn()
+    self:slot()
+  end
 end
 
 function PlayerServer:logic()
