@@ -27,15 +27,10 @@ function love.run()
       local releases = {}
       for e, a, b, c, d in love.event.poll() do
         if e == 'quit' then f.exe(love.quit) love.audio.stop() return
-        elseif e == 'mousereleased' or e == 'keyreleased' then table.insert(releases, {e, a, b, c, d})
         else love.handlers[e](a, b, c, d) end
       end
       
       love.update()
-      
-      for _, e in pairs(releases) do
-        love.handlers[e[1]](e[2], e[3], e[4], e[5])
-      end
     end
 
     syncDelta = syncDelta + delta

@@ -81,7 +81,7 @@ function Player:move()
     self.speed = 0
   end
   
-  if self.speed == 0 and #self.auxVex == 0 then return end
+  if self.speed == 0 then return end
   
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
@@ -95,14 +95,6 @@ function Player:move()
     local dir = (dx + dy) / 2
     newx, newy = newx + math.cos(dir) * (self.speed * tickRate), newy + math.sin(dir) * (self.speed * tickRate)
   end
-
-  for i = 1, #self.auxVex do
-    newx = newx + math.dx(self.auxVex[i].speed * tickRate, self.auxVex[i].angle)
-    newy = newy + math.dy(self.auxVex[i].speed * tickRate, self.auxVex[i].angle)
-    self.auxVex[i].t = self.auxVex[i].t - tickRate
-  end
-
-  self.auxVex = table.filter(self.auxVex, function(v) return v.t > 0 end)
 
   self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
   self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)

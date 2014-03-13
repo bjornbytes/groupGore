@@ -26,8 +26,6 @@ function PlayerServer:activate()
   self.ack = tick
   self.lastHurt = tick
 
-  self.auxVex = {}
-
   Player.activate(self)
 end
 
@@ -52,14 +50,9 @@ function PlayerServer:update()
   end
   
   local data = {}
-  if math.round(self.x) ~= prevx or math.round(self.y) ~= prevy then
-    data.x = math.round(self.x)
-    data.y = math.round(self.y)
-  end
-
-  if math.round((math.deg(self.angle) + 360) % 360) ~= prevangle then
-    data.angle = math.round((math.deg(self.angle) + 360) % 360)
-  end
+  data.x = math.round(self.x)
+  data.y = math.round(self.y)
+  data.angle = math.round((math.deg(self.angle) + 360) % 360)
 
   local shield = 0
   table.each(self.shields, function(s) shield = shield + s.health end)

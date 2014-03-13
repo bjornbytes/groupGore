@@ -20,8 +20,6 @@ function PlayerMain:activate()
   
   self.visible = 1
 
-  self.auxVex = {}
-
   self.lastUpdate = tick
 
   Player.activate(self)
@@ -71,7 +69,7 @@ function PlayerMain:draw()
 end
 
 function PlayerMain:drawPosition()
-  local t = tick - 1
+  local t = tick
   local prev, cur = ovw.players.history[self.id][t - 1], ovw.players.history[self.id][t]
   if prev then
     prev, cur = {x = prev.x, y = prev.y}, {x = cur.x, y = cur.y}
@@ -125,28 +123,22 @@ function PlayerMain:trace(data)
   self.health = data.health or self.health
   self.shield = data.shield or self.shield
 
-  if not data.x or not data.y then
-    local hist = ovw.players.history[self.id][self.lastUpdate]
-    if not hist then return end
-    data.x, data.y = hist.x, hist.y
-  end
-
-  table.merge(data, ovw.players.history[self.id][t])
-  
-  local state = table.copy(ovw.players.history[self.id][ack])
+  local state = table.copy(self)--ovw.players.history[self.id][tick - 1]
   if not state then return end
   
-  for i = ack + 1, tick do
-    local dst = (i == tick) and self or ovw.players.history[self.id][i]
-    if dst then
-      if dst ~= self then
-        state.input = dst.input
-        state.auxVex = dst.auxVex
-        state:move()
-      end
-      table.merge({x = state.x, y = state.y}, dst)
+  table.merge(data, state)
+  
+  for i = ack + 1, tick - 1 do
+    if ovw.players.history[self.id][i] then
+      state.input = ovw.players.history[self.id][i].input
+      state:move()
     end
   end
+  
+  if ovw.players.history[self.id][tick - 1] then
+    table.merge({x = state.x, y = state.y}, ovw.players.history[self.id][tick - 1])
+  end
+  table.merge({x = state.x, y = state.y}, self)
 
   self.lastUpdate = math.max(self.lastUpdate, t)
 end
