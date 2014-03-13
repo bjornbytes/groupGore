@@ -27,17 +27,10 @@ data.load = function()
   end)
   load('data/spell', 'spell')
   load('data/class', 'class', function(class)
-    --[[for name, sprite in pairs(class.sprites) do
-      class.sprites[name] = love.graphics.newImage(sprite)
-    end]]
     class.sprite = love.graphics.newImage(class.sprite)
   end)
   load('data/particle', 'particle', function(particle)
-    for k, v in pairs(particle.initial) do
-      if type(v) == 'string' and v:match('%.png') then
-        particle.initial[k] = love.graphics.newImage(v)
-      end
-    end
+    if particle.image then particle.image = love.graphics.newImage(particle.image) end
   end)
   load('data/prop', 'prop')
   

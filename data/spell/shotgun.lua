@@ -26,8 +26,10 @@ Shotgun.activate = function(self)
     
     local x2, y2 = self.x + math.cos(ang) * len, self.y + math.sin(ang) * len
     local endx, endy = ovw.collision:checkLineWall(self.x, self.y, x2, y2, true)
+    local wall = true
     if not endx then
       endx, endy = x2, y2
+      wall = false
     end
     
     local targets = {}
@@ -48,13 +50,30 @@ Shotgun.activate = function(self)
       local l, h = data.weapon.shotgun.damage * .4, data.weapon.shotgun.damage * 1
       local damage = l + ((h - l) * ((f - math.clamp(len, n, f)) / f))
       ovw.net:emit(evtDamage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
+    elseif wall and ovw.particles then
+      for _ = 1, 4 do
+        ovw.particles:create('spark', {
+          x = endx,
+          y = endy,
+          angle = i + math.pi + love.math.random() * 2.08 - 1.04
+        })
+      end
     end
     
     table.insert(self.bullets, {
-      angle = i + (math.pi / 2),
       endx = endx,
       endy = endy
     })
+  end
+  
+  if ovw.particles then
+    for _ = 1, 4 do
+      ovw.particles:create('spark', {
+        x = self.x,
+        y = self.y,
+        angle = self.owner.angle + love.math.random() * 1.56 - .78
+      })
+    end
   end
 end
 
