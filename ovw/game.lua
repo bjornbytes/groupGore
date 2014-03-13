@@ -13,6 +13,7 @@ function Game:load()
   self.particles = Particles()
   self.map = Map()
   self.hud = Hud()
+  self.sound = Sound()
 end
 
 function Game:unload()

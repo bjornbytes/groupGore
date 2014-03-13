@@ -75,6 +75,10 @@ Shotgun.activate = function(self)
       })
     end
   end
+  
+  if ovw.sound then
+    ovw.sound:play('shotgun')
+  end
 end
 
 Shotgun.update = function(self)

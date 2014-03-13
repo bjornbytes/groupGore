@@ -66,6 +66,10 @@ SMG.activate = function(self)
       })
     end
   end
+  
+  if ovw.sound then
+    ovw.sound:play('smg')
+  end
 end
 
 SMG.update = function(self)
