@@ -34,7 +34,7 @@ end
 function Gorgeous:load()
   self.socket = require('socket').tcp()
   self.socket:settimeout(1)
-  local _, err = self.socket:connect('127.0.0.1', 6060)--'107.4.63.70', 6060)
+  local _, err = self.socket:connect('107.4.63.70', 6060)
   
   if err then
     print('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
