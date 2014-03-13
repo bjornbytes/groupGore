@@ -14,7 +14,7 @@ function Overwatch:add(obj, ...)
 end
 
 function Overwatch:remove(ovw)
-	self.toRemove = ovw
+	table.insert(self.toRemove, ovw)
 end
 
 function Overwatch:clear()
@@ -24,18 +24,18 @@ end
 setmetatable(Overwatch, {
 	__index = function(t, k)
 		return function(...)
-			local args = {...}
-			table.each(t.ovws, function(o)
-				ovw = o
-				if k == 'update' and t.toRemove == ovw then
+			local i = 1
+			while i <= #t.ovws do
+				ovw = t.ovws[i]
+				if k == 'update' and table.has(t.toRemove, ovw) then
 					f.exe(ovw.unload, ovw)
-					t.ovws = table.filter(t.ovws, function(o) return o ~= ovw end)
-					o = nil
+					table.remove(t.ovws, i)
 				else
-					if o[k] then o[k](o, unpack(args)) end
+					if ovw[k] then ovw[k](ovw, ...) end
+					i = i + 1
 				end
 				ovw = nil
-			end)
+			end
 		end
 	end
 })

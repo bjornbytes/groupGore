@@ -22,8 +22,8 @@ function PlayerRobot:logic()
     self.input.w, self.input.a, self.input.s, self.input.d = the WASD keys
     self.input.mx, self.input.my = the mouse positon
     self.input.l, self.input.r = the mouse buttons
-    self.input.wep, self.input.skl = the weapon/skill you have selected
-    self.input.rel = the reload key
+    self.input.weapon, self.input.skill = the weapon/skill you have selected
+    self.input.reload = the reload key
   ]]
   
   self.input.a = tick % self.s1 < self.s4 / 2
