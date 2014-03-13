@@ -5,25 +5,14 @@ local function h(x) x = x or 1 return (love.window.getHeight() - ovw.view.margin
 local g = love.graphics
 
 function Hud:init()
-  self.health = {}
-  self.health.canvas = g.newCanvas(160, 160)
-  self.health.back = g.newImage('media/graphics/healthBack.png')
-  self.health.glass = g.newImage('media/graphics/healthGlass.png')
-  self.health.red = g.newImage('media/graphics/healthRed.png')
-  self.health.val = 0
-  self.health.prevVal = 0
+  self.health = HudHealth()
+  self.chat = HudChat()
   
   self.font = g.newFont('media/fonts/aeromatics.ttf', h() * .02)
   
   self.classSelectTeam = purple
   self.classSelectAngle = 0
   self.classSelectFont = g.newFont('media/fonts/BebasNeue.ttf', h() * .065)
-
-  self.chatting = false
-  self.chatMessage = ''
-  self.chatLog = ''
-  self.chatTimer = 0
-  self.chatOffset = -w(.25) - 4
 
   self.killfeed = {}
   self.killfeedAlpha = 0
@@ -58,7 +47,7 @@ function Hud:init()
   end
 
   ovw.event:on(evtChat, self, function(self, data)
-    self:updateChat(data.message)
+    self.chat:add(data.message)
   end)
 
   ovw.event:on(evtDead, self, function(self, data)
@@ -76,11 +65,11 @@ function Hud:init()
 end
 
 function Hud:update()
+  self.health:update()
+  self.chat:update()
+  
   local p = ovw.players:get(myId)
   if p and p.active then
-    self.health.prevVal = self.health.val
-    self.health.val = math.lerp(self.health.val, p.health, .25)
-
     for i = 1, 5 do
       self.slotFrameRight[i]:clear()
       self.slotFrameRight[i]:renderTo(function()
@@ -93,10 +82,6 @@ function Hud:update()
       end)
     end
   end
-
-  self.chatTimer = timer.rot(self.chatTimer)
-  if self.chatting then self.chatTimer = 2 end
-  self.chatOffset = math.lerp(self.chatOffset, (self.chatTimer == 0) and -w(.25) - 4 or 0, .25)
 
   for i = 1, #self.killfeed do
     local k = self.killfeed[i]
@@ -122,11 +107,11 @@ function Hud:draw()
   if self:classSelect() then return self:drawClassSelect() end
 
   self:drawPlayerDetails()
-  self:drawHealthbar()
+  self.health:draw()
   self:drawSlots()
   self:drawBuffs()
   self:drawKillfeed()
-  self:drawChat()
+  self.chat:draw()
   self:drawDebug()
   f.exe(ovw.map.hud, ovw.map)
 end
@@ -158,25 +143,13 @@ function Hud:mousereleased(x, y, button)
 end
 
 function Hud:textinput(character)
-  if self.chatting then self.chatMessage = self.chatMessage .. character end
+  self.chat:textinput(character)
 end
 
 function Hud:keypressed(key)
   if tick < 10 then return end
 
-  if self.chatting then
-    if key == 'backspace' then self.chatMessage = self.chatMessage:sub(1, -2)
-    elseif key == 'return' then
-      if #self.chatMessage > 0 then
-        ovw.net:send(msgChat, {
-          message = self.chatMessage
-        })
-      end
-      self.chatting = false
-      self.chatMessage = ''
-      love.keyboard.setKeyRepeat(false)
-    end
-    return true
+  if self.chat:keypressed(key) then return true
   else
     if self:classSelect() then
       for i = 1, #data.class do
@@ -188,8 +161,8 @@ function Hud:keypressed(key)
         end
       end
     elseif key == 'return' then
-      self.chatting = true
-      self.chatMessage = ''
+      self.chat.active = true
+      self.chat.message = ''
       love.keyboard.setKeyRepeat(true)
     elseif key == '`' then
       ovw.editor.active = not ovw.editor.active
@@ -198,7 +171,7 @@ function Hud:keypressed(key)
 end
 
 function Hud:keyreleased(key)
-  if self.chatting then return true end
+  if self.chat.active then return true end
 end
 
 function Hud:connecting()
@@ -275,28 +248,6 @@ function Hud:drawPlayerDetails()
   end)
 end
 
-function Hud:drawHealthbar()
-  local p = ovw.players:get(myId)
-  self.health.canvas:clear()
-  self.health.canvas:renderTo(function()
-    g.setColor(255, 255, 255, 255)
-    g.draw(self.health.red, 4, 13)
-    g.setBlendMode('subtractive')
-    g.setColor(255, 255, 255, 255)
-    g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (math.lerp(self.health.prevVal, self.health.val, tickDelta / tickRate) / p.maxHealth))))
-    g.setBlendMode('alpha')
-  end)
-  
-  if p and p.active then
-    local s = math.min(1, h(.2) / 160)
-    g.setColor(255, 255, 255)
-    g.draw(self.health.back, 12 * s, 12 * s, 0, s, s)
-    g.draw(self.health.canvas, 4 * s, 4 * s, 0, s, s)
-    g.draw(self.health.glass, 0, 0, 0, s, s)
-    g.printCenter(math.ceil(p.health), (4 * s) + (s * self.health.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.health.canvas:getHeight() / 2))
-  end
-end
-
 function Hud:drawSlots()
   local p = ovw.players:get(myId)
   if p and p.active then
@@ -360,28 +311,6 @@ function Hud:drawKillfeed()
   end
 end
 
-function Hud:drawChat()
-  local height = h(.25) + 2
-  if self.chatting then height = height + (self.font:getHeight() + 6.5) end
-  g.setColor(0, 0, 0, 180)
-  g.rectangle('fill', 4 + self.chatOffset, h() - (height + 4), w(.25), height)
-  g.setColor(30, 30, 30, 180)
-  g.rectangle('line', 4 + self.chatOffset, h() - (height + 4), w(.25), height)
-  g.setFont(self.font)
-  local yy = h() - 4
-  if self.chatting then
-    g.setColor(255, 255, 255, 60)
-    g.line(4.5 + self.chatOffset, h() - 4 - self.font:getHeight() - 6.5, 3 + w(.25) + self.chatOffset, h() - 4 - self.font:getHeight() - 6.5)
-    g.setColor(255, 255, 255, 180)
-    g.printf(self.chatMessage .. (self.chatting and '|' or ''), 4 + 4 + self.chatOffset, math.round(yy - self.font:getHeight() - 5.5 + 2), w(.25), 'left')
-    yy = yy - self.font:getHeight() - 6.5
-  end
-
-  if self.chatText then
-    self.chatText:draw(4 + 4 + self.chatOffset, math.round(yy - (self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25) - 2))) - 4))
-  end
-end
-
 function Hud:drawDebug()
   g.setColor(255, 255, 255, 100)
   local debug = love.timer.getFPS() .. 'fps'
@@ -391,21 +320,6 @@ function Hud:drawDebug()
     debug = debug .. ', ' .. math.floor(ovw.net.host:total_received_data() / 1000 + .5) .. 'rx'
   end
   g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
-end
-
-function Hud:updateChat(message)
-  if #message > 0 then
-    if #self.chatLog > 0 then self.chatLog = self.chatLog .. '\n' end
-    self.chatLog = self.chatLog .. message
-  end
-
-  while self.font:getHeight() * select(2, self.font:getWrap(self.chatLog, w(.25))) > (h(.25) - 2) do
-    self.chatLog = self.chatLog:sub(2)
-  end
-  
-  g.setFont(self.font)
-  self.chatText = rich.new({self.chatLog, w(.25) - 2, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
-  self.chatTimer = 2
 end
 
 function Hud:classSelect() return myId and not ovw.players:get(myId).active end

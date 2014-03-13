@@ -22,7 +22,7 @@ function Player:create()
     lifesteal = 0,
     size = 0,
     depth = 0,
-    anchor = nil,
+    recoil = 0,
     visible = 0,
     slots = {{}, {}, {}, {}, {}}
   }
@@ -139,6 +139,8 @@ function Player:slot()
   if self.input.r and skill.canFire(self, skill) then
     ovw.net:emit(evtFire, {id = self.id, slot = self.input.skill})
   end
+  
+  if self.recoil > 0 then self.recoil = self.recoil - math.min(self.recoil, 8 * tickRate) end
 end
 
 function Player:hurt()

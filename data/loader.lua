@@ -4,7 +4,7 @@ data.load = function()
     data[type] = {}
     local id = 1
     for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-      if file:match('%.lua$') then
+      if file:match('%.lua$') and not file:match('^%.') then
         local obj = love.filesystem.load(dir .. '/' .. file)()
         obj = f.exe(fn, obj) or obj
         obj.id = id
