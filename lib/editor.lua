@@ -6,6 +6,8 @@ function Editor:load()
   self.view = View()
   self.map = Map()
   
+  self.font = love.graphics.newFont('media/fonts/aeromatics.ttf', h(.02))
+  
   self.gridSize = 32
   self.findProp = false
   self.findPropX = 0
@@ -68,8 +70,6 @@ function Editor:load()
   }
   
   self.view:register(self.grid)
-
-  self.gooey = Gooey()
 
   self.props = {}
   for _, v in ipairs(data.prop) do
@@ -139,7 +139,7 @@ function Editor:draw()
   self.view:draw()
 
   if self.findProp then
-    self.gooey:font('aeroMatics', 2)
+    love.graphics.setFont(self.font)
     love.graphics.setColor(0, 0, 0, 160)
     local w = math.max(160, love.graphics.getFont():getWidth(self.findPropStr))
     local h = (love.graphics.getFont():getHeight() + 4) * (#self.props + 1) + 6
@@ -254,9 +254,9 @@ function Editor:mousepressed(x, y, button)
       end
     end)
   elseif button == 'wu' then
-    self.targetScale = math.min(self.targetScale + .2, 8)
+    self.targetScale = math.min(self.targetScale + .2, 4)
   elseif button == 'wd' then
-    self.targetScale = math.max(self.targetScale - .2, 1)
+    self.targetScale = math.max(self.targetScale - .2, .6)
   end
 end
 

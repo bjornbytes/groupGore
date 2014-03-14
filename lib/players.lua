@@ -119,6 +119,14 @@ function Players:setClass(id, class, team)
   p:activate()
 end
 
+function Players:rewind(t)
+  
+end
+
+function Players:unrewind()
+  
+end
+
 function Players:refresh()
   table.clear(self.active)
   for i = 1, 16 do

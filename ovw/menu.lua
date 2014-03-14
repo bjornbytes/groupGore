@@ -20,6 +20,7 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
+  if key == 'escape' then love.event.quit() end
   self.input:keypressed(key)
 end
 
