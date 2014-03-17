@@ -24,6 +24,7 @@ function Player:create()
     depth = 0,
     recoil = 0,
     visible = 0,
+    lastHurt = 0,
     slots = {{}, {}, {}, {}, {}}
   }
 end
@@ -136,7 +137,7 @@ function Player:slot()
 end
 
 function Player:hurt()
-  --
+  self.lastHurt = tick
 end
 
 function Player:heal()

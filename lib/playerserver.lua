@@ -24,7 +24,6 @@ function PlayerServer:activate()
   self.helpHistory = {}
   
   self.ack = tick
-  self.lastHurt = tick
 
   Player.activate(self)
 end

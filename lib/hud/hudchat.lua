@@ -59,10 +59,16 @@ function HudChat:keypressed(key)
     end
     
     return true
+  elseif key == 'return' then
+    self.active = true
+    self.message = ''
+    love.keyboard.setKeyRepeat(true)
   end
 end
 
-function HudChat:add(message)
+function HudChat:add(data)
+  local message = data.message
+  
   if #message > 0 then
     if #self.log > 0 then self.log = self.log .. '\n' end
     self.log = self.log .. message

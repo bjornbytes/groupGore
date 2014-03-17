@@ -20,8 +20,11 @@ data.load = function()
 
   load('data/weapon', 'weapon', function(weapon)
     if weapon.image then weapon.image = love.graphics.newImage(weapon.image) end
+    weapon.icon = love.graphics.newImage('media/graphics/icons/' .. weapon.code .. '.png')
   end)
-  load('data/skill', 'skill')
+  load('data/skill', 'skill', function(skill)
+    skill.icon = love.graphics.newImage('media/graphics/icons/' .. skill.code .. '.png')
+  end)
   load('data/buff', 'buff', function(data)
     return table.merge(data, extend(Buff))
   end)
