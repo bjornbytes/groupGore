@@ -3,12 +3,8 @@ Editor = class()
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
 function Editor:load()
-  self.view = View()
-  self.map = Map()
-  
   self.font = love.graphics.newFont('media/fonts/aeromatics.ttf', h(.02))
   
-  self.gridSize = 32
   self.findProp = false
   self.findPropX = 0
   self.findPropY = 0
@@ -17,15 +13,7 @@ function Editor:load()
   self.findPropStr = ''
   self.findPropPrev = 'wall'
   self.findPropPrevPrev = 'wall'
-  
-  self.x = 0
-  self.y = 0
-  self.xVel = 0
-  self.yVel = 0
-  self.maxSpeed = 20
-  
-  self.targetScale = self.view.scale
-  
+    
   self.dragging = nil
   self.dragOffsetX = 0
   self.dragOffsetY = 0
@@ -37,19 +25,20 @@ function Editor:load()
   self.scaleHandleX = 0
   self.scaleHandleY = 0
   
-  self.grid = {
+  self.grid = EditorGrid()
+  self.view = EditorView()
+  
+  self.map = Map()
+  
+  self.widgets = {self.grid}
+  
+  table.each(self.widgets, function(widget)
+    if widget.draw and widget.depth then self.view:register(widget) end
+  end)
+  
+  --[[self.grid = {
     depth = -10000,
     draw = function()
-      love.graphics.setColor(255, 255, 255, 10)
-
-      for i = .5, self.map.width, self.gridSize do
-        love.graphics.line(i, 0, i, self.map.height)
-      end
-
-      for i = .5, self.map.height, self.gridSize do
-        love.graphics.line(0, i, self.map.width, i)
-      end
-
       table.each(self.map.props, function(p)
         love.graphics.setColor(0, 255, 255, (self.dragging == p or self.scaling == p) and 200 or 50)
         if self.scaling then
@@ -67,9 +56,7 @@ function Editor:load()
         end
       end)
     end
-  }
-  
-  self.view:register(self.grid)
+  }]]
 
   self.props = {}
   for _, v in ipairs(data.prop) do
@@ -79,6 +66,8 @@ function Editor:load()
 end
 
 function Editor:update()
+  table.each(self.widgets, f.egoexe('update'))
+  
   if self.dragging then
     local x, y = self.dragging.x, self.dragging.y
     local tx, ty = self:snap(mouseX() - self.dragOffsetX, mouseY() - self.dragOffsetY)
@@ -97,41 +86,6 @@ function Editor:update()
   end
   
   self.view:update()
-
-  if not self.findProp then
-    if love.keyboard.isDown('w') then
-      self.yVel = math.lerp(self.yVel, -self.maxSpeed, .25)
-    elseif love.keyboard.isDown('s') then
-      self.yVel = math.lerp(self.yVel, self.maxSpeed, .25)
-    else
-      self.yVel = math.lerp(self.yVel, 0, .1)
-    end
-    
-    if love.keyboard.isDown('a') then
-      self.xVel = math.lerp(self.xVel, -self.maxSpeed, .25)
-    elseif love.keyboard.isDown('d') then
-      self.xVel = math.lerp(self.xVel, self.maxSpeed, .25)
-    else
-      self.xVel = math.lerp(self.xVel, 0, .1)
-    end
-  
-    self.view.x = self.view.x + (self.xVel / (self.targetScale / 1.5))
-    self.view.y = self.view.y + (self.yVel / (self.targetScale / 1.5))
-  end
-  
-  local prevw, prevh = self.view.w, self.view.h
-  local xf, yf = love.mouse.getX() / love.window.getWidth(), love.mouse.getY() / love.window.getHeight()
-  self.view.scale = math.round(math.lerp(self.view.scale, self.targetScale, .25) / .01) * .01
-  self.view.w = love.window.getWidth() / self.view.scale
-  self.view.h = love.window.getHeight() / self.view.scale
-  self.view.x = self.view.x + (prevw - self.view.w) * xf
-  self.view.y = self.view.y + (prevh - self.view.h) * yf
-  
-  if self.view.x < 0 then self.view.x = 0 self.xVel = 0 end
-  if self.view.y < 0 then self.view.y = 0 self.yVel = 0 end
-  if self.view.x + self.view.w > ovw.map.width then self.view.x = ovw.map.width - self.view.w self.xVel = 0 end
-  if self.view.y + self.view.h > ovw.map.height then self.view.y = ovw.map.height - self.view.h self.yVel = 0 end
-  
   self.map:update()
 end
 
@@ -173,9 +127,6 @@ function Editor:keypressed(key)
         self.findPropY = love.mouse.getY()
         self.findPropDstX, self.findPropDstY = self:snap(mouseX(), mouseY())
         self.findPropStr = self.findPropPrev
-
-        self.xVel = 0
-        self.yVel = 0
         return
       end
 
@@ -201,13 +152,11 @@ function Editor:keypressed(key)
     ['delete'] = function()
       table.each(ovw.map.props, function(p)
         if math.inside(mouseX(), mouseY(), invoke(p, 'boundingBox')) then
-          ovw.view:unregister(p)
+          self.view:unregister(p)
           ovw.map.props = table.filter(ovw.map.props, function(prop) return p ~= prop end)
         end
       end)
     end,
-    ['['] = function() self.gridSize = math.max(self.gridSize / 2, 8) end,
-    [']'] = function() self.gridSize = math.min(self.gridSize * 2, 256) end,
     ['s'] = function()
       if love.keyboard.isDown('lctrl') then
         local str = 'return {'
@@ -221,6 +170,7 @@ function Editor:keypressed(key)
     end
   }
 
+  table.each(self.widgets, f.egoexe('keypressed', key))
   return f.exe(handlers[key])
 end
 
@@ -253,11 +203,9 @@ function Editor:mousepressed(x, y, button)
         self.scaleAnchor = {x, y, w, h}
       end
     end)
-  elseif button == 'wu' then
-    self.targetScale = math.min(self.targetScale + .2, 4)
-  elseif button == 'wd' then
-    self.targetScale = math.max(self.targetScale - .2, .6)
   end
+  
+  self.view:mousepressed(x, y, button)
 end
 
 function Editor:mousereleased(x, y, button)
@@ -267,5 +215,5 @@ end
 
 function Editor:snap(x, y)
   if love.keyboard.isDown('lalt') then return x, y end
-  return math.round(x / self.gridSize) * self.gridSize, math.round(y / self.gridSize) * self.gridSize
+  return math.round(x / self.grid.size) * self.grid.size, math.round(y / self.grid.size) * self.grid.size
 end

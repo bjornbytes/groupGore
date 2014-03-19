@@ -162,7 +162,7 @@ function table.clear(t, v)
 end
 
 function table.merge(t1, t2)
-  t2 = t2 or {}
+  t1, t2 = t1 or {}, t2 or {}
   for k, v in pairs(t1) do t2[k] = table.copy(v) end
   return t2
 end

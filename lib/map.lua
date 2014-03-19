@@ -12,7 +12,7 @@ local function safeLoad(file)
 end
 
 function Map:init(name)
-  name = 'jungleCarnage'
+  name = 'industria'
 
   self.code = name
 
