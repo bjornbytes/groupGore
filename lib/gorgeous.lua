@@ -37,7 +37,7 @@ function Gorgeous:load()
   local _, err = self.socket:connect('107.4.63.70', 6060)
   
   if err then
-    print('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
+    error('Can\'t connect to Gorgeous.  Things are looking pretty ugly.')
     Overwatch:remove(self)
     self.socket = nil
     return
