@@ -43,11 +43,6 @@ function EditorView:update()
   self.h = love.window.getHeight() / self.scale
   self.x = self.x + (prevw - self.w) * xf
   self.y = self.y + (prevh - self.h) * yf
-  
-  if self.x < 0 then self.x = 0 self.xVel = 0 end
-  if self.y < 0 then self.y = 0 self.yVel = 0 end
-  if self.x + self.w > ovw.map.width then self.x = ovw.map.width - self.w self.xVel = 0 end
-  if self.y + self.h > ovw.map.height then self.y = ovw.map.height - self.h self.yVel = 0 end
 end
 
 function EditorView:draw()
@@ -58,6 +53,8 @@ function EditorView:mousepressed(x, y, button)
   if button == 'wu' then
     self.targetScale = math.min(self.targetScale + .2, 4)
   elseif button == 'wd' then
-    self.targetScale = math.max(self.targetScale - .2, .6)
+    self.targetScale = math.max(self.targetScale - .2, .2)
   end
 end
+
+EditorView.contain = f.empty

@@ -63,6 +63,8 @@ function Editor:load()
     table.insert(self.props, v.code)
   end
   table.sort(self.props)
+  
+  self.event = Event()
 end
 
 function Editor:update()

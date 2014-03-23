@@ -57,10 +57,7 @@ function View:update()
     end
   end
   
-  if self.x < 0 then self.x = 0 end
-  if self.y < 0 then self.y = 0 end
-  if self.x + self.w > ovw.map.width then self.x = ovw.map.width - self.w end
-  if self.y + self.h > ovw.map.height then self.y = ovw.map.height - self.h end
+  self:contain()
 end
 
 function View:push()
@@ -106,4 +103,11 @@ function View:three(x, y, z)
   z = (.8 * z) ^ (1 + (.0008 * z))
   
   return x - (z * ((self.x + self.w / 2 - x) / 500)), y - (z * ((self.y + self.h / 2 - y) / 500))
+end
+
+function View:contain()
+  if self.x < 0 then self.x = 0 end
+  if self.y < 0 then self.y = 0 end
+  if self.x + self.w > ovw.map.width then self.x = ovw.map.width - self.w end
+  if self.y + self.h > ovw.map.height then self.y = ovw.map.height - self.h end
 end
