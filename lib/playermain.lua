@@ -130,6 +130,7 @@ function PlayerMain:trace(data)
     if ovw.players.history[self.id][i] then
       state.input = ovw.players.history[self.id][i].input
       state:move()
+      ovw.collision:update()
     end
   end
   

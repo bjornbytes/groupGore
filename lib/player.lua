@@ -87,19 +87,14 @@ function Player:move()
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
 
-  local newx, newy = self.x, self.y
   if dx or dy then
     if not dx then dx = dy end
     if not dy then dy = dx end
     if dx == right and dy == down then dx = 0 end
     
     local dir = (dx + dy) / 2
-    newx, newy = newx + math.cos(dir) * (self.speed * tickRate), newy + math.sin(dir) * (self.speed * tickRate)
+    self.x, self.y = self.x + math.cos(dir) * (self.speed * tickRate), self.y + math.sin(dir) * (self.speed * tickRate)
   end
-
-  self.x, self.y = ovw.collision:resolveCircleWall(newx, newy, self.size, .5)
-  self.x, self.y = ovw.collision:resolveCirclePlayer(self.x, self.y, self.size, .5, self.team)
-  ovw.collision:refreshPlayer(self)
   
   if self.x < 0 then self.x = 0
   elseif self.x > ovw.map.width then self.x = ovw.map.width end

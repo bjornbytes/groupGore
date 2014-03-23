@@ -1,7 +1,6 @@
 local function load(dir)
   for _, file in pairs(love.filesystem.getDirectoryItems(dir)) do
     local path = dir .. '/' .. file
-    print(path)
     if string.find(path, '%.lua') then
       require(path:gsub('%.lua', ''))
     end

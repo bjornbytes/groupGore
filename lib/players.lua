@@ -86,6 +86,7 @@ end
 
 function Players:update()
   self:with(self.active, f.ego('update'))
+  ovw.collision:update()
   self:with(self.active, function(p)
     self.history[p.id][tick] = table.copy(p)
     self.history[p.id][tick - (1 / interp + 5)] = nil
