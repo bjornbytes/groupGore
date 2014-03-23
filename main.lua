@@ -1,4 +1,4 @@
-require('lib/require')('enet', 'lib/util', 'lib', 'ovw', 'data/loader')
+require 'require'
 
 function love.load()
   data.load()
