@@ -1,6 +1,7 @@
 HudHealth = class()
 
 local g = love.graphics
+local w, h = g.width, g.height
 
 function HudHealth:init()
   self.canvas = g.newCanvas(160, 160)
@@ -23,12 +24,15 @@ function HudHealth:draw()
   local p = ovw.players:get(myId)
   self.canvas:clear()
   self.canvas:renderTo(function()
+    g.pop()
     g.setColor(255, 255, 255, 255)
     g.draw(self.red, 4, 13)
     g.setBlendMode('subtractive')
     g.setColor(255, 255, 255, 255)
     g.arc('fill', 80, 80, 80, 0, -((2 * math.pi) * (1 - (math.lerp(self.prevVal, self.val, tickDelta / tickRate) / p.maxHealth))))
     g.setBlendMode('alpha')
+    love.graphics.push()
+    love.graphics.translate(0, ovw.view.margin)
   end)
   
   if p and p.active then
@@ -37,6 +41,7 @@ function HudHealth:draw()
     g.draw(self.back, 12 * s, 12 * s, 0, s, s)
     g.draw(self.canvas, 4 * s, 4 * s, 0, s, s)
     g.draw(self.glass, 0, 0, 0, s, s)
+    g.setFont('aeromatics', 2)
     g.printCenter(math.ceil(p.health), (4 * s) + (s * self.canvas:getWidth() / 2) - 3, (4 * s) + (s * self.canvas:getHeight() / 2))
   end
 end

@@ -1,6 +1,7 @@
 HudClassSelect = class()
 
 local g = love.graphics
+local w, h = g.width, g.height
 
 function HudClassSelect:init()
   self.team = purple

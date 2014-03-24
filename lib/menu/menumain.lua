@@ -1,7 +1,9 @@
 MenuMain = class()
 
+local g = love.graphics
+local w, h = g.width, g.height
+
 function MenuMain:init()
-  self.font = love.graphics.newFont('media/fonts/BebasNeue.ttf', h(.065))
   self.menu = ovw
 end
 
@@ -22,11 +24,9 @@ function MenuMain:mousepressed(x, y, button)
 end
 
 function MenuMain:draw()
-  local g = love.graphics
-  
   local anchor = h(.3) + (h(.8) - h(.3)) / 2
 
-  g.setFont(self.font)
+  g.setFont('BebasNeue', 6.5)
   g.setColor(160, 160, 160)
   
   g.printCenter('Host Game', w(.05), anchor - ovw.ribbon.margin * 2, false, true)

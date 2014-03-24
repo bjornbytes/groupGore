@@ -1,6 +1,7 @@
 HudChat = class()
 
 local g = love.graphics
+local w, h = g.width, g.height
 
 function HudChat:init()
   self.active = false

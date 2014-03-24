@@ -1,17 +1,17 @@
 MenuBackground = class()
 
 local g = love.graphics
+local w, h = g.width, g.height
 
 function MenuBackground:init()
 	self.bg = love.graphics.newImage('media/graphics/menu/ggbg.png')
-  self.font = love.graphics.newFont('media/fonts/BebasNeue.ttf', h(.1))
 end
 
 function MenuBackground:draw()
   g.reset()
 	g.draw(self.bg, 0, 0)
   
-  g.setFont(self.font)
+  g.setFont('BebasNeue', 10)
   g.setColor(50, 50, 50)
   g.print('group', w(.6), h(.1) - g.getFont():getHeight() / 2)
   g.setColor(160, 160, 160)

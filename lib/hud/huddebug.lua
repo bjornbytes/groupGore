@@ -1,10 +1,7 @@
 HudDebug = class()
 
 local g = love.graphics
-
-function HudDebug:init()
-  self.font = love.graphics.newFont('media/fonts/aeromatics.ttf', h() * .02)
-end
+local w, h = g.width, g.height
 
 function HudDebug:draw()
   g.setColor(255, 255, 255, 100)
@@ -14,5 +11,6 @@ function HudDebug:draw()
     debug = debug .. ', ' .. math.floor(ovw.net.host:total_sent_data() / 1000 + .5) .. 'tx'
     debug = debug .. ', ' .. math.floor(ovw.net.host:total_received_data() / 1000 + .5) .. 'rx'
   end
-  g.print(debug, w() - self.font:getWidth(debug), h() - self.font:getHeight())
+  g.setFont('aeromatics', 2)
+  g.print(debug, w() - g.getFont():getWidth(debug), h() - ovw.view.margin * 2 - g.getFont():getHeight())
 end

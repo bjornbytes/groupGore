@@ -1,13 +1,10 @@
 HudPlayers = class()
 
 local g = love.graphics
-
-function HudPlayers:init()
-  self.font = love.graphics.newFont('media/fonts/aeromatics.ttf', h(.02))
-end
+local w, h = g.width, g.height
 
 function HudPlayers:draw()
-  g.setFont(self.font)
+  g.setFont('aeromatics', 2)
   ovw.players:with(ovw.players.active, function(p)
     if p.team == purple then g.setColor(190, 160, 220, p.visible * 255)
     elseif p.team == orange then g.setColor(240, 160, 140, p.visible * 255) end

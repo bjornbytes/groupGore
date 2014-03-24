@@ -1,10 +1,11 @@
 MenuLogin = class()
 
+local g = love.graphics
+local w, h = g.width, g.height
+
 function MenuLogin:init()
   ovw.input:addInput('username', love.filesystem.read('username') or 'username')
   ovw.input:addInput('password', 'password')
-  
-  self.font = love.graphics.newFont('media/fonts/BebasNeue.ttf', h(.065))
 end
 
 function MenuLogin:load()
@@ -14,7 +15,7 @@ end
 
 function MenuLogin:mousepressed(x, y, button)
   local ribbon = ovw.ribbon:test(x, y)
-  
+
   if ribbon == 1 then ovw.input:focusInput('username')
   elseif ribbon == 2 then ovw.input:focusInput('password')
   elseif ribbon == 3 then self:login() end
@@ -27,12 +28,10 @@ function MenuLogin:keyreleased(key)
 end
 
 function MenuLogin:draw()
-  local g = love.graphics
-  
   local anchor = h(.3) + (h(.8) - h(.3)) / 2
   local input = ovw.input
 
-  g.setFont(self.font)
+  g.setFont('BebasNeue', 6.5)
   g.setColor(160, 160, 160)
   
   if input.focused == 'username' then g.setColor(220, 220, 220) else g.setColor(160, 160, 160) end

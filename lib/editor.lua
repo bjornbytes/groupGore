@@ -3,8 +3,6 @@ Editor = class()
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
 function Editor:load()
-  self.font = love.graphics.newFont('media/fonts/aeromatics.ttf', h(.02))
-  
   self.findProp = false
   self.findPropX = 0
   self.findPropY = 0
@@ -95,7 +93,7 @@ function Editor:draw()
   self.view:draw()
 
   if self.findProp then
-    love.graphics.setFont(self.font)
+    love.graphics.setFont('aeromatics', 2)
     love.graphics.setColor(0, 0, 0, 160)
     local w = math.max(160, love.graphics.getFont():getWidth(self.findPropStr))
     local h = (love.graphics.getFont():getHeight() + 4) * (#self.props + 1) + 6

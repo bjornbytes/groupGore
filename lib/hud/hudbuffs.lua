@@ -1,6 +1,7 @@
 HudBuffs = class()
 
 local g = love.graphics
+local w, h = love.graphics.width, love.graphics.height
 
 function HudBuffs:draw()
   local p = ovw.players:get(myId)

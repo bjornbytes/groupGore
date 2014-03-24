@@ -58,3 +58,7 @@ function love.graphics.printCenter(str, x, y, h, v)
   local yy = y - ((v or (v == nil)) and (love.graphics.getFont():getHeight() / 2) or 0)
   love.graphics.print(str, xx, yy)
 end
+
+function love.graphics.width(x) x = x or 1 return love.window.getWidth() * x end
+function love.graphics.height(x) x = x or 1 return love.window.getHeight() * x end
+function love.graphics.minUnit(x) return math.min(love.graphics.width(x), love.graphics.height(x)) end

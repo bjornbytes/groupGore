@@ -1,6 +1,7 @@
 MenuRibbon = class()
 
 local g = love.graphics
+local w, h = g.width, g.height
 
 function MenuRibbon:init()
   self.ribbons = {0, 0, 0, 0, 0}

@@ -1,8 +1,5 @@
 Menu = class()
 
-function w(x) x = x or 1 return love.window.getWidth() * x end
-function h(x) x = x or 1 return love.window.getHeight() * x end
-
 function Menu:load()
   self.background = MenuBackground()
   self.ribbon = MenuRibbon()
@@ -30,6 +27,10 @@ end
 
 function Menu:mousepressed(x, y, button)
   f.exe(self.page.mousepressed, self.page, x, y, button)
+end
+
+function Menu:resize()
+  Typo:resize()
 end
 
 function Menu:changePage(page)

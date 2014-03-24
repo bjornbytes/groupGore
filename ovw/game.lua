@@ -69,4 +69,5 @@ end
 
 function Game:resize()
   self.view:resize()
+  Typo:resize()
 end
