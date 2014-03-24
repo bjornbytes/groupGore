@@ -10,6 +10,8 @@ function Players:init()
   self.active = {}
   self.history = {}
   
+  self.tick = nil
+  
   for i = 1, 16 do
     self.players[i] = Player:create()
     self.players[i].id = i
@@ -66,8 +68,10 @@ function Players:deactivate(id)
   self:refresh()
 end
 
-function Players:get(id)
-  return self.players[id]
+function Players:get(id, t)
+  if not id then return end
+  t = t or self.tick or tick
+  return t == tick and self.players[id] or self.history[id][t]
 end
 
 function Players:with(ps, fn)
@@ -121,11 +125,11 @@ function Players:setClass(id, class, team)
 end
 
 function Players:rewind(t)
-  
+  self.tick = t
 end
 
 function Players:unrewind()
-  
+  self.tick = nil
 end
 
 function Players:refresh()

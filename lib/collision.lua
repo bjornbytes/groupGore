@@ -6,30 +6,31 @@ local cellSize = 128
 
 function Collision:init()
   self.hc = hardon(cellSize, function(_, a, b, dx, dy)
-    print(_, dx, dy)
     if self.players[a] and self.players[b] then
       a:move(dx / 2, dy / 2)
       b:move(-dx / 2, -dy / 2)
       local p
-      p = ovw.players:get(self.players[a])
+      p = self.playerShadows[self.players[a]] or ovw.players:get(self.players[a])
       p.x, p.y = p.x + dx / 2, p.y + dy / 2
-      p = ovw.players:get(self.players[b])
+      p = self.playerShadows[self.players[b]] or ovw.players:get(self.players[b])
       p.x, p.y = p.x - dx / 2, p.y - dy / 2
     elseif self.players[a] and not self.players[b] then
       a:move(dx, dy)
-      local p = ovw.players:get(self.players[a])
+      local p = self.playerShadows[self.players[a]] or ovw.players:get(self.players[a])
       p.x, p.y = p.x + dx, p.y + dy
     elseif not self.players[a] and self.players[b] then
       b:move(-dx, -dy)
-      local p = ovw.players:get(self.players[b])
+      local p = self.playerShadows[self.players[b]] or ovw.players:get(self.players[b])
       p.x, p.y = p.x - dx, p.y - dy
     else
+      
       a:move(dx / 2, dy / 2)
       b:move(-dx / 2, -dy / 2)
     end
   end)
   
   self.players = {}
+  self.playerShadows = {}
   self.walls = {}
   
   ovw.event:on(evtClass, self, function(self, data)
@@ -61,6 +62,13 @@ function Collision:update()
   end
   
   self.hc:update(tickRate)
+end
+
+function Collision:updateClone(id, obj)
+  self.playerShadows[id] = obj
+  self.players[id]:moveTo(obj.x, obj.y)
+  self.hc:update(tickRate)
+  self.playerShadows[id] = nil
 end
 
 function Collision:wallRaycast(x, y, dir, distance)

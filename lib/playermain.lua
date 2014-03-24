@@ -43,12 +43,6 @@ end
 
 function PlayerMain:draw()
   if self.ded then return end
-  local t = tick
-  local previous = ovw.players.history[self.id][t - 1]
-  local current = ovw.players.history[self.id][t]
-  if current and previous then
-    Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
-  end
   
   if love.keyboard.isDown(' ') then
     local server
@@ -62,6 +56,13 @@ function PlayerMain:draw()
     
     if server then
       Player.draw(server.players:get(self.id))
+    end
+  else
+    local t = tick
+    local previous = ovw.players.history[self.id][t - 1]
+    local current = ovw.players.history[self.id][t]
+    if current and previous then
+      Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
     end
   end
 end
@@ -111,6 +112,7 @@ function PlayerMain:mouseHandler(x, y, button)
 end
 
 function PlayerMain:trace(data)
+  local p
   local t = data.tick
   local ack = data.ack
   data.tick = nil
@@ -127,15 +129,18 @@ function PlayerMain:trace(data)
   table.merge(data, state)
   
   for i = ack + 1, tick - 1 do
-    if ovw.players.history[self.id][i] then
-      state.input = ovw.players.history[self.id][i].input
+    p = ovw.players:get(self.id, i)
+    if p then
+      state.input = p.input
       state:move()
-      ovw.collision:update()
+      ovw.collision:updateClone(self.id, state)
     end
   end
   
-  if ovw.players.history[self.id][tick - 1] then
-    table.merge({x = state.x, y = state.y}, ovw.players.history[self.id][tick - 1])
+  p = ovw.players:get(self.id, tick - 1)
+  if p then
+    table.merge({x = self.x, y = self.y}, p)
   end
+  
   table.merge({x = state.x, y = state.y}, self)
 end
