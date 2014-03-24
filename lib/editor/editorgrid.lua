@@ -25,3 +25,8 @@ function EditorGrid:keypressed(key)
   if key == '[' then self.size = math.max(self.size / 2, 8)
   elseif key == ']' then self.size = math.min(self.size * 2, 256) end
 end
+
+function EditorGrid:snap(x, y)
+  if love.keyboard.isDown('lalt') then return x, y end
+  return math.round(x / self.size) * self.size, math.round(y / self.size) * self.size
+end

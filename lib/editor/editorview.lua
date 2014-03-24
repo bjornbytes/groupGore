@@ -33,8 +33,8 @@ function EditorView:update()
     self.xVel = math.lerp(self.xVel, 0, .1)
   end
 
-  self.x = self.x + (self.xVel / (self.targetScale / 1.5))
-  self.y = self.y + (self.yVel / (self.targetScale / 1.5))
+  self.x = self.x + (self.xVel / (self.targetScale ^ 0.5))
+  self.y = self.y + (self.yVel / (self.targetScale ^ 0.5))
   
   local prevw, prevh = self.w, self.h
   local xf, yf = love.mouse.getX() / love.window.getWidth(), love.mouse.getY() / love.window.getHeight()

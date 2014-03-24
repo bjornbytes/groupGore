@@ -44,7 +44,7 @@ Wall.activate = function(self, map)
 end
 
 Wall.update = function(self)
-  if ovw.view then self.depth = -1000 + math.distance(ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2, self.x, self.y) end
+  if ovw.view then self.depth = -1000 + math.distance(ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2, self.x, self.y) * ovw.view.scale end
 end
 
 Wall.draw = function(self)
