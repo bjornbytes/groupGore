@@ -58,24 +58,14 @@ function PlayerMain:draw()
       Player.draw(server.players:get(self.id))
     end
   else
-    local t = tick
-    local previous = ovw.players.history[self.id][t - 1]
-    local current = ovw.players.history[self.id][t]
-    if current and previous then
-      Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
-    end
+    local p = ovw.players:get(self.id, tick - 1 + tickDelta / tickRate)
+    if p then Player.draw(p) end
   end
 end
 
 function PlayerMain:drawPosition()
-  local t = tick
-  local prev, cur = ovw.players.history[self.id][t - 1], ovw.players.history[self.id][t]
-  if prev then
-    prev, cur = {x = prev.x, y = prev.y}, {x = cur.x, y = cur.y}
-    local interp = table.interpolate(prev, cur, tickDelta / tickRate)
-    return interp.x, interp.y
-  end
-  
+  local p = ovw.players:get(self.id, tick - 1 + tickDelta / tickRate)
+  if p then return p.x, p.y end
   return 0, 0
 end
 
