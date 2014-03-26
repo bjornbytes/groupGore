@@ -7,11 +7,13 @@ function Editor:load()
   self.menu = EditorMenu()
   self.dragger = EditorDragger()
   self.scaler = EditorScaler()
+  self.selector = EditorSelector()
+  self.deletor = EditorDeletor()
   self.map = Map()
   self.event = Event()
   
   self.widgets = {self.grid, self.dragger, self.scaler}
-  self.components = {self.view, self.menu, self.dragger, self.scaler, self.map}
+  self.components = {self.view, self.menu, self.dragger, self.scaler, self.deletor, self.selector, self.map}
   
   table.each(self.widgets, function(widget)
     if widget.draw and widget.depth then self.view:register(widget) end
@@ -31,18 +33,10 @@ end
 function Editor:keypressed(key)
   local handlers = {
     ['escape'] = function() love.event.push('quit') end,
-    ['delete'] = function()
-      table.each(ovw.map.props, function(p)
-        if math.inside(mouseX(), mouseY(), invoke(p, 'boundingBox')) then
-          self.view:unregister(p)
-          ovw.map.props = table.filter(ovw.map.props, function(prop) return p ~= prop end)
-        end
-      end)
-    end,
     ['s'] = function() if love.keyboard.isDown('lctrl') then self:save() end end
   }
 
-  table.each(self.components, f.egoexe('keypressed', key)) 
+  table.each(self.components, f.egoexe('keypressed', key))
   table.each(self.widgets, f.egoexe('keypressed', key))
   return f.exe(handlers[key])
 end

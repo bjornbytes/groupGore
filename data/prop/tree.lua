@@ -29,8 +29,8 @@ Tree.editor.boundingBox = function(self)
   return self.x - (self.scale * w / 2), self.y - (self.scale * h / 2), self.scale * w, self.scale * h
 end
 
-Tree.editor.dragTo = function(self, x, y)
-  self.x, self.y = x + (self.image:getWidth() * self.scale / 2), y + (self.image:getHeight() * self.scale / 2)
+Tree.editor.move = function(self, x, y)
+  
 end
 
 Tree.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
