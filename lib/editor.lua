@@ -4,13 +4,14 @@ function Editor:load()
   self.grid = EditorGrid()
   
   self.view = EditorView()
+  self.map = Map()
+  self.event = Event()
   self.menu = EditorMenu()
   self.dragger = EditorDragger()
   self.scaler = EditorScaler()
   self.selector = EditorSelector()
   self.deletor = EditorDeletor()
-  self.map = Map()
-  self.event = Event()
+  self.state = EditorState()
   
   self.widgets = {self.grid, self.dragger, self.scaler}
   self.components = {self.view, self.menu, self.dragger, self.scaler, self.deletor, self.selector, self.map}

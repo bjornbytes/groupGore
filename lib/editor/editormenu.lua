@@ -63,15 +63,17 @@ function EditorMenu:mousepressed(x, y, button)
   if button == 'l' then
     for i = 1, #self.props do
       if math.inside(x, y, self.x, self.y + h(.09) + (g.getFont():getHeight() + 1) * i, self.w, g.getFont():getHeight()) then
+        local x, y = ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2
         table.insert(ovw.map.props, ovw.map:initProp({
           kind = self.props[i],
-          x = ovw.view.x + ovw.view.w / 2,
-          y = ovw.view.y + ovw.view.h / 2,
+          x = x,
+          y = y,
           w = 64,
           h = 64,
           z = 64
         }))
         self.lastProp = self.props[i]
+        ovw.event:emit('prop.create', {prop = self.props[i], x = x, y = y})
       end
     end
   end

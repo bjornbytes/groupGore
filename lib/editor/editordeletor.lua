@@ -8,6 +8,8 @@ function EditorDeletor:keypressed(key)
       if math.inside(mouseX(), mouseY(), invoke(p, 'boundingBox')) then
         ovw.view:unregister(p)
         ovw.map.props = table.filter(ovw.map.props, function(prop) return p ~= prop end)
+        ovw.event:emit('prop.destroy', p)
+        return true
       end
     end)
   end
