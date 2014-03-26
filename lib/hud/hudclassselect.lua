@@ -6,7 +6,6 @@ local w, h = g.width, g.height
 function HudClassSelect:init()
   self.team = purple
   self.angle = 0
-  self.font = g.newFont('media/fonts/BebasNeue.ttf', h() * .065)
 end
 
 function HudClassSelect:update()
@@ -25,7 +24,7 @@ function HudClassSelect:draw()
   g.rectangle('line', w(.08), h(.313), w(.46), h(.35))
   g.rectangle('line', w(.55), h(.313), w(.37), h(.58))
   
-  g.setFont(self.font)
+  g.setFont('BebasNeue', 6.5)
   g.setColor(128, 128, 128)
   g.print('Team', w(.08), h(.106))
   g.print('Class', w(.08), h(.213))
@@ -71,13 +70,15 @@ function HudClassSelect:mousereleased(x, y, button)
     end
     
     local str = self.team and 'purple' or 'orange'
-    if math.inside(x, y, w(.08), h(.106), w(.24) + self.font:getWidth(str), self.font:getHeight()) then
+    g.setFont('BebasNeue', 6.5)
+    local font = g.getFont()
+    if math.inside(x, y, w(.08), h(.106), w(.24) + font:getWidth(str), font:getHeight()) then
       self.team = 1 - self.team
-    elseif math.inside(x, y, w(.08), h(1 - .213) - self.font:getHeight(), self.font:getWidth('Disconnect'), self.font:getHeight()) then
+    elseif math.inside(x, y, w(.08), h(1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
       ovw.net:send(msgLeave)
       Overwatch:remove(ovw)
       Overwatch:add(Menu)
-    elseif math.inside(x, y, w(.08), h(1 - .106) - self.font:getHeight(), self.font:getWidth('Exit'), self.font:getHeight()) then
+    elseif math.inside(x, y, w(.08), h(1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
       ovw.net:send(msgLeave)
       love.event.quit()
     end

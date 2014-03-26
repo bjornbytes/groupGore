@@ -1,4 +1,5 @@
 EditorGrid = class()
+EditorGrid.name = 'Grid'
 
 local g = love.graphics
 
