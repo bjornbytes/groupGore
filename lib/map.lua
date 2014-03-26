@@ -34,7 +34,9 @@ function Map:init(name)
   self.props = table.map(map.props, f.cur(self.initProp, self))
 
   table.each(map.on, function(f, e)
-    if ovw.event then ovw.event:on(e, self, f) end
+    if ovw.event then
+      ovw.event:on(e, function(data) f(self, data) end)
+    end
   end)
 
   self.points = {}

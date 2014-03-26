@@ -39,11 +39,11 @@ function NetClient:init()
   self:connectTo(serverIp, 6061)
   self.messageBuffer = {}
 
-  ovw.event:on(evtJoin, self, function(self, data)
+  ovw.event:on(evtJoin, function(data)
     ovw.players:get(data.id).username = data.username
   end)
   
-  ovw.event:on(evtSync, self, function(self, data)
+  ovw.event:on(evtSync, function(data)
     local p = ovw.players:get(data.id)
     p:trace(data)
   end)

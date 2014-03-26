@@ -33,14 +33,14 @@ function Collision:init()
   self.playerShadows = {}
   self.walls = {}
   
-  ovw.event:on(evtClass, self, function(self, data)
+  ovw.event:on(evtClass, function(data)
     local shape = self.hc:addCircle(0, 0, gg.class[data.class].size)
     self.players[data.id] = shape
     self.hc:addToGroup(data.team, shape)
     self.players[shape] = data.id
   end)
   
-  ovw.event:on(evtLeave, self, function(self, data)
+  ovw.event:on(evtLeave, function(data)
     self.hc:remove(self.players[data.id])
     self.players[self.players[data.id]] = nil
     self.players[data.id] = nil
