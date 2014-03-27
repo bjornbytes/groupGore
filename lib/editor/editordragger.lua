@@ -22,8 +22,10 @@ function EditorDragger:update()
   end
 end
 
-function EditorDragger:mousepressed(x, y, button)
-  if button == 'l' and not love.keyboard.isDown('lshift') then
+function EditorDragger:mousepressed(x, y, button)  
+  if button == 'l' then
+    self.deselect = nil
+    if love.keyboard.isDown('lshift') then return end
     if #ovw.selector.selection == 0 then
       local p = ovw.selector:pointTest(x, y)
       if p then ovw.selector:select(p) end
@@ -40,6 +42,7 @@ function EditorDragger:mousepressed(x, y, button)
 end
 
 function EditorDragger:mousereleased(x, y, button)
+  if self.dragging then ovw.state:push() end
   self.dragging = false
   if self.deselect then ovw.selector:deselect(self.deselect) end
 end

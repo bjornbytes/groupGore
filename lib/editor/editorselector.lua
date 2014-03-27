@@ -14,6 +14,13 @@ function EditorSelector:update()
 end
 
 function EditorSelector:draw()
+  love.graphics.setColor(0, 255, 255, 50)
+  if self.active then
+    table.each(ovw.map.props, function(prop)
+      love.graphics.rectangle('line', invoke(prop, 'boundingBox'))
+    end)
+  end
+  
   love.graphics.setColor(0, 255, 255, 100)
   for _, p in ipairs(self.selection) do
     love.graphics.rectangle('fill', invoke(p, 'boundingBox'))

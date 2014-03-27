@@ -1,21 +1,29 @@
 EditorState = class()
 
+local function invoke(x, k, ...) return x.editor[k](x, ...) end
+
 function EditorState:init()
-  self.states = table.copy(ovw.map.props)
+  --
 end
 
 function EditorState:push()
-  table.insert(self.states, table.deltas(self.states[#self.states], ovw.map.props))
+  --
 end
 
 function EditorState:pop()
-  self.states[#self.states] = nil
+  --
 end
 
 function EditorState:undo()
-  
+  --
 end
 
 function EditorState:redo()
   --
+end
+
+function EditorState:keypressed(key)
+  if key == 'z' and love.keyboard.isDown('lctrl') then
+    self:undo()
+  end
 end
