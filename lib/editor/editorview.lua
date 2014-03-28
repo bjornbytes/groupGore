@@ -17,20 +17,22 @@ end
 function EditorView:update()
   View.update(self)
 
-  if love.keyboard.isDown('w') then
-    self.yVel = math.lerp(self.yVel, -self.maxSpeed, .25)
-  elseif love.keyboard.isDown('s') then
-    self.yVel = math.lerp(self.yVel, self.maxSpeed, .25)
-  else
-    self.yVel = math.lerp(self.yVel, 0, .1)
-  end
-  
-  if love.keyboard.isDown('a') then
-    self.xVel = math.lerp(self.xVel, -self.maxSpeed, .25)
-  elseif love.keyboard.isDown('d') then
-    self.xVel = math.lerp(self.xVel, self.maxSpeed, .25)
-  else
-    self.xVel = math.lerp(self.xVel, 0, .1)
+  if not love.keyboard.isDown('lctrl') then
+    if love.keyboard.isDown('w') then
+      self.yVel = math.lerp(self.yVel, -self.maxSpeed, .25)
+    elseif love.keyboard.isDown('s') then
+      self.yVel = math.lerp(self.yVel, self.maxSpeed, .25)
+    else
+      self.yVel = math.lerp(self.yVel, 0, .1)
+    end
+    
+    if love.keyboard.isDown('a') then
+      self.xVel = math.lerp(self.xVel, -self.maxSpeed, .25)
+    elseif love.keyboard.isDown('d') then
+      self.xVel = math.lerp(self.xVel, self.maxSpeed, .25)
+    else
+      self.xVel = math.lerp(self.xVel, 0, .1)
+    end
   end
 
   self.x = self.x + (self.xVel / (self.targetScale ^ 0.5))

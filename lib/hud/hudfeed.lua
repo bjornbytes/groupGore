@@ -1,6 +1,7 @@
 HudFeed = class()
 
 local g = love.graphics
+local w, h = g.width, g.height
 
 function HudFeed:init()
   self.entries = {}

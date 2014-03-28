@@ -13,8 +13,8 @@ function Hud:init()
   self.classSelect = HudClassSelect()
   self.debug = HudDebug()
   
-  ovw.event:on(evtChat, self, function(_, data) self.chat:add(data) end)
-  ovw.event:on(evtDead, self, function(_, data) self.feed:insert(data) end)
+  ovw.event:on(evtChat, function(data) self.chat:add(data) end)
+  ovw.event:on(evtDead, function(data) self.feed:insert(data) end)
 end
 
 function Hud:update()

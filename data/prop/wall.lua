@@ -97,9 +97,7 @@ Wall.editor.boundingBox = function(self)
   return self.x, self.y, self.w, self.h
 end
 
-Wall.editor.dragTo = function(self, x, y)
-  self.x, self.y = x, y
-  
+Wall.editor.move = function(self, x, y)
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
   self.north:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
 

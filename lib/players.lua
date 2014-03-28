@@ -19,21 +19,21 @@ function Players:init()
     setmetatable(self.players[i], {__index = tags[ovw.tag]})
   end
   
-  ovw.event:on(evtLeave, self, function(self, data)
+  ovw.event:on(evtLeave, function(data)
     self:deactivate(data.id)
   end)
   
-  ovw.event:on(evtFire, self, function(self, data)
+  ovw.event:on(evtFire, function(data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
   end)
   
-  ovw.event:on(evtClass, self, function(self, data)
+  ovw.event:on(evtClass, function(data)
     self:setClass(data.id, data.class, data.team)
   end)
   
-  ovw.event:on(evtDamage, self, function(self, data)
+  ovw.event:on(evtDamage, function(data)
     local to, from = self:get(data.id), self:get(data.from)
     to:hurt(data)
     local oldAmt = data.amount
@@ -42,12 +42,12 @@ function Players:init()
     data.amount = oldAmt
   end)
   
-  ovw.event:on(evtDead, self, function(self, data)
+  ovw.event:on(evtDead, function(data)
     local p = self:get(data.id)
     p:die()
   end)
   
-  ovw.event:on(evtSpawn, self, function(self, data)
+  ovw.event:on(evtSpawn, function(data)
     local p = self:get(data.id)
     p.ded = false
     p:spawn()
