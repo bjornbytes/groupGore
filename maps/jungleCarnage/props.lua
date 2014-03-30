@@ -99,6 +99,6 @@ return {
     kind = 'tree',
     x = 1600 * .5,
     y = 1200 * .5,
-		radius = 10
+    radius = 10
   }
 }

@@ -6,7 +6,7 @@ function Editor:load()
   self.grid = EditorGrid()
   
   self.view = EditorView()
-	self.collision = EditorCollision()
+  self.collision = EditorCollision()
   self.map = Map()
   self.event = Event()
   self.menu = EditorMenu()

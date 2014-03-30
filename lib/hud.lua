@@ -15,7 +15,7 @@ function Hud:init()
   
   ovw.event:on(evtChat, function(data) self.chat:add(data) end)
   ovw.event:on(evtDead, function(data) self.feed:insert(data) end)
-	ovw.view:register(self)
+  ovw.view:register(self)
 end
 
 function Hud:update()
