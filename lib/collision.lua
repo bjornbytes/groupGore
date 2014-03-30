@@ -1,5 +1,3 @@
-local hardon = require('lib/hardon')
-
 Collision = class()
 
 local cellSize = 128
@@ -22,8 +20,7 @@ function Collision:init()
       b:move(-dx, -dy)
       local p = self.playerShadows[self.players[b]] or ovw.players:get(self.players[b])
       p.x, p.y = p.x - dx, p.y - dy
-    else
-      
+    else      
       a:move(dx / 2, dy / 2)
       b:move(-dx / 2, -dy / 2)
     end
@@ -31,7 +28,6 @@ function Collision:init()
   
   self.players = {}
   self.playerShadows = {}
-  self.walls = {}
   
   ovw.event:on(evtClass, function(data)
     local shape = self.hc:addCircle(0, 0, gg.class[data.class].size)
@@ -45,12 +41,6 @@ function Collision:init()
     self.players[self.players[data.id]] = nil
     self.players[data.id] = nil
   end)
-end
-
-function Collision:addWall(...)
-  local wall = self.hc:addRectangle(...)
-  self.hc:setPassive(wall)
-  self.walls[wall] = wall
 end
 
 function Collision:update()
@@ -71,12 +61,32 @@ function Collision:updateClone(id, obj)
   self.playerShadows[id] = nil
 end
 
+function Collision:register(obj)
+  if not obj.shape then
+    assert(obj.collision)
+    local shape
+    if obj.collision.shape == 'rectangle' then
+      shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
+    elseif obj.collision.shape == 'circle' then
+      shape = self.hc:addCircle(obj.x, obj.y, obj.radius)
+    end
+
+    if obj.collision.solid then
+      shape:setPassive()
+    end
+
+    obj.shape = shape
+    shape.owner = obj
+  end
+end
+
 function Collision:wallRaycast(x, y, dir, distance)
   local dx, dy = math.cos(dir), math.sin(dir)
   local shapes = {}
   local distances = {}
   
-  for _, shape in pairs(self.walls) do
+  for _, prop in pairs(ovw.map.propsBy.wall) do
+    local shape = prop.shape
     local hit, dis = shape:intersectsRay(x, y, dx, dy)
     if hit and dis <= distance and dis >= 0 then
       shapes[#shapes + 1] = shape

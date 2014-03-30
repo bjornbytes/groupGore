@@ -31,6 +31,7 @@ end
 
 function View:register(x)
   table.insert(self.toDraw, x)
+  x.depth = x.depth or 0
 end
 
 function View:unregister(x)
@@ -77,9 +78,12 @@ function View:draw()
     return a.depth > b.depth
   end)
 
-  for k, v in ipairs(self.toDraw) do v:draw() end
+  for _, v in ipairs(self.toDraw) do f.exe(v.draw, v) end
+
   self:pop()
-  if ovw.hud then ovw.hud:draw() end
+
+  for _, v in ipairs(self.toDraw) do f.exe(v.gui, v) end
+  
   self:letterbox()
 end
 

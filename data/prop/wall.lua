@@ -2,8 +2,12 @@ local Wall = {}
 Wall.name = 'Wall'
 Wall.code = 'wall'
 
+Wall.collision = {}
+Wall.collision.shape = 'rectangle'
+Wall.collision.solid = true
+
 Wall.activate = function(self, map)
-  if ovw.collision then ovw.collision:addWall(self.x, self.y, self.w, self.h) end
+  if ovw.collision then ovw.collision:register(self) end
 
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},
@@ -14,7 +18,7 @@ Wall.activate = function(self, map)
 
   self.north = love.graphics.newMesh({
     {self.x, self.y, 0, 0, 0, 0, 0},
-    {self.x + self.w, self.y, 1, 0, 0, 0, 0},
+    {self.x + self.width, self.y, 1, 0, 0, 0, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
   }, map.graphics.grass)
@@ -22,14 +26,14 @@ Wall.activate = function(self, map)
   self.south = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
-    {self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0},
-    {self.x, self.y + self.h, 0, 1, 0, 0, 0}
+    {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
+    {self.x, self.y + self.height, 0, 1, 0, 0, 0}
   }, map.graphics.grass)
 
   self.east = love.graphics.newMesh({
     {0, 0, 0, 0},
-    {self.x + self.w, self.y, 1, 0, 0, 0, 0},
-    {self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0},
+    {self.x + self.width, self.y, 1, 0, 0, 0, 0},
+    {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
     {0, 0, 0, 1}
   }, map.graphics.grass)
 
@@ -37,7 +41,7 @@ Wall.activate = function(self, map)
     {self.x, self.y, 0, 0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
-    {self.x, self.y + self.h, 0, 1, 0, 0, 0}
+    {self.x, self.y + self.height, 0, 1, 0, 0, 0}
   }, map.graphics.grass)
 
   self.depth = -5
@@ -53,9 +57,9 @@ Wall.draw = function(self)
   
   local v = ovw.view
   local ulx, uly = v:three(self.x, self.y, self.z)
-  local urx, ury = v:three(self.x + self.w, self.y, self.z)
-  local llx, lly = v:three(self.x, self.y + self.h, self.z)
-  local lrx, lry = v:three(self.x + self.w, self.y + self.h, self.z)
+  local urx, ury = v:three(self.x + self.width, self.y, self.z)
+  local llx, lly = v:three(self.x, self.y + self.height, self.z)
+  local lrx, lry = v:three(self.x + self.width, self.y + self.height, self.z)
 
   self.top:setVertex(1, ulx, uly, 0, 0)
   self.top:setVertex(2, urx, ury, 1, 0)
@@ -70,7 +74,7 @@ Wall.draw = function(self)
     love.graphics.draw(self.north, 0, 0)
   end
 
-  if self.y + self.h < y2 then
+  if self.y + self.height < y2 then
     self.south:setVertex(1, llx, lly, 0, 0)
     self.south:setVertex(2, lrx, lry, 1, 0)
     love.graphics.draw(self.south, 0, 0)
@@ -83,7 +87,7 @@ Wall.draw = function(self)
     love.graphics.draw(self.west, 0, 0)
   end
 
-  if self.x + self.w < x2 then
+  if self.x + self.width < x2 then
     self.east:setVertex(1, urx, ury, 0, 0)
     self.east:setVertex(4, lrx, lry, 0, 1)
     love.graphics.draw(self.east, 0, 0)
@@ -94,43 +98,43 @@ end
 
 Wall.editor = {}
 Wall.editor.boundingBox = function(self)
-  return self.x, self.y, self.w, self.h
+  return self.x, self.y, self.width, self.height
 end
 
 Wall.editor.move = function(self, x, y)
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
-  self.north:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
+  self.north:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
 
-  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
-  self.south:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
+  self.south:setVertex(3, self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0)
+  self.south:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
 
-  self.east:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
-  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
+  self.east:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
+  self.east:setVertex(3, self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0)
 
   self.west:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
-  self.west:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
+  self.west:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
 end
 
 Wall.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
   self.x, self.y = ox, oy
-  self.w, self.h = ow, oh
+  self.width, self.height = ow, oh
   
-  self.w = self.w + (ew * math.sign(hx))
-  self.h = self.h + (eh * math.sign(hy))
+  self.width = self.width + (ew * math.sign(hx))
+  self.height = self.height + (eh * math.sign(hy))
   if hx < 0 then self.x = self.x + ew end
   if hy < 0 then self.y = self.y + eh end
   
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0)
-  self.north:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
+  self.north:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
 
-  self.south:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
-  self.south:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
+  self.south:setVertex(3, self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0)
+  self.south:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
 
-  self.east:setVertex(2, self.x + self.w, self.y, 1, 0, 0, 0, 0)
-  self.east:setVertex(3, self.x + self.w, self.y + self.h, 1, 1, 0, 0, 0)
+  self.east:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
+  self.east:setVertex(3, self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0)
 
   self.west:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
-  self.west:setVertex(4, self.x, self.y + self.h, 0, 1, 0, 0, 0)
+  self.west:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
 end
 
 Wall.editor.save = function(self)
@@ -138,8 +142,8 @@ Wall.editor.save = function(self)
     kind = 'wall',
     x = ]] .. self.x .. [[,
     y = ]] .. self.y .. [[,
-    w = ]] .. self.w .. [[,
-    h = ]] .. self.h .. [[,
+    w = ]] .. self.width .. [[,
+    h = ]] .. self.height .. [[,
     z = ]] .. self.z .. [[
   }]]
 end

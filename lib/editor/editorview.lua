@@ -59,4 +59,8 @@ function EditorView:mousepressed(x, y, button)
   end
 end
 
+function EditorView:transform(x, y)
+	return x / self.scale + self.x, y / self.scale + self.y
+end
+
 EditorView.contain = f.empty

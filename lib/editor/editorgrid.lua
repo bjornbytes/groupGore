@@ -20,6 +20,7 @@ function EditorGrid:draw()
   for i = .5, ovw.map.height, self.size do
     g.line(0, i, ovw.map.width, i)
   end
+  g.setLineWidth(1)
 end
 
 function EditorGrid:keypressed(key)

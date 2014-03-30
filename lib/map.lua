@@ -20,6 +20,7 @@ function Map:init(name)
   local map = safeLoad(dir .. name .. '.lua')
   map.graphics = {}
   map.props = {}
+  map.propsBy = {}
   
   for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
     if file:match('%.png$') then
@@ -76,6 +77,8 @@ end
 function Map:initProp(prop)
   setmetatable(prop, {__index = data.prop[prop.kind]})
   f.exe(prop.activate, prop, self)
+  self.propsBy[prop.kind] = self.propsBy[prop.kind] or {}
+  table.insert(self.propsBy[prop.kind], prop)
   if ovw.view then ovw.view:register(prop) end
   return prop
 end
