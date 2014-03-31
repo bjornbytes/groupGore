@@ -19,6 +19,11 @@ function EditorMenu:init()
   table.sort(self.props)
   
   self.lastProp = 'wall'
+
+  self.mapDetails = Collapse()
+  self.mapDetails.leftMargin = 16
+  self.mapDetails.label = 'map details'
+  self.mapDetails.open = true
 end
 
 function EditorMenu:update()
@@ -33,18 +38,19 @@ function EditorMenu:draw()
   local x, y = self.x, self.y
   local padding = g.minUnit(.01)
   if math.round(x) > -self.w then
+
     g.setColor(10, 10, 10, 200)
     g.rectangle('fill', x, y, self.w, self.h)
     
     g.setColor(200, 200, 200)
-    g.setFont('aeromatics', 2.8)
-    g.print(ovw.map.name, x + padding, y + padding)
+    g.setFontPixel('pixel', 8)
+    self.mapDetails:draw(x + padding, y)
     
-    g.setFont('aeromatics', 2.6)
+    g.setFontPixel('pixel', 8)
     g.print('Props', x + padding, y + h(.08))
     
     g.setColor(255, 255, 255)
-    g.setFont('aeromatics', 2.4)
+    g.setFontPixel('pixel', 8)
     for i = 1, #self.props do
       g.print(self.props[i], x + padding, y + h(.09) + (g.getFont():getHeight() + 1) * i)
     end
@@ -57,9 +63,13 @@ function EditorMenu:keypressed(key)
   end
 end
 
+function EditorMenu:textinput(key)
+  --
+end
+
 function EditorMenu:mousepressed(x, y, button)
   local padding = g.minUnit(.01)
-  g.setFont('aeromatics', 2.4)
+  g.setFontPixel('pixel', 8)
   if button == 'l' then
     for i = 1, #self.props do
       if math.inside(x, y, self.x, self.y + h(.09) + (g.getFont():getHeight() + 1) * i, self.w, g.getFont():getHeight()) then
@@ -77,4 +87,6 @@ function EditorMenu:mousepressed(x, y, button)
       end
     end
   end
+
+  self.mapDetails:mousepressed(x, y, button)
 end

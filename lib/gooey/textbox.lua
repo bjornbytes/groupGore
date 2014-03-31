@@ -3,10 +3,8 @@ TextBox = class()
 local g = love.graphics
 
 function TextBox:init()
-  self.x = 0
-  self.y = 0
-  self.w = 0
-  self.h = 0
+  self.width = 0
+  self.height = 0
   self.bgColor = {0, 0, 0, 255}
   self.borderColor = {0, 0, 0, 255}
 
@@ -15,7 +13,6 @@ function TextBox:init()
   self.fontColor = {255, 255, 255, 255}
 
   self.hPadding = 0
-  self.vPadding = 0
 
   self.text = ''
 
@@ -54,6 +51,8 @@ function TextBox:keypressed(key)
     self.insertAt = self.insertAt - 1
   elseif key == 'right' and self.insertAt < #self.text + 1 then
     self.insertAt = self.insertAt + 1
+  elseif key == 'enter' then
+    self:unfocus()
   end
 end
 
@@ -65,12 +64,11 @@ function TextBox:textinput(char)
   end
 end
 
-function TextBox:draw()
-
+function TextBox:draw(x, y)
   g.setColor(self.bgColor)
-  g.rectangle('fill', self.x, self.y, self.w, self.h)
+  g.rectangle('fill', x, y, self.width, self.height)
   g.setColor(self.borderColor)
-  g.rectangle('line', self.x + .5, self.y + .5, self.w - 1, self.h - 1)
+  g.rectangle('line', x + .5, y + .5, self.width - 1, self.height - 1)
 
   g.setFontPixel(self.font, self.fontSize)
   g.setColor(self.fontColor)
@@ -84,14 +82,16 @@ function TextBox:draw()
   end
   
   local font = g.getFont()
-  local x = self.x + self.hPadding
-  local y = self.y + self.h / 2 - font:getHeight() / 2
+  x = x + self.hPadding
+  y = y + self.height / 2 - font:getHeight() / 2
 
   g.print(str, x, y)
 
   if self.focused then
-    local xx = self.x + self.hPadding + font:getWidth(self.text:sub(1, self.insertAt - 1)) + .5
+    local xx = x + font:getWidth(self.text:sub(1, self.insertAt - 1)) + .5
     g.setColor(self.fontColor)
     g.line(xx, y, xx, y + font:getHeight())
   end
+
+  self.x, self.y = _x, _y
 end

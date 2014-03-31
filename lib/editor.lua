@@ -50,6 +50,11 @@ function Editor:keypressed(key)
   table.each(self.widgets, f.egoexe('keypressed', key))
 end
 
+function Editor:textinput(key)
+  table.each(self.components, f.egoexe('textinput', key))
+  table.each(self.widgets, f.egoexe('textinput', key))
+end
+
 function Editor:mousepressed(x, y, button)
   table.each(self.components, f.egoexe('mousepressed', x, y, button))
   table.each(self.widgets, f.egoexe('mousepressed', x, y, button))

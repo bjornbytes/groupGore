@@ -22,8 +22,8 @@ function Player:create()
     lifesteal = 0,
     collision = {
       shape = 'circle',
-      radius = 0
     },
+    radius = 0,
     depth = 0,
     recoil = 0,
     visible = 0,
@@ -37,9 +37,8 @@ function Player:activate()
   self.y = ovw.map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
-  self.size = self.class.size
   self.health = self.maxHealth
-  self.collision.radius = self.class.size
+  self.radius = self.class.size
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end

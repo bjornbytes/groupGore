@@ -25,7 +25,6 @@ function EditorDragger:mousepressed(x, y, button)
   if button == 'l' then
     self.deselect = false
     if love.keyboard.isDown('lshift') then return end
-    print(#ovw.selector.selection)
     if #ovw.selector.selection == 0 then
       ovw.selector:select(unpack(ovw.selector:pointTest(x, y)))
       self.deselect = true
@@ -43,4 +42,5 @@ end
 function EditorDragger:mousereleased(x, y, button)
   self.dragging = false
   if self.deselect then ovw.selector:deselectAll() end
+  ovw.state:push()
 end

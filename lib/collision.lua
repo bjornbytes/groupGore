@@ -28,9 +28,6 @@ function Collision:init()
     end
   end)
   
-  self.players = {}
-  self.playerShadows = {}
-  
   ovw.event:on('player.activate', function(data)
     self:register(ovw.players:get(data.id))
   end)
@@ -65,13 +62,6 @@ end
 
 function Collision:update()
   self.hc:update(tickRate)
-end
-
-function Collision:updateClone(id, obj)
-  self.playerShadows[id] = obj
-  self.players[id]:moveTo(obj.x, obj.y)
-  self.hc:update(tickRate)
-  self.playerShadows[id] = nil
 end
 
 function Collision:register(obj)

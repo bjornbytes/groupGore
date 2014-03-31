@@ -3,7 +3,7 @@ EditorState = class()
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
 function EditorState:init()
-  --
+  self.states = {}
 end
 
 function EditorState:push()
@@ -11,7 +11,7 @@ function EditorState:push()
 end
 
 function EditorState:pop()
-  --
+  self.states[#self.states] = nil
 end
 
 function EditorState:undo()
