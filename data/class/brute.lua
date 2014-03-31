@@ -7,7 +7,7 @@ Brute.code = 'brute'
 ----------------
 Brute.health = 235
 Brute.speed  = 150
-Brute.radius = 20
+Brute.size = 20
 
 
 ----------------

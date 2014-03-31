@@ -4,7 +4,7 @@ Tree.code = 'tree'
 
 Tree.collision = {}
 Tree.collision.shape = 'circle'
-Tree.collision.solid = true
+Tree.collision.static = true
 
 Tree.activate = function(self, map)
   if ovw.collision then ovw.collision:register(self) end
@@ -27,15 +27,7 @@ Tree.draw = function(self)
   love.graphics.draw(self.image, x, y, 0, self.radius / 20, self.radius / 20, self.image:getWidth() / 2, self.image:getHeight() / 2)
 end
 
-Tree.editor = {}
-Tree.editor.move = f.empty
-Tree.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
-  ew = ew * hx
-  eh = eh * hy
-  self.scale = (ow / self.image:getWidth()) + (((ew + eh) / 2) / ow)
-end
-
-Tree.editor.save = function(self)
+Tree.__tostring = function(self)
   return [[{
     kind = 'tree',
     x = ]] .. self.x .. [[,

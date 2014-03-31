@@ -75,7 +75,7 @@ function Map:score(team)
 end
 
 function Map:initProp(prop)
-  setmetatable(prop, {__index = data.prop[prop.kind]})
+  setmetatable(prop, {__index = data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
   f.exe(prop.activate, prop, self)
   self.propsBy[prop.kind] = self.propsBy[prop.kind] or {}
   table.insert(self.propsBy[prop.kind], prop)

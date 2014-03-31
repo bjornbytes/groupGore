@@ -1,5 +1,5 @@
 EditorSelector = class()
-EditorSelector.doubleClickSpeed = .5
+EditorSelector.doubleClickSpeed = .25
 
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
@@ -8,6 +8,7 @@ function EditorSelector:init()
   self.active = false
   self.depth = -10000
   self.lastClick = tick
+  self.lastButton = nil
   self.dragging = false
   self.dragStartX = nil
   self.dragStartY = nil
@@ -52,7 +53,7 @@ function EditorSelector:gui()
 end
 
 function EditorSelector:pointTest(x, y)
-  local shapes = ovw.collision.hc:shapesAt(x + ovw.view.x, y + ovw.view.y)
+  local shapes = ovw.collision.hc:shapesAt(ovw.view:transform(x, y))
   return table.map(shapes, function(s) return s.owner end)
 end
 
@@ -93,7 +94,7 @@ end
 
 function EditorSelector:mousepressed(x, y, button)
   local function doubleClick()
-    return (tick - self.lastClick) * tickRate <= self.doubleClickSpeed
+    return button == self.lastButton and (tick - self.lastClick) * tickRate <= self.doubleClickSpeed
   end
 
   if self.active then
@@ -104,6 +105,7 @@ function EditorSelector:mousepressed(x, y, button)
         self:select(unpack(self:pointTest(x, y)))
       end
       self.lastClick = tick
+      self.lastButton = button
       self.dragStartX = x
       self.dragStartY = y
     elseif button == 'r' then
@@ -113,6 +115,7 @@ function EditorSelector:mousepressed(x, y, button)
         self:deselect(unpack(self:pointTest(x, y)))
       end
       self.lastClick = tick
+      self.lastButton = button
       self.dragStartX = x
       self.dragStartY = y
     end

@@ -4,7 +4,7 @@ Wall.code = 'wall'
 
 Wall.collision = {}
 Wall.collision.shape = 'rectangle'
-Wall.collision.solid = true
+Wall.collision.static = true
 
 Wall.activate = function(self, map)
   if ovw.collision then ovw.collision:register(self) end
@@ -44,11 +44,18 @@ Wall.activate = function(self, map)
     {self.x, self.y + self.height, 0, 1, 0, 0, 0}
   }, map.graphics.grass)
 
+  self.meshX = self.x
+  self.meshY = self.y
+
   self.depth = -5
 end
 
 Wall.update = function(self)
   if ovw.view then self.depth = -1000 + math.distance(ovw.view.x + ovw.view.w / 2, ovw.view.y + ovw.view.h / 2, self.x, self.y) * ovw.view.scale end
+
+  if self.meshX ~= self.x or self.meshY ~= y then
+    self:updateMesh()
+  end
 end
 
 Wall.draw = function(self)
@@ -96,12 +103,7 @@ Wall.draw = function(self)
   love.graphics.draw(self.top, 0, 0)
 end
 
-Wall.editor = {}
-Wall.editor.boundingBox = function(self)
-  return self.x, self.y, self.width, self.height
-end
-
-Wall.editor.move = function(self, x, y)
+Wall.updateMesh = function(self)
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
   self.north:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
 
@@ -113,31 +115,12 @@ Wall.editor.move = function(self, x, y)
 
   self.west:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
   self.west:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
+
+  self.meshX = self.x
+  self.meshY = self.y
 end
 
-Wall.editor.scale = function(self, hx, hy, ew, eh, ox, oy, ow, oh)
-  self.x, self.y = ox, oy
-  self.width, self.height = ow, oh
-  
-  self.width = self.width + (ew * math.sign(hx))
-  self.height = self.height + (eh * math.sign(hy))
-  if hx < 0 then self.x = self.x + ew end
-  if hy < 0 then self.y = self.y + eh end
-  
-  self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0)
-  self.north:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
-
-  self.south:setVertex(3, self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0)
-  self.south:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
-
-  self.east:setVertex(2, self.x + self.width, self.y, 1, 0, 0, 0, 0)
-  self.east:setVertex(3, self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0)
-
-  self.west:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
-  self.west:setVertex(4, self.x, self.y + self.height, 0, 1, 0, 0, 0)
-end
-
-Wall.editor.save = function(self)
+Wall.__tostring = function(self)
   return [[{
     kind = 'wall',
     x = ]] .. self.x .. [[,

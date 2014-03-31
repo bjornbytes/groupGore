@@ -1,3 +1,5 @@
+local hardon = require 'lib/hardon'
+
 Collision = class()
 
 local cellSize = 128
@@ -29,28 +31,39 @@ function Collision:init()
   self.players = {}
   self.playerShadows = {}
   
-  ovw.event:on(evtClass, function(data)
-    local shape = self.hc:addCircle(0, 0, gg.class[data.class].size)
-    self.players[data.id] = shape
-    self.hc:addToGroup(data.team, shape)
-    self.players[shape] = data.id
+  ovw.event:on('player.activate', function(data)
+    self:register(ovw.players:get(data.id))
   end)
   
-  ovw.event:on(evtLeave, function(data)
-    self.hc:remove(self.players[data.id])
-    self.players[self.players[data.id]] = nil
-    self.players[data.id] = nil
+  ovw.event:on('player.deactivate', function(data)
+    self.hc:remove(ovw.players:get(data.id).shape)
+  end)
+
+  ovw.event:on(evtClass, function(data)
+    self.hc:addToGroup('players' .. data.team, ovw.players:get(data.id).shape)
+  end)
+  
+  ovw.event:on('prop.create', function(data) self:register(data.prop) end)
+
+  ovw.event:on('prop.move', function(data)
+    if data.prop.collision.shape == 'rectangle' then
+      data.prop.shape:moveTo(data.prop.x + data.prop.width / 2, data.prop.y + data.prop.height / 2)
+    else
+      data.prop.shape:moveTo(data.x, data.y)
+    end
+  end)
+
+  ovw.event:on('prop.scale', function(data)
+    self.hc:remove(data.prop.shape)
+    self:register(data.prop)
+  end)
+
+  ovw.event:on('player.move', function(data)
+    data.player.shape:moveTo(data.x, data.y)
   end)
 end
 
 function Collision:update()
-  for i = 1, 16 do
-    if self.players[i] then
-      local p = ovw.players:get(i)
-      self.players[i]:moveTo(p.x, p.y)
-    end
-  end
-  
   self.hc:update(tickRate)
 end
 
@@ -62,22 +75,20 @@ function Collision:updateClone(id, obj)
 end
 
 function Collision:register(obj)
-  if not obj.shape then
-    assert(obj.collision)
-    local shape
-    if obj.collision.shape == 'rectangle' then
-      shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
-    elseif obj.collision.shape == 'circle' then
-      shape = self.hc:addCircle(obj.x, obj.y, obj.radius)
-    end
-
-    if obj.collision.solid then
-      shape:setPassive()
-    end
-
-    obj.shape = shape
-    shape.owner = obj
+  assert(obj.collision)
+  local shape
+  if obj.collision.shape == 'rectangle' then
+    shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
+  elseif obj.collision.shape == 'circle' then
+    shape = self.hc:addCircle(obj.x, obj.y, obj.radius)
   end
+
+  if obj.collision.solid then
+    shape:setPassive()
+  end
+
+  obj.shape = shape
+  shape.owner = obj
 end
 
 function Collision:wallRaycast(x, y, dir, distance)
@@ -110,8 +121,8 @@ function Collision:playerRaycast(x, y, dir, options)
   local res = {}
   
   for i = 1, 16 do
-    local shape = self.players[i]
     local p = ovw.players:get(i)
+    local shape = p.shape
     if shape and (not team or p.team == team) then
       local shape = self.players[i]
       local hit, dis = shape:intersectsRay(x, y, dx, dy)

@@ -60,6 +60,7 @@ function Players:activate(id)
   if ovw.view then ovw.view:register(self.players[id]) end
   if ovw.collision then ovw.collision:register(self.players[id]) end
   self:refresh()
+  ovw.event:emit('player.activate', {id = id})
 end
 
 function Players:deactivate(id)
@@ -67,6 +68,7 @@ function Players:deactivate(id)
   self.players[id]:deactivate()
   if ovw.view then ovw.view:unregister(self.players[id]) end
   self:refresh()
+  ovw.event:emit('player.deactivate', {id = id})
 end
 
 function Players:get(id, t)

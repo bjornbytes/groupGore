@@ -20,8 +20,10 @@ function Player:create()
     maxSpeed = 0,
     maxHealth = 0,
     lifesteal = 0,
-    shape = 'cirlce',
-    radius = 0,
+    collision = {
+      shape = 'circle',
+      radius = 0
+    },
     depth = 0,
     recoil = 0,
     visible = 0,
@@ -37,6 +39,7 @@ function Player:activate()
   self.maxSpeed = self.class.speed
   self.size = self.class.size
   self.health = self.maxHealth
+  self.collision.radius = self.class.size
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end

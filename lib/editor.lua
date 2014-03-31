@@ -1,28 +1,26 @@
-local hardon = require 'lib/hardon'
-
 Editor = class()
 
 function Editor:load()
   self.grid = EditorGrid()
   
   self.view = EditorView()
-  self.collision = EditorCollision()
-  self.map = Map()
   self.event = Event()
+  self.collision = Collision()
+  self.map = Map()
   self.menu = EditorMenu()
   self.dragger = EditorDragger()
-  --self.scaler = EditorScaler()
+  self.scaler = EditorScaler()
   self.selector = EditorSelector()
   self.deletor = EditorDeletor()
   self.state = EditorState()
   self.saver = EditorSaver()
   
-  self.widgets = {self.grid, self.dragger, self.scaler}
+  self.widgets = {self.grid}
   self.components = {
     self.view,
     self.menu,
     self.dragger,
-    --self.scaler,
+    self.scaler,
     self.deletor,
     self.selector,
     self.state,

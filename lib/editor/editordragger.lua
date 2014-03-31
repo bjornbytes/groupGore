@@ -7,7 +7,7 @@ function EditorDragger:init()
   self.dragX = 0
   self.dragY = 0
   self.depth = -10000
-  self.deselect = nil
+  self.deselect = false
 end
 
 function EditorDragger:update()
@@ -16,7 +16,6 @@ function EditorDragger:update()
       local ox, oy = ovw.grid:snap(prop._dragX, prop._dragY)
       local x, y = ovw.grid:snap(mouseX() - self.dragX, mouseY() - self.dragY)
       prop.x, prop.y = ox + x, oy + y
-      invoke(prop, 'move') -- events
       ovw.event:emit('prop.move', {prop = prop, x = ox + x, y = oy + y})
     end)
   end
@@ -24,13 +23,12 @@ end
 
 function EditorDragger:mousepressed(x, y, button)  
   if button == 'l' then
-    self.deselect = nil
+    self.deselect = false
     if love.keyboard.isDown('lshift') then return end
+    print(#ovw.selector.selection)
     if #ovw.selector.selection == 0 then
-      do return end
-      local p = ovw.selector:pointTest(x, y)
-      if p then ovw.selector:select(p) end
-      self.deselect = p
+      ovw.selector:select(unpack(ovw.selector:pointTest(x, y)))
+      self.deselect = true
     end
     self.dragging = true
     self.dragX = mouseX()
@@ -43,7 +41,6 @@ function EditorDragger:mousepressed(x, y, button)
 end
 
 function EditorDragger:mousereleased(x, y, button)
-  if self.dragging then ovw.state:push() end
   self.dragging = false
-  if self.deselect then ovw.selector:deselect(self.deselect) end
+  if self.deselect then ovw.selector:deselectAll() end
 end
