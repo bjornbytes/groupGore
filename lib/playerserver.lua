@@ -142,3 +142,9 @@ end
 function PlayerServer:logic()
   -- Override by AI.
 end
+
+function PlayerServer:copy()
+  return table.merge({
+    input = table.copy(self.input)
+  }, Player.copy(self))
+end

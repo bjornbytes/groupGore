@@ -11,6 +11,12 @@ function Sound:play(name)
   return self.sounds[name]:play()
 end
 
+function Sound:loop(name)
+  local sound = self:play(name)
+  if sound then sound:setLooping(true) end
+  return sound
+end
+
 function Sound:mute()
   self.mute = not self.mute
   love.audio.tag.all.stop()

@@ -46,6 +46,7 @@ Shotgun.update = function(self, myShotgun)
     local amt = math.min(Shotgun.clip, myShotgun.ammo)
     myShotgun.clip = amt
     myShotgun.ammo = myShotgun.ammo - amt
+    if ovw.sound then ovw.sound:play('reload') end
   end)
   if self.input.reload and myShotgun.clip < Shotgun.clip and myShotgun.timers.reload == 0 then myShotgun.timers.reload = Shotgun.reload end
 end

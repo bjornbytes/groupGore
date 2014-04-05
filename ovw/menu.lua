@@ -8,6 +8,8 @@ function Menu:load()
   self.main = MenuMain()
   
   self:changePage(self.login)
+  
+  self.container = Container()
 end
 
 function Menu:draw()

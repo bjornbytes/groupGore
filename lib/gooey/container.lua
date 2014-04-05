@@ -1,10 +1,6 @@
 Container = class()
 
 function Container:init()
-  self.x = 0
-  self.y = 0
-  self.w = 0
-  self.h = 0
   self.padding = 0
   self.background = {0, 0, 0, 0}
   self.items = {}
@@ -14,10 +10,10 @@ function Container:update()
   table.each(self.items, f.ego('update'))
 end
 
-function Container:draw()
+function Container:draw(x, y, w, h)
   love.graphics.setColor(self.background)
-  love.graphics.rectangle('fill', self.x, self.y, self.w, self.h)
-  love.graphics.translate(-self.x, -self.y)
+  love.graphics.rectangle('fill', x, y, w, h)
+  love.graphics.translate(-x, -y)
   table.each(self.items, f.ego('draw'))
 end
 

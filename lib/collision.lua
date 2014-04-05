@@ -6,30 +6,17 @@ local cellSize = 128
 
 function Collision:init()
   self.hc = hardon(cellSize, function(_, a, b, dx, dy)
-    if self.players[a] and self.players[b] then
-      a:move(dx / 2, dy / 2)
-      b:move(-dx / 2, -dy / 2)
-      local p
-      p = self.playerShadows[self.players[a]] or ovw.players:get(self.players[a])
-      p.x, p.y = p.x + dx / 2, p.y + dy / 2
-      p = self.playerShadows[self.players[b]] or ovw.players:get(self.players[b])
-      p.x, p.y = p.x - dx / 2, p.y - dy / 2
-    elseif self.players[a] and not self.players[b] then
-      a:move(dx, dy)
-      local p = self.playerShadows[self.players[a]] or ovw.players:get(self.players[a])
-      p.x, p.y = p.x + dx, p.y + dy
-    elseif not self.players[a] and self.players[b] then
-      b:move(-dx, -dy)
-      local p = self.playerShadows[self.players[b]] or ovw.players:get(self.players[b])
-      p.x, p.y = p.x - dx, p.y - dy
-    else      
-      a:move(dx / 2, dy / 2)
-      b:move(-dx / 2, -dy / 2)
+    a, b = a.owner, b.owner
+    local function isPlayer(t) return t.class and t.team end
+    if isPlayer(a) then
+      a.shape:move(dx, dy)
+      a.x, a.y = a.x + dx, a.y + dy
+    elseif isPlayer(b) then
+      b.shape:move(-dx, -dy)
+      b.x, b.y = b.x - dx, b.y - dy
+    else
+      --
     end
-  end)
-  
-  ovw.event:on('player.activate', function(data)
-    self:register(ovw.players:get(data.id))
   end)
   
   ovw.event:on('player.deactivate', function(data)
@@ -37,7 +24,10 @@ function Collision:init()
   end)
 
   ovw.event:on(evtClass, function(data)
-    self.hc:addToGroup('players' .. data.team, ovw.players:get(data.id).shape)
+    local p = ovw.players:get(data.id)
+    if not p.shape then self:register(p) end
+    self.hc:removeFromGroup('players' .. (1 - data.team), p.shape)
+    self.hc:addToGroup('players' .. data.team, p.shape)
   end)
   
   ovw.event:on('prop.create', function(data) self:register(data.prop) end)
@@ -54,13 +44,16 @@ function Collision:init()
     self.hc:remove(data.prop.shape)
     self:register(data.prop)
   end)
-
-  ovw.event:on('player.move', function(data)
-    data.player.shape:moveTo(data.x, data.y)
-  end)
 end
 
 function Collision:update()
+  for i = 1, 16 do
+    local p = ovw.players:get(i)
+    if p.shape then
+      p.shape:moveTo(p.x, p.y)
+    end
+  end
+  
   self.hc:update(tickRate)
 end
 
@@ -113,12 +106,11 @@ function Collision:playerRaycast(x, y, dir, options)
   for i = 1, 16 do
     local p = ovw.players:get(i)
     local shape = p.shape
-    if shape and (not team or p.team == team) then
-      local shape = self.players[i]
+    if shape and ((not team) or p.team == team) then
       local hit, dis = shape:intersectsRay(x, y, dx, dy)
-      if hit and dis <= maxdis or math.huge and dis >= 0 then
+      if hit and dis <= (maxdis or math.huge) and dis >= 0 then
         res[#res + 1] = {player = p, shape = shape, distance = dis}
-        if not all and not sort then break end
+        if (not all) and (not sort) then break end
       end
     end
   end

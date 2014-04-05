@@ -19,6 +19,8 @@ function PlayerMain:activate()
   self.input.reload = false
   
   self.visible = 1
+  
+  self.heartbeatSound = nil
 
   Player.activate(self)
 end
@@ -37,6 +39,15 @@ function PlayerMain:update()
   self:turn()
   self:slot()
   self:fade()
+  
+  if self.health < self.maxHealth * .5 then
+    local prc = self.health / self.maxHealth
+    self.heartbeatSound = self.heartbeatSound or ovw.sound:loop('heartbeat')
+    self.heartbeatSound:setVolume(math.min(1 - ((prc - .3) / .2), 1.0))
+  elseif self.heartbeatSound then
+    self.heartbeatSound:stop()
+    self.heartbeatSound = nil
+  end
   
   ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
@@ -77,12 +88,19 @@ function PlayerMain:fade()
   local function shouldFade(p)
     if p.team == self.team then return false end
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
-    return ovw.collision:checkLineWall(self.x, self.y, p.x, p.y)
+    return ovw.collision:wallRaycast(self.x, self.y, math.direction(self.x, self.y, p.x, p.y), math.distance(self.x, self.y, p.x, p.y))
   end
   ovw.players:with(ovw.players.active, function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
     else p.visible = math.min(p.visible + tickRate, 1) end
   end)
+end
+
+function PlayerMain:die()
+  if self.heartbeatSound then
+    self.heartbeatSound:stop()
+    self.heartbeatSound = nil
+  end
 end
 
 function PlayerMain:keyHandler(key)
@@ -112,8 +130,8 @@ function PlayerMain:trace(data)
 
   self.health = data.health or self.health
   self.shield = data.shield or self.shield
-
-  local state = table.copy(self)--ovw.players.history[self.id][tick - 1]
+  
+  local state = self:copy()--ovw.players.history[self.id][tick - 1]
   if not state then return end
   
   table.merge(data, state)
@@ -123,14 +141,22 @@ function PlayerMain:trace(data)
     if p then
       state.input = p.input
       state:move()
-      ovw.collision:updateClone(self.id, state)
+      self.x, self.y = state.x, state.y
+      ovw.collision:update()
+      state.x, state.y = self.x, self.y
     end
   end
   
   p = ovw.players:get(self.id, tick - 1)
   if p then
-    table.merge({x = self.x, y = self.y}, p)
+    table.merge({x = state.x, y = state.y}, p)
   end
   
   table.merge({x = state.x, y = state.y}, self)
+end
+
+function PlayerMain:copy()
+  return table.merge({
+    input = table.copy(self.input)
+  }, Player.copy(self))
 end

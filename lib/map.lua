@@ -28,10 +28,10 @@ function Map:init(name)
       map.graphics[image] = love.graphics.newImage(dir .. file)
     end
   end
-
+  
   table.merge(safeLoad(dir .. 'props.lua'), map.props)
   table.merge(map, self)
-  
+    
   self.props = table.map(map.props, f.cur(self.initProp, self))
 
   table.each(map.on, function(f, e)

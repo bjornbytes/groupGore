@@ -45,6 +45,7 @@ SMG.update = function(self, mySMG)
     local amt = math.min(SMG.clip, mySMG.ammo)
     mySMG.clip = amt
     mySMG.ammo = mySMG.ammo - amt
+    if ovw.sound then ovw.sound:play('reload') end
   end)
   if self.input.reload and mySMG.clip < SMG.clip and mySMG.timers.reload == 0 then mySMG.timers.reload = SMG.reload end
 end

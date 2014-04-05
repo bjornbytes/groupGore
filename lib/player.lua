@@ -39,6 +39,7 @@ function Player:activate()
   self.maxSpeed = self.class.speed
   self.health = self.maxHealth
   self.radius = self.class.size
+  self.class.activate(self)
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
@@ -47,6 +48,7 @@ end
 function Player:deactivate()
   self.x, self.y = 0, 0
   self.username = ''
+  self.class.deactivate(self)
 end
 
 function Player:update()
@@ -145,6 +147,7 @@ end
 function Player:die()
   self.ded = 5
   if ovw.particles then ovw.particles:create('skull', {x = self.x, y = self.y}) end
+  if ovw.sound then ovw.sound:play('die') end
   ovw.buffs:remove(self.id)
 
   self.x, self.y = 0, 0
@@ -153,4 +156,25 @@ end
 
 function Player:spawn()
   self:activate()
+end
+
+function Player:copy()
+  local t = {
+    id = self.id,
+    class = self.class,
+    team = self.team,
+    ded = self.ded,
+    x = self.x,
+    y = self.y,
+    angle = self.angle,
+    speed = self.speed,
+    health = self.health,
+    shield = self.shield,
+    recoil = self.recoil,
+    visible = self.visible,
+    slots = table.copy(self.slots)
+  }
+  
+  setmetatable(t, {__index = self})
+  return t
 end

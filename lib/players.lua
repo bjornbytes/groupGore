@@ -58,17 +58,16 @@ function Players:activate(id)
   assert(id >= 1 and id <= 16)
   self.players[id].active = true
   if ovw.view then ovw.view:register(self.players[id]) end
-  if ovw.collision then ovw.collision:register(self.players[id]) end
   self:refresh()
   ovw.event:emit('player.activate', {id = id})
 end
 
 function Players:deactivate(id)
+  ovw.event:emit('player.deactivate', {id = id})
   self.players[id].active = false
   self.players[id]:deactivate()
   if ovw.view then ovw.view:unregister(self.players[id]) end
   self:refresh()
-  ovw.event:emit('player.deactivate', {id = id})
 end
 
 function Players:get(id, t)
@@ -104,7 +103,7 @@ function Players:update()
   self:with(self.active, f.ego('update'))
   ovw.collision:update()
   self:with(self.active, function(p)
-    self.history[p.id][tick] = table.copy(p)
+    self.history[p.id][tick] = p:copy()
     self.history[p.id][tick - (1 / interp + 5)] = nil
   end)
 end
