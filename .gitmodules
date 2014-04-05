@@ -1,6 +1,6 @@
 [submodule "lib/hardon"]
 	path = lib/hardon
-	url = git@github.com:vrld/HardonCollider.git
+	url = https://github.com/vrld/HardonCollider
 [submodule "lib/lutil"]
 	path = lib/lutil
-	url = git@github.com:tie372/lutil.git
+	rl = https://github.com/tie372/lutil
