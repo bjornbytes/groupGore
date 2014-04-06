@@ -1,8 +1,8 @@
 require 'require'
 
-function love.load()
+function love.load(arg)  
   data.load()
-
+  
   Overwatch:add(Menu)
   gorgeous = Overwatch:add(Gorgeous)
   if not gorgeous.socket then gorgeous = nil end
@@ -14,4 +14,6 @@ function love.load()
   
   love.handlers = {}
   setmetatable(love.handlers, {__index = Overwatch})
+  
+  if arg[2] == 'test' then require 'test/test' end
 end

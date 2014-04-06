@@ -57,6 +57,7 @@ function NetClient:connect(event)
 end
 
 function NetClient:disconnect(event)
+  myId = nil
   Overwatch:remove(ovw)
   Overwatch:add(Menu)
 end
