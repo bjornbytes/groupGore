@@ -5,8 +5,10 @@ local g = love.graphics
 function Hud:init()
   self.players = HudPlayers()
   self.blood = HudBlood()
+  self.left = HudLeft()
   self.health = HudHealth()
   self.icons = HudIcons()
+  self.right = HudRight()
   self.buffs = HudBuffs()
   self.feed = HudFeed()
   self.chat = HudChat()
@@ -21,8 +23,9 @@ end
 function Hud:update()
   self.health:update()
   self.chat:update()
-  self.feed:update()  
+  self.feed:update()
   self.classSelect:update()
+  self.icons:update()
 end
 
 function Hud:gui()
@@ -33,8 +36,10 @@ function Hud:gui()
 
   self.players:draw()
   self.blood:draw()
+  self.left:draw()
   self.health:draw()
   self.icons:draw()
+  self.right:draw()
   self.buffs:draw()
   self.feed:draw()
   self.chat:draw()
@@ -53,7 +58,8 @@ function Hud:keypressed(key)
   if tick < 10 then return end
 
   if self.chat:keypressed(key) then return true
-  elseif self.classSelect:keypressed(key) then return true end
+  elseif self.classSelect:keypressed(key) then return true
+  elseif self.icons:keypressed(key) then return end
 end
 
 function Hud:keyreleased(key)

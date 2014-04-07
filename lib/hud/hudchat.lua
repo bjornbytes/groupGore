@@ -8,7 +8,8 @@ function HudChat:init()
   self.message = ''
   self.log = ''
   self.timer = 0
-  self.offset = -w(.25) - 4
+  self.width = w(.35)
+  self.offset = -self.width - 4
   self.font = g.newFont('media/fonts/aeromatics.ttf', h() * .02)
   self.richText = nil
 end
@@ -16,29 +17,32 @@ end
 function HudChat:update()
   self.timer = timer.rot(self.timer)
   if self.active then self.timer = 2 end
-  self.offset = math.lerp(self.offset, (self.timer == 0) and -w(.25) - 4 or 0, .25)
+  self.offset = math.lerp(self.offset, (self.timer == 0) and -self.width - 4 or 0, .25)
 end
 
 function HudChat:draw()
-  local height = h(.25) + 2
-  g.setFont('aeromatics', 2)
+  if not self.richText then return end
+  
+  g.setFontPixel('pixel', 8)
   local font = g.getFont()
-  if self.active then height = height + (font:getHeight() + 6.5) end
+  local height = self.richText.height - 2
+  if self.active then height = height + (font:getHeight() + 6.5) - 1 end
+  
   g.setColor(0, 0, 0, 180)
-  g.rectangle('fill', 4 + self.offset, h() - (height + 4), w(.25), height)
+  g.rectangle('fill', 4 + self.offset, h() - (height + 4), self.width, height)
   g.setColor(30, 30, 30, 180)
-  g.rectangle('line', 4 + self.offset, h() - (height + 4), w(.25), height)
+  g.rectangle('line', 4 + self.offset, h() - (height + 4), self.width, height)
   local yy = h() - 4
   if self.active then
     g.setColor(255, 255, 255, 60)
-    g.line(4.5 + self.offset, h() - 4 - font:getHeight() - 6.5, 3 + w(.25) + self.offset, h() - 4 - font:getHeight() - 6.5)
+    g.line(4.5 + self.offset, h() - 4 - font:getHeight() - 6.5, 3 + self.width + self.offset, h() - 4 - font:getHeight() - 6.5)
     g.setColor(255, 255, 255, 180)
-    g.printf(self.message .. (self.active and '|' or ''), 4 + 4 + self.offset, math.round(yy - font:getHeight() - 5.5 + 2), w(.25), 'left')
+    g.printf(self.message .. (self.active and '|' or ''), 4 + 4 + self.offset, math.round(yy - font:getHeight() - 5.5 + 2), self.width, 'left')
     yy = yy - font:getHeight() - 6.5
   end
 
   if self.richText then
-    self.richText:draw(4 + 4 + self.offset, math.round(yy - (font:getHeight() * select(2, font:getWrap(self.log, w(.25) - 2))) - 4))
+    self.richText:draw(4 + 4 + self.offset, math.round(yy - self.richText.height + 4))
   end
 end
 
@@ -76,11 +80,11 @@ function HudChat:add(data)
     self.log = self.log .. message
   end
 
-  g.setFont('aeromatics', 2)
-  while g.getFont():getHeight() * select(2, g.getFont():getWrap(self.log, w(.25))) > (h(.25) - 2) do
+  g.setFontPixel('pixel', 8)
+  while g.getFont():getHeight() * select(2, g.getFont():getWrap(self.log, self.width)) > (h(.25) - 2) do
     self.log = self.log:sub(2)
   end
-
-  self.richText = rich.new({self.log, w(.25) - 2, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
+  
+  self.richText = rich.new({self.log, self.width, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
   self.timer = 2
 end

@@ -3,7 +3,7 @@ HudBlood = class()
 function HudBlood:init()
   self.images = {}
   for i = 1, 4 do
-    self.images[i] = love.graphics.newImage('media/graphics/hudBlood' .. i .. '.png')
+    self.images[i] = love.graphics.newImage('media/graphics/hud/hudBlood' .. i .. '.png')
   end
 end
 

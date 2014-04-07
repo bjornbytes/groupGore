@@ -11,14 +11,15 @@ end
 function HudFeed:update()
   for i = 1, #self.entries do
     local k = self.entries[i]
-    k.x = math.lerp(k.x, k.targetX, .25)
-    k.y = math.lerp(k.y, k.targetY, .25)
+    k.x = math.lerp(k.x, k.targetX, 30 * tickRate)
+    k.y = math.lerp(k.y, k.targetY, 30 * tickRate)
   end
 
   self.alpha = timer.rot(self.alpha)
 end
 
 function HudFeed:draw()
+  g.setFontPixel('pixel', 8)
   local alpha = math.min(self.alpha, 1)
   for i = 1, #self.entries do
     local k = self.entries[i]
@@ -46,7 +47,7 @@ function HudFeed:insert(data)
   t.x = w()
   t.y = -h(.05)
   t.targetX = w() - w(.14) - 4
-  t.targetY = 4
+  t.targetY = 4 + h(.07)
   table.insert(self.entries, t)
   self.alpha = 4
 end
