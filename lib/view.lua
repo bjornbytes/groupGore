@@ -103,8 +103,12 @@ function View:resize()
   self.margin = math.max(math.round(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2)), 0)
 end
 
+function View:convertZ(z)
+  return (.8 * z) ^ (1 + (.0008 * z))  
+end
+
 function View:three(x, y, z)
-  z = (.8 * z) ^ (1 + (.0008 * z))
+  z = self:convertZ(z)
   
   return x - (z * ((self.x + self.w / 2 - x) / 500)), y - (z * ((self.y + self.h / 2 - y) / 500))
 end

@@ -1,7 +1,7 @@
 function love.run()
-  --[[if love.math then
+  if love.math then
     love.math.setRandomSeed(os.time())
-  end]]
+  end
 
   tick = 0
   tickRate = .02

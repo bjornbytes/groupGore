@@ -59,10 +59,16 @@ function Map:init(name)
     {self.width, self.height, self.width / self.graphics.background:getWidth(), self.height / self.graphics.background:getHeight()},
     {0, self.height, self.height / self.graphics.background:getHeight(), 0}
   }, self.graphics.background)
+  
+  if self.weather then
+    self.weather = new(data.weather[self.weather])
+    if ovw.view then ovw.view:register(self.weather) end
+  end
 end
 
 function Map:update()
   table.each(self.props, function(p) f.exe(p.update, p) end)
+  if self.weather then self.weather:update() end
 end
 
 function Map:draw()

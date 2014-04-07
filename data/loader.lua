@@ -36,6 +36,7 @@ data.load = function()
     if particle.image then particle.image = love.graphics.newImage(particle.image) end
   end)
   load('data/prop', 'prop')
+  load('data/weather', 'weather')
   
   gG = {}
   gg = gG
