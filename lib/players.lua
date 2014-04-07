@@ -10,8 +10,6 @@ function Players:init()
   self.active = {}
   self.history = {}
   
-  self.tick = nil
-  
   for i = 1, 16 do
     self.players[i] = Player:create()
     self.players[i].id = i
@@ -72,7 +70,7 @@ end
 
 function Players:get(id, t)
   if not id then return end
-  t = t or self.tick or tick
+  t = t or tick
   local f = math.floor(t)
 	if t ~= f then
     local prev = self.history[id][f]
@@ -133,14 +131,6 @@ function Players:setClass(id, class, team)
   p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
   p:activate()
-end
-
-function Players:rewind(t)
-  self.tick = t
-end
-
-function Players:unrewind()
-  self.tick = nil
 end
 
 function Players:refresh()

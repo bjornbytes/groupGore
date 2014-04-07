@@ -46,7 +46,6 @@ function HudClassSelect:keypressed(key)
   if self:active() then
     for i = 1, #data.class do
       if key == tostring(i) then
-        print('sent!')
         ovw.net:send(msgClass, {
           class = i,
           team = myId > 1 and 1 or 0

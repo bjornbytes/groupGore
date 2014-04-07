@@ -126,17 +126,42 @@ function PlayerServer:spawn()
   Player.spawn(self)
 end
 
-function PlayerServer:trace(data)
+function PlayerServer:trace(data, ping)
   local t = data.tick
   data.tick = nil
   
+  local rewindTo = t - ((ping / 1000) + interp) / tickRate
   if t > self.ack then
+    
+    -- Lag compensation
+    local oldPos = {}
+    ovw.players:with(ovw.players.active, function(p)
+      if p.id ~= self.id then
+        oldPos[p.id] = {p.x, p.y}
+        local lerpd = ovw.players:get(p.id, rewindTo)
+        if lerpd then
+          p.x = lerpd.x
+          p.y = lerpd.y
+          p.shape:moveTo(p.x, p.y)
+        end
+      end
+    end)
+
     self.ack = t
     self.input = data
     self:move()
-    ovw.collision:update()
     self:turn()
     self:slot()
+
+    -- Undo lag compensation
+    ovw.players:with(ovw.players.active, function(p)
+      if oldPos[p.id] then
+        p.x, p.y = unpack(oldPos[p.id])
+        p.shape:moveTo(p.x, p.y)
+      end
+    end)
+    
+    ovw.collision:update()
   end
 end
 

@@ -50,7 +50,7 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  ovw.players:get(event.pid):trace(event.data)
+  ovw.players:get(event.pid):trace(event.data, event.peer:last_round_trip_time())
 end
 
 NetServer.receive[msgChat] = function(self, event)
