@@ -109,7 +109,7 @@ function PlayerServer:hurt(data)
 
       ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
     else
-      f.exe(self.shields[1].callback, self) 
+      f.exe(self.shields[1].callback, self)
       table.remove(self.shields, 1)
     end
   end
@@ -134,6 +134,7 @@ function PlayerServer:trace(data)
     self.ack = t
     self.input = data
     self:move()
+    ovw.collision:update()
     self:turn()
     self:slot()
   end

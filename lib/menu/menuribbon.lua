@@ -27,9 +27,9 @@ function MenuRibbon:draw()
   local test = self:test(love.mouse.getPosition())
   for i = 1, self.count do
     if test == i then
-      self.ribbons[i] = math.lerp(self.ribbons[i], 1, 10 * delta)
+      self.ribbons[i] = math.lerp(self.ribbons[i], 1, 20 * delta)
     else
-      self.ribbons[i] = math.lerp(self.ribbons[i], 0, 20 * delta)
+      self.ribbons[i] = math.lerp(self.ribbons[i], 0, 30 * delta)
     end
 
     g.setColor(0, 0, 0, 80 * self.ribbons[i])

@@ -36,6 +36,7 @@ function Menu:resize()
 end
 
 function Menu:changePage(page)
+  if not page then return end
   if self.page and self.page.unload then self.page:unload() end
   self.page = page
   self.page:load()
