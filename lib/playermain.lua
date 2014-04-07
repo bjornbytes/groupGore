@@ -20,7 +20,8 @@ function PlayerMain:activate()
   
   self.visible = 1
   
-  self.heartbeatSound = nil
+  self.heartbeatSound = ovw.sound:loop('heartbeat')
+  self.heartbeatSound:pause()
 
   Player.activate(self)
 end
@@ -41,12 +42,11 @@ function PlayerMain:update()
   self:fade()
   
   if self.health < self.maxHealth * .5 then
+    if self.heartbeatSound:isPaused() then self.heartbeatSound:resume() end
     local prc = self.health / self.maxHealth
-    self.heartbeatSound = self.heartbeatSound or ovw.sound:loop('heartbeat')
     self.heartbeatSound:setVolume(math.min(1 - ((prc - .3) / .2), 1.0))
-  elseif self.heartbeatSound then
-    self.heartbeatSound:stop()
-    self.heartbeatSound = nil
+  elseif not self.heartbeatSound:isPaused() then
+    self.heartbeatSound:pause()
   end
   
   ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
@@ -97,10 +97,8 @@ function PlayerMain:fade()
 end
 
 function PlayerMain:die()
-  if self.heartbeatSound then
-    self.heartbeatSound:stop()
-    self.heartbeatSound = nil
-  end
+  self.heartbeatSound:pause()
+  Player.die(self)
 end
 
 function PlayerMain:keyHandler(key)
