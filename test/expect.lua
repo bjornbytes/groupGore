@@ -29,7 +29,7 @@ function Suite:init(name, fn)
   local t = {
     it = function(...) table.insert(tests, Test(name, ...)) end
   }
-  setmetatable(t, {__index = _G})
+  setmetatable(t, {__index = _G, __newindex = _G})
   setfenv(fn, t)
   fn()
   
@@ -39,7 +39,7 @@ function Suite:init(name, fn)
     if not tests[i]:run(i) then code = 1 end
   end
   print()
-  
+
   os.exit(code)
 end
 
@@ -61,7 +61,7 @@ function Test:run(idx)
   local t = {
     expect = function(...) return Assertion(...) end
   }
-  setmetatable(t, {__index = _G})
+  setmetatable(t, {__index = _G, __newindex = _G})
   setfenv(self.fn, t)
   local success, err = xpcall(self.fn, function(e)
     return tostring(e)
@@ -85,7 +85,7 @@ end
 
 local function isa(v, x)
   if type(x) == 'string' then return type(v) == x, tostring(v) .. ' is not a ' .. x end
-  return getmetatable(v).__index == x, 'table is not a ' .. x
+  return getmetatable(v).__index == x, 'table is not a ' .. tostring(x)
 end
 
 local paths = {
@@ -93,13 +93,13 @@ local paths = {
   to = {'not', 'have', 'equal', 'be'},
   ['not'] = {'be', 'have'},
   be = {'a', 'an', 'truthy', 'falsy', f = function(v, x)
-    return table.eq(v, x), tostring(v) .. ' and ' .. tostring(x) ' are not strictly equal!'
+    return table.eq(v, x), tostring(v) .. ' and ' .. tostring(x) .. ' are not strictly equal!'
   end},
   a = {f = isa},
   an = {f = isa},
   truthy = {f = function(v) return v, tostring(v) .. ' is not truthy!' end},
   falsy = {f = function(v) return not v, tostring(v) .. ' is not falsy!' end},
-  equal = {f = function(v, x) return v == x, tostring(v) .. ' and ' .. tostring(x) ' are not equal!' end},
+  equal = {f = function(v, x) return v == x, tostring(v) .. ' and ' .. tostring(x) .. ' are not equal!' end},
   have = {f = function(v, x) return v[x], 'table does not have key ' .. tostring(x)  end}
 }
 
