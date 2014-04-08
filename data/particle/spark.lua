@@ -5,7 +5,7 @@ Spark.code = 'spark'
 
 Spark.activate = function(self)
   self.speed = love.math.random(200, 300)
-  self.alpha = love.math.random(.6, 1)
+  self.alpha = .6 + love.math.random() * .4
   self.length = love.math.random(4, 12)
   self.angle = 0
 end
