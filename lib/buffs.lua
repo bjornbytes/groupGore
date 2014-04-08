@@ -9,6 +9,8 @@ function Buffs:update()
 end
 
 function Buffs:add(player, code)
+  assert(not self:get(player, code))
+  
   local buff = new(data.buff[code])
   buff.owner = player
   f.exe(buff.activate, buff)

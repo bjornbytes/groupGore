@@ -9,21 +9,12 @@ function Snow:init()
   self.vy = 400 * (love.math.random() < .5 and -1 or 1)
   self.dx = love.math.random() < .5 and -1 or 1
   self.dy = love.math.random() < .5 and -1 or 1
-  self.image = love.graphics.newImage('media/graphics/bgBlizzard.png')
+  self.image = love.graphics.newImage('media/graphics/effects/bgBlizzard.png')
   self.image:setWrap('repeat', 'repeat')
-  self.depth = -10000
+  self.depth = 1
 end
 
 function Snow:update()
-  --[[global.blizzardX+=global.blizzardHSpeed*(global.delta/global.timerResolution)
-  global.blizzardY+=global.blizzardVSpeed*(global.delta/global.timerResolution)
-  global.blizzardHSpeed+=global.blizzardHDSpeed*random_range(50,100)*(global.delta/global.timerResolution)
-  global.blizzardVSpeed+=global.blizzardVDSpeed*random_range(50,100)*(global.delta/global.timerResolution)
-  if global.blizzardHSpeed>300{global.blizzardHDSpeed=-1}
-  else if global.blizzardHSpeed<-300{global.blizzardHDSpeed=1}
-  if global.blizzardVSpeed>300{global.blizzardVDSpeed=-1}
-  else if global.blizzardVSpeed<-300{global.blizzardVDSpeed=1}]]
-    
   self.x = self.x + self.vx * tickRate
   self.y = self.y + self.vy * tickRate
   self.vx = self.vx + self.dx * love.math.random(50, 100) * tickRate
@@ -35,10 +26,6 @@ function Snow:update()
 end
 
 function Snow:gui()
-  --[[w3d_draw_background_tiled(bgBlizzard,global.blizzardX,global.blizzardY,64,1,1,c_white,.35)
-  w3d_draw_background_tiled(bgBlizzard,global.blizzardX*1.1,global.blizzardY*1.1,128,1,1,c_white,.35)
-  w3d_draw_background_tiled(bgBlizzard,global.blizzardX*1.2,global.blizzardY*1.2,256,1,1,c_white,.35)]]
-
   love.graphics.setColor(255, 255, 255, 90)
   local factor = 1
   local x, y = (ovw.view.x + ovw.view.w / 2 - self.x), (ovw.view.y + ovw.view.h / 2 - self.y)

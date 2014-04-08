@@ -144,7 +144,12 @@ end
 
 function Player:die()
   self.ded = 5
-  if ovw.particles then ovw.particles:create('skull', {x = self.x, y = self.y}) end
+  if ovw.particles then
+    ovw.particles:create('skull', {x = self.x, y = self.y})
+    for _ = 1, 64 do
+      ovw.particles:create('gib', {x = self.x, y = self.y})
+    end
+  end
   if ovw.sound then ovw.sound:play('die') end
   ovw.buffs:remove(self.id)
 

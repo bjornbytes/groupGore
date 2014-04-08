@@ -47,8 +47,8 @@ SMG.activate = function(self)
     if self.len < 900 then
       for _ = 1, 4 do
         ovw.particles:create('spark', {
-          x = self.x + math.dx(self.angle, self.len),
-          y = self.y + math.dy(self.angle, self.len),
+          x = self.x + math.dx(self.len, self.angle),
+          y = self.y + math.dy(self.len, self.angle),
           angle = self.angle + math.pi + love.math.random() * 2.08 - 1.04
         })
       end

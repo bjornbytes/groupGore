@@ -7,8 +7,7 @@ function Particles:init()
 end
 
 function Particles:create(type, vars)
-	local p = {}
-	setmetatable(p, {__index = data.particle[type]})
+	local p = new(data.particle[type])
 	
 	p:activate()
 	table.merge(vars or {}, p)
@@ -21,7 +20,6 @@ end
 function Particles:update()
 	for i = #self.particles, 1, -1 do
 		local p = self.particles[i]
-		p._prev = table.copy(p)
 		if f.exe(p.update, p) then
 			table.remove(self.particles, i)
 		end
@@ -29,8 +27,5 @@ function Particles:update()
 end
 
 function Particles:draw()
-	table.each(self.particles, function(v)
-		local p = table.interpolate(v._prev, v, tickDelta / tickRate)
-		p:draw()
-	end)
+	table.with(self.particles, 'draw')
 end
