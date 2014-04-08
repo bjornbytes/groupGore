@@ -9,8 +9,8 @@ function HudIcons:init()
   self.prevLabelAlphas = {}
   self.labelAlphas = {}
   for i = 1, 5 do
-    self.prevLabelAlphas[i] = 1
-    self.labelAlphas[i] = 1
+    self.prevLabelAlphas[i] = 0
+    self.labelAlphas[i] = 0
   end
 end
 
@@ -19,17 +19,13 @@ function HudIcons:update()
   if p and p.active then
     for i = 1, 5 do
       self.prevLabelAlphas[i] = self.labelAlphas[i]
-      if p.input.weapon ~= i and p.input.skill ~= i then
-        self.labelAlphas[i] = math.max(self.labelAlphas[i] - tickRate, 0)
+      if p.input.weapon == i or p.input.skill == i then
+        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], 1, 10 * tickRate)
+      elseif p.slots[i].type == 'passive' then
+        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], .5, 10 * tickRate)
+      else
+        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], .5, 10 * tickRate)
       end
-    end
-  end
-end
-
-function HudIcons:keypressed(key)  
-  for i = 1, 5 do
-    if key == tostring(i) then
-      self.labelAlphas[i] = 2
     end
   end
 end
@@ -40,10 +36,10 @@ function HudIcons:draw()
     local width = p.slots[1].icon:getWidth()
     local s = g.minUnit(.08) / width
     for i = 1, 5 do
+      local alpha = math.min(math.lerp(self.prevLabelAlphas[i], self.labelAlphas[i], tickDelta / tickRate), 1) * 200
       local iconx = w(.5) - g.minUnit(.213) + g.minUnit(.106 * (i - 1))
-      if p.input.weapon == i or p.input.skill == i then love.graphics.setColor(255, 255, 255, 255)
-      else love.graphics.setColor(255, 255, 255, 128) end
-      love.graphics.draw(p.slots[i].icon, iconx - (width / 2), h(.093), 0, s, s)
+      g.setColor(255, 255, 255, math.max(alpha, 100) * (255 / 200))
+      g.draw(p.slots[i].icon, iconx - (width / 2), h(.093), 0, s, s)
 
       local prc = 0      
       if p.slots[i].type == 'weapon' then
@@ -95,14 +91,17 @@ function HudIcons:draw()
       g.polygon('fill', points)
       
       g.setFontPixel('pixel', 8)
-      local strw, strh = g.getFont():getWidth(p.slots[i].name), g.getFont():getHeight()
-      local alpha = math.min(math.lerp(self.prevLabelAlphas[i], self.labelAlphas[i], tickDelta / tickRate), 1) * 200
+      local str = p.slots[i].name
+      if p.slots[i].type == 'passive' then str = '[' .. str .. ']' end
+      local strw, strh = g.getFont():getWidth(str), g.getFont():getHeight()
       
       g.setColor(0, 0, 0, alpha)
       g.rectangle('fill', iconx - ((strw + 3) / 2), h(.093) + width + 1, strw + 3, strh + 2)
       
-      g.setColor(255, 255, 255, alpha)
-      g.printCenter(p.slots[i].name, iconx, h(.093) + width + 2, true, false)
+      if p.slots[i].type == 'weapon' then g.setColor(255, 150, 150, alpha)
+      elseif p.slots[i].type == 'skill' then g.setColor(150, 150, 255, alpha)
+      else g.setColor(255, 255, 255, alpha) end
+      g.printCenter(str, iconx, h(.093) + width + 2, true, false)
     end
   end
 end

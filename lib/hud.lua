@@ -58,8 +58,7 @@ function Hud:keypressed(key)
   if tick < 10 then return end
 
   if self.chat:keypressed(key) then return true
-  elseif self.classSelect:keypressed(key) then return true
-  elseif self.icons:keypressed(key) then return end
+  elseif self.classSelect:keypressed(key) then return true end
 end
 
 function Hud:keyreleased(key)

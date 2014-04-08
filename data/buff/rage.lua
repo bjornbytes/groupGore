@@ -5,7 +5,7 @@ local Rage = {}
 ----------------
 Rage.name = 'Rage'
 Rage.code = 'rage'
-Rage.text = 'The brute is shielded from damage and gains lifesteal.'
+Rage.text = 'The brute has 20% additional lifesteal.'
 Rage.icon = 'media/graphics/icon.png'
 Rage.hide = false
 
@@ -13,13 +13,12 @@ Rage.hide = false
 ----------------
 -- Data
 ----------------
-Rage.effects = {}
-Rage.effects.shield = {
-  health = 80,
-  callback = function(self)
-    ovw.buffs:remove(self.id, data.buff.rage)
-  end
-}
-Rage.effects.lifesteal = .2
+function Rage:activate()
+  self.owner.lifesteal = self.owner.lifesteal + .2
+end
+
+function Rage:deactivate()
+  self.owner.lifesteal = self.owner.lifesteal - .2
+end
 
 return Rage

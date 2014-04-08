@@ -31,16 +31,4 @@ Brute.slots[3] = data.skill.adrenaline
 Brute.slots[4] = data.skill.rage
 Brute.slots[5] = data.skill.bloodlust
 
-Brute.activate = function(self)
-  self.rage = 0
-end
-
-Brute.deactivate = function(self)
-  self.rage = nil
-end
-
-Brute.secondary = function(self)
-  return self.rage / 200
-end
-
 return Brute

@@ -39,7 +39,6 @@ function Player:activate()
   self.maxSpeed = self.class.speed
   self.health = self.maxHealth
   self.radius = self.class.size
-  self.class.activate(self)
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
@@ -48,7 +47,6 @@ end
 function Player:deactivate()
   self.x, self.y = 0, 0
   self.username = ''
-  self.class.deactivate(self)
 end
 
 function Player:update()

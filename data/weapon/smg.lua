@@ -5,7 +5,6 @@ local SMG = {}
 ----------------
 SMG.name = 'SMG'
 SMG.code = 'smg'
-SMG.icon = 'media/graphics/icon.png'
 SMG.text = 'It is a SMG.  It pumps people full of lead.'
 SMG.type = 'weapon'
 

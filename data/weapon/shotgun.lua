@@ -5,7 +5,6 @@ local Shotgun = {}
 ----------------
 Shotgun.name = 'Shotgun'
 Shotgun.code = 'shotgun'
-Shotgun.icon = 'media/graphics/icon.png'
 Shotgun.text = 'It is a shotgun.  It blows people to bits.'
 Shotgun.type = 'weapon'
 

@@ -5,7 +5,6 @@ local Adrenaline = {}
 ----------------
 Adrenaline.name = 'Adrenaline'
 Adrenaline.code = 'adrenaline'
-Adrenaline.icon = 'media/graphics/icon.png'
 Adrenaline.text = 'It is Adrenaline.  It sucks.'
 Adrenaline.type = 'skill'
 
@@ -20,33 +19,33 @@ Adrenaline.cooldown = 6
 ----------------
 -- Behavior
 ----------------
-function Adrenaline.activate(self, myAdrenaline)
-  myAdrenaline.cooldown = 0
-  myAdrenaline.active = false
+function Adrenaline.activate(self, adrenaline)
+  adrenaline.cooldown = 0
+  adrenaline.active = false
 end
 
-function Adrenaline.update(self, myAdrenaline)
-  myAdrenaline.cooldown = timer.rot(myAdrenaline.cooldown)
+function Adrenaline.update(self, adrenaline)
+  adrenaline.cooldown = timer.rot(adrenaline.cooldown)
 end
 
-function Adrenaline.canFire(self, myAdrenaline)
-  return myAdrenaline.cooldown == 0
+function Adrenaline.canFire(self, adrenaline)
+  return adrenaline.cooldown == 0
 end
 
-function Adrenaline.fire(self, myAdrenaline)
-  if not myAdrenaline.active then
+function Adrenaline.fire(self, adrenaline)
+  if not adrenaline.active then
     ovw.buffs:add(self, 'adrenaline')
-    myAdrenaline.active = true
-    myAdrenaline.cooldown = 1
+    adrenaline.active = true
+    adrenaline.cooldown = 1
   else
     ovw.buffs:remove(self, 'adrenaline')
-    myAdrenaline.active = false
-    myAdrenaline.cooldown = Adrenaline.cooldown
+    adrenaline.active = false
+    adrenaline.cooldown = Adrenaline.cooldown
   end
 end
 
-function Adrenaline.value(myAdrenaline)
-  return myAdrenaline.cooldown / (myAdrenaline.active and 1 or Adrenaline.cooldown)
+function Adrenaline.value(adrenaline)
+  return adrenaline.cooldown / (adrenaline.active and 1 or Adrenaline.cooldown)
 end
 
 return Adrenaline
