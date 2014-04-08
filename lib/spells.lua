@@ -28,5 +28,5 @@ function Spells:update()
 end
 
 function Spells:draw()
-  table.with(self.spells, 'draw', true)
+  table.with(self.spells, 'draw')
 end

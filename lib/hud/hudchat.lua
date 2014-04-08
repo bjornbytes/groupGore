@@ -17,7 +17,7 @@ end
 function HudChat:update()
   self.timer = timer.rot(self.timer)
   if self.active then self.timer = 2 end
-  self.offset = math.lerp(self.offset, (self.timer == 0) and -self.width - 4 or 0, .25)
+  self.offset = math.lerp(self.offset, (self.timer == 0) and -self.width - 4 or 0, tickRate * 30)
 end
 
 function HudChat:draw()
