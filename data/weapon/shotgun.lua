@@ -30,48 +30,48 @@ Shotgun.tipy = 0
 ----------------
 -- Behavior
 ----------------
-Shotgun.activate = function(self, myShotgun)
-  myShotgun.timers = {}
-  myShotgun.timers.shoot = 0
-  myShotgun.timers.reload = 0
+Shotgun.activate = function(self, shotgun)
+  shotgun.timers = {}
+  shotgun.timers.shoot = 0
+  shotgun.timers.reload = 0
   
-  myShotgun.ammo = Shotgun.ammo
-  myShotgun.clip = Shotgun.clip
+  shotgun.ammo = Shotgun.ammo
+  shotgun.clip = Shotgun.clip
 end
 
-Shotgun.update = function(self, myShotgun)
-  myShotgun.timers.shoot = timer.rot(myShotgun.timers.shoot)
-  myShotgun.timers.reload = timer.rot(myShotgun.timers.reload, function()
-    local amt = math.min(Shotgun.clip, myShotgun.ammo)
-    myShotgun.clip = amt
-    myShotgun.ammo = myShotgun.ammo - amt
+Shotgun.update = function(self, shotgun)
+  shotgun.timers.shoot = timer.rot(shotgun.timers.shoot)
+  shotgun.timers.reload = timer.rot(shotgun.timers.reload, function()
+    local amt = math.min(Shotgun.clip, shotgun.ammo)
+    shotgun.clip = amt
+    shotgun.ammo = shotgun.ammo - amt
     if ovw.sound then ovw.sound:play('reload') end
   end)
-  if self.input.reload and myShotgun.clip < Shotgun.clip and myShotgun.timers.reload == 0 then myShotgun.timers.reload = Shotgun.reload end
+  if self.input.reload and shotgun.clip < Shotgun.clip and shotgun.timers.reload == 0 then shotgun.timers.reload = Shotgun.reload end
 end
 
-Shotgun.canFire = function(self, myShotgun)
-  return myShotgun.timers.shoot == 0 and myShotgun.timers.reload == 0 and myShotgun.clip > 0
+Shotgun.canFire = function(self, shotgun)
+  return shotgun.timers.shoot == 0 and shotgun.timers.reload == 0 and shotgun.clip > 0
 end
 
-Shotgun.fire = function(self, myShotgun)
+Shotgun.fire = function(self, shotgun)
   ovw.spells:activate(self.id, data.spell.shotgun)
   
-  myShotgun.timers.shoot = myShotgun.firerate
-  myShotgun.clip = myShotgun.clip - 1
-  if myShotgun.clip == 0 then myShotgun.timers.reload = Shotgun.reload end
-  self.recoil = myShotgun.recoil
+  shotgun.timers.shoot = shotgun.firerate
+  shotgun.clip = shotgun.clip - 1
+  if shotgun.clip == 0 then shotgun.timers.reload = Shotgun.reload end
+  self.recoil = shotgun.recoil
 end
 
-Shotgun.draw = function(self, myShotgun)
+Shotgun.draw = function(self, shotgun)
   local dir = self.angle
   local dx = self.class.handx - self.recoil
   local dy = self.class.handy
-  love.graphics.draw(myShotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, myShotgun.anchorx, myShotgun.anchory)
+  love.graphics.draw(shotgun.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, shotgun.anchorx, shotgun.anchory)
 end
 
-Shotgun.value = function(myShotgun)
-  return myShotgun.timers.reload > 0 and 1 - (myShotgun.timers.reload / Shotgun.reload) or myShotgun.clip / Shotgun.clip
+Shotgun.value = function(shotgun)
+  return shotgun.timers.reload > 0 and 1 - (shotgun.timers.reload / Shotgun.reload) or shotgun.clip / Shotgun.clip
 end
 
 return Shotgun

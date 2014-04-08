@@ -1,4 +1,4 @@
-SMG = {}
+local SMG = {}
 SMG.code = 'smg'
 SMG.hp = .12
 
@@ -19,20 +19,20 @@ SMG.activate = function(self)
   
   self.angle = self.owner.angle
   self.angle = self.angle - (data.weapon.smg.spread / 2) + (2 * love.math.random() * data.weapon.smg.spread)
-  local hit = ovw.collision:wallRaycast(self.x, self.y, self.angle, 900)
-  self.len = hit and hit.distance or 900
+  local hit, dis = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})
+  self.len = hit and dis or 900
   
-  local hit = ovw.collision:playerRaycast(self.x, self.y, self.angle, {
-    distance = self.len,
-    team = 1 - self.owner.team,
-    sort = true,
-    all = false
+  local target = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(self.len, self.angle), self.y + math.dy(self.len, self.angle), {
+    tag = 'player',
+    fn = function(p)
+      return p.team ~= self.owner.team
+    end,
+    first = true
   })
 
-  if hit then
-    local p = hit.player
-    self.len = math.distance(self.x, self.y, p.x, p.y)
-    ovw.net:emit(evtDamage, {id = p.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
+  if target then
+    self.len = math.distance(self.x, self.y, target.x, target.y)
+    ovw.net:emit(evtDamage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
   
   if ovw.particles then

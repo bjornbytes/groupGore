@@ -22,6 +22,17 @@ function Player:create()
     lifesteal = 0,
     collision = {
       shape = 'circle',
+      tag = 'player',
+      with = {
+        wall = function(self, other, dx, dy)
+          self.x, self.y = self.x + dx, self.y + dy
+          self.shape:moveTo(self.x, self.y)
+        end,
+        player = function(self, other, dx, dy)
+          self.x, self.y = self.x + dx / 2, self.y + dy / 2
+          self.shape:moveTo(self.x, self.y)
+        end
+      }
     },
     radius = 0,
     depth = 0,

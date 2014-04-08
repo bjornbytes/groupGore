@@ -5,6 +5,7 @@ Wall.code = 'wall'
 Wall.collision = {}
 Wall.collision.shape = 'rectangle'
 Wall.collision.static = true
+Wall.collision.tag = 'wall'
 
 Wall.activate = function(self, map)
   if ovw.collision then ovw.collision:register(self) end

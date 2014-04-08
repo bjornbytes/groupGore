@@ -22,17 +22,16 @@ Shotgun.activate = function(self)
   self.bullets = {}
   
   for i = self.owner.angle - data.weapon.shotgun.spread, self.owner.angle + data.weapon.shotgun.spread + (.001), (2 * data.weapon.shotgun.spread / (data.weapon.shotgun.count - 1)) do
-    local ang, len = i, self.len
-    local hit
+    local ang, len = i, self.len    
+    local hit, d = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {tag = 'wall', first = true})
+    len = hit and d or len
     
-    hit = ovw.collision:wallRaycast(self.x, self.y, ang, len)
-    if hit then len = hit.distance end
-    
-    hit = ovw.collision:playerRaycast(self.x, self.y, ang, {
-      distance = len,
-      team = 1 - self.owner.team,
-      sort = true,
-      all = false
+    hit = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {
+      tag = 'player',
+      fn = function(p)
+        return p.team ~= self.owner.team
+      end,
+      first = true
     })
     
     if hit then
