@@ -21,10 +21,20 @@ function Buffs:add(player, code)
 end
 
 function Buffs:remove(player, code)
-  local buff = self:get(player, code)
+  local buff, i = self:get(player, code)
   if buff then
     f.exe(buff.deactivate, buff)
     table.remove(self.buffs, i)
+  end
+end
+
+function Buffs:removeAll(player)
+  for i = #self.buffs, 1, -1 do
+    local buff = self.buffs[i]
+    if buff.owner == player then
+      f.exe(buff.deactivate, buff)
+      table.remove(self.buffs, i)
+    end
   end
 end
 
@@ -32,7 +42,7 @@ function Buffs:get(player, code)
   for i = 1, #self.buffs do
     local buff = self.buffs[i]
     if buff.owner == player and buff.code == code then
-      return buff
+      return buff, i
     end
   end
 end
