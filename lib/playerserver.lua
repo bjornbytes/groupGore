@@ -35,9 +35,9 @@ function PlayerServer:deactivate()
 end
 
 function PlayerServer:update()
-  local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
+  --local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
   
-  self:time()
+  self:time()  
   self:logic()
   
   if self.health < self.maxHealth and not self.ded then
@@ -62,6 +62,8 @@ function PlayerServer:update()
   data.tick = tick
   data.ack = self.ack
   ovw.net:emit(evtSync, data)
+  
+  Player.update(self)
 end
 
 function PlayerServer:time()
@@ -129,7 +131,7 @@ end
 function PlayerServer:trace(data, ping)
   local t = data.tick
   data.tick = nil
-  
+
   local rewindTo = t - ((ping / 1000) + interp) / tickRate
   if t > self.ack then
     
@@ -149,6 +151,7 @@ function PlayerServer:trace(data, ping)
 
     self.ack = t
     self.input = data
+    
     self:move()
     self:turn()
     self:slot()

@@ -42,10 +42,8 @@ function HudIcons:draw()
       g.draw(p.slots[i].icon, iconx - (width / 2), h(.093), 0, s, s)
 
       local prc = 0      
-      if p.slots[i].type == 'weapon' then
-        prc = p.slots[i].timers.reload / p.slots[i].reload * 100
-      elseif p.slots[i].value then
-        prc = p.slots[i]:value() * 100
+      if p.slots[i].value then
+        prc = p.slots[i].value(p, p.slots[i]) * 100
       end
 
       g.setColor(0, 0, 0, 128)

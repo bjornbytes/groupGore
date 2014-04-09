@@ -44,7 +44,7 @@ function Adrenaline.fire(self, adrenaline)
   end
 end
 
-function Adrenaline.value(adrenaline)
+function Adrenaline.value(self, adrenaline)
   return adrenaline.cooldown / (adrenaline.active and 1 or Adrenaline.cooldown)
 end
 

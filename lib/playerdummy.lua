@@ -7,18 +7,15 @@ end
 
 function PlayerDummy:draw()
 	if self.ded then return end
-	local t = tick - (interp / tickRate)
-	local previous = ovw.players.history[self.id][t - 1]
-	local current = ovw.players.history[self.id][t]
-	if current and previous then
-		Player.draw(table.interpolate(previous, current, tickDelta / tickRate))
-	end
+	local t = tick - (interp / tickRate) + (tickDelta / tickRate)
+	local p = ovw.players:get(self.id, t)
+	if p then Player.draw(p) end
 end
 
 function PlayerDummy:drawPosition()
 	local t = tick - (interp / tickRate)
 	local prev, cur = ovw.players.history[self.id][t - 1], ovw.players.history[self.id][t]
-	if prev then
+	if prev and cur then
 		prev, cur = {x = prev.x, y = prev.y}, {x = cur.x, y = cur.y}
 		local interp = table.interpolate(prev, cur, tickDelta / tickRate)
 		return interp.x, interp.y
@@ -32,7 +29,6 @@ function PlayerDummy:trace(data)
 	data.tick = nil
 	data.id = nil
 	if data.angle then data.angle = math.rad(data.angle) end
-	local dst = (t == tick) and self or ovw.players.history[self.id][t]
-	table.merge(data, dst)
-	if dst ~= self then table.merge(data, self) end
+	table.merge(data, ovw.players:get(self.id, t))
+	table.merge(data, self)
 end

@@ -15,7 +15,8 @@ function PlayerMain:activate()
   self.input.r = false
   
   self.input.weapon = 1
-  self.input.skill = 3
+  self.input.skill = 1
+  while self.slots[self.input.skill].type ~= 'skill' do self.input.skill = self.input.skill + 1 end
   self.input.reload = false
   
   self.visible = 1
@@ -50,28 +51,15 @@ function PlayerMain:update()
   end
   
   ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
+  
+  Player.update(self)
 end
 
 function PlayerMain:draw()
   if self.ded then return end
-  
-  if love.keyboard.isDown(' ') then
-    local server
-    for i = 1, #Overwatch.ovws do
-      local o = Overwatch.ovws[i]
-      if o and o.tag and o.tag == 'server' then
-        server = o
-        break
-      end
-    end
-    
-    if server then
-      Player.draw(server.players:get(self.id))
-    end
-  else
-    local p = ovw.players:get(self.id, tick - 1 + tickDelta / tickRate)
-    if p then Player.draw(p) end
-  end
+
+  local p = ovw.players:get(self.id, tick - 1 + tickDelta / tickRate)
+  if p then Player.draw(p) end
 end
 
 function PlayerMain:drawPosition()
@@ -88,7 +76,7 @@ function PlayerMain:fade()
   local function shouldFade(p)
     if p.team == self.team then return false end
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
-    return ovw.collision:wallRaycast(self.x, self.y, math.direction(self.x, self.y, p.x, p.y), math.distance(self.x, self.y, p.x, p.y))
+    return ovw.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
   end
   ovw.players:with(ovw.players.active, function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)

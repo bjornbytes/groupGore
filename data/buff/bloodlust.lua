@@ -13,9 +13,23 @@ Bloodlust.hide = false
 ----------------
 -- Data
 ----------------
+Bloodlust.heal = 15
+Bloodlust.rate = .25
 Bloodlust.duration = 6
 
-Bloodlust.effects = {}
-Bloodlust.effects.hot = 15
+function Bloodlust:activate()
+  self.timer = Bloodlust.duration
+  self.healTimer = 0
+end
+
+function Bloodlust:update()
+  self.healTimer = self.healTimer - 1
+  if self.healTimer <= 0 then
+    ovw.net:emit(evtHeal, {id = self.owner.id, amount = self.heal * self.rate, from = self.owner.id, tick = tick})
+    self.healTimer = math.round(Bloodlust.rate / tickRate)
+    self.duration = self.duration - self.rate
+    if self.duration <= 0 then ovw.buffs:remove(self.owner, 'bloodlust') end
+  end
+end
 
 return Bloodlust

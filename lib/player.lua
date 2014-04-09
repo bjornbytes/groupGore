@@ -29,8 +29,10 @@ function Player:create()
           self.shape:moveTo(self.x, self.y)
         end,
         player = function(self, other, dx, dy)
-          self.x, self.y = self.x + dx / 2, self.y + dy / 2
-          self.shape:moveTo(self.x, self.y)
+          if self.speed > 0 then
+            self.x, self.y = self.x + dx, self.y + dy
+            self.shape:moveTo(self.x, self.y)
+          end
         end
       }
     },
@@ -50,14 +52,17 @@ function Player:activate()
   self.maxSpeed = self.class.speed
   self.health = self.maxHealth
   self.radius = self.class.size
+  self.depth = self.id
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
+  if ovw.collision then ovw.collision:register(self) end
 end
 
 function Player:deactivate()
   self.x, self.y = 0, 0
   self.username = ''
+  if ovw.collision then ovw.collision:unregister(self) end
 end
 
 function Player:update()
@@ -76,6 +81,14 @@ function Player:draw()
   if self.input then
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
     f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
+  end
+  if self.shape and love.keyboard.isDown(' ') then
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 100)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 100) end
+    self.shape:draw('fill')
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
+    self.shape:draw('line')
   end
 end
 
@@ -162,7 +175,7 @@ function Player:die()
     end
   end
   if ovw.sound then ovw.sound:play('die') end
-  ovw.buffs:remove(self.id)
+  ovw.buffs:removeAll(self)  
 
   self.x, self.y = 0, 0
   self.visible = 0

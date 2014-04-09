@@ -5,23 +5,24 @@ Knife.code = 'knife'
 Knife.text = 'Stabby'
 Knife.type = 'weapon'
 
-Knife.reload = .1
+Knife.damage = 45
+Knife.cooldown = .8
 
 function Knife:activate(knife)
-  knife.timers = {}
-  knife.timers.reload = 0
+  knife.timer = 0
 end
 
-function Knife:udpate(knife)
-  --
+function Knife:update(knife)
+  knife.timer = timer.rot(knife.timer)
 end
 
 function Knife:canFire(knife)
-  --
+  return knife.timer == 0
 end
 
 function Knife:fire(knife)
-  --
+  ovw.spells:activate(self.id, data.spell.knife)
+  knife.timer = knife.cooldown
 end
 
 function Knife:draw(knife)

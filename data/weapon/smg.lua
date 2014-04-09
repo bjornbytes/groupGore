@@ -68,8 +68,8 @@ SMG.draw = function(self, mySMG)
   love.graphics.draw(mySMG.image, self.x + math.dx(dx, dir) - math.dy(dy, dir), self.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, mySMG.anchorx, mySMG.anchory)
 end
 
-SMG.value = function(mySMG)
-  return mySMG.timers.reload > 0 and 1 - (mySMG.timers.reload / SMG.reload) or mySMG.clip / SMG.clip
+SMG.value = function(self, mySMG)
+  return mySMG.timers.reload > 0 and (mySMG.timers.reload / SMG.reload) or 0
 end
 
 return SMG

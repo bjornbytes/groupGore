@@ -102,6 +102,13 @@ Wall.draw = function(self)
   end
   
   love.graphics.draw(self.top, 0, 0)
+  
+  if love.keyboard.isDown(' ') then
+    love.graphics.setColor(100, 100, 100, 100)
+    self.shape:draw('fill')
+    love.graphics.setColor(100, 100, 100, 255)
+    self.shape:draw('line')
+  end
 end
 
 Wall.updateMesh = function(self)

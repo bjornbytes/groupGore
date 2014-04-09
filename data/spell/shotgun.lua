@@ -26,7 +26,7 @@ Shotgun.activate = function(self)
     local hit, d = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {tag = 'wall', first = true})
     len = hit and d or len
     
-    hit = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {
+    hit, d = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {
       tag = 'player',
       fn = function(p)
         return p.team ~= self.owner.team
@@ -35,8 +35,8 @@ Shotgun.activate = function(self)
     })
     
     if hit then
-      local p = hit.player
-      len = hit.distance
+      local p = hit
+      len = d
       
       local n, f = self.len * .25, self.len * .75
       local l, h = data.weapon.shotgun.damage * .4, data.weapon.shotgun.damage * 1

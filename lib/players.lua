@@ -57,11 +57,9 @@ function Players:activate(id)
   self.players[id].active = true
   if ovw.view then ovw.view:register(self.players[id]) end
   self:refresh()
-  ovw.event:emit('player.activate', {id = id})
 end
 
 function Players:deactivate(id)
-  ovw.event:emit('player.deactivate', {id = id})
   self.players[id].active = false
   self.players[id]:deactivate()
   if ovw.view then ovw.view:unregister(self.players[id]) end

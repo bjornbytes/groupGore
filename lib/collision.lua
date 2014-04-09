@@ -11,17 +11,7 @@ function Collision:init()
   end
   
   self.hc = hardon(self.cellSize, onCollide)
-  
-  ovw.event:on('player.deactivate', function(data)
-    self:unregister(ovw.players:get(data.id))
-  end)
-  ovw.event:on(evtClass, function(data)
-    local p = ovw.players:get(data.id)
-    if not p.shape then self:register(p) end
-    self.hc:removeFromGroup('players' .. (1 - data.team), p.shape)
-    self.hc:addToGroup('players' .. data.team, p.shape)
-  end)
-  
+
   ovw.event:on('prop.create', function(data) self:register(data.prop) end)
   ovw.event:on('prop.move', function(data)
     if data.prop.collision.shape == 'rectangle' then
@@ -125,9 +115,12 @@ function Collision:circleTest(x, y, r, options)
     if circle:collidesWith(shape) then
       if (not tag) or shape.owner.collision.tag == tag then
         if (not fn) or fn(shape.owner) then
+          self.hc:remove(circle)
           return shape.owner
         end
       end
     end
   end
+  
+  self.hc:remove(circle)
 end
