@@ -29,10 +29,8 @@ function Player:create()
           self.shape:moveTo(self.x, self.y)
         end,
         player = function(self, other, dx, dy)
-          if self.speed > 0 then
-            self.x, self.y = self.x + dx, self.y + dy
-            self.shape:moveTo(self.x, self.y)
-          end
+          self.x, self.y = self.x + dx, self.y + dy
+          self.shape:moveTo(self.x, self.y)
         end
       }
     },
