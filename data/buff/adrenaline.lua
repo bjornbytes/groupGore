@@ -31,11 +31,12 @@ function Adrenaline:update()
   if self.hurtTimer <= 0 then
     ovw.net:emit(evtDamage, {id = self.owner.id, amount = Adrenaline.drain * Adrenaline.rate, from = self.owner.id, tick = tick})
     self.hurtTimer = math.round(Adrenaline.rate / tickRate)
+    if ovw.particles then
+      for _ = 1, 8 do
+        ovw.particles:create('gib', {x = self.owner.x, y = self.owner.y, alpha = .5, speed = 200})
+      end
+    end
   end
-end
-
-function Adrenaline:draw()
-  -- purdy
 end
 
 return Adrenaline
