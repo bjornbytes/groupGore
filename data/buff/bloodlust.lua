@@ -27,9 +27,13 @@ function Bloodlust:update()
   if self.healTimer <= 0 then
     self.owner:heal({amount = self.heal * self.rate})
     self.healTimer = math.round(Bloodlust.rate / tickRate)
-    self.duration = self.duration - self.rate
-    if self.duration <= 0 then ovw.buffs:remove(self.owner, 'bloodlust') end
+    self.timer = self.timer - self.rate
+    if self.timer <= 0 then ovw.buffs:remove(self.owner, 'bloodlust') end
   end
+end
+
+function Bloodlust:stack()
+  self.timer = self.duration
 end
 
 return Bloodlust

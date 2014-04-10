@@ -9,9 +9,10 @@ function Buffs:update()
 end
 
 function Buffs:add(player, code)
-  assert(not self:get(player, code))
+  local buff = self:get(player, code)
+  if buff then return buff.stack and buff:stack() or buff end
   
-  local buff = new(data.buff[code])
+  buff = new(data.buff[code])
   buff.owner = player
   f.exe(buff.activate, buff)
 
