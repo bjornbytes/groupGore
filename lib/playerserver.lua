@@ -151,7 +151,6 @@ function PlayerServer:trace(data, ping)
 
     self.ack = t
     self.input = data
-    
     self:move()
     self:turn()
     self:slot()
