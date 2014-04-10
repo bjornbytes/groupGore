@@ -15,7 +15,7 @@ function HudLeft:draw()
   g.setColor(255, 255, 255)
   g.draw(self.frame, -w(.08), -h(.013))
   
-  local p = ovw.players:get(myId)
+  local p = ovw.players:get(ovw.id)
   if p and p.active then
     local clip = tostring(p.slots[p.input.weapon].clip)
     local ammo = tostring(p.slots[p.input.weapon].ammo)

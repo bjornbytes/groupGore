@@ -15,7 +15,7 @@ function HudRight:draw()
   g.setColor(255, 255, 255, 255)
   g.draw(self.frame, w(.80375), -h(.01))
   
-  local p = ovw.players:get(myId)
+  local p = ovw.players:get(ovw.id)
   if p and p.active then
     g.setFont('BebasNeue', 5.2)
     

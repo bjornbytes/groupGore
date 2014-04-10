@@ -18,8 +18,8 @@ end
 Tree.draw = function(self)
 	love.graphics.reset()
   local x, y = ovw.view:three(self.x, self.y, 100)
-  if myId and ovw.players:get(myId) and ovw.players:get(myId).active then
-    local p = ovw.players:get(myId)
+  if ovw.id and ovw.players:get(ovw.id) and ovw.players:get(ovw.id).active then
+    local p = ovw.players:get(ovw.id)
     love.graphics.setColor(255, 255, 255, (math.clamp(math.distance(self.x, self.y, p.x, p.y), 60, 120) / 120) * 255)
   else
     love.graphics.setColor(255, 255, 255)

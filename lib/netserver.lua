@@ -116,7 +116,7 @@ function NetServer:snapshot(peer)
       })
     end
   end
-  self:send(msgSnapshot, peer, {tick = tick, map = 'jungleCarnage', ['players'] = players})
+  self:send(msgSnapshot, peer, {tick = tick, map = 'testArena', ['players'] = players})
 end
 
 function NetServer:nextPlayerId()

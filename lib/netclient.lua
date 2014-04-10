@@ -17,8 +17,8 @@ NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) ovw.event:emit(event.msg, event.data) end
 
 NetClient.receive[msgJoin] = function(self, event)
-  myId = event.data.id
-  setmetatable(ovw.players:get(myId), {__index = PlayerMain})
+  ovw.id = event.data.id
+  setmetatable(ovw.players:get(ovw.id), {__index = PlayerMain})
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
@@ -57,7 +57,7 @@ function NetClient:connect(event)
 end
 
 function NetClient:disconnect(event)
-  myId = nil
+  ovw.id = nil
   Overwatch:remove(ovw)
   Overwatch:add(Menu)
 end

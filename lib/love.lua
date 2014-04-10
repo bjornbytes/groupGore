@@ -9,7 +9,7 @@ function love.run()
   syncRate = .05
   syncDelta = 0
   interp = .1
-
+  
   love.load(arg)
 
   delta = 0
@@ -108,7 +108,7 @@ function love.errhand(msg)
 		love.graphics.clear()
 		love.graphics.setColor(255, 255, 255, 128)
 		love.graphics.print('groupGore crashed =[\n\nhere\'s why:', 64, 64)
-		love.graphics.setColor(255, 255, 255, 255)
+		love.graphics.setColor(192, 0, 0, 255)
 		love.graphics.printf(msg, 64, 64 + font:getHeight() * 4, love.graphics.getWidth() - 64)
 		love.graphics.setColor(255, 255, 255, 128)
 		love.graphics.printf(p, 64, 64 + font:getHeight() * 6, love.graphics.getWidth() - 64)

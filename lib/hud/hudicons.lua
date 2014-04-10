@@ -15,7 +15,7 @@ function HudIcons:init()
 end
 
 function HudIcons:update()
-  local p = ovw.players:get(myId)
+  local p = ovw.players:get(ovw.id)
   if p and p.active then
     for i = 1, 5 do
       self.prevLabelAlphas[i] = self.labelAlphas[i]
@@ -31,7 +31,7 @@ function HudIcons:update()
 end
 
 function HudIcons:draw()
-  local p = ovw.players:get(myId)
+  local p = ovw.players:get(ovw.id)
   if p and p.active then
     local width = p.slots[1].icon:getWidth()
     local s = g.minUnit(.08) / width

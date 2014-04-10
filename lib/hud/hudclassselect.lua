@@ -48,7 +48,7 @@ function HudClassSelect:keypressed(key)
       if key == tostring(i) then
         ovw.net:send(msgClass, {
           class = i,
-          team = myId > 1 and 1 or 0
+          team = ovw.id > 1 and 1 or 0
         })
         return true
       end
@@ -86,5 +86,5 @@ function HudClassSelect:mousereleased(x, y, button)
 end
 
 function HudClassSelect:active()
-  return myId and not ovw.players:get(myId).active
+  return ovw.id and not ovw.players:get(ovw.id).active
 end

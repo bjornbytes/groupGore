@@ -105,8 +105,8 @@ function Players:update()
 end
 
 local function mouseHandler(self, x, y, b)
-  if not myId then return end
-  local p = self:get(myId)
+  if not ovw.id then return end
+  local p = self:get(ovw.id)
   if not p.active then return end
   f.exe(p.mouseHandler, p, x, y, b)
 end
@@ -114,8 +114,8 @@ Players.mousepressed = mouseHandler
 Players.mousereleased = mouseHandler
 
 local function keyHandler(self, key)
-  if not myId then return end
-  local p = self:get(myId)
+  if not ovw.id then return end
+  local p = self:get(ovw.id)
   if not p.active then return end
   f.exe(p.keyHandler, p, key)
 end

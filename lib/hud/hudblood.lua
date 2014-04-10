@@ -8,7 +8,7 @@ function HudBlood:init()
 end
 
 function HudBlood:draw()
-  local p = ovw.players:get(myId)
+  local p = ovw.players:get(ovw.id)
   if p and p.active then
     local hp = math.lerp(ovw.hud.health.prevVal, ovw.hud.health.val, tickDelta / tickRate)
     local prc = hp / p.maxHealth

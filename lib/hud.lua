@@ -31,7 +31,7 @@ end
 function Hud:gui()
   g.reset()
   
-  if not myId then return self:connecting() end
+  if not ovw.id then return self:connecting() end
   if self.classSelect:active() then return self.classSelect:draw() end
 
   self.players:draw()
@@ -55,8 +55,6 @@ function Hud:textinput(character)
 end
 
 function Hud:keypressed(key)
-  if tick < 10 then return end
-
   if self.chat:keypressed(key) then return true
   elseif self.classSelect:keypressed(key) then return true end
 end

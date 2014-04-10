@@ -4,7 +4,7 @@ local g = love.graphics
 local w, h = love.graphics.width, love.graphics.height
 
 function HudBuffs:draw()
-  local p = ovw.players:get(myId)
+  local p = ovw.players:get(ovw.id)
   if p and p.active then
     g.setColor(255, 255, 255)
     local xx = w(.01)

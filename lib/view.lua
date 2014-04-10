@@ -45,7 +45,7 @@ function View:update()
   self.prevy = self.y
   self.prevscale = self.scale
   if ovw.players then
-    local object = ovw.players:get(myId)
+    local object = ovw.players:get(ovw.id)
     if object and not object.ded then
       local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY())
       dis = dis / 4
