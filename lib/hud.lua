@@ -46,8 +46,12 @@ function Hud:gui()
   self.debug:draw()
 end
 
+function Hud:mousepressed(x, y, button)
+  return self.classSelect:mousepressed(x, y, button)
+end
+
 function Hud:mousereleased(x, y, button)
-  self.classSelect:mousereleased(x, y, button)
+  return self.classSelect:mousereleased(x, y, button)
 end
 
 function Hud:textinput(character)
@@ -60,7 +64,7 @@ function Hud:keypressed(key)
 end
 
 function Hud:keyreleased(key)
-  if self.chat.active then return true end
+  if self.chat.active or self.classSelect.active then return true end
 end
 
 function Hud:connecting()

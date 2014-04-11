@@ -61,16 +61,20 @@ function HudClassSelect:keypressed(key)
         return true
       end
     end
+    
+    return true
   end
-  
-  return false
+end
+
+function HudClassSelect:mousepressed(x, y, button)
+  return self.active
 end
 
 function HudClassSelect:mousereleased(x, y, button)
   if self.active and button == 'l' then
     for i = 1, #data.class do
       if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
-        return ovw.net:send(msgClass, {
+        ovw.net:send(msgClass, {
           class = i,
           team = self.team
         })
@@ -91,4 +95,6 @@ function HudClassSelect:mousereleased(x, y, button)
       love.event.quit()
     end
   end
+  
+  if self.active then return true end
 end

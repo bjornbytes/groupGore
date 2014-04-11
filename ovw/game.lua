@@ -45,7 +45,8 @@ function Game:quit()
 end
 
 function Game:mousepressed(...)
-  if self.players:mousepressed(...) then return end
+  if self.hud:mousepressed(...) then return
+  elseif self.players:mousepressed(...) then return end
 end
 
 function Game:mousereleased(...)
@@ -59,7 +60,8 @@ function Game:keypressed(key)
 end
 
 function Game:keyreleased(key)
-  self.players:keyreleased(key)
+  if self.hud:keyreleased(key) then return
+  elseif self.players:keyreleased(key) then return end
 end
 
 function Game:textinput(character)
