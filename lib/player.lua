@@ -177,6 +177,8 @@ function Player:die()
 
   self.x, self.y = 0, 0
   self.visible = 0
+  print('unregister')
+  ovw.collision:unregister(self)
 end
 
 function Player:spawn()

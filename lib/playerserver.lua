@@ -77,6 +77,9 @@ end
 
 function PlayerServer:hurt(data)
   if self.ded then return end
+  assert(data.tick)
+  assert(data.amount)
+  assert(data.from)
 
   local target = self.shields[1] or self
 
@@ -95,7 +98,7 @@ function PlayerServer:hurt(data)
       playerHurt[self.id][2] = -1
       for i, v in ipairs(self.hurtHistory) do
         if v.from ~= data.from and v.from ~= self.id then
-          playerHurt[i][2] = playerHurt[i][2] + v.amount * (1 - ((data.tick - v.tick) / (10 / tickRate)))
+          playerHurt[v.from][2] = playerHurt[v.from][2] + v.amount * (1 - ((data.tick - v.tick) / (10 / tickRate)))
         end
       end
       
@@ -105,7 +108,7 @@ function PlayerServer:hurt(data)
 
       local assists = {}
       if playerHurt[1][2] > 0 then
-        table.insert(assists, playerHurt[1][1])
+        table.insert(assists, {id = playerHurt[1][1]})
         if playerHurt[2][2] > 0 then table.insert(assists, {id = playerHurt[2][1]}) end
       end
 

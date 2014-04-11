@@ -41,7 +41,6 @@ end
 function Bloodlust:draw()
   love.graphics.setColor(128, 0, 0, 128)
   local x, y = self.owner:drawPosition()
-  print(math.sin(self.healTimer / 80))
   love.graphics.circle('fill', x, y, self.owner.radius * (1 + math.sin((self.timer + self.healTimer) * 50) / 4))
 end
 
