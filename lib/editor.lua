@@ -44,7 +44,10 @@ function Editor:draw()
 end
 
 function Editor:keypressed(key)
-  if key == 'escape' then love.event.quit() end
+  if key == 'escape' then
+    Overwatch:remove(ovw)
+    Overwatch:add(Menu)
+  end
   
   table.each(self.components, f.egoexe('keypressed', key))
   table.each(self.widgets, f.egoexe('keypressed', key))

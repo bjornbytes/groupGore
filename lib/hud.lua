@@ -32,7 +32,7 @@ function Hud:gui()
   g.reset()
   
   if not ovw.id then return self:connecting() end
-  if self.classSelect:active() then return self.classSelect:draw() end
+  if self.classSelect.active then return self.classSelect:draw() end
 
   self.players:draw()
   self.blood:draw()

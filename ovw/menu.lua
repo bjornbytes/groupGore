@@ -7,7 +7,11 @@ function Menu:load()
   self.login = MenuLogin()
   self.main = MenuMain()
   
-  self:changePage(self.login)
+  if not username then
+    self:changePage(self.login)
+  else
+    self:changePage(self.main)
+  end
   
   self.container = Container()
 end

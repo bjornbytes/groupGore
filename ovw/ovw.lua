@@ -14,15 +14,13 @@ function Overwatch:add(obj, ...)
 end
 
 function Overwatch:run(key, ...)
-	local i = 1
-	while i <= #self.ovws do
+	for i = #self.ovws, 1, -1 do
 		ovw = self.ovws[i]
 		if key == 'update' and table.has(self.toRemove, ovw) then
 			f.exe(ovw.unload, ovw)
 			table.remove(self.ovws, i)
 		else
 			if ovw[key] then ovw[key](ovw, ...) end
-			i = i + 1
 		end
 		ovw = nil
 	end

@@ -54,7 +54,6 @@ function Game:mousereleased(...)
 end
 
 function Game:keypressed(key)
-  if key == 'escape' then love.event.quit() end
   if self.hud:keypressed(key) then return
   elseif self.players:keypressed(key) then return end
 end

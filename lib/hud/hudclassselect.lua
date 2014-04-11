@@ -6,10 +6,16 @@ local w, h = g.width, g.height
 function HudClassSelect:init()
   self.team = purple
   self.angle = 0
+  self.active = true
+  
+  ovw.event:on(evtClass, function(data)
+    self.active = false
+  end)
 end
 
 function HudClassSelect:update()
-    self.angle = (self.angle + .65 * tickRate) % (2 * math.pi)
+  self.angle = (self.angle + .65 * tickRate) % (2 * math.pi)
+  if ovw.id and not ovw.players:get(ovw.id).active then self.active = true end
 end
 
 function HudClassSelect:draw()
@@ -43,7 +49,9 @@ function HudClassSelect:draw()
 end
 
 function HudClassSelect:keypressed(key)
-  if self:active() then
+  if key == 'escape' then self.active = not self.active end
+  
+  if self.active then
     for i = 1, #data.class do
       if key == tostring(i) then
         ovw.net:send(msgClass, {
@@ -59,7 +67,7 @@ function HudClassSelect:keypressed(key)
 end
 
 function HudClassSelect:mousereleased(x, y, button)
-  if self:active() and button == 'l' then
+  if self.active and button == 'l' then
     for i = 1, #data.class do
       if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
         return ovw.net:send(msgClass, {
@@ -83,8 +91,4 @@ function HudClassSelect:mousereleased(x, y, button)
       love.event.quit()
     end
   end
-end
-
-function HudClassSelect:active()
-  return ovw.id and not ovw.players:get(ovw.id).active
 end
