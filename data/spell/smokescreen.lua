@@ -2,14 +2,14 @@ Smokescreen = {}
 
 Smokescreen.code = 'smokescreen'
 Smokescreen.duration = 6
-Smokescreen.radius = 135
+Smokescreen.radius = 145
 Smokescreen.image = love.graphics.newImage('media/graphics/effects/smoke.png')
 
 function Smokescreen:activate()
   self.timer = self.duration
   self.angle = love.math.random() * math.pi * 2
-  self.x = self.owner.input.mx
-  self.y = self.owner.input.my
+  self.x = self.owner.x
+  self.y = self.owner.y
 end
 
 function Smokescreen:deactivate()

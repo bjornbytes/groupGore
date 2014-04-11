@@ -6,8 +6,8 @@ function Knife:activate()
   self.hp = Knife.hp
   
   self.angle = self.owner.angle
-  self.x, self.y = self.owner.x + math.dx(32, self.angle), self.owner.y + math.dy(32, self.angle)
-  self.target = ovw.collision:circleTest(self.x, self.y, 12, {
+  self.x, self.y = self.owner.x + math.dx(35, self.angle), self.owner.y + math.dy(35, self.angle)
+  self.target = ovw.collision:circleTest(self.x, self.y, 14, {
     tag = 'player',
     fn = function(p) return p.team ~= self.owner.team end
   })
