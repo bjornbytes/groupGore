@@ -1,17 +1,17 @@
 View = class()
 
 function View:init()
-  self.prevx = 0
-  self.prevy = 0
   self.x = 0
   self.y = 0
   self.w = 800
   self.h = 600
-  self.scale = love.graphics.getWidth() / self.w
-  self.prevscale = self.scale
-  self.margin = math.floor(((love.graphics.getHeight() - love.graphics.getWidth() * (self.h / self.w)) / 2) + .5)
   self.toDraw = {}
   self.target = nil
+
+  self:resize()
+  self.prevx = 0
+  self.prevy = 0
+  self.prevscale = self.scale
 end
 
 function View:update()
@@ -55,7 +55,6 @@ end
 
 function View:register(x)
   table.insert(self.toDraw, x)
-  x.depth = x.depth or 0
 end
 
 function View:unregister(x)

@@ -53,7 +53,6 @@ function Players:init()
 end
 
 function Players:activate(id)
-  assert(id >= 1 and id <= 16)
   self.players[id].active = true
   if ovw.view then ovw.view:register(self.players[id]) end
   self:refresh()

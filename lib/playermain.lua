@@ -55,8 +55,6 @@ function PlayerMain:update()
   end
   
   ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
-  
-  Player.update(self)
 end
 
 function PlayerMain:draw()

@@ -62,8 +62,6 @@ function PlayerServer:update()
   data.tick = tick
   data.ack = self.ack
   ovw.net:emit(evtSync, data)
-  
-  Player.update(self)
 end
 
 function PlayerServer:time()
@@ -77,9 +75,6 @@ end
 
 function PlayerServer:hurt(data)
   if self.ded then return end
-  assert(data.tick)
-  assert(data.amount)
-  assert(data.from)
 
   local target = self.shields[1] or self
 

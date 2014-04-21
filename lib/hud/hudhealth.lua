@@ -16,17 +16,12 @@ function HudHealth:update()
   local p = ovw.players:get(ovw.id)
   if p and p.active then
     self.prevVal = self.val
-    self.val = math.lerp(self.val, p.health, .25)
+    self.val = math.lerp(self.val, p.health, 10 * tickRate)
   end
 end
 
 function HudHealth:draw()
   local p = ovw.players:get(ovw.id)
-  
-  --[[
-  draw_surface_ext(hpSurf,xx+(view_wview[0]/2)-(sprite_get_width(sprNewHpBar)/2),yy,1,1,0,global.classBlend[global.class],.35)
-  draw_sprite_ext(sprNewHpBar,0,xx+(view_wview[0]/2),yy,1,1,0,global.classBlend[global.class],1)
-  ]]
   
   self.canvas:clear()
   self.canvas:renderTo(function()

@@ -63,12 +63,7 @@ function Player:deactivate()
   if ovw.collision then ovw.collision:unregister(self) end
 end
 
-function Player:update()
-  assert(self.active)
-end
-
 function Player:draw()
-  assert(self.class)
   love.graphics.reset()
   love.graphics.setColor(0, 0, 0, self.visible * 50)
   love.graphics.draw(self.class.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
@@ -95,7 +90,6 @@ end
 -- Behavior
 ----------------
 function Player:move()
-  assert(self.input)
   local w, a, s, d = self.input.w, self.input.a, self.input.s, self.input.d
   local moving = w or a or s or d
   
@@ -128,13 +122,10 @@ function Player:move()
 end
 
 function Player:turn()
-  assert(self.input)
-  self.angle = math.anglerp(self.angle, math.direction(self.x, self.y, self.input.mx, self.input.my), .35)
+  self.angle = math.anglerp(self.angle, math.direction(self.x, self.y, self.input.mx, self.input.my), 15 * tickRate)
 end
 
 function Player:slot()
-  assert(self.input)
-  
   if self.ded then return end
   
   for i = 1, 5 do
@@ -177,7 +168,6 @@ function Player:die()
 
   self.x, self.y = 0, 0
   self.visible = 0
-  print('unregister')
   ovw.collision:unregister(self)
 end
 

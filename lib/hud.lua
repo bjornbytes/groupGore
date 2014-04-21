@@ -3,6 +3,8 @@ Hud = class()
 local g = love.graphics
 
 function Hud:init()
+  self.depth = -10000
+
   self.players = HudPlayers()
   self.blood = HudBlood()
   self.left = HudLeft()

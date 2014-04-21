@@ -9,6 +9,7 @@ Tree.collision.static = true
 Tree.activate = function(self, map)
   if ovw.collision then ovw.collision:register(self) end
   self.image = map.graphics.tree
+  self.depth = -5
 end
 
 Tree.update = function(self)
@@ -16,7 +17,7 @@ Tree.update = function(self)
 end
 
 Tree.draw = function(self)
-	love.graphics.reset()
+  love.graphics.reset()
   local x, y = ovw.view:three(self.x, self.y, 100)
   if ovw.id and ovw.players:get(ovw.id) and ovw.players:get(ovw.id).active then
     local p = ovw.players:get(ovw.id)

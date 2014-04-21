@@ -44,8 +44,6 @@ function Collision:register(obj)
     return
   end
   
-  assert(obj.collision)
-  
   local shape
   if obj.collision.shape == 'rectangle' then
     shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)

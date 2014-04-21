@@ -33,6 +33,6 @@ function MenuRibbon:draw()
     end
 
     g.setColor(0, 0, 0, 80 * self.ribbons[i])
-    g.rectangle('fill', 0, anchor - (self.margin * math.floor(self.count / 2)) + (self.margin * (i - 1)) - (self.fh * self.ribbons[i]), w(), math.ceil(self.fh * 2 * self.ribbons[i]))
+    g.rectangle('fill', 0, anchor - (self.margin * math.floor(self.count / 2)) + (self.margin * (i - 1)) - (self.fh * self.ribbons[i]), w(), self.fh * 2 * self.ribbons[i])
   end
 end
