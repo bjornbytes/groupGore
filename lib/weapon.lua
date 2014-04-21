@@ -12,7 +12,6 @@ end
 Weapon.update = function(owner, self)
   self.timers.shoot = timer.rot(self.timers.shoot)
   self.timers.reload = timer.rot(self.timers.reload, function()
-    print(self.clip, self.currentClip, self.currentAmmo)
     local amt = math.min(self.clip - self.currentClip, self.currentAmmo)
     self.currentClip = self.currentClip + amt
     self.currentAmmo = self.currentAmmo - amt
