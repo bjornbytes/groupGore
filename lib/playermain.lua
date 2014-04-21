@@ -24,11 +24,15 @@ function PlayerMain:activate()
   self.heartbeatSound = ovw.sound:loop('heartbeat')
   self.heartbeatSound:pause()
 
+  ovw.view:setTarget(self)
+
   Player.activate(self)
 end
 
 function PlayerMain:deactivate()
   self.input = nil
+
+  ovw.view:setTarget(nil)
   
   Player.deactivate(self)
 end
@@ -69,7 +73,7 @@ function PlayerMain:drawPosition()
 end
 
 function PlayerMain:poll()
-  self.input.mx, self.input.my = mouseX(), mouseY()
+  self.input.mx, self.input.my = ovw.view:mouseX(), ovw.view:mouseY()
 end
 
 function PlayerMain:fade()

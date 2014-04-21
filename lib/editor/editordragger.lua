@@ -14,7 +14,7 @@ function EditorDragger:update()
   if self.dragging then
     ovw.selector:each(function(prop)
       local ox, oy = ovw.grid:snap(prop._dragX, prop._dragY)
-      local x, y = ovw.grid:snap(mouseX() - self.dragX, mouseY() - self.dragY)
+      local x, y = ovw.grid:snap(ovw.view:mouseX() - self.dragX, ovw.view:mouseY() - self.dragY)
       prop.x, prop.y = ox + x, oy + y
       ovw.event:emit('prop.move', {prop = prop, x = ox + x, y = oy + y})
     end)
@@ -30,8 +30,8 @@ function EditorDragger:mousepressed(x, y, button)
       self.deselect = true
     end
     self.dragging = true
-    self.dragX = mouseX()
-    self.dragY = mouseY()
+    self.dragX = ovw.view:mouseX()
+    self.dragY = ovw.view:mouseY()
     ovw.selector:each(function(prop)
       prop._dragX = prop.x
       prop._dragY = prop.y

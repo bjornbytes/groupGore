@@ -70,14 +70,14 @@ function Players:get(id, t)
   if not id then return end
   t = t or tick
   local f = math.floor(t)
-	if t ~= f then
+    if t ~= f then
     local prev = self.history[id][f]
     local cur = self.history[id][math.ceil(t)]
     if cur and prev then
-			return table.interpolate(prev, cur, t - f)
-		end
+      return table.interpolate(prev, cur, t - f)
+    end
     return nil
-	end
+  end
   return t == tick and self.players[id] or self.history[id][t]
 end
 

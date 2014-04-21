@@ -59,8 +59,8 @@ function EditorScaler:mousepressed(x, y, button)
     if p then
       local x, y = ovw.view:transform(x, y)
       self.scaling = p
-      self.scaleOriginX = mouseX()
-      self.scaleOriginY = mouseY()
+      self.scaleOriginX = ovw.view:mouseX()
+      self.scaleOriginY = ovw.view:mouseY()
       p._scaleX = p.x
       p._scaleY = p.y
       if p.collision.shape == 'rectangle' then
