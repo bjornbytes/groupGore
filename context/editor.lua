@@ -12,7 +12,6 @@ function Editor:load()
   self.scaler = EditorScaler()
   self.selector = EditorSelector()
   self.deletor = EditorDeletor()
-  self.state = EditorState()
   self.saver = EditorSaver()
   
   self.widgets = {self.grid}
@@ -23,7 +22,6 @@ function Editor:load()
     self.scaler,
     self.deletor,
     self.selector,
-    self.state,
     self.saver,
     self.map
   }

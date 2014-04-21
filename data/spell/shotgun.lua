@@ -49,30 +49,32 @@ Shotgun.activate = function(self)
       dis = len
     })
     
-    if ctx.particles and len < self.len then
+    if len < self.len then
       for _ = 1, 4 do
-        ctx.particles:create('spark', {
-          x = self.x + math.dx(len, ang),
-          y = self.y + math.dy(len, ang),
-          angle = i + math.pi + love.math.random() * 2.08 - 1.04
+        ctx.event:emit('particle.create', {
+          kind = 'spark',
+          vars = {
+            x = self.x + math.dx(len, ang),
+            y = self.y + math.dy(len, ang),
+            angle = i + math.pi + love.math.random() * 2.08 - 1.04
+          }
         })
       end
     end
   end
   
-  if ctx.particles then
-    for _ = 1, 4 do
-      ctx.particles:create('spark', {
+  for _ = 1, 4 do
+    ctx.event:emit('particle.create', {
+      kind = 'spark',
+      vars = {
         x = self.x,
         y = self.y,
         angle = self.owner.angle + love.math.random() * 1.56 - .78
-      })
-    end
+      }
+    })
   end
-  
-  if ctx.sound then
-    ctx.sound:play('shotgun')
-  end
+
+  ctx.event:emit('sound.play', {sound = 'shotgun'})
 end
 
 Shotgun.update = function(self)

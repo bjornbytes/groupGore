@@ -27,8 +27,8 @@ function EditorScaler:update()
         prop.height = prop._scaleH + (yinc * math.sign(self.scaleHandleY))
         if self.scaleHandleX < 0 then prop.x = prop.x + xinc end
         if self.scaleHandleY < 0 then prop.y = prop.y + yinc end
-        ctx.event:emit('prop.move', {prop = prop, x = prop.x, y = prop.y})
-        ctx.event:emit('prop.scale', {prop = prop, width = prop.width, height = prop.height})
+        ctx.event:emit('collision.detach', {object = prop})
+        ctx.event:emit('collision.attach', {object = prop})
       end
     else
       --

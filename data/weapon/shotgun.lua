@@ -45,7 +45,7 @@ Shotgun.update = function(self, shotgun)
     local amt = math.min(Shotgun.clip, shotgun.ammo)
     shotgun.clip = amt
     shotgun.ammo = shotgun.ammo - amt
-    if ctx.sound then ctx.sound:play('reload') end
+    ctx.event:emit('sound.play', {sound = 'reload'})
   end)
   if self.input.reload and shotgun.clip < Shotgun.clip and shotgun.timers.reload == 0 then shotgun.timers.reload = Shotgun.reload end
 end

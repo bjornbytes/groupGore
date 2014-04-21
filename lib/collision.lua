@@ -2,28 +2,18 @@ local hardon = require 'lib/hardon'
 
 Collision = class()
 Collision.cellSize = 128
+Collision.onCollide = function(_, a, b, dx, dy)
+  a, b = a.owner, b.owner
+  f.exe(a.collision.with and a.collision.with[b.collision.tag], a, b, dx, dy)
+  f.exe(b.collision.with and b.collision.with[a.collision.tag], b, a, -dx, -dy)
+end
 
 function Collision:init()
-  local function onCollide(dt, a, b, dx, dy)
-    a, b = a.owner, b.owner
-    f.exe(a.collision.with and a.collision.with[b.collision.tag], a, b, dx, dy)
-    f.exe(b.collision.with and b.collision.with[a.collision.tag], b, a, -dx, -dy)
-  end
-  
-  self.hc = hardon(self.cellSize, onCollide)
+  self.hc = hardon(self.cellSize, self.onCollide)
 
-  ctx.event:on('prop.create', function(data) self:register(data.prop) end)
-  ctx.event:on('prop.move', function(data)
-    if data.prop.collision.shape == 'rectangle' then
-      data.prop.shape:moveTo(data.prop.x + data.prop.width / 2, data.prop.y + data.prop.height / 2)
-    else
-      data.prop.shape:moveTo(data.x, data.y)
-    end
-  end)
-  ctx.event:on('prop.scale', function(data)
-    self.hc:remove(data.prop.shape)
-    self:register(data.prop)
-  end)
+  ctx.event:on('collision.attach', f.cur(self.attach, self))
+  ctx.event:on('collision.detach', f.cur(self.detach, self))
+  ctx.event:on('collision.move', f.cur(self.move, self))
 end
 
 function Collision:update()
@@ -37,12 +27,8 @@ function Collision:update()
   self.hc:update(tickRate)
 end
 
-function Collision:register(obj)
-  if obj.shape then
-    obj.shape.owner = obj
-    self.hc:addShape(obj.shape)
-    return
-  end
+function Collision:attach(data)
+  local obj = data.object
   
   local shape
   if obj.collision.shape == 'rectangle' then
@@ -59,8 +45,18 @@ function Collision:register(obj)
   shape.owner = obj
 end
 
-function Collision:unregister(obj)
-  self.hc:remove(obj.shape)
+function Collision:detach(data)
+  self.hc:remove(data.object.shape)
+end
+
+function Collision:move(data)
+  local x, y = data.x, data.y
+  if data.object.collision.shape == 'rectangle' then
+    x = x + data.object.width / 2
+    y = y + data.object.height / 2
+  end
+
+  data.object.shape:moveTo(x, y)
 end
 
 function Collision:pointTest(x, y, options)

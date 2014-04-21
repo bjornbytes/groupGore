@@ -21,7 +21,7 @@ function PlayerMain:activate()
   
   self.visible = 1
   
-  self.heartbeatSound = ctx.sound:loop('heartbeat')
+  self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
   self.heartbeatSound:pause()
 
   ctx.view:setTarget(self)
@@ -119,7 +119,7 @@ function PlayerMain:trace(data)
   self.health = data.health or self.health
   self.shield = data.shield or self.shield
   
-  local state = self:copy()--ctx.players.history[self.id][tick - 1]
+  local state = self:copy()
   if not state then return end
   
   table.merge(data, state)

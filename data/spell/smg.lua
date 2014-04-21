@@ -35,29 +35,31 @@ SMG.activate = function(self)
     ctx.net:emit(evtDamage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
   
-  if ctx.particles then
-    for _ = 1, 4 do
-      ctx.particles:create('spark', {
+  for _ = 1, 4 do
+    ctx.event:emit('particle.create', {
+      kind = 'spark',
+      vars = {
         x = self.x,
         y = self.y,
         angle = self.angle + love.math.random() * 1.56 - .78
-      })
-    end
-    
-    if self.len < 900 then
-      for _ = 1, 4 do
-        ctx.particles:create('spark', {
+      }
+    })
+  end
+
+  if self.len < 900 then
+    for _ = 1, 4 do
+      ctx.event:emit('particle.create', {
+        kind = 'spark',
+        vars = {
           x = self.x + math.dx(self.len, self.angle),
           y = self.y + math.dy(self.len, self.angle),
           angle = self.angle + math.pi + love.math.random() * 2.08 - 1.04
-        })
-      end
+        }
+      })
     end
   end
-  
-  if ctx.sound then
-    ctx.sound:play('smg')
-  end
+
+  ctx.event:emit('sound.play', {sound = 'smg'})
 end
 
 SMG.update = function(self)

@@ -7,7 +7,7 @@ Tree.collision.shape = 'circle'
 Tree.collision.static = true
 
 Tree.activate = function(self, map)
-  if ctx.collision then ctx.collision:register(self) end
+  ctx.event:emit('collision.attach', {object = self})
   self.image = map.graphics.tree
   self.depth = -5
 end

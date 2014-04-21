@@ -83,7 +83,6 @@ function EditorMenu:mousepressed(x, y, button)
           z = 64
         }))
         self.lastProp = self.props[i]
-        ctx.event:emit('prop.create', {prop = self.props[i], x = x, y = y})
       end
     end
   end

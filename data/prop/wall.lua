@@ -8,7 +8,7 @@ Wall.collision.static = true
 Wall.collision.tag = 'wall'
 
 Wall.activate = function(self, map)
-  if ctx.collision then ctx.collision:register(self) end
+  ctx.event:emit('collision.attach', {object = self})
 
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},

@@ -44,7 +44,7 @@ SMG.update = function(self, mySMG)
     local amt = math.min(SMG.clip, mySMG.ammo)
     mySMG.clip = amt
     mySMG.ammo = mySMG.ammo - amt
-    if ctx.sound then ctx.sound:play('reload') end
+    ctx.event:emit('sound.play', {sound = 'reload'})
   end)
   if self.input.reload and mySMG.clip < SMG.clip and mySMG.timers.reload == 0 then mySMG.timers.reload = SMG.reload end
 end

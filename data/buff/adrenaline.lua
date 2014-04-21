@@ -31,11 +31,16 @@ function Adrenaline:update()
   if self.hurtTimer <= 0 then
     ctx.net:emit(evtDamage, {id = self.owner.id, amount = Adrenaline.drain * Adrenaline.rate, from = self.owner.id, tick = tick})
     self.hurtTimer = math.round(Adrenaline.rate / tickRate)
-    if ctx.particles then
-      for _ = 1, 8 do
-        ctx.particles:create('gib', {x = self.owner.x, y = self.owner.y, alpha = .5, speed = 200})
-      end
-    end
+    ctx.event:emit('particle.create', {
+      kind = 'gib',
+      count = 8,
+      vars = {
+        x = self.owner.x,
+        y = self.owner.y,
+        alpha = .5,
+        speed = 200
+      }
+    })
   end
 end
 

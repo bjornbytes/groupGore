@@ -6,7 +6,7 @@ ShadowDash.hp = .1
 function ShadowDash:activate()
   self.hp = ShadowDash.hp
   self.angle = self.owner.angle
-  if ctx.sound then ctx.sound:play('dash') end
+  ctx.event:emit('sound.play', {sound = 'dash'})
   if ctx.buffs:get(self.owner, 'shadowform') then
     self.owner.x = self.owner.x + math.dx(self.distance, self.angle)
     self.owner.y = self.owner.y + math.dy(self.distance, self.angle)

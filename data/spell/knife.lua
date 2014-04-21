@@ -25,7 +25,7 @@ function Knife:activate()
     ctx.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
   end
   
-  if ctx.sound then ctx.sound:play(backstab and 'backstab' or 'slash') end
+  ctx.event:emit('sound.play', {sound = backstab and 'backstab' or 'slash'})
 end
 
 function Knife:update()

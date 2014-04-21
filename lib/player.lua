@@ -54,13 +54,13 @@ function Player:activate()
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
-  if ctx.collision then ctx.collision:register(self) end
+  ctx.event:emit('collision.attach', {object = self})
 end
 
 function Player:deactivate()
   self.x, self.y = 0, 0
   self.username = ''
-  if ctx.collision then ctx.collision:unregister(self) end
+  ctx.event:emit('collision.detach', {object = self})
 end
 
 Player.update = f.empty
@@ -159,18 +159,22 @@ end
 
 function Player:die()
   self.ded = 5
-  if ctx.particles then
-    ctx.particles:create('skull', {x = self.x, y = self.y})
-    for _ = 1, 64 do
-      ctx.particles:create('gib', {x = self.x, y = self.y})
-    end
-  end
-  if ctx.sound then ctx.sound:play('die') end
+ 
+  ctx.event:emit('particle.create', {
+    kind = 'skull',
+    vars = {x = self.x, y = self.y}
+  })
+  ctx.event:emit('particle.create', {
+    kind = 'gib',
+    count = 64,
+    vars = {x = self.x, y = self.y}
+  })
+  ctx.event:emit('sound.play', {sound = 'die'})
   ctx.buffs:removeAll(self)  
 
   self.x, self.y = 0, 0
   self.visible = 0
-  ctx.collision:unregister(self)
+  ctx.event:emit('collision.detach', {object = self})
 end
 
 function Player:spawn()

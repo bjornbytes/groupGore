@@ -4,17 +4,20 @@ function Particles:init()
   self.particles = {}
   self.depth = -10000
   if ctx.view then ctx.view:register(self) end
+  ctx.event:on('particle.create', f.cur(self.create, self))
 end
 
-function Particles:create(type, vars)
-  local p = new(data.particle[type])
+function Particles:create(_data)
+  local type = _data.kind
   
-  p:activate()
-  table.merge(vars or {}, p)
-  
-  table.insert(self.particles, p)
-
-  return p
+  for _ = 1, _data.count or 1 do
+    local p = new(data.particle[type])
+    
+    p:activate()
+    table.merge(_data.vars or {}, p)
+    
+    table.insert(self.particles, p)
+  end
 end
 
 function Particles:update()

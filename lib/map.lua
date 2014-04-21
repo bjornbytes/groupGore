@@ -19,6 +19,7 @@ function Map:init(name)
   self.code = name
 
   local dir = 'maps/' .. name .. '/'
+  print(dir .. name .. '.lua')
   local map = safeLoad(dir .. name .. '.lua')
   map.graphics = {}
   map.props = {}
@@ -36,20 +37,22 @@ function Map:init(name)
     
   self.props = table.map(map.props, f.cur(self.initProp, self))
 
-  table.each(map.on, function(f, e)
-    if ctx.event then
-      ctx.event:on(e, function(data) f(self, data) end)
-    end
-  end)
-
   self.points = {}
   self.points[purple] = 0
   self.points[orange] = 0
   self.pointLimit = 5
 
-  f.exe(self.activate, self)
+  ctx.event:on(evtDead, function(data)
+    local team = 1 - ctx.players:get(data.id).team
+    self:score(team)
+    if self.points[team] >= self.pointLimit then
+      ctx.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
+      self.points[purple] = 0
+      self.points[orange] = 0
+    end
+  end)
 
-  self:score()
+  f.exe(self.activate, self)
 
   self.depth = 5
   if ctx.view then ctx.view:register(self) end

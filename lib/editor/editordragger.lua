@@ -16,7 +16,7 @@ function EditorDragger:update()
       local ox, oy = ctx.grid:snap(prop._dragX, prop._dragY)
       local x, y = ctx.grid:snap(ctx.view:mouseX() - self.dragX, ctx.view:mouseY() - self.dragY)
       prop.x, prop.y = ox + x, oy + y
-      ctx.event:emit('prop.move', {prop = prop, x = ox + x, y = oy + y})
+      ctx.event:emit('collision.move', {object = prop, x = ox + x, y = oy + y})
     end)
   end
 end
