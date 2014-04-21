@@ -5,6 +5,8 @@ function View:init()
   self.y = 0
   self.w = 800
   self.h = 600
+  self.xlimit = self.w
+  self.ylimit = self.h
   self.toDraw = {}
   self.target = nil
 
@@ -79,8 +81,8 @@ function View:three(x, y, z)
 end
 
 function View:contain()
-  self.x = math.clamp(self.x, 0, ctx.map.width - self.w)
-  self.y = math.clamp(self.y, 0, ctx.map.height - self.h)
+  self.x = math.clamp(self.x, 0, self.xlimit - self.w)
+  self.y = math.clamp(self.y, 0, self.ylimit - self.h)
 end
 
 function View:follow()
@@ -96,6 +98,10 @@ function View:follow()
   
   self.x = math.clamp(self.x, self.target.x - (self.w * margin), self.target.x + (self.w * margin) - self.w)
   self.y = math.clamp(self.y, self.target.y - (self.h * margin), self.target.y + (self.h * margin) - self.h)
+end
+
+function View:setLimits(x, y)
+  self.xlimit, self.ylimit = x, y
 end
 
 function View:mouseX()

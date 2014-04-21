@@ -64,7 +64,10 @@ function Map:init(name)
   
   if self.weather then
     self.weather = new(data.weather[self.weather])
-    if ctx.view then ctx.view:register(self.weather) end
+    if ctx.view then
+      ctx.view:setLimits(self.width, self.height)
+      ctx.view:register(self.weather)
+    end
   end
 end
 
