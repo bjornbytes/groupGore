@@ -15,9 +15,6 @@ data.load = function()
     end
   end
   
-  purple = 0
-  orange = 1
-
   load('data/weapon', 'weapon', function(weapon)
     if weapon.image then weapon.image = love.graphics.newImage(weapon.image) end
     weapon.icon = love.graphics.newImage('media/graphics/icons/' .. weapon.code .. '.png')
@@ -35,19 +32,4 @@ data.load = function()
   end)
   load('data/prop', 'prop')
   load('data/weather', 'weather')
-  
-  gG = {}
-  gg = gG
-  setmetatable(gg, {
-    __index = function(t, k)
-      if data[k] then return data[k] end
-      if data.class[k] then return data.class[k] end
-      if data.weapon[k] then return data.weapon[k] end
-      if data.skill[k] then return data.skill[k] end
-      if data.buff[k] then return data.buff[k] end
-      if data.particle[k] then return data.particle[k] end
-      
-      return 'wat'
-    end
-  })
 end

@@ -13,6 +13,8 @@ end
 
 function Map:init(name)
   name = 'jungleCarnage'
+  purple = 0
+  orange = 1
 
   self.code = name
 
