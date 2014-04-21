@@ -16,10 +16,6 @@ function Game:load()
   self.sound = Sound()
 end
 
-function Game:unload()
-  --
-end
-
 function Game:update()
   self.net:update()
   self.buffs:update()

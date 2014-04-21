@@ -63,6 +63,8 @@ function Player:deactivate()
   if ovw.collision then ovw.collision:unregister(self) end
 end
 
+Player.update = f.empty
+
 function Player:draw()
   love.graphics.reset()
   love.graphics.setColor(0, 0, 0, self.visible * 50)
