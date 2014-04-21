@@ -20,12 +20,12 @@ function HudLeft:draw()
     local clip = tostring(p.slots[p.input.weapon].currentClip)
     local ammo = tostring(p.slots[p.input.weapon].currentAmmo)
     
-    g.setFont('BebasNeue', 6.5)
+    g.setFont('BebasNeue', h(.065))
     local font = g:getFont()
     g.setColor(255, 255, 255)
     g.printCenter(clip .. ' /', w(.055), -h(.004), true, false)
     
-    g.setFont('BebasNeue', 4.5)
+    g.setFont('BebasNeue', h(.045))
     g.setColor(255, 255, 255, 153)
     g.printCenter(ammo, w(.0575) + (font:getWidth(clip .. ' /') / 2) + (g.getFont():getWidth(ammo) / 2), h(.015), true, false)
   end

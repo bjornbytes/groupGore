@@ -17,7 +17,7 @@ end
 
 function Collapse:mousepressed(x, y, button)
   if button == 'l' and self.x and self.y then
-    g.setFontPixel('pixel', 8)
+    g.setFont('pixel', 8)
     if math.inside(x, y, self.x, self.y, g.getFont():getWidth(getStr(self)), g.getFont():getHeight()) then
       self.open = not self.open
     end
@@ -25,7 +25,7 @@ function Collapse:mousepressed(x, y, button)
 end
 
 function Collapse:draw(x, y)
-  g.setFontPixel('pixel', 8)
+  g.setFont('pixel', 8)
   g.print(getStr(self), x, y)
 
   y = y + g.getFont():getHeight()

@@ -30,7 +30,7 @@ function HudClassSelect:draw()
   g.rectangle('line', w(.08), h(.313), w(.46), h(.35))
   g.rectangle('line', w(.55), h(.313), w(.37), h(.58))
   
-  g.setFont('BebasNeue', 6.5)
+  g.setFont('BebasNeue', h(.065))
   g.setColor(128, 128, 128)
   g.print('Team', w(.08), h(.106))
   g.print('Class', w(.08), h(.213))
@@ -82,7 +82,7 @@ function HudClassSelect:mousereleased(x, y, button)
     end
     
     local str = self.team and 'purple' or 'orange'
-    g.setFont('BebasNeue', 6.5)
+    g.setFont('BebasNeue', h(.065))
     local font = g.getFont()
     if math.inside(x, y, w(.08), h(.106), w(.24) + font:getWidth(str), font:getHeight()) then
       self.team = 1 - self.team

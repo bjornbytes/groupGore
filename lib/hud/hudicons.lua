@@ -4,8 +4,6 @@ local g = love.graphics
 local w, h = g.width, g.height
 
 function HudIcons:init()
-  self.smallFont = g.newFont('media/fonts/aeromatics.ttf', h() * .018)
-  self.font = g.newFont('media/fonts/aeromatics.ttf', h() * .025)
   self.prevLabelAlphas = {}
   self.labelAlphas = {}
   for i = 1, 5 do
@@ -88,7 +86,7 @@ function HudIcons:draw()
       
       g.polygon('fill', points)
       
-      g.setFontPixel('pixel', 8)
+      g.setFont('pixel', 8)
       local str = p.slots[i].name
       if p.slots[i].type == 'passive' then str = '[' .. str .. ']' end
       local strw, strh = g.getFont():getWidth(str), g.getFont():getHeight()

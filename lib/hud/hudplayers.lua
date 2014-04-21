@@ -4,7 +4,7 @@ local g = love.graphics
 local w, h = g.width, g.height
 
 function HudPlayers:draw()
-  g.setFont('aeromatics', 2)
+  g.setFont('aeromatics', h(.02))
   ctx.players:with(ctx.players.active, function(p)
     if p.team == purple then g.setColor(190, 160, 220, p.visible * 255)
     elseif p.team == orange then g.setColor(240, 160, 140, p.visible * 255) end

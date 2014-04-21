@@ -43,14 +43,14 @@ function EditorMenu:draw()
     g.rectangle('fill', x, y, self.w, self.h)
     
     g.setColor(200, 200, 200)
-    g.setFontPixel('pixel', 8)
+    g.setFont('pixel', 8)
     self.mapDetails:draw(x + padding, y)
     
-    g.setFontPixel('pixel', 8)
+    g.setFont('pixel', 8)
     g.print('Props', x + padding, y + h(.08))
     
     g.setColor(255, 255, 255)
-    g.setFontPixel('pixel', 8)
+    g.setFont('pixel', 8)
     for i = 1, #self.props do
       g.print(self.props[i], x + padding, y + h(.09) + (g.getFont():getHeight() + 1) * i)
     end
@@ -69,7 +69,7 @@ end
 
 function EditorMenu:mousepressed(x, y, button)
   local padding = g.minUnit(.01)
-  g.setFontPixel('pixel', 8)
+  g.setFont('pixel', 8)
   if button == 'l' then
     for i = 1, #self.props do
       if math.inside(x, y, self.x, self.y + h(.09) + (g.getFont():getHeight() + 1) * i, self.w, g.getFont():getHeight()) then

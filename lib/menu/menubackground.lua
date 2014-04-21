@@ -9,9 +9,9 @@ end
 
 function MenuBackground:draw()
   g.reset()
-	g.draw(self.bg, 0, 0)
+  g.draw(self.bg, 0, 0)
   
-  g.setFont('BebasNeue', 10)
+  g.setFont('BebasNeue', h(.1))
   g.setColor(50, 50, 50)
   g.print('group', w(.6), h(.1) - g.getFont():getHeight() / 2)
   g.setColor(160, 160, 160)

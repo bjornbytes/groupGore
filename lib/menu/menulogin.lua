@@ -31,7 +31,7 @@ function MenuLogin:draw()
   local anchor = h(.3) + (h(.8) - h(.3)) / 2
   local input = ctx.input
 
-  g.setFont('BebasNeue', 6.5)
+  g.setFont('BebasNeue', h(.065))
   g.setColor(160, 160, 160)
   
   if input.focused == 'username' then g.setColor(220, 220, 220) else g.setColor(160, 160, 160) end

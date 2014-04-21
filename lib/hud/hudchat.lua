@@ -10,7 +10,6 @@ function HudChat:init()
   self.timer = 0
   self.width = w(.35)
   self.offset = -self.width - 4
-  self.font = g.newFont('media/fonts/aeromatics.ttf', h() * .02)
   self.richText = nil
 end
 
@@ -23,7 +22,7 @@ end
 function HudChat:draw()
   if not self.richText then return end
   
-  g.setFontPixel('pixel', 8)
+  g.setFont('pixel', 8)
   local font = g.getFont()
   local height = self.richText.height - 2
   if self.active then height = height + (font:getHeight() + 6.5) - 1 end
@@ -80,7 +79,7 @@ function HudChat:add(data)
     self.log = self.log .. message
   end
 
-  g.setFontPixel('pixel', 8)
+  g.setFont('pixel', 8)
   while g.getFont():getHeight() * select(2, g.getFont():getWrap(self.log, self.width)) > (h(.25) - 2) do
     self.log = self.log:sub(2)
   end

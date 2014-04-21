@@ -19,7 +19,7 @@ function HudFeed:update()
 end
 
 function HudFeed:draw()
-  g.setFontPixel('pixel', 8)
+  g.setFont('pixel', 8)
   local alpha = math.min(self.alpha, 1)
   for i = 1, #self.entries do
     local k = self.entries[i]

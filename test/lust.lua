@@ -53,7 +53,7 @@ function lust.describe(name, fn)
   if lust.level == 0 then
     love.graphics.setBackgroundColor(35, 35, 35)
     love.graphics.clear()
-    love.graphics.setFontPixel('pixel', 8)
+    love.graphics.setFont('pixel', 8)
     local font = love.graphics:getFont()
     love.graphics.setColor(0, 192, 0)
     love.graphics.printf('all clear', 64, 64 + font:getHeight() * 4, love.graphics.getWidth() - 64)

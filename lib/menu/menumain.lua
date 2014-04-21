@@ -26,7 +26,7 @@ end
 function MenuMain:draw()
   local anchor = h(.3) + (h(.8) - h(.3)) / 2
 
-  g.setFont('BebasNeue', 6.5)
+  g.setFont('BebasNeue', h(.065))
   g.setColor(160, 160, 160)
   
   g.printCenter('Host Game', w(.05), anchor - ctx.ribbon.margin * 2, false, true)

@@ -17,7 +17,7 @@ function HudRight:draw()
   
   local p = ctx.players:get(ctx.id)
   if p and p.active then
-    g.setFont('BebasNeue', 5.2)
+    g.setFont('BebasNeue', h(.052))
     
     if p.team == purple then love.graphics.setColor(190, 160, 220)
     else love.graphics.setColor(240, 160, 140) end

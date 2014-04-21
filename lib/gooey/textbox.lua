@@ -70,7 +70,7 @@ function TextBox:draw(x, y)
   g.setColor(self.borderColor)
   g.rectangle('line', x + .5, y + .5, self.width - 1, self.height - 1)
 
-  g.setFontPixel(self.font, self.fontSize)
+  g.setFont(self.font, self.fontSize)
   g.setColor(self.fontColor)
 
   local str = self.text

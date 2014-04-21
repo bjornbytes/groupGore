@@ -40,7 +40,9 @@ Weapon.draw = function(owner, self)
   local dir = owner.angle
   local dx = owner.class.handx - owner.recoil
   local dy = owner.class.handy
-  love.graphics.draw(self.image, owner.x + math.dx(dx, dir) - math.dy(dy, dir), owner.y + math.dy(dx, dir) + math.dx(dy, dir), dir, 1, 1, self.anchorx, self.anchory)
+  local x = owner.x + math.dx(dx, dir) - math.dy(dy, dir)
+  local y = owner.y + math.dy(dx, dir) + math.dx(dy, dir)
+  love.graphics.draw(self.image, x, y, dir, 1, 1, self.anchorx, self.anchory)
 end
 
 Weapon.value = function(owner, self)
