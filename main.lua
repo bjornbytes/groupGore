@@ -4,8 +4,6 @@ function love.load(arg)
   data.load()
   
   Overwatch:add(Menu)
-  gorgeous = Overwatch:add(Gorgeous)
-  if not gorgeous.socket then gorgeous = nil end
 end
 
 love.update = Overwatch.update

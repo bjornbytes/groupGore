@@ -36,6 +36,4 @@ function Server:quit()
       if self.net.host:get_peer(i) then self.net.host:get_peer(i):disconnect_now() end
     end
   end
-  
-  gorgeous:send(gorgeous.msgServerDelete)
 end

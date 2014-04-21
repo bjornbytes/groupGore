@@ -51,6 +51,7 @@ function View:update()
       dis = dis / 4
       self.x = math.lerp(self.x, (object.x + math.cos(dir) * dis) - (self.w / 2), .5)
       self.y = math.lerp(self.y, (object.y + math.sin(dir) * dis) - (self.h / 2), .5)
+      print(self.x)
       if object.x - self.x > (self.w * .80) then self.x = object.x - (self.w * .80) end
       if object.y - self.y > (self.h * .80) then self.y = object.y - (self.h * .80) end
       if (self.x + self.w) - object.x > (self.w * .80) then self.x = object.x + (self.w * .80) - self.w end

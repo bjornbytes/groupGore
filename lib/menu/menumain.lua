@@ -37,6 +37,9 @@ function MenuMain:draw()
 end
 
 function MenuMain:host()
+  Overwatch:add(Server)
+  self:connect('localhost')
+  do return end
   gorgeous:send(gorgeous.msgServerCreate, {name = username .. '\'s server'}, function(data)
     if data.success then  
       Overwatch:add(Server)
@@ -46,6 +49,8 @@ function MenuMain:host()
 end
 
 function MenuMain:join()
+  self:connect('localhost')
+  do return end
   gorgeous:send(gorgeous.msgMatchmake, {}, function(data)
     if #data.ip > 0 then self:connect(data.ip)
     else print('No servers running :[') end

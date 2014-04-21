@@ -5,8 +5,6 @@ lust.describe('groupGore', function()
   lust.describe('Basic server connectivity', function()
     -- Initial load
     data.load()
-    gorgeous = Overwatch:add(Gorgeous)
-    if not gorgeous.socket then gorgeous = nil end
     serverIp = '127.0.0.1'
     serverPort = 6061
     username = 'testbot'
