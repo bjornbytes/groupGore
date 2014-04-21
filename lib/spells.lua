@@ -7,13 +7,10 @@ function Spells:init()
 end
 
 function Spells:activate(owner, kind)
-  local s = Spell.create()
+  local s = new(kind)
+  s.owner = ovw.players:get(owner)
   self.spells[#self.spells + 1] = s
   s._idx = #self.spells
-  
-  s.owner = type(owner) == 'number' and ovw.players:get(owner) or owner
-  s.kind = type(kind) == 'number' and data.spell[kind] or kind
-  setmetatable(s, {__index = s.kind})
   s:activate()
   return s
 end
