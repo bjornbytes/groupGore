@@ -42,10 +42,11 @@ function View:draw()
 
   for _, v in ipairs(self.toDraw) do f.exe(v.gui, v) end
   
+  local w, h = love.graphics.getDimensions()
   love.graphics.pop()
   love.graphics.setColor(0, 0, 0, 255)
-  love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), self.margin)
-  love.graphics.rectangle('fill', 0, love.graphics.getHeight() - self.margin, love.graphics.getWidth(), self.margin)
+  love.graphics.rectangle('fill', 0, 0, w, self.margin)
+  love.graphics.rectangle('fill', 0, h - self.margin, w, self.margin)
 end
 
 function View:resize()
