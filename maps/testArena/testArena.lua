@@ -38,10 +38,10 @@ end
 ----------------
 testArena.on = {}
 testArena.on[evtDead] = function(self, data)
-  local team = 1 - ovw.players:get(data.id).team
+  local team = 1 - ctx.players:get(data.id).team
   self:score(team)
   if self.points[team] >= self.pointLimit then
-    ovw.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
+    ctx.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
     self.points[purple] = 0
     self.points[orange] = 0
     self:score()

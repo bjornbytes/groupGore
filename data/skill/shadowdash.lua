@@ -24,7 +24,7 @@ function ShadowDash:canFire(shadowDash)
 end
 
 function ShadowDash:fire(shadowDash)
-  ovw.spells:activate(self.id, data.spell.shadowdash)
+  ctx.spells:activate(self.id, data.spell.shadowdash)
   if shadowDash.reuse == 0 then
     shadowDash.timer = .5
     shadowDash.reuse = 2.5

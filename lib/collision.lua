@@ -12,15 +12,15 @@ function Collision:init()
   
   self.hc = hardon(self.cellSize, onCollide)
 
-  ovw.event:on('prop.create', function(data) self:register(data.prop) end)
-  ovw.event:on('prop.move', function(data)
+  ctx.event:on('prop.create', function(data) self:register(data.prop) end)
+  ctx.event:on('prop.move', function(data)
     if data.prop.collision.shape == 'rectangle' then
       data.prop.shape:moveTo(data.prop.x + data.prop.width / 2, data.prop.y + data.prop.height / 2)
     else
       data.prop.shape:moveTo(data.x, data.y)
     end
   end)
-  ovw.event:on('prop.scale', function(data)
+  ctx.event:on('prop.scale', function(data)
     self.hc:remove(data.prop.shape)
     self:register(data.prop)
   end)
@@ -28,7 +28,7 @@ end
 
 function Collision:update()
   for i = 1, 16 do
-    local p = ovw.players:get(i)
+    local p = ctx.players:get(i)
     if p.shape then
       p.shape:moveTo(p.x, p.y)
     end

@@ -9,15 +9,15 @@ function EditorScaler:init()
   self.scaleHandleX = 0
   self.scaleHandleY = 0
   self.depth = -10000
-  ovw.view:register(self)
+  ctx.view:register(self)
 end
 
 function EditorScaler:update()
   if self.scaling then
     local prop = self.scaling
-    local mx, my = ovw.view:transform(love.mouse.getPosition())
+    local mx, my = ctx.view:transform(love.mouse.getPosition())
     if prop.collision.shape == 'rectangle' then
-      local xinc, yinc = ovw.grid:snap(mx - self.scaleOriginX, my - self.scaleOriginY)
+      local xinc, yinc = ctx.grid:snap(mx - self.scaleOriginX, my - self.scaleOriginY)
       local newWidth = prop._scaleW + (xinc * math.sign(self.scaleHandleX))
       local newHeight = prop._scaleH + (yinc * math.sign(self.scaleHandleY))
       if newWidth > 0 and newHeight > 0 then
@@ -27,8 +27,8 @@ function EditorScaler:update()
         prop.height = prop._scaleH + (yinc * math.sign(self.scaleHandleY))
         if self.scaleHandleX < 0 then prop.x = prop.x + xinc end
         if self.scaleHandleY < 0 then prop.y = prop.y + yinc end
-        ovw.event:emit('prop.move', {prop = prop, x = prop.x, y = prop.y})
-        ovw.event:emit('prop.scale', {prop = prop, width = prop.width, height = prop.height})
+        ctx.event:emit('prop.move', {prop = prop, x = prop.x, y = prop.y})
+        ctx.event:emit('prop.scale', {prop = prop, width = prop.width, height = prop.height})
       end
     else
       --
@@ -55,12 +55,12 @@ end
 
 function EditorScaler:mousepressed(x, y, button)
   if button == 'r' and not love.keyboard.isDown('lshift') then
-    local p = ovw.selector:pointTest(x, y)[1]
+    local p = ctx.selector:pointTest(x, y)[1]
     if p then
-      local x, y = ovw.view:transform(x, y)
+      local x, y = ctx.view:transform(x, y)
       self.scaling = p
-      self.scaleOriginX = ovw.view:mouseX()
-      self.scaleOriginY = ovw.view:mouseY()
+      self.scaleOriginX = ctx.view:mouseX()
+      self.scaleOriginY = ctx.view:mouseY()
       p._scaleX = p.x
       p._scaleY = p.y
       if p.collision.shape == 'rectangle' then

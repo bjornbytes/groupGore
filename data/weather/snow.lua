@@ -28,10 +28,10 @@ end
 function Snow:gui()
   love.graphics.setColor(255, 255, 255, 90)
   local factor = 1
-  local x, y = (ovw.view.x + ovw.view.w / 2 - self.x), (ovw.view.y + ovw.view.h / 2 - self.y)
+  local x, y = (ctx.view.x + ctx.view.w / 2 - self.x), (ctx.view.y + ctx.view.h / 2 - self.y)
   
   for _, z in ipairs({64, 128, 256}) do
-    local scale = 1 + (ovw.view:convertZ(z) / 500)
+    local scale = 1 + (ctx.view:convertZ(z) / 500)
     local quad = love.graphics.newQuad(x, y, love.graphics.getWidth(), love.graphics.getHeight(), self.image:getWidth(), self.image:getHeight())
 
     love.graphics.draw(self.image, quad, 0, 0, 0, scale, scale)

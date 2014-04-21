@@ -7,13 +7,13 @@ function Knife:activate()
   
   self.angle = self.owner.angle
   self.x, self.y = self.owner.x + math.dx(35, self.angle), self.owner.y + math.dy(35, self.angle)
-  self.target = ovw.collision:circleTest(self.x, self.y, 14, {
+  self.target = ctx.collision:circleTest(self.x, self.y, 14, {
     tag = 'player',
     fn = function(p) return p.team ~= self.owner.team end
   })
   
   local backstab = false
-  local shadowform = ovw.buffs:get(self.owner, 'shadowform')
+  local shadowform = ctx.buffs:get(self.owner, 'shadowform')
   if self.target then
     backstab = math.abs(math.anglediff(self.target.angle, math.direction(self.target.x, self.target.y, self.owner.x, self.owner.y))) > math.pi / 2
     local damage = data.weapon.knife.damage
@@ -22,14 +22,14 @@ function Knife:activate()
       if shadowform then multiplier = multiplier + (1 - (self.target.health / self.target.maxHealth)) * 2 end
       damage = damage * multiplier
     end
-    ovw.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
+    ctx.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
   end
   
-  if ovw.sound then ovw.sound:play(backstab and 'backstab' or 'slash') end
+  if ctx.sound then ctx.sound:play(backstab and 'backstab' or 'slash') end
 end
 
 function Knife:update()
-  self.hp = timer.rot(self.hp, function() ovw.spells:deactivate(self) end)
+  self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
 end
 
 function Knife:draw()

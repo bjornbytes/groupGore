@@ -17,9 +17,9 @@ function Hud:init()
   self.classSelect = HudClassSelect()
   self.debug = HudDebug()
   
-  ovw.event:on(evtChat, function(data) self.chat:add(data) end)
-  ovw.event:on(evtDead, function(data) self.feed:insert(data) end)
-  ovw.view:register(self)
+  ctx.event:on(evtChat, function(data) self.chat:add(data) end)
+  ctx.event:on(evtDead, function(data) self.feed:insert(data) end)
+  ctx.view:register(self)
 end
 
 function Hud:update()
@@ -33,7 +33,7 @@ end
 function Hud:gui()
   g.reset()
   
-  if not ovw.id then return self:connecting() end
+  if not ctx.id then return self:connecting() end
   if self.classSelect.active then return self.classSelect:draw() end
 
   self.players:draw()

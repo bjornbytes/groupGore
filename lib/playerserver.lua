@@ -61,11 +61,11 @@ function PlayerServer:update()
   data.id = self.id
   data.tick = tick
   data.ack = self.ack
-  ovw.net:emit(evtSync, data)
+  ctx.net:emit(evtSync, data)
 end
 
 function PlayerServer:time()
-  self.ded = timer.rot(self.ded, function() ovw.net:emit(evtSpawn, {id = self.id}) end)
+  self.ded = timer.rot(self.ded, function() ctx.net:emit(evtSpawn, {id = self.id}) end)
   if self.ded == 0 then self.ded = false end
 end
 
@@ -107,7 +107,7 @@ function PlayerServer:hurt(data)
         if playerHurt[2][2] > 0 then table.insert(assists, {id = playerHurt[2][1]}) end
       end
 
-      ovw.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
+      ctx.net:emit(evtDead, {id = self.id, kill = data.from, assists = assists})
     else
       f.exe(self.shields[1].callback, self)
       table.remove(self.shields, 1)
@@ -135,10 +135,10 @@ function PlayerServer:trace(data, ping)
     
     -- Lag compensation
     local oldPos = {}
-    ovw.players:with(ovw.players.active, function(p)
+    ctx.players:with(ctx.players.active, function(p)
       if p.id ~= self.id then
         oldPos[p.id] = {p.x, p.y}
-        local lerpd = ovw.players:get(p.id, rewindTo)
+        local lerpd = ctx.players:get(p.id, rewindTo)
         if lerpd then
           p.x = lerpd.x
           p.y = lerpd.y
@@ -154,14 +154,14 @@ function PlayerServer:trace(data, ping)
     self:slot()
 
     -- Undo lag compensation
-    ovw.players:with(ovw.players.active, function(p)
+    ctx.players:with(ctx.players.active, function(p)
       if oldPos[p.id] then
         p.x, p.y = unpack(oldPos[p.id])
         p.shape:moveTo(p.x, p.y)
       end
     end)
     
-    ovw.collision:update()
+    ctx.collision:update()
   end
 end
 

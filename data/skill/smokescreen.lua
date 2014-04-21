@@ -20,7 +20,7 @@ function Smokescreen:canFire(smokescreen)
 end
 
 function Smokescreen:fire(smokescreen)
-  ovw.spells:activate(self.id, data.spell.smokescreen)
+  ctx.spells:activate(self.id, data.spell.smokescreen)
   smokescreen.timer = smokescreen.cooldown
 end
 

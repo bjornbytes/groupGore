@@ -13,7 +13,7 @@ function HudHealth:init()
 end
 
 function HudHealth:update()
-  local p = ovw.players:get(ovw.id)
+  local p = ctx.players:get(ctx.id)
   if p and p.active then
     self.prevVal = self.val
     self.val = math.lerp(self.val, p.health, 10 * tickRate)
@@ -21,7 +21,7 @@ function HudHealth:update()
 end
 
 function HudHealth:draw()
-  local p = ovw.players:get(ovw.id)
+  local p = ctx.players:get(ctx.id)
   
   self.canvas:clear()
   self.canvas:renderTo(function()
@@ -38,7 +38,7 @@ function HudHealth:draw()
     g.setBlendMode('alpha')
     
     love.graphics.push()
-    love.graphics.translate(0, ovw.view.margin)
+    love.graphics.translate(0, ctx.view.margin)
   end)
   
   if p and p.active then

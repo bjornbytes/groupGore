@@ -45,7 +45,7 @@ Shotgun.update = function(self, shotgun)
     local amt = math.min(Shotgun.clip, shotgun.ammo)
     shotgun.clip = amt
     shotgun.ammo = shotgun.ammo - amt
-    if ovw.sound then ovw.sound:play('reload') end
+    if ctx.sound then ctx.sound:play('reload') end
   end)
   if self.input.reload and shotgun.clip < Shotgun.clip and shotgun.timers.reload == 0 then shotgun.timers.reload = Shotgun.reload end
 end
@@ -55,7 +55,7 @@ Shotgun.canFire = function(self, shotgun)
 end
 
 Shotgun.fire = function(self, shotgun)
-  ovw.spells:activate(self.id, data.spell.shotgun)
+  ctx.spells:activate(self.id, data.spell.shotgun)
   
   shotgun.timers.shoot = shotgun.firerate
   shotgun.clip = shotgun.clip - 1

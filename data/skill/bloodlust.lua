@@ -13,15 +13,15 @@ Bloodlust.type = 'passive'
 -- Behavior
 ----------------
 function Bloodlust.activate(self, bloodlust)
-  ovw.event:on(evtDead, function(data)
+  ctx.event:on(evtDead, function(data)
     if data.kill == self.id and data.id ~= self.id then
-      ovw.buffs:add(self, 'bloodlust')
+      ctx.buffs:add(self, 'bloodlust')
     end
   end)
 end
 
 function Bloodlust.value(self, bloodlust)
-  local buff = ovw.buffs:get(self, 'bloodlust')
+  local buff = ctx.buffs:get(self, 'bloodlust')
   if buff then
     return buff.timer / buff.duration
   end

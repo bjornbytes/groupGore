@@ -3,12 +3,12 @@ Spells = class()
 function Spells:init()
   self.spells = {}
   self.depth = -100
-  if ovw.view then ovw.view:register(self) end
+  if ctx.view then ctx.view:register(self) end
 end
 
 function Spells:activate(owner, kind)
   local s = new(kind)
-  s.owner = ovw.players:get(owner)
+  s.owner = ctx.players:get(owner)
   self.spells[#self.spells + 1] = s
   s._idx = #self.spells
   s:activate()

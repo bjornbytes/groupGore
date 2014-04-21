@@ -27,12 +27,12 @@ function HudFeed:draw()
     g.rectangle('fill', k.x, k.y, w(.14), h(.05))
 
     local yy = h(.025) - (g.getFont():getHeight() / 2)
-    local killer = ovw.players:get(k.kill)
+    local killer = ctx.players:get(k.kill)
     if killer.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
     g.print(killer.username, k.x + 8, k.y + yy)
 
-    local victim = ovw.players:get(k.id)
+    local victim = ctx.players:get(k.id)
     if victim.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
     g.print(victim.username, k.x + w(.14) - g.getFont():getWidth(victim.username) - 9, k.y + yy)

@@ -45,8 +45,8 @@ end
 
 function Editor:keypressed(key)
   if key == 'escape' then
-    Overwatch:remove(ovw)
-    Overwatch:add(Menu)
+    Context:remove(ctx)
+    Context:add(Menu)
   end
   
   table.each(self.components, f.egoexe('keypressed', key))

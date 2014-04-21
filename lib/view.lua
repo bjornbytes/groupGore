@@ -56,6 +56,7 @@ end
 
 function View:register(x)
   table.insert(self.toDraw, x)
+  x.depth = x.depth or 0
 end
 
 function View:unregister(x)
@@ -78,8 +79,8 @@ function View:three(x, y, z)
 end
 
 function View:contain()
-  self.x = math.clamp(self.x, 0, ovw.map.width - self.w)
-  self.y = math.clamp(self.y, 0, ovw.map.height - self.h)
+  self.x = math.clamp(self.x, 0, ctx.map.width - self.w)
+  self.y = math.clamp(self.y, 0, ctx.map.height - self.h)
 end
 
 function View:follow()

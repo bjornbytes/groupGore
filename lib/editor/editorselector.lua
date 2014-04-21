@@ -12,7 +12,7 @@ function EditorSelector:init()
   self.dragging = false
   self.dragStartX = nil
   self.dragStartY = nil
-  ovw.view:register(self)
+  ctx.view:register(self)
 end
 
 function EditorSelector:update()
@@ -25,7 +25,7 @@ end
 function EditorSelector:draw()
   love.graphics.setColor(0, 255, 255, 50)
   if self.active then
-    table.each(ovw.map.props, function(prop)
+    table.each(ctx.map.props, function(prop)
       prop.shape:draw('line')
     end)
   end
@@ -53,16 +53,16 @@ function EditorSelector:gui()
 end
 
 function EditorSelector:pointTest(x, y)
-  local shapes = ovw.collision.hc:shapesAt(ovw.view:transform(x, y))
+  local shapes = ctx.collision.hc:shapesAt(ctx.view:transform(x, y))
   return table.map(shapes, function(s) return s.owner end)
 end
 
 function EditorSelector:rectTest(x1, y1, x2, y2)
   if x1 > x2 then x1, x2 = x2, x1 end
   if y1 > y2 then y1, y2 = y2, y1 end
-  x1, y1 = ovw.view:transform(x1, y1)
-  x2, y2 = ovw.view:transform(x2, y2)
-  local selectRect = ovw.collision.hc:addRectangle(x1, y1, x2 - x1, y2 - y1)
+  x1, y1 = ctx.view:transform(x1, y1)
+  x2, y2 = ctx.view:transform(x2, y2)
+  local selectRect = ctx.collision.hc:addRectangle(x1, y1, x2 - x1, y2 - y1)
   
   local res = {}
   for shape in pairs(selectRect:neighbors()) do
@@ -71,18 +71,18 @@ function EditorSelector:rectTest(x1, y1, x2, y2)
     end
   end
 
-  ovw.collision.hc:remove(selectRect)
+  ctx.collision.hc:remove(selectRect)
   
   return res
 end
 
 function EditorSelector:lineTest(x1, y1, x2, y2)
-  x1, y1 = ovw.view:transform(x1, y1)
-  x2, y2 = ovw.view:transform(x2, y2)
+  x1, y1 = ctx.view:transform(x1, y1)
+  x2, y2 = ctx.view:transform(x2, y2)
   local dis = math.distance(x1, y1, x2, y2)
   
   local res = {}
-  for shape in pairs(ovw.collision.hc:shapesInRange(math.min(x1, x2), math.min(y1, y2), math.max(x1, x2), math.max(y1, y2))) do
+  for shape in pairs(ctx.collision.hc:shapesInRange(math.min(x1, x2), math.min(y1, y2), math.max(x1, x2), math.max(y1, y2))) do
     local intersects, d = shape:intersectsRay(x1, y1, x2 - x1, y2 - y1)
     if intersects then
       table.insert(res, shape.owner)
@@ -161,11 +161,11 @@ function EditorSelector:deselect(prop, ...)
 end
 
 function EditorSelector:selectAll()
-  self:select(unpack(ovw.map.props))
+  self:select(unpack(ctx.map.props))
 end
 
 function EditorSelector:deselectAll()
-  self:deselect(unpack(ovw.map.props))
+  self:deselect(unpack(ctx.map.props))
 end
 
 function EditorSelector:each(fn)

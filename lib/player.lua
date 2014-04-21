@@ -44,8 +44,8 @@ function Player:create()
 end
 
 function Player:activate()
-  self.x = ovw.map.spawn[self.team].x
-  self.y = ovw.map.spawn[self.team].y
+  self.x = ctx.map.spawn[self.team].x
+  self.y = ctx.map.spawn[self.team].y
   self.maxHealth = self.class.health
   self.maxSpeed = self.class.speed
   self.health = self.maxHealth
@@ -54,13 +54,13 @@ function Player:activate()
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
-  if ovw.collision then ovw.collision:register(self) end
+  if ctx.collision then ctx.collision:register(self) end
 end
 
 function Player:deactivate()
   self.x, self.y = 0, 0
   self.username = ''
-  if ovw.collision then ovw.collision:unregister(self) end
+  if ctx.collision then ctx.collision:unregister(self) end
 end
 
 Player.update = f.empty
@@ -118,9 +118,9 @@ function Player:move()
   end
   
   if self.x < 0 then self.x = 0
-  elseif self.x > ovw.map.width then self.x = ovw.map.width end
+  elseif self.x > ctx.map.width then self.x = ctx.map.width end
   if self.y < 0 then self.y = 0
-  elseif self.y > ovw.map.height then self.y = ovw.map.height end
+  elseif self.y > ctx.map.height then self.y = ctx.map.height end
 end
 
 function Player:turn()
@@ -138,12 +138,12 @@ function Player:slot()
   
   local weapon = self.slots[self.input.weapon]
   if self.input.l and weapon.canFire(self, weapon) then
-    ovw.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
+    ctx.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
   end
   
   local skill = self.slots[self.input.skill]
   if self.input.r and skill.canFire(self, skill) then
-    ovw.net:emit(evtFire, {id = self.id, slot = self.input.skill})
+    ctx.net:emit(evtFire, {id = self.id, slot = self.input.skill})
   end
   
   if self.recoil > 0 then self.recoil = self.recoil - math.min(self.recoil, 8 * tickRate) end
@@ -159,18 +159,18 @@ end
 
 function Player:die()
   self.ded = 5
-  if ovw.particles then
-    ovw.particles:create('skull', {x = self.x, y = self.y})
+  if ctx.particles then
+    ctx.particles:create('skull', {x = self.x, y = self.y})
     for _ = 1, 64 do
-      ovw.particles:create('gib', {x = self.x, y = self.y})
+      ctx.particles:create('gib', {x = self.x, y = self.y})
     end
   end
-  if ovw.sound then ovw.sound:play('die') end
-  ovw.buffs:removeAll(self)  
+  if ctx.sound then ctx.sound:play('die') end
+  ctx.buffs:removeAll(self)  
 
   self.x, self.y = 0, 0
   self.visible = 0
-  ovw.collision:unregister(self)
+  ctx.collision:unregister(self)
 end
 
 function Player:spawn()

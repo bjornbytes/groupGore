@@ -2,14 +2,14 @@ require 'require'
 
 function love.load(arg)  
   data.load()
-  Overwatch:add(Menu)
+  Context:add(Menu)
 end
 
-love.update = Overwatch.update
-love.draw = Overwatch.draw
-love.sync = Overwatch.sync
-love.quit = Overwatch.quit
+love.update = Context.update
+love.draw = Context.draw
+love.sync = Context.sync
+love.quit = Context.quit
 
-love.handlers = setmetatable({}, {__index = Overwatch})
+love.handlers = setmetatable({}, {__index = Context})
 
 if arg[2] == 'test' then require 'test/test' end

@@ -19,10 +19,10 @@ SMG.activate = function(self)
   
   self.angle = self.owner.angle
   self.angle = self.angle - (data.weapon.smg.spread / 2) + (2 * love.math.random() * data.weapon.smg.spread)
-  local hit, dis = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})
+  local hit, dis = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})
   self.len = hit and dis or 900
   
-  local target = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(self.len, self.angle), self.y + math.dy(self.len, self.angle), {
+  local target = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(self.len, self.angle), self.y + math.dy(self.len, self.angle), {
     tag = 'player',
     fn = function(p)
       return p.team ~= self.owner.team
@@ -32,12 +32,12 @@ SMG.activate = function(self)
 
   if target then
     self.len = math.distance(self.x, self.y, target.x, target.y)
-    ovw.net:emit(evtDamage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
+    ctx.net:emit(evtDamage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
   
-  if ovw.particles then
+  if ctx.particles then
     for _ = 1, 4 do
-      ovw.particles:create('spark', {
+      ctx.particles:create('spark', {
         x = self.x,
         y = self.y,
         angle = self.angle + love.math.random() * 1.56 - .78
@@ -46,7 +46,7 @@ SMG.activate = function(self)
     
     if self.len < 900 then
       for _ = 1, 4 do
-        ovw.particles:create('spark', {
+        ctx.particles:create('spark', {
           x = self.x + math.dx(self.len, self.angle),
           y = self.y + math.dy(self.len, self.angle),
           angle = self.angle + math.pi + love.math.random() * 2.08 - 1.04
@@ -55,13 +55,13 @@ SMG.activate = function(self)
     end
   end
   
-  if ovw.sound then
-    ovw.sound:play('smg')
+  if ctx.sound then
+    ctx.sound:play('smg')
   end
 end
 
 SMG.update = function(self)
-  self.hp = timer.rot(self.hp, function() ovw.spells:deactivate(self) end)
+  self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
 end
 
 SMG.draw = function(self)

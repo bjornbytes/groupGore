@@ -10,10 +10,10 @@ lust.describe('groupGore', function()
     username = 'testbot'
     
     -- Create server
-    server = Overwatch:add(Server)
+    server = Context:add(Server)
     
     lust.describe('Single connect/disconnect', function()
-      game = Overwatch:add(Game)
+      game = Context:add(Game)
       
       -- Wait for client to connect
       lust.waitUntil(function() return game.id ~= nil end, 25)
@@ -25,7 +25,7 @@ lust.describe('groupGore', function()
       -- Initiate disconnect
       game.net:send(msgLeave)
       game.net.host:flush()
-      Overwatch:remove(game)
+      Context:remove(game)
       game = nil
       
       -- Wait for server to recognize disconnect
@@ -33,9 +33,9 @@ lust.describe('groupGore', function()
       
       lust.it('should clear server state on disconnect', function()
         lust.with(server, function()
-          lust.expect(table.count(ovw.net.peerToPlayer)).to.be(0)
-          lust.expect(ovw.net.peerToPlayer[1]).to.be(nil)
-          lust.expect(ovw.net:nextPlayerId()).to.be(1)
+          lust.expect(table.count(ctx.net.peerToPlayer)).to.be(0)
+          lust.expect(ctx.net.peerToPlayer[1]).to.be(nil)
+          lust.expect(ctx.net:nextPlayerId()).to.be(1)
         end)
       end)
     end)
@@ -45,7 +45,7 @@ lust.describe('groupGore', function()
       
       -- Create 10 clients
       for i = 1, 10 do
-        games[i] = Overwatch:add(Game)
+        games[i] = Context:add(Game)
       end
       
       -- Wait until they're all connected
@@ -62,7 +62,7 @@ lust.describe('groupGore', function()
         local game = games[i]
         game.net:send(msgLeave)
         game.net.host:flush()
-        Overwatch:remove(game)
+        Context:remove(game)
         table.remove(games, i)
         lust.wait(love.math.random(10))
       end
@@ -80,12 +80,12 @@ lust.describe('groupGore', function()
       
       lust.it('Should handle rapid connects/disconnects', function()
         for _ = 1, 20 do
-          game = Overwatch:add(Game)
+          game = Context:add(Game)
           lust.waitUntil(function() return game.id ~= nil end, 50)
           lust.expect(game.id).to.be(1)
           game.net:send(msgLeave)
           game.net.host:flush()
-          Overwatch:remove(game)
+          Context:remove(game)
           game = nil
         end
       end)

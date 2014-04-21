@@ -6,7 +6,7 @@ function EditorMirror:init()
   self.horizontal = true
   self.vertical = true
   
-  ovw.event:on('prop.create', function(self, prop)
+  ctx.event:on('prop.create', function(self, prop)
     
   end)
 end

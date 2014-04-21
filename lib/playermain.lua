@@ -21,10 +21,10 @@ function PlayerMain:activate()
   
   self.visible = 1
   
-  self.heartbeatSound = ovw.sound:loop('heartbeat')
+  self.heartbeatSound = ctx.sound:loop('heartbeat')
   self.heartbeatSound:pause()
 
-  ovw.view:setTarget(self)
+  ctx.view:setTarget(self)
 
   Player.activate(self)
 end
@@ -32,7 +32,7 @@ end
 function PlayerMain:deactivate()
   self.input = nil
 
-  ovw.view:setTarget(nil)
+  ctx.view:setTarget(nil)
   
   Player.deactivate(self)
 end
@@ -54,33 +54,33 @@ function PlayerMain:update()
     self.heartbeatSound:pause()
   end
   
-  ovw.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
+  ctx.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
 end
 
 function PlayerMain:draw()
   if self.ded then return end
 
-  local p = ovw.players:get(self.id, tick - 1 + tickDelta / tickRate)
+  local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
   if p then Player.draw(p) end
 end
 
 function PlayerMain:drawPosition()
-  local p = ovw.players:get(self.id, tick - 1 + tickDelta / tickRate)
+  local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
   if p then return p.x, p.y end
   return 0, 0
 end
 
 function PlayerMain:poll()
-  self.input.mx, self.input.my = ovw.view:mouseX(), ovw.view:mouseY()
+  self.input.mx, self.input.my = ctx.view:mouseX(), ctx.view:mouseY()
 end
 
 function PlayerMain:fade()
   local function shouldFade(p)
     if p.team == self.team then return false end
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
-    return ovw.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
+    return ctx.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
   end
-  ovw.players:with(ovw.players.active, function(p)
+  ctx.players:with(ctx.players.active, function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
     else p.visible = math.min(p.visible + tickRate, 1) end
   end)
@@ -119,23 +119,23 @@ function PlayerMain:trace(data)
   self.health = data.health or self.health
   self.shield = data.shield or self.shield
   
-  local state = self:copy()--ovw.players.history[self.id][tick - 1]
+  local state = self:copy()--ctx.players.history[self.id][tick - 1]
   if not state then return end
   
   table.merge(data, state)
   
   for i = ack + 1, tick - 1 do
-    p = ovw.players:get(self.id, i)
+    p = ctx.players:get(self.id, i)
     if p then
       state.input = p.input
       state:move()
       self.x, self.y = state.x, state.y
-      ovw.collision:update()
+      ctx.collision:update()
       state.x, state.y = self.x, self.y
     end
   end
   
-  p = ovw.players:get(self.id, tick - 1)
+  p = ctx.players:get(self.id, tick - 1)
   if p then
     table.merge({x = state.x, y = state.y}, p)
   end

@@ -31,7 +31,7 @@ NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
 NetServer.receive[msgJoin] = function(self, event)
-  ovw.players:get(event.pid).username = event.data.username
+  ctx.players:get(event.pid).username = event.data.username
   self:send(msgJoin, event.peer, {id = event.pid})
   self:emit(evtJoin, {id = event.pid, username = event.data.username})
   self:emit(evtChat, {message = '{white}' .. event.data.username .. ' has joined!'})
@@ -39,7 +39,7 @@ NetServer.receive[msgJoin] = function(self, event)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
-  self:emit(evtChat, {message = '{white}' .. ovw.players:get(event.pid).username .. ' has left!'})
+  self:emit(evtChat, {message = '{white}' .. ctx.players:get(event.pid).username .. ' has left!'})
   self:emit(evtLeave, {id = event.pid, reason = 'left'})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
@@ -50,12 +50,12 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  ovw.players:get(event.pid):trace(event.data, event.peer:last_round_trip_time())
+  ctx.players:get(event.pid):trace(event.data, event.peer:last_round_trip_time())
 end
 
 NetServer.receive[msgChat] = function(self, event)
-  local username = ovw.players:get(event.pid).username
-  local color = ovw.players:get(event.pid).team == 0 and 'purple' or 'orange'
+  local username = ctx.players:get(event.pid).username
+  local color = ctx.players:get(event.pid).team == 0 and 'purple' or 'orange'
   self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
 end
 
@@ -81,7 +81,7 @@ end
 
 function NetServer:emit(evt, data)
   table.insert(self.eventBuffer, {evt, data})
-  ovw.event:emit(evt, data)
+  ctx.event:emit(evt, data)
 end
 
 function NetServer:sync()
@@ -100,7 +100,7 @@ end
 function NetServer:snapshot(peer)
   local players = {}
   for id = 1, 16 do
-    local p = ovw.players:get(id)
+    local p = ctx.players:get(id)
     if #p.username > 0 and id ~= self.peerToPlayer[peer] then
       table.insert(players, {
         id = id,
@@ -115,6 +115,6 @@ end
 
 function NetServer:nextPlayerId()
   for i = 1, 16 do
-    if #ovw.players:get(i).username == 0 then return i end
+    if #ctx.players:get(i).username == 0 then return i end
   end
 end

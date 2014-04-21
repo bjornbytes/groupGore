@@ -21,7 +21,7 @@ function Knife:canFire(knife)
 end
 
 function Knife:fire(knife)
-  ovw.spells:activate(self.id, data.spell.knife)
+  ctx.spells:activate(self.id, data.spell.knife)
   knife.timer = knife.cooldown
 end
 

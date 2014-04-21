@@ -18,11 +18,11 @@ end
 
 function Rage.update(self, myRage)
   if self.health < self.maxHealth * .5 then
-    if not ovw.buffs:get(self, 'rage') then
-      ovw.buffs:add(self, 'rage')
+    if not ctx.buffs:get(self, 'rage') then
+      ctx.buffs:add(self, 'rage')
     end
   else
-    ovw.buffs:remove(self, 'rage')
+    ctx.buffs:remove(self, 'rage')
   end
 end
 

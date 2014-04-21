@@ -23,10 +23,10 @@ Shotgun.activate = function(self)
   
   for i = self.owner.angle - data.weapon.shotgun.spread, self.owner.angle + data.weapon.shotgun.spread + (.001), (2 * data.weapon.shotgun.spread / (data.weapon.shotgun.count - 1)) do
     local ang, len = i, self.len    
-    local hit, d = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {tag = 'wall', first = true})
+    local hit, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {tag = 'wall', first = true})
     len = hit and d or len
     
-    hit, d = ovw.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {
+    hit, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {
       tag = 'player',
       fn = function(p)
         return p.team ~= self.owner.team
@@ -41,7 +41,7 @@ Shotgun.activate = function(self)
       local n, f = self.len * .25, self.len * .75
       local l, h = data.weapon.shotgun.damage * .4, data.weapon.shotgun.damage * 1
       local damage = l + ((h - l) * ((f - math.clamp(len, n, f)) / f))
-      ovw.net:emit(evtDamage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
+      ctx.net:emit(evtDamage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
     end
     
     table.insert(self.bullets, {
@@ -49,9 +49,9 @@ Shotgun.activate = function(self)
       dis = len
     })
     
-    if ovw.particles and len < self.len then
+    if ctx.particles and len < self.len then
       for _ = 1, 4 do
-        ovw.particles:create('spark', {
+        ctx.particles:create('spark', {
           x = self.x + math.dx(len, ang),
           y = self.y + math.dy(len, ang),
           angle = i + math.pi + love.math.random() * 2.08 - 1.04
@@ -60,9 +60,9 @@ Shotgun.activate = function(self)
     end
   end
   
-  if ovw.particles then
+  if ctx.particles then
     for _ = 1, 4 do
-      ovw.particles:create('spark', {
+      ctx.particles:create('spark', {
         x = self.x,
         y = self.y,
         angle = self.owner.angle + love.math.random() * 1.56 - .78
@@ -70,13 +70,13 @@ Shotgun.activate = function(self)
     end
   end
   
-  if ovw.sound then
-    ovw.sound:play('shotgun')
+  if ctx.sound then
+    ctx.sound:play('shotgun')
   end
 end
 
 Shotgun.update = function(self)
-  self.hp = timer.rot(self.hp, function() ovw.spells:deactivate(self) end)
+  self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
 end
 
 Shotgun.draw = function(self)

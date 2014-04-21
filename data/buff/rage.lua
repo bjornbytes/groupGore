@@ -15,7 +15,7 @@ Rage.hide = false
 ----------------
 function Rage:activate()
   self.owner.lifesteal = self.owner.lifesteal + .2
-  if ovw.view then ovw.view:register(self) end
+  if ctx.view then ctx.view:register(self) end
   self.alpha = 0
 end
 
@@ -25,7 +25,7 @@ end
 
 function Rage:deactivate()
   self.owner.lifesteal = self.owner.lifesteal - .2
-  if ovw.view then ovw.view:unregister(self) end
+  if ctx.view then ctx.view:unregister(self) end
 end
 
 function Rage:draw()

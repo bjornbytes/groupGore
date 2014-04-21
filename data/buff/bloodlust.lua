@@ -21,11 +21,11 @@ function Bloodlust:activate()
   self.timer = Bloodlust.duration
   self.healTimer = 0
   self.depth = 4
-  if ovw.view then ovw.view:register(self) end
+  if ctx.view then ctx.view:register(self) end
 end
 
 function Bloodlust:deactivate()
-  if ovw.view then ovw.view:unregister(self) end
+  if ctx.view then ctx.view:unregister(self) end
 end
 
 function Bloodlust:update()
@@ -34,7 +34,7 @@ function Bloodlust:update()
     self.owner:heal({amount = self.heal * self.rate})
     self.healTimer = math.round(Bloodlust.rate / tickRate)
     self.timer = self.timer - self.rate
-    if self.timer <= 0 then ovw.buffs:remove(self.owner, 'bloodlust') end
+    if self.timer <= 0 then ctx.buffs:remove(self.owner, 'bloodlust') end
   end
 end
 

@@ -6,11 +6,11 @@ Shadowform.text = 'Eva is more dangerous but more vulnerable.'
 
 function Shadowform:activate()
   self.depth = 4
-  if ovw.view then ovw.view:register(self) end
+  if ctx.view then ctx.view:register(self) end
 end
 
 function Shadowform:deactivate()
-  if ovw.view then ovw.view:unregister(self) end
+  if ctx.view then ctx.view:unregister(self) end
 end
 
 function Shadowform:draw()

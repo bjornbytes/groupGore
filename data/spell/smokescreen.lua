@@ -13,20 +13,20 @@ function Smokescreen:activate()
 end
 
 function Smokescreen:deactivate()
-  ovw.players:with(ovw.players.active, function(p)
-    if ovw.buffs:get(p, 'smokescreen') then ovw.buffs:remove(p, 'smokescreen') end
+  ctx.players:with(ctx.players.active, function(p)
+    if ctx.buffs:get(p, 'smokescreen') then ctx.buffs:remove(p, 'smokescreen') end
   end)
 end
 
 function Smokescreen:update()
-  ovw.players:with(ovw.players.active, function(p)
+  ctx.players:with(ctx.players.active, function(p)
     if p.team ~= self.owner.team and math.distance(self.x, self.y, p.x, p.y) < self.radius then
-      if not ovw.buffs:get(p, 'smokescreen') then ovw.buffs:add(p, 'smokescreen') end
+      if not ctx.buffs:get(p, 'smokescreen') then ctx.buffs:add(p, 'smokescreen') end
     else
-      if ovw.buffs:get(p, 'smokescreen') then ovw.buffs:remove(p, 'smokescreen') end
+      if ctx.buffs:get(p, 'smokescreen') then ctx.buffs:remove(p, 'smokescreen') end
     end
   end)
-  self.timer = timer.rot(self.timer, function() ovw.spells:deactivate(self) end)
+  self.timer = timer.rot(self.timer, function() ctx.spells:deactivate(self) end)
 end
 
 function Smokescreen:draw()

@@ -8,10 +8,10 @@ end
 
 function EditorSaver:save()
   local str = 'return {'
-  table.each(ovw.map.props, function(p)
+  table.each(ctx.map.props, function(p)
     str = str .. p
   end)
   str = str .. '}'
-  love.filesystem.createDirectory('maps/' .. ovw.map.code)
-  love.filesystem.write('maps/' .. ovw.map.code .. '/props.lua', str)
+  love.filesystem.createDirectory('maps/' .. ctx.map.code)
+  love.filesystem.write('maps/' .. ctx.map.code .. '/props.lua', str)
 end

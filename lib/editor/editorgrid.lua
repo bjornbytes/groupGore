@@ -12,13 +12,13 @@ end
 function EditorGrid:draw()
   g.setColor(self.color)
   
-  g.setLineWidth(1 / ovw.view.scale)
-  for i = .5, ovw.map.width, self.size do
-    g.line(i, 0, i, ovw.map.height)
+  g.setLineWidth(1 / ctx.view.scale)
+  for i = .5, ctx.map.width, self.size do
+    g.line(i, 0, i, ctx.map.height)
   end
   
-  for i = .5, ovw.map.height, self.size do
-    g.line(0, i, ovw.map.width, i)
+  for i = .5, ctx.map.height, self.size do
+    g.line(0, i, ctx.map.width, i)
   end
   g.setLineWidth(1)
 end

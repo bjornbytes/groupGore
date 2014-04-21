@@ -8,14 +8,14 @@ function HudClassSelect:init()
   self.angle = 0
   self.active = true
   
-  ovw.event:on(evtClass, function(data)
+  ctx.event:on(evtClass, function(data)
     self.active = false
   end)
 end
 
 function HudClassSelect:update()
   self.angle = (self.angle + .65 * tickRate) % (2 * math.pi)
-  if ovw.id and not ovw.players:get(ovw.id).active then self.active = true end
+  if ctx.id and not ctx.players:get(ctx.id).active then self.active = true end
 end
 
 function HudClassSelect:draw()
@@ -54,9 +54,9 @@ function HudClassSelect:keypressed(key)
   if self.active then
     for i = 1, #data.class do
       if key == tostring(i) then
-        ovw.net:send(msgClass, {
+        ctx.net:send(msgClass, {
           class = i,
-          team = ovw.id > 1 and 1 or 0
+          team = ctx.id > 1 and 1 or 0
         })
         return true
       end
@@ -74,7 +74,7 @@ function HudClassSelect:mousereleased(x, y, button)
   if self.active and button == 'l' then
     for i = 1, #data.class do
       if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
-        ovw.net:send(msgClass, {
+        ctx.net:send(msgClass, {
           class = i,
           team = self.team
         })
@@ -87,11 +87,11 @@ function HudClassSelect:mousereleased(x, y, button)
     if math.inside(x, y, w(.08), h(.106), w(.24) + font:getWidth(str), font:getHeight()) then
       self.team = 1 - self.team
     elseif math.inside(x, y, w(.08), h(1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
-      ovw.net:send(msgLeave)
-      Overwatch:remove(ovw)
-      Overwatch:add(Menu)
+      ctx.net:send(msgLeave)
+      Context:remove(ctx)
+      Context:add(Menu)
     elseif math.inside(x, y, w(.08), h(1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
-      ovw.net:send(msgLeave)
+      ctx.net:send(msgLeave)
       love.event.quit()
     end
   end

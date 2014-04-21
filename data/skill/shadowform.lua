@@ -13,7 +13,7 @@ end
 
 function Shadowform:update(shadowform)
   shadowform.timer = timer.rot(shadowform.timer, function()
-    ovw.buffs:remove(self, 'shadowform')
+    ctx.buffs:remove(self, 'shadowform')
   end)
 end
 
@@ -22,7 +22,7 @@ function Shadowform:canFire(shadowform)
 end
 
 function Shadowform:fire(shadowform)
-  ovw.buffs:add(self, 'shadowform')
+  ctx.buffs:add(self, 'shadowform')
   shadowform.timer = shadowform.cooldown
 end
 

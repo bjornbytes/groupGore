@@ -14,24 +14,24 @@ function Players:init()
     self.players[i] = Player:create()
     self.players[i].id = i
     self.history[i] = {}
-    setmetatable(self.players[i], {__index = tags[ovw.tag]})
+    setmetatable(self.players[i], {__index = tags[ctx.tag]})
   end
   
-  ovw.event:on(evtLeave, function(data)
+  ctx.event:on(evtLeave, function(data)
     self:deactivate(data.id)
   end)
   
-  ovw.event:on(evtFire, function(data)
+  ctx.event:on(evtFire, function(data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
   end)
   
-  ovw.event:on(evtClass, function(data)
+  ctx.event:on(evtClass, function(data)
     self:setClass(data.id, data.class, data.team)
   end)
   
-  ovw.event:on(evtDamage, function(data)
+  ctx.event:on(evtDamage, function(data)
     local to, from = self:get(data.id), self:get(data.from)
     to:hurt(data)
     local oldAmt = data.amount
@@ -40,12 +40,12 @@ function Players:init()
     data.amount = oldAmt
   end)
   
-  ovw.event:on(evtDead, function(data)
+  ctx.event:on(evtDead, function(data)
     local p = self:get(data.id)
     p:die()
   end)
   
-  ovw.event:on(evtSpawn, function(data)
+  ctx.event:on(evtSpawn, function(data)
     local p = self:get(data.id)
     p.ded = false
     p:spawn()
@@ -54,14 +54,14 @@ end
 
 function Players:activate(id)
   self.players[id].active = true
-  if ovw.view then ovw.view:register(self.players[id]) end
+  if ctx.view then ctx.view:register(self.players[id]) end
   self:refresh()
 end
 
 function Players:deactivate(id)
   self.players[id].active = false
   self.players[id]:deactivate()
-  if ovw.view then ovw.view:unregister(self.players[id]) end
+  if ctx.view then ctx.view:unregister(self.players[id]) end
   self:refresh()
 end
 
@@ -96,7 +96,7 @@ end
 
 function Players:update()
   self:with(self.active, f.ego('update'))
-  ovw.collision:update()
+  ctx.collision:update()
   self:with(self.active, function(p)
     self.history[p.id][tick] = p:copy()
     self.history[p.id][tick - (1 / interp + 5)] = nil
@@ -104,8 +104,8 @@ function Players:update()
 end
 
 local function mouseHandler(self, x, y, b)
-  if not ovw.id then return end
-  local p = self:get(ovw.id)
+  if not ctx.id then return end
+  local p = self:get(ctx.id)
   if not p.active then return end
   f.exe(p.mouseHandler, p, x, y, b)
 end
@@ -113,8 +113,8 @@ Players.mousepressed = mouseHandler
 Players.mousereleased = mouseHandler
 
 local function keyHandler(self, key)
-  if not ovw.id then return end
-  local p = self:get(ovw.id)
+  if not ctx.id then return end
+  local p = self:get(ctx.id)
   if not p.active then return end
   f.exe(p.keyHandler, p, key)
 end

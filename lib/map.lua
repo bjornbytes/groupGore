@@ -37,8 +37,8 @@ function Map:init(name)
   self.props = table.map(map.props, f.cur(self.initProp, self))
 
   table.each(map.on, function(f, e)
-    if ovw.event then
-      ovw.event:on(e, function(data) f(self, data) end)
+    if ctx.event then
+      ctx.event:on(e, function(data) f(self, data) end)
     end
   end)
 
@@ -52,7 +52,7 @@ function Map:init(name)
   self:score()
 
   self.depth = 5
-  if ovw.view then ovw.view:register(self) end
+  if ctx.view then ctx.view:register(self) end
   
   self.graphics.background:setWrap('repeat')
   self.background = love.graphics.newMesh({
@@ -64,7 +64,7 @@ function Map:init(name)
   
   if self.weather then
     self.weather = new(data.weather[self.weather])
-    if ovw.view then ovw.view:register(self.weather) end
+    if ctx.view then ctx.view:register(self.weather) end
   end
 end
 
@@ -87,6 +87,6 @@ function Map:initProp(prop)
   f.exe(prop.activate, prop, self)
   self.propsBy[prop.kind] = self.propsBy[prop.kind] or {}
   table.insert(self.propsBy[prop.kind], prop)
-  if ovw.view then ovw.view:register(prop) end
+  if ctx.view then ctx.view:register(prop) end
   return prop
 end

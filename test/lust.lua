@@ -78,9 +78,9 @@ function lust.it(name, fn)
 end
 
 function lust.with(o, fn)
-  ovw = o
+  ctx = o
   fn()
-  ovw = nil
+  ctx = nil
 end
 
 -- Assertions

@@ -34,11 +34,11 @@ end
 
 function Adrenaline.fire(self, adrenaline)
   if not adrenaline.active then
-    ovw.buffs:add(self, 'adrenaline')
+    ctx.buffs:add(self, 'adrenaline')
     adrenaline.active = true
     adrenaline.cooldown = 1
   else
-    ovw.buffs:remove(self, 'adrenaline')
+    ctx.buffs:remove(self, 'adrenaline')
     adrenaline.active = false
     adrenaline.cooldown = Adrenaline.cooldown
   end

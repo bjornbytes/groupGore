@@ -55,7 +55,7 @@ function HudChat:keypressed(key)
     if key == 'backspace' then self.message = self.message:sub(1, -2)
     elseif key == 'return' then
       if #self.message > 0 then
-        ovw.net:send(msgChat, {
+        ctx.net:send(msgChat, {
           message = self.message
         })
       end
