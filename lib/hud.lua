@@ -69,7 +69,7 @@ end
 
 function Hud:connecting()
   g.setColor(0, 0, 0)
-  g.rectangle('fill', 0, 0, love.window.getWidth(), love.window.getHeight())
+  g.rectangle('fill', 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
   g.setColor(255, 255, 255)
   local str = 'Connecting...'
   if tick > 5 / tickRate then str = str .. '\noshit' end
@@ -77,5 +77,5 @@ function Hud:connecting()
   if tick > (6 / tickRate) + 5 then str = str .. ' oshit' end
   if tick > (6 / tickRate) + 10 then str = str .. ' oshit' end
   if tick > 10 / tickRate then str = str .. '\n' str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3)) end
-  g.printf(str, 0, math.floor(love.window.getHeight() / 2 - love.graphics.height(.02)), love.window.getWidth(), 'center')
+  g.printf(str, 0, math.floor(love.graphics.getHeight() / 2 - love.graphics.height(.02)), love.graphics.getWidth(), 'center')
 end

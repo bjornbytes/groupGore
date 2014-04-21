@@ -9,23 +9,15 @@ function mouseY()
 end
 
 function View:init()
-  local modes = love.window.getFullscreenModes()
-  table.sort(modes, function(a, b) return a.width > b.width end)
-  while modes[#modes].width ~= modes[1].width do table.remove(modes, #modes) end
-  table.sort(modes, function(a, b) return a.width * a.height > b.width * b.height end)
-  -- love.window.setMode(modes[1].width, modes[1].height, {fullscreen = true, borderless = true, vsync = false})
-  -- love.window.setMode(1280, 800, {fullscreen = false, borderless = false, vsync = false, resizable = true})
-  --love.window.setMode(800, 600, {fullscreen = false, borderless = false, vsync = false, resizable = true})
-  
   self.x = 0
   self.prevx = 0
   self.y = 0
   self.prevy = 0
   self.w = 800
   self.h = 600
-  self.scale = love.window.getWidth() / self.w
+  self.scale = love.graphics.getWidth() / self.w
   self.prevscale = self.scale
-  self.margin = math.floor(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2) + .5)
+  self.margin = math.floor(((love.graphics.getHeight() - love.graphics.getWidth() * (self.h / self.w)) / 2) + .5)
   self.toDraw = {}
 end
 
@@ -48,14 +40,14 @@ function View:update()
     local object = ovw.players:get(ovw.id)
     if object and not object.ded then
       local dis, dir = math.distance(object.x, object.y, mouseX(), mouseY()), math.direction(object.x, object.y, mouseX(), mouseY())
-      dis = dis / 4
-      self.x = math.lerp(self.x, (object.x + math.cos(dir) * dis) - (self.w / 2), .5)
-      self.y = math.lerp(self.y, (object.y + math.sin(dir) * dis) - (self.h / 2), .5)
-      print(self.x)
-      if object.x - self.x > (self.w * .80) then self.x = object.x - (self.w * .80) end
-      if object.y - self.y > (self.h * .80) then self.y = object.y - (self.h * .80) end
-      if (self.x + self.w) - object.x > (self.w * .80) then self.x = object.x + (self.w * .80) - self.w end
-      if (self.y + self.h) - object.y > (self.h * .80) then self.y = object.y + (self.h * .80) - self.h end
+      dis = dis / 2
+      self.x = object.x + (math.cos(dir) * dis) - (self.w / 2)
+      self.y = object.y + (math.sin(dir) * dis) - (self.h / 2)
+      local margin = 0.8
+      if object.x - self.x > (self.w * margin) then self.x = object.x - (self.w * margin) end
+      if object.y - self.y > (self.h * margin) then self.y = object.y - (self.h * margin) end
+      if (self.x + self.w) - object.x > (self.w * margin) then self.x = object.x + (self.w * margin) - self.w end
+      if (self.y + self.h) - object.y > (self.h * margin) then self.y = object.y + (self.h * margin) - self.h end
     end
   end
   
@@ -95,13 +87,13 @@ end
 function View:letterbox()
   love.graphics.pop()
   love.graphics.setColor(0, 0, 0, 255)
-  love.graphics.rectangle('fill', 0, 0, love.window.getWidth(), self.margin)
-  love.graphics.rectangle('fill', 0, love.window.getHeight() - self.margin, love.window.getWidth(), self.margin)
+  love.graphics.rectangle('fill', 0, 0, love.graphics.getWidth(), self.margin)
+  love.graphics.rectangle('fill', 0, love.graphics.getHeight() - self.margin, love.graphics.getWidth(), self.margin)
 end
 
 function View:resize()
-  self.scale = love.window.getWidth() / self.w
-  self.margin = math.max(math.round(((love.window.getHeight() - love.window.getWidth() * (self.h / self.w)) / 2)), 0)
+  self.scale = love.graphics.getWidth() / self.w
+  self.margin = math.max(math.round(((love.graphics.getHeight() - love.graphics.getWidth() * (self.h / self.w)) / 2)), 0)
 end
 
 function View:convertZ(z)

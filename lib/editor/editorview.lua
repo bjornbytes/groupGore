@@ -39,10 +39,10 @@ function EditorView:update()
   self.y = self.y + (self.yVel / (self.targetScale ^ 0.5))
   
   local prevw, prevh = self.w, self.h
-  local xf, yf = love.mouse.getX() / love.window.getWidth(), love.mouse.getY() / love.window.getHeight()
+  local xf, yf = love.mouse.getX() / love.graphics.getWidth(), love.mouse.getY() / love.graphics.getHeight()
   self.scale = math.round(math.lerp(self.scale, self.targetScale, .25) / .01) * .01
-  self.w = love.window.getWidth() / self.scale
-  self.h = love.window.getHeight() / self.scale
+  self.w = love.graphics.getWidth() / self.scale
+  self.h = love.graphics.getHeight() / self.scale
   self.x = self.x + (prevw - self.w) * xf
   self.y = self.y + (prevh - self.h) * yf
 end
