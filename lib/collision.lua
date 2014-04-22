@@ -10,22 +10,10 @@ end
 
 function Collision:init()
   self.hc = hardon(self.cellSize, self.onCollide)
-  self.scratch = hardon(self.cellSize, self.onCollide)
 
   ctx.event:on('collision.attach', f.cur(self.attach, self))
   ctx.event:on('collision.detach', f.cur(self.detach, self))
   ctx.event:on('collision.move', f.cur(self.move, self))
-end
-
-function Collision:update()
-  for i = 1, 16 do
-    local p = ctx.players:get(i)
-    if p.shape then
-      p.shape:moveTo(p.x, p.y)
-    end
-  end
-  
-  self.hc:update(tickRate)
 end
 
 function Collision:attach(data)
@@ -40,7 +28,6 @@ function Collision:attach(data)
 
   if obj.collision.static then
     self.hc:setPassive(shape)
-    self.scratch:addShape(shape)
   end
 
   obj.shape = shape
@@ -51,7 +38,6 @@ end
 
 function Collision:detach(data)
   self.hc:remove(data.object.shape)
-  self.scratch:remove(data.object.shape)
 end
 
 function Collision:move(data)

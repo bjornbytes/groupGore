@@ -1,4 +1,4 @@
-require('lib/view')
+require('lib/core/view')
 
 EditorView = extend(View)
 

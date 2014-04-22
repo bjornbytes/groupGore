@@ -115,6 +115,8 @@ function Player:move()
   elseif self.x > ctx.map.width then self.x = ctx.map.width end
   if self.y < 0 then self.y = 0
   elseif self.y > ctx.map.height then self.y = ctx.map.height end
+
+  ctx.collision:resolve(self)
 end
 
 function Player:turn()

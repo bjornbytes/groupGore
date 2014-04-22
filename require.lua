@@ -11,6 +11,7 @@ end
 
 require 'enet'
 load 'lib/lutil'
+load 'lib/core'
 load 'lib'
 load 'lib/editor'
 load 'lib/hud'
