@@ -99,7 +99,7 @@ function Players:update()
   ctx.collision:update()
   self:with(self.active, function(p)
     self.history[p.id][tick] = p:copy()
-    self.history[p.id][tick - (1 / interp + 5)] = nil
+    self.history[p.id][tick - math.round(interp / tickRate + 10)] = nil
   end)
 end
 

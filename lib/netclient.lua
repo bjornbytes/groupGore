@@ -22,6 +22,7 @@ NetClient.receive[msgJoin] = function(self, event)
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
+  --tick = event.data.tick + math.round(self.server:round_trip_time() / 2 / 1000 / tickRate)
   tick = event.data.tick
   --ctx.map:load(event.data.map)
   for i = 1, #event.data.players do

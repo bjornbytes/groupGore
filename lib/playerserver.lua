@@ -47,21 +47,6 @@ function PlayerServer:update()
       self:heal({amount = self.maxHealth * percentage * tickRate})
     end
   end
-  
-  local data = {}
-  data.x = math.round(self.x)
-  data.y = math.round(self.y)
-  data.angle = math.round((math.deg(self.angle) + 360) % 360)
-
-  local shield = 0
-  table.each(self.shields, function(s) shield = shield + s.health end)
-  data.health = math.round(self.health)
-  data.shield = math.round(shield)
-
-  data.id = self.id
-  data.tick = tick
-  data.ack = self.ack
-  ctx.net:emit(evtSync, data)
 end
 
 function PlayerServer:time()
@@ -147,11 +132,36 @@ function PlayerServer:trace(data, ping)
       end
     end)
 
-    self.ack = t
-    self.input = data
-    self:move()
-    self:turn()
-    self:slot()
+    local p = ctx.players:get(self.id, t)
+
+    if p then
+      self.ack = t
+      p.input = data
+      p:move()
+      p:turn()
+      p:slot()
+      for i = t + 1, tick do
+        local dst = ctx.players:get(self.id, i)
+        table.merge(p, dst)
+      end
+   
+      do
+        local data = {}
+        data.x = math.round(p.x)
+        data.y = math.round(p.y)
+        data.angle = math.round((math.deg(p.angle) + 360) % 360)
+
+        local shield = 0
+        table.each(p.shields, function(s) shield = shield + s.health end)
+        data.health = math.round(p.health)
+        data.shield = math.round(shield)
+
+        data.id = p.id
+        data.tick = t
+        data.ack = self.ack
+        ctx.net:emit(evtSync, data)
+      end
+    end
 
     -- Undo lag compensation
     ctx.players:with(ctx.players.active, function(p)
