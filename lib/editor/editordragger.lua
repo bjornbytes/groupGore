@@ -42,5 +42,4 @@ end
 function EditorDragger:mousereleased(x, y, button)
   self.dragging = false
   if self.deselect then ctx.selector:deselectAll() end
-  ctx.state:push()
 end

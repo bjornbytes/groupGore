@@ -72,6 +72,14 @@ function NetServer:init()
   Net.init(self)
 end
 
+function NetServer:quit()
+  if self.host then
+    for i = 1, 16 do
+      if self.host:get_peer(i) then self.host:get_peer(i):disconnect_now() end
+    end
+  end
+end
+
 function NetServer:connect(event)
   self.peerToPlayer[event.peer] = self:nextPlayerId()
 end

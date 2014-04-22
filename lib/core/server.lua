@@ -20,14 +20,6 @@ function Server:update()
   self.net:sync()
 end
 
-function Server:sync()
-  -- self.net:sync()
-end
-
 function Server:quit()
-  if self.net.host then
-    for i = 1, 16 do
-      if self.net.host:get_peer(i) then self.net.host:get_peer(i):disconnect_now() end
-    end
-  end
+  self.net:quit()
 end

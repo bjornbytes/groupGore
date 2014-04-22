@@ -10,15 +10,13 @@ local function load(dir)
 end
 
 require 'enet'
-load 'lib/deps/richtext'
 load 'lib/deps/slam'
 load 'lib/deps/lutil'
 load 'lib/deps'
 load 'lib/core'
-load 'lib'
 load 'lib/editor'
-load 'lib/hud'
-load 'lib/menu'
 load 'lib/gooey'
-load 'context'
+load 'lib'
 load 'data/loader'
+load 'data/hud'
+load 'data/menu'
