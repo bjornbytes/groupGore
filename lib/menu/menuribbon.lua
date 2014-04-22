@@ -6,7 +6,8 @@ local w, h = g.width, g.height
 function MenuRibbon:init()
   self.ribbons = {0, 0, 0, 0, 0}
   self.count = 3
-  self.fh = love.graphics.newFont('media/fonts/BebasNeue.ttf', h(.065)):getHeight() / 2
+  g.setFont('BebasNeue', h(.065))
+  self.fh = g.getFont():getHeight() / 2
   self.margin = h(.1)
 end
 

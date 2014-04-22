@@ -17,7 +17,7 @@ Eva.anchorx = 15
 Eva.anchory = 17
 Eva.handx = 22
 Eva.handy = 0
-Eva.sprite = 'media/graphics/eva.png'
+Eva.sprite = data.media.graphics.eva
 
 
 ----------------

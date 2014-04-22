@@ -12,7 +12,7 @@ Shotgun.type = 'weapon'
 ----------------
 -- Data
 ----------------
-Shotgun.image = 'media/graphics/shotgun.png'
+Shotgun.image = data.media.graphics.shotgun
 Shotgun.damage = 25
 Shotgun.fireSpeed = .65
 Shotgun.reloadSpeed = 2

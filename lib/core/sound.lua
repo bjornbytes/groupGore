@@ -1,18 +1,16 @@
 Sound = class()
 
 function Sound:init()
-  self.sounds = {}
   self.mute = false
 
   ctx.event:on('sound.play', f.cur(self.play, self))
   ctx.event:on('sound.loop', f.cur(self.loop, self))
 end
 
-function Sound:play(data)
-  local name = data.sound
+function Sound:play(_data)
+  local name = _data.sound
   if self.mute then return end
-  self.sounds[name] = self.sounds[name] or love.audio.newSource('media/sounds/' .. name .. '.ogg')
-  return self.sounds[name]:play()
+  return data.media.sounds[name]:play()
 end
 
 function Sound:loop(data)

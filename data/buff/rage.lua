@@ -6,7 +6,6 @@ local Rage = {}
 Rage.name = 'Rage'
 Rage.code = 'rage'
 Rage.text = 'The brute has 20% additional lifesteal.'
-Rage.icon = 'media/graphics/icon.png'
 Rage.hide = false
 
 

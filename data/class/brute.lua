@@ -17,7 +17,7 @@ Brute.anchorx = 16
 Brute.anchory = 22
 Brute.handx = 26
 Brute.handy = 5
-Brute.sprite = 'media/graphics/brute.png'
+Brute.sprite = data.media.graphics.brute
 
 
 ----------------

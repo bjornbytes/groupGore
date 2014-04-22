@@ -11,8 +11,7 @@ function Gib:activate()
   self.angle = love.math.random() * math.pi * 2
   self.alpha = 1
   local i = 1 + love.math.random(6)
-  Gib.images[i] = Gib.images[i] or love.graphics.newImage('media/graphics/effects/gib' .. i .. '.png')
-  self.image = Gib.images[i]
+  self.image = data.media.graphics.effects['gib' .. i]
 end
 
 function Gib:update()

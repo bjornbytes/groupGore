@@ -6,7 +6,6 @@ local Smokescreen = {}
 Smokescreen.name = 'Smokescreen'
 Smokescreen.code = 'smokescreen'
 Smokescreen.text = 'This unit is slowed.'
-Smokescreen.icon = 'media/graphics/icon.png'
 Smokescreen.hide = false
 
 

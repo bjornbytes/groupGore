@@ -3,13 +3,9 @@ MenuBackground = class()
 local g = love.graphics
 local w, h = g.width, g.height
 
-function MenuBackground:init()
-	self.bg = love.graphics.newImage('media/graphics/menu/ggbg.png')
-end
-
 function MenuBackground:draw()
   g.reset()
-  g.draw(self.bg, 0, 0)
+  g.draw(data.media.graphics.menu.ggbg, 0, 0)
   
   g.setFont('BebasNeue', h(.1))
   g.setColor(50, 50, 50)

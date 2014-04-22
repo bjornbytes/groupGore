@@ -6,7 +6,6 @@ local Adrenaline = {}
 Adrenaline.name = 'Adrenaline'
 Adrenaline.code = 'adrenaline'
 Adrenaline.text = 'Increases movespeed, drains health.'
-Adrenaline.icon = 'media/graphics/icon.png'
 Adrenaline.hide = false
 
 

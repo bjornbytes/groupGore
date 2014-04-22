@@ -31,13 +31,14 @@ end
 function HudIcons:draw()
   local p = ctx.players:get(ctx.id)
   if p and p.active then
-    local width = p.slots[1].icon:getWidth()
+    local width = data.media.graphics.icons[p.slots[1].code]:getWidth()
     local s = g.minUnit(.08) / width
     for i = 1, 5 do
+      local icon = data.media.graphics.icons[p.slots[i].code]
       local alpha = math.min(math.lerp(self.prevLabelAlphas[i], self.labelAlphas[i], tickDelta / tickRate), 1) * 200
       local iconx = w(.5) - g.minUnit(.213) + g.minUnit(.106 * (i - 1))
       g.setColor(255, 255, 255, math.max(alpha, 100) * (255 / 200))
-      g.draw(p.slots[i].icon, iconx - (width / 2), h(.093), 0, s, s)
+      g.draw(icon, iconx - (width / 2), h(.093), 0, s, s)
 
       local prc = 0      
       if p.slots[i].value then

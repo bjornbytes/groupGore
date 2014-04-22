@@ -3,17 +3,12 @@ HudLeft = class()
 local g = love.graphics
 local w, h = g.width, g.height
 
-function HudLeft:init()
-  self.frame = g.newImage('media/graphics/hud/left.png')
-  self.bg = g.newImage('media/graphics/hud/leftBg.png')
-end
-
 function HudLeft:draw()
   g.setColor(255, 255, 255, 64)
-  g.draw(self.bg, -w(.0825), -h(.0083))
+  g.draw(data.media.graphics.hud.leftBg, -w(.0825), -h(.0083))
   
   g.setColor(255, 255, 255)
-  g.draw(self.frame, -w(.08), -h(.013))
+  g.draw(data.media.graphics.hud.left, -w(.08), -h(.013))
   
   local p = ctx.players:get(ctx.id)
   if p and p.active then

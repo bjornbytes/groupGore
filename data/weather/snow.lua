@@ -9,7 +9,7 @@ function Snow:init()
   self.vy = 400 * (love.math.random() < .5 and -1 or 1)
   self.dx = love.math.random() < .5 and -1 or 1
   self.dy = love.math.random() < .5 and -1 or 1
-  self.image = love.graphics.newImage('media/graphics/effects/bgBlizzard.png')
+  self.image = data.media.graphics.effects.bgBlizzard
   self.image:setWrap('repeat', 'repeat')
   self.depth = 1
 end

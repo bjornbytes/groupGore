@@ -3,13 +3,11 @@ local Skull = {}
 Skull.name = 'Skull'
 Skull.code = 'skull'
 
-Skull.image = 'media/graphics/effects/skull.png'
-
 Skull.activate = function(self)
   self.health = 5
   self.scale = 1
   self.alpha = 1
-  self.image = image
+  self.image = data.media.graphics.effects.skull
 end
 
 Skull.update = function(self)

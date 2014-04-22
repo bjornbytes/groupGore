@@ -1,5 +1,29 @@
 data = {}
 data.load = function()
+
+  -- Media
+  local function lookup(ext, fn)
+    local function halp(s, k)
+      local base = s._path .. '/' .. k
+      if love.filesystem.exists(base .. ext) then
+        s[k] = fn(base .. ext)
+      elseif love.filesystem.isDirectory(base) then
+        local t = {}
+        t._path = base
+        setmetatable(t, {__index = halp})
+        s[k] = t
+      end
+
+      return rawget(s, k)
+    end
+    return halp
+  end
+  
+  data.media = {}
+  data.media.graphics = setmetatable({_path = 'data/media/graphics'}, {__index = lookup('.png', love.graphics.newImage)})
+  data.media.sounds = setmetatable({_path = 'data/media/sounds'}, {__index = lookup('.ogg', love.audio.newSource)})
+
+  -- Data
   local function load(dir, type, fn)
     data[type] = {}
     local id = 1
@@ -15,21 +39,12 @@ data.load = function()
     end
   end
   
-  load('data/weapon', 'weapon', function(weapon)
-    if weapon.image then weapon.image = love.graphics.newImage(weapon.image) end
-    weapon.icon = love.graphics.newImage('media/graphics/icons/' .. weapon.code .. '.png')
-  end)
-  load('data/skill', 'skill', function(skill)
-    skill.icon = love.graphics.newImage('media/graphics/icons/' .. skill.code .. '.png')
-  end)
+  load('data/weapon', 'weapon')
+  load('data/skill', 'skill')
   load('data/buff', 'buff')
   load('data/spell', 'spell')
-  load('data/class', 'class', function(class)
-    class.sprite = love.graphics.newImage(class.sprite)
-  end)
-  load('data/particle', 'particle', function(particle)
-    if particle.image then particle.image = love.graphics.newImage(particle.image) end
-  end)
+  load('data/class', 'class')
+  load('data/particle', 'particle')
   load('data/prop', 'prop')
   load('data/weather', 'weather')
 end

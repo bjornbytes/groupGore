@@ -12,7 +12,7 @@ SMG.type = 'weapon'
 ----------------
 -- Data
 ----------------
-SMG.image = 'media/graphics/smg.png'
+SMG.image = data.media.graphics.smg
 SMG.damage = 14
 SMG.fireSpeed = .15
 SMG.reloadSpeed = 1.6

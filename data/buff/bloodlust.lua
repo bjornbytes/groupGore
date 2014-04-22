@@ -6,7 +6,6 @@ local Bloodlust = {}
 Bloodlust.name = 'Bloodlust'
 Bloodlust.code = 'bloodlust'
 Bloodlust.text = 'This Brute is gaining health because he killed someone.'
-Bloodlust.icon = 'media/graphics/icon.png'
 Bloodlust.hide = false
 
 

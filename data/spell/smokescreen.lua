@@ -3,7 +3,7 @@ Smokescreen = {}
 Smokescreen.code = 'smokescreen'
 Smokescreen.duration = 6
 Smokescreen.radius = 145
-Smokescreen.image = love.graphics.newImage('media/graphics/effects/smoke.png')
+Smokescreen.image = data.media.graphics.effects.smoke
 
 function Smokescreen:activate()
   self.timer = self.duration
