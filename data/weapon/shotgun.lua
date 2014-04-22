@@ -14,8 +14,8 @@ Shotgun.type = 'weapon'
 ----------------
 Shotgun.image = 'media/graphics/shotgun.png'
 Shotgun.damage = 25
-Shotgun.firerate = .65
-Shotgun.reload = 2
+Shotgun.fireSpeed = .65
+Shotgun.reloadSpeed = 2
 Shotgun.clip = 4
 Shotgun.ammo = 16
 Shotgun.spread = .06

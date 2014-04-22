@@ -26,15 +26,15 @@ end
 Weapon.fire = function(owner, self)
   ctx.spells:activate(owner.id, data.spell[self.code])
   
-  self.timers.shoot = self.firerate
+  self.timers.shoot = self.fireSpeed
   self.currentClip = self.currentClip - 1
-  if self.currentClip == 0 then self.timers.reload = self.reload end
+  if self.currentClip == 0 then self.timers.reload = self.reloadSpeed end
   owner.recoil = self.recoil
 end
 
 Weapon.reload = function(owner, self)
   if self.currentClip < self.clip and self.timers.reload == 0 then
-    self.timers.reload = self.reload
+    self.timers.reload = self.reloadSpeed
   end
 end
 
@@ -48,5 +48,5 @@ Weapon.draw = function(owner, self)
 end
 
 Weapon.value = function(owner, self)
-  return self.timers.reload > 0 and (self.timers.reload / self.reload) or 0
+  return self.timers.reload > 0 and (self.timers.reload / self.reloadSpeed) or 0
 end

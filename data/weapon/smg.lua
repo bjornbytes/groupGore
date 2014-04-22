@@ -14,8 +14,8 @@ SMG.type = 'weapon'
 ----------------
 SMG.image = 'media/graphics/smg.png'
 SMG.damage = 14
-SMG.firerate = .15
-SMG.reload = 1.6
+SMG.fireSpeed = .15
+SMG.reloadSpeed = 1.6
 SMG.clip = 12
 SMG.ammo = 120
 SMG.spread = .03
