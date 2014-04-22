@@ -4,11 +4,11 @@ function love.run()
   end
 
   tick = 0
-  tickRate = .1
+  tickRate = .02
   tickDelta = 0
-  syncRate = .25
+  syncRate = .05
   syncDelta = 0
-  interp = .5
+  interp = .1
   
   love.load(arg)
 

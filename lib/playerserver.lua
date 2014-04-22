@@ -37,6 +37,7 @@ end
 function PlayerServer:update()
   self:time()  
   self:logic()
+  self:slot()
   
   if self.health < self.maxHealth and not self.ded then
     local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
@@ -138,10 +139,9 @@ function PlayerServer:trace(data, ping)
       p:move()
       ctx.collision:resolve(p)
       p:turn()
-      p:slot()
       for i = t + 1, tick do
         local dst = ctx.players:get(self.id, i)
-        table.merge({x = p.x, y = p.y}, dst)
+        table.merge(p, dst)
       end
    
       do
@@ -169,8 +169,6 @@ function PlayerServer:trace(data, ping)
         p.shape:moveTo(p.x, p.y)
       end
     end)
-    
-    --ctx.collision:update()
   end
 end
 
