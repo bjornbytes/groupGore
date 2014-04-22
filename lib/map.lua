@@ -54,7 +54,10 @@ function Map:init(name)
   f.exe(self.activate, self)
 
   self.depth = 5
-  if ctx.view then ctx.view:register(self) end
+  if ctx.view then
+    ctx.view:register(self)
+    ctx.view:register(self.weather)
+  end
   
   self.graphics.background:setWrap('repeat')
   self.background = love.graphics.newMesh({
@@ -68,7 +71,6 @@ function Map:init(name)
     self.weather = new(data.weather[self.weather])
     if ctx.view then
       ctx.view:setLimits(self.width, self.height)
-      ctx.view:register(self.weather)
     end
   end
 end
