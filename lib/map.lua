@@ -20,16 +20,8 @@ function Map:init(name)
 
   local dir = 'data/maps/' .. name .. '/'
   local map = safeLoad(dir .. name .. '.lua')
-  map.graphics = {}
   map.props = {}
   map.propsBy = {}
-  
-  for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-    if file:match('%.png$') then
-      local image = file:gsub('%.png$', '')
-      map.graphics[image] = love.graphics.newImage(dir .. file)
-    end
-  end
   
   table.merge(safeLoad(dir .. 'props.lua'), map.props)
   table.merge(map, self)
@@ -58,14 +50,16 @@ function Map:init(name)
     ctx.view:register(self)
     ctx.view:setLimits(self.width, self.height)
   end
-  
-  self.graphics.background:setWrap('repeat')
-  self.background = love.graphics.newMesh({
-    {0, 0, 0, 0},
-    {self.width, 0, self.width / self.graphics.background:getWidth(), 0},
-    {self.width, self.height, self.width / self.graphics.background:getWidth(), self.height / self.graphics.background:getHeight()},
-    {0, self.height, self.height / self.graphics.background:getHeight(), 0}
-  }, self.graphics.background)
+ 
+  if self.background then
+    self.background:setWrap('repeat')
+    self.backgroundMesh = love.graphics.newMesh({
+      {0, 0, 0, 0},
+      {self.width, 0, self.width / self.background:getWidth(), 0},
+      {self.width, self.height, self.width / self.background:getWidth(), self.height / self.background:getHeight()},
+      {0, self.height, self.height / self.background:getHeight(), 0}
+    }, self.background)
+  end
   
   if self.weather then
     self.weather = new(data.weather[self.weather])
@@ -82,7 +76,7 @@ end
 
 function Map:draw()
   love.graphics.reset()
-  love.graphics.draw(self.background)
+  if self.background then love.graphics.draw(self.backgroundMesh) end
 end
 
 function Map:score(team)

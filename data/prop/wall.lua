@@ -10,40 +10,42 @@ Wall.collision.tag = 'wall'
 Wall.activate = function(self, map)
   ctx.event:emit('collision.attach', {object = self})
 
+  local image = data.media.graphics.map.wall
+
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
-  }, map.graphics.grass)
+  }, image)
 
   self.north = love.graphics.newMesh({
     {self.x, self.y, 0, 0, 0, 0, 0},
     {self.x + self.width, self.y, 1, 0, 0, 0, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
-  }, map.graphics.grass)
+  }, image)
 
   self.south = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
     {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
     {self.x, self.y + self.height, 0, 1, 0, 0, 0}
-  }, map.graphics.grass)
+  }, image)
 
   self.east = love.graphics.newMesh({
     {0, 0, 0, 0},
     {self.x + self.width, self.y, 1, 0, 0, 0, 0},
     {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
     {0, 0, 0, 1}
-  }, map.graphics.grass)
+  }, image)
 
   self.west = love.graphics.newMesh({
     {self.x, self.y, 0, 0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
     {self.x, self.y + self.height, 0, 1, 0, 0, 0}
-  }, map.graphics.grass)
+  }, image)
 
   self.meshX = self.x
   self.meshY = self.y
