@@ -31,31 +31,34 @@ NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
 NetServer.receive[msgJoin] = function(self, event)
-  ctx.players:get(event.pid).username = event.data.username
-  self:send(msgJoin, event.peer, {id = event.pid})
-  self:emit(evtJoin, {id = event.pid, username = event.data.username})
+  local pid = self.peerToPlayer[event.peer]
+  ctx.players:get(pid).username = event.data.username
+  self:send(msgJoin, event.peer, {id = pid})
+  self:emit(evtJoin, {id = pid, username = event.data.username})
   self:emit(evtChat, {message = '{white}' .. event.data.username .. ' has joined!'})
   self:snapshot(event.peer)
 end
 
 NetServer.receive[msgLeave] = function(self, event)
-  self:emit(evtChat, {message = '{white}' .. ctx.players:get(event.pid).username .. ' has left!'})
-  self:emit(evtLeave, {id = event.pid, reason = 'left'})
+  local pid = self.peerToPlayer[event.peer]
+  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
+  self:emit(evtLeave, {id = pid, reason = 'left'})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
 end
 
 NetServer.receive[msgClass] = function(self, event)
-  self:emit(evtClass, {id = event.pid, class = event.data.class, team = event.data.team})
+  self:emit(evtClass, {id = self.peerToPlayer[event.peer], class = event.data.class, team = event.data.team})
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  ctx.players:get(event.pid):trace(event.data, event.peer:last_round_trip_time())
+  ctx.players:get(self.peerToPlayer[event.peer]):trace(event.data, event.peer:last_round_trip_time())
 end
 
 NetServer.receive[msgChat] = function(self, event)
-  local username = ctx.players:get(event.pid).username
-  local color = ctx.players:get(event.pid).team == 0 and 'purple' or 'orange'
+  local pid = self.peerToPlayer(event.peer)
+  local username = ctx.players:get(pid).username
+  local color = ctx.players:get(pid).team == 0 and 'purple' or 'orange'
   self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
 end
 

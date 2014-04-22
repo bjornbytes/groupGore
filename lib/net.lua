@@ -37,8 +37,6 @@ function Net:update()
     local event = self.host:service()
     if not event then break end
     
-    event.pid = self.peerToPlayer and self.peerToPlayer[event.peer] or event.peer:index()
-    
     if event.type == 'receive' then
       self.inStream:clear()
       self.inStream.str = event.data
