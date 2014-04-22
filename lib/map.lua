@@ -18,7 +18,7 @@ function Map:init(name)
 
   self.code = name
 
-  local dir = 'maps/' .. name .. '/'
+  local dir = 'data/maps/' .. name .. '/'
   local map = safeLoad(dir .. name .. '.lua')
   map.graphics = {}
   map.props = {}
