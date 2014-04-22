@@ -29,7 +29,8 @@ function PlayerDummy:trace(data)
   data.tick = nil
   data.id = nil
   if data.angle then data.angle = math.rad(data.angle) end
-  for i = t, tick do
+  --[[for i = t, tick do
     table.merge(data, ctx.players:get(self.id, i))
-  end
+  end]]
+  table.merge(data, self)
 end

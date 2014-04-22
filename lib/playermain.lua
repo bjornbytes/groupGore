@@ -55,6 +55,8 @@ function PlayerMain:update()
   end
   
   ctx.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
+
+  Player.update(self)
 end
 
 function PlayerMain:draw()
@@ -129,9 +131,7 @@ function PlayerMain:trace(data)
     if p then
       state.input = p.input
       state:move()
-      self.x, self.y = state.x, state.y
-      ctx.collision:update()
-      state.x, state.y = self.x, self.y
+      ctx.collision:resolve(state)
     end
   end
   

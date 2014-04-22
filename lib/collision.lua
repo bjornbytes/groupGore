@@ -10,6 +10,7 @@ end
 
 function Collision:init()
   self.hc = hardon(self.cellSize, self.onCollide)
+  self.scratch = hardon(self.cellSize, self.onCollide)
 
   ctx.event:on('collision.attach', f.cur(self.attach, self))
   ctx.event:on('collision.detach', f.cur(self.detach, self))
@@ -39,14 +40,18 @@ function Collision:attach(data)
 
   if obj.collision.static then
     self.hc:setPassive(shape)
+    self.scratch:addShape(shape)
   end
 
   obj.shape = shape
   shape.owner = obj
+
+  return shape
 end
 
 function Collision:detach(data)
   self.hc:remove(data.object.shape)
+  self.scratch:remove(data.object.shape)
 end
 
 function Collision:move(data)
@@ -57,6 +62,24 @@ function Collision:move(data)
   end
 
   data.object.shape:moveTo(x, y)
+end
+
+function Collision:resolve(obj)
+  local oldShape = rawget(obj, 'shape')
+
+  local shape
+  if obj.collision.shape == 'rectangle' then
+    shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
+  elseif obj.collision.shape == 'circle' then
+    shape = self.hc:addCircle(obj.x, obj.y, obj.radius)
+  end
+
+  shape.owner = obj
+  obj.shape = shape
+  self.hc:update()
+  self.hc:remove(shape)
+
+  obj.shape = oldShape
 end
 
 function Collision:pointTest(x, y, options)

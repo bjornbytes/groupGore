@@ -29,8 +29,10 @@ function Player:create()
           self.shape:moveTo(self.x, self.y)
         end,
         player = function(self, other, dx, dy)
-          self.x, self.y = self.x + dx, self.y + dy
-          self.shape:moveTo(self.x, self.y)
+          if self.speed > 0 and other.team ~= self.team then
+            self.x, self.y = self.x + dx, self.y + dy
+            self.shape:moveTo(self.x, self.y)
+          end
         end
       }
     },
@@ -77,13 +79,30 @@ function Player:draw()
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
     f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
   end
-  if self.shape and love.keyboard.isDown(' ') then
+  if self.shape and not love.keyboard.isDown(' ') then
+    local server
+    for i = 1, #Context.list do
+      if getmetatable(Context.list[i]).__index == Server then
+        server = Context.list[i]
+        break
+      end
+    end
+
+    local p = server and server.players:get(self.id) or self
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 50)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 50) end
+    p.shape:draw('fill')
     if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 100)
     elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 100) end
-    self.shape:draw('fill')
-    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)
-    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
-    self.shape:draw('line')
+    p.shape:draw('line')
+
+    local p = self
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 50)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 50) end
+    p.shape:draw('fill')
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 100)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 100) end
+    p.shape:draw('line')
   end
 end
 
@@ -121,10 +140,13 @@ function Player:move()
   elseif self.x > ctx.map.width then self.x = ctx.map.width end
   if self.y < 0 then self.y = 0
   elseif self.y > ctx.map.height then self.y = ctx.map.height end
+
+  --ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
+  --ctx.collision:update()
 end
 
 function Player:turn()
-  self.angle = math.anglerp(self.angle, math.direction(self.x, self.y, self.input.mx, self.input.my), 15 * tickRate)
+  self.angle = math.anglerp(self.angle, math.direction(self.x, self.y, self.input.mx, self.input.my), math.min(15 * tickRate, 1))
 end
 
 function Player:slot()

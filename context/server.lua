@@ -10,13 +10,6 @@ function Server:load()
   self.buffs = Buffs()
   self.net = NetServer()
   self.map = Map()
-
-  for i = 1, 0 do
-    local p = self.players:get(i)
-    setmetatable(p, {__index = PlayerRobot})
-    self.players:setClass(i, 1, i % 2)
-    p.x = p.x - 20 + (10 * i) 
-  end
 end
 
 function Server:update()
@@ -24,10 +17,11 @@ function Server:update()
   self.buffs:update()
   self.players:update()
   self.spells:update()
+  self.net:sync()
 end
 
 function Server:sync()
-  self.net:sync()
+  -- self.net:sync()
 end
 
 function Server:quit()

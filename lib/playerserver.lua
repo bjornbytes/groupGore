@@ -35,8 +35,6 @@ function PlayerServer:deactivate()
 end
 
 function PlayerServer:update()
-  --local prevx, prevy, prevangle, prevhp = math.round(self.x), math.round(self.y), math.round((math.deg(self.angle) + 360) % 360), math.round(self.health)
-  
   self:time()  
   self:logic()
   
@@ -138,11 +136,12 @@ function PlayerServer:trace(data, ping)
       self.ack = t
       p.input = data
       p:move()
+      ctx.collision:resolve(p)
       p:turn()
       p:slot()
       for i = t + 1, tick do
         local dst = ctx.players:get(self.id, i)
-        table.merge(p, dst)
+        table.merge({x = p.x, y = p.y}, dst)
       end
    
       do
@@ -171,7 +170,7 @@ function PlayerServer:trace(data, ping)
       end
     end)
     
-    ctx.collision:update()
+    --ctx.collision:update()
   end
 end
 

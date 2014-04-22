@@ -73,6 +73,7 @@ end
 
 function NetClient:buffer(msg, data)
   table.insert(self.messageBuffer, {msg, data})
+  self:sync()
 end
 
 function NetClient:sync()

@@ -18,11 +18,11 @@ function HudIcons:update()
     for i = 1, 5 do
       self.prevLabelAlphas[i] = self.labelAlphas[i]
       if p.input.weapon == i or p.input.skill == i then
-        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], 1, 10 * tickRate)
+        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], 1, math.min(10 * tickRate, 1))
       elseif p.slots[i].type == 'passive' then
-        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], .5, 10 * tickRate)
+        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], .5, math.min(10 * tickRate, 1))
       else
-        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], .5, 10 * tickRate)
+        self.labelAlphas[i] = math.lerp(self.labelAlphas[i], .5, math.min(10 * tickRate, 1))
       end
     end
   end

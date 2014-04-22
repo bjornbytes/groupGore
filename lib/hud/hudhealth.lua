@@ -16,7 +16,7 @@ function HudHealth:update()
   local p = ctx.players:get(ctx.id)
   if p and p.active then
     self.prevVal = self.val
-    self.val = math.lerp(self.val, p.health, 10 * tickRate)
+    self.val = math.lerp(self.val, p.health, math.min(10 * tickRate, 1))
   end
 end
 
