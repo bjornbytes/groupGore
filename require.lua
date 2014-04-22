@@ -10,7 +10,8 @@ local function load(dir)
 end
 
 require 'enet'
-load 'lib/lutil'
+load 'lib/deps/lutil'
+load 'lib/deps'
 load 'lib/core'
 load 'lib'
 load 'lib/editor'

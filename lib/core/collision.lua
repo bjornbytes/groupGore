@@ -1,4 +1,4 @@
-local hardon = require 'lib/hardon'
+local hardon = require 'lib/deps/hardon'
 
 Collision = class()
 Collision.cellSize = 128
