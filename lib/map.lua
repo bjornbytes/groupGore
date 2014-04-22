@@ -56,7 +56,7 @@ function Map:init(name)
   self.depth = 5
   if ctx.view then
     ctx.view:register(self)
-    ctx.view:register(self.weather)
+    ctx.view:setLimits(self.width, self.height)
   end
   
   self.graphics.background:setWrap('repeat')
@@ -70,7 +70,7 @@ function Map:init(name)
   if self.weather then
     self.weather = new(data.weather[self.weather])
     if ctx.view then
-      ctx.view:setLimits(self.width, self.height)
+      ctx.view:register(self.weather)
     end
   end
 end
