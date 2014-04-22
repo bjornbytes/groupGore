@@ -56,7 +56,7 @@ NetServer.receive[msgInput] = function(self, event)
 end
 
 NetServer.receive[msgChat] = function(self, event)
-  local pid = self.peerToPlayer(event.peer)
+  local pid = self.peerToPlayer[event.peer]
   local username = ctx.players:get(pid).username
   local color = ctx.players:get(pid).team == 0 and 'purple' or 'orange'
   self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})

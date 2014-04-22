@@ -1,3 +1,5 @@
+local rich = require 'lib/deps/richtext/richtext'
+
 HudChat = class()
 
 local g = love.graphics
