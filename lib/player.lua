@@ -136,6 +136,10 @@ function Player:slot()
   if self.input.l and weapon.canFire(self, weapon) then
     ctx.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
   end
+
+  if self.input.reload then
+    weapon.reload(self, weapon)
+  end
   
   local skill = self.slots[self.input.skill]
   if self.input.r and skill.canFire(self, skill) then

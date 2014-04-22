@@ -7,14 +7,14 @@ function Particles:init()
   ctx.event:on('particle.create', f.cur(self.create, self))
 end
 
-function Particles:create(_data)
-  local type = _data.kind
+function Particles:create(arg)
+  local type = arg.kind
   
-  for _ = 1, _data.count or 1 do
+  for _ = 1, arg.count or 1 do
     local p = new(data.particle[type])
     
     p:activate()
-    table.merge(_data.vars or {}, p)
+    table.merge(arg.vars or {}, p)
     
     table.insert(self.particles, p)
   end

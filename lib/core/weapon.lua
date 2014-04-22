@@ -17,10 +17,6 @@ Weapon.update = function(owner, self)
     self.currentAmmo = self.currentAmmo - amt
     ctx.event:emit('sound.play', {sound = 'reload'})
   end)
-
-  if owner.input.reload and self.currentClip < self.clip and self.timers.reload == 0 then
-    self.timers.reload = self.reload
-  end
 end
 
 Weapon.canFire = function(owner, self)
@@ -34,6 +30,12 @@ Weapon.fire = function(owner, self)
   self.currentClip = self.currentClip - 1
   if self.currentClip == 0 then self.timers.reload = self.reload end
   owner.recoil = self.recoil
+end
+
+Weapon.reload = function(owner, self)
+  if self.currentClip < self.clip and self.timers.reload == 0 then
+    self.timers.reload = self.reload
+  end
 end
 
 Weapon.draw = function(owner, self)
