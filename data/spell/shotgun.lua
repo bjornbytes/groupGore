@@ -49,7 +49,7 @@ Shotgun.activate = function(self)
       dis = len
     })
     
-    if len < self.len then
+    if not hit and len < self.len then
       for _ = 1, 4 do
         ctx.event:emit('particle.create', {
           kind = 'spark',
@@ -57,6 +57,18 @@ Shotgun.activate = function(self)
             x = self.x + math.dx(len, ang),
             y = self.y + math.dy(len, ang),
             angle = i + math.pi + love.math.random() * 2.08 - 1.04
+          }
+        })
+      end
+    end
+
+    if hit then
+      for _ = 1, 4 do
+        ctx.event:emit('particle.create', {
+          kind = 'blood',
+          vars = {
+            x = hit.x - 10 + love.math.random() * 20,
+            y = hit.y - 10 + love.math.random() * 20
           }
         })
       end

@@ -46,7 +46,7 @@ SMG.activate = function(self)
     })
   end
 
-  if self.len < 900 then
+  if target and self.len < 900 then
     for _ = 1, 4 do
       ctx.event:emit('particle.create', {
         kind = 'spark',
@@ -54,6 +54,18 @@ SMG.activate = function(self)
           x = self.x + math.dx(self.len, self.angle),
           y = self.y + math.dy(self.len, self.angle),
           angle = self.angle + math.pi + love.math.random() * 2.08 - 1.04
+        }
+      })
+    end
+  end
+
+  if target then
+    for _ = 1, 4 do
+      ctx.event:emit('particle.create', {
+        kind = 'blood',
+        vars = {
+          x = target.x - 10 + love.math.random() * 20,
+          y = target.y - 10 + love.math.random() * 20
         }
       })
     end
