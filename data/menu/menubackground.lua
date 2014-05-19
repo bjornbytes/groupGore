@@ -62,5 +62,4 @@ function MenuBackground:draw()
   
   g.setColor(0, 0, 0, 80)
   g.rectangle('fill', 0, h(.2), w(), h(.1))
-  g.rectangle('fill', 0, h(.8), w(), h(.2))
 end

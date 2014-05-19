@@ -3,14 +3,13 @@ MenuLogin = class()
 local g = love.graphics
 local w, h = g.width, g.height
 
-function MenuLogin:init()
-  ctx.input:addInput('username', love.filesystem.read('username') or 'username')
-  ctx.input:addInput('password', 'password')
-end
-
 function MenuLogin:load()
   ctx.ribbon.count = 3
   ctx.ribbon.margin = h(.1)
+
+  ctx.input:clear()
+  ctx.input:addInput('username', username or love.filesystem.read('username') or 'username')
+  ctx.input:addInput('password', 'password')
 end
 
 function MenuLogin:mousepressed(x, y, button)
@@ -48,5 +47,5 @@ end
 
 function MenuLogin:login()
   username = ctx.input:val('username')
-  ctx:changePage(ctx.main)
+  ctx:push(ctx.main)
 end

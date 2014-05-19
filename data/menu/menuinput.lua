@@ -27,6 +27,11 @@ function MenuInput:keypressed(key)
   end
 end
 
+function MenuInput:clear()
+  self.focused = nil
+  table.clear(self.inputs)
+end
+
 function MenuInput:addInput(name, default)
   self.inputs[name] = {
     val = default,
