@@ -31,21 +31,39 @@ function HudClassSelect:draw()
   g.rectangle('line', w(.55), h(.313), w(.37), h(.58))
   
   g.setFont('BebasNeue', h(.065))
-  g.setColor(128, 128, 128)
+  local fh = g.getFont():getHeight()
+  local x, y = love.mouse.getPosition()
+  local teamStr = self.team == purple and 'purple' or 'orange'
+  local hover
+  local white, gray = {255, 255, 255}, {128, 128, 128}
+  
+  hover = math.inside(x, y, w(.08), h(.106), w(.24) + g.getFont():getWidth(teamStr), fh)
+  g.setColor(hover and white or gray)
   g.print('Team', w(.08), h(.106))
-  g.print('Class', w(.08), h(.213))
-  g.print('Disconnect', w(.08), h(1 - .213) - g.getFont():getHeight())
-  g.print('Exit', w(.08), h(1 - .106) - g.getFont():getHeight())
-  
-  g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})
-  g.print(self.team == purple and 'purple' or 'orange', w(.32), h(.106))
-  
+
+  hover = false
   for i = 1, #data.class do
     g.setColor(255, 255, 255, 25)
     g.rectangle('line', w(.09) * i, h(.326), w(.08), w(.08))
     g.setColor(255, 255, 255)
     g.draw(data.class[i].sprite, w(.09) * i + w(.04), h(.326) + w(.04), self.angle, 1, 1, data.class[i].anchorx, data.class[i].anchory)
+    hover = hover or math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08))
   end
+  g.setColor(hover and white or gray)
+  g.print('Class', w(.08), h(.213))
+
+  hover = math.inside(x, y, w(.08), h(1 - .213) - fh, g.getFont():getWidth('Disconnect'), fh)
+  g.setColor(hover and white or gray)
+  g.print('Disconnect', w(.08), h(1 - .213) - fh)
+
+  hover = math.inside(x, y, w(.08), h(1 - .106) - fh, g.getFont():getWidth('Exit'), fh)
+  g.setColor(hover and white or gray)
+  g.print('Exit', w(.08), h(1 - .106) - fh)
+  
+  g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})
+  g.print(self.team == purple and 'purple' or 'orange', w(.32), h(.106))
+  
+  
 end
 
 function HudClassSelect:keypressed(key)
