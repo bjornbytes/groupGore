@@ -45,10 +45,18 @@ function HudClassSelect:draw()
   for i = 1, #data.class do
     g.setColor(255, 255, 255, 25)
     g.rectangle('line', w(.09) * i, h(.326), w(.08), w(.08))
-    g.setColor(255, 255, 255)
+
+    if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
+      hover = true
+      self:drawClassDetails(i)
+      g.setColor(255, 255, 255)
+    else
+      g.setColor(255, 255, 255, 150)
+    end
+
     g.draw(data.class[i].sprite, w(.09) * i + w(.04), h(.326) + w(.04), self.angle, 1, 1, data.class[i].anchorx, data.class[i].anchory)
-    hover = hover or math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08))
   end
+
   g.setColor(hover and white or gray)
   g.print('Class', w(.08), h(.213))
 
@@ -62,8 +70,6 @@ function HudClassSelect:draw()
   
   g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})
   g.print(self.team == purple and 'purple' or 'orange', w(.32), h(.106))
-  
-  
 end
 
 function HudClassSelect:keypressed(key)
@@ -115,4 +121,17 @@ function HudClassSelect:mousereleased(x, y, button)
   end
   
   if self.active then return true end
+end
+
+function HudClassSelect:drawClassDetails(index)
+  local fh = g.getFont():getHeight()
+  g.setColor(255, 255, 255)
+  g.print(data.class[index].name, w(.56), h(.243) + g.getFont():getHeight())
+  
+  g.setFont('pixel', 8)
+  g.setColor(255, 255, 255, 150)
+  g.print(data.class[index].quote, w(.56) + 2, h(.243) + fh * 2)
+
+  g.setFont('BebasNeue', h(.065))
+  g.setColor(255, 255, 255)
 end

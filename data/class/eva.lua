@@ -18,6 +18,7 @@ Eva.anchory = 17
 Eva.handx = 22
 Eva.handy = 0
 Eva.sprite = data.media.graphics.eva
+Eva.quote = '???'
 
 
 ----------------
