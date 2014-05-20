@@ -23,10 +23,11 @@ function Hud:init()
 end
 
 function Hud:update()
+  if self.classSelect.active then return self.classSelect:update() end
+
   self.health:update()
   self.chat:update()
   self.feed:update()
-  self.classSelect:update()
   self.icons:update()
 end
 

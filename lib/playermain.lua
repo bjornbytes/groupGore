@@ -1,6 +1,9 @@
 PlayerMain = extend(Player)
 
 function PlayerMain:activate()
+  self.prev = setmetatable({}, {__index = self})
+  self.inputs = {}
+
   self.input = {}
   
   self.input.w = false
@@ -36,10 +39,23 @@ function PlayerMain:deactivate()
   Player.deactivate(self)
 end
 
+function PlayerMain:get(t)
+  assert(t == tick or t == tick - 1)
+  if t == tick then
+    return self
+  else
+    return self.prev
+  end
+end
+
 function PlayerMain:update()
   if self.ded then return end
   
-  self:poll()
+  self.prev.x = self.x
+  self.prev.y = self.y
+  self.prev.angle = self.angle
+
+  self:readInput()
   self:move()
   self:turn()
   self:slot()
@@ -54,15 +70,13 @@ function PlayerMain:update()
   end
   
   ctx.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
-
-  Player.update(self)
 end
 
 function PlayerMain:draw()
   if self.ded then return end
 
-  local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
-  if p then Player.draw(p) end
+  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
+  Player.draw(p)
 
   if love.keyboard.isDown(' ') then
     local server
@@ -81,12 +95,11 @@ function PlayerMain:draw()
 end
 
 function PlayerMain:drawPosition()
-  local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
-  if p then return p.x, p.y end
-  return 0, 0
+  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
+  return p.x, p.y
 end
 
-function PlayerMain:poll()
+function PlayerMain:readInput()
   self.input.mx, self.input.my = ctx.view:mouseX(), ctx.view:mouseY()
 end
 
@@ -140,14 +153,14 @@ function PlayerMain:trace(data)
   
   table.merge(data, state)
   
-  for i = ack + 1, tick - 1 do
+  --[[for i = ack + 1, tick - 1 do
     p = ctx.players:get(self.id, i)
     if p then
       state.input = p.input
       state:move()
       ctx.collision:resolve(state)
     end
-  end
+  end]]
   
   p = ctx.players:get(self.id, tick - 1)
   if p then

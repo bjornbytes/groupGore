@@ -1,26 +1,38 @@
 PlayerDummy = extend(Player)
 
+local function drawTick() return tick - (interp / tickRate) end
+
 function PlayerDummy:activate()
+  self.history = {}
+  self.dinosaur = setmetatable({}, self)
+
   Player.activate(self)
+end
+
+function PlayerDummy:get(t)
+  
+  -- The most recent received snapshot is merged into self for convenience.
+  if t == tick then return self end
+
+  -- Search backwards through history until we find something.
+  for i = t, drawTick() - 1, -1 do
+    if self.history[i] then return self.history[i] end
+  end
+
+  -- If we don't have anything in history, just return dinosaur.
+  return self.dinosaur
 end
 
 function PlayerDummy:draw()
   if self.ded then return end
-  local t = tick - (interp / tickRate) + (tickDelta / tickRate)
-  local p = ctx.players:get(self.id, t)
-  if p then Player.draw(p) end
+  
+  local t = drawTick()
+  table.interpolate(self:get(t), self:get(t + 1), tickDelta / tickRate):draw()
 end
 
 function PlayerDummy:drawPosition()
-  local t = tick - (interp / tickRate)
-  local prev, cur = ctx.players.history[self.id][t - 1], ctx.players.history[self.id][t]
-  if prev and cur then
-    prev, cur = {x = prev.x, y = prev.y}, {x = cur.x, y = cur.y}
-    local interp = table.interpolate(prev, cur, tickDelta / tickRate)
-    return interp.x, interp.y
-  end
-  
-  return 0, 0
+  local p = table.interpolate(self:get(drawTick()), self:get(drawTick() + 1), tickDelta / tickRate)
+  return p.x, p.y
 end
 
 function PlayerDummy:trace(data)

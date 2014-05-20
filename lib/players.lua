@@ -8,12 +8,10 @@ function Players:init()
   
   self.players = {}
   self.active = {}
-  self.history = {}
   
   for i = 1, 16 do
     self.players[i] = tags[ctx.tag]()
     self.players[i].id = i
-    self.history[i] = {}
   end
   
   ctx.event:on(evtLeave, function(data)
@@ -65,25 +63,15 @@ function Players:deactivate(id)
 end
 
 function Players:get(id, t)
-  if not id then return end
-  t = t or tick
-  local f = math.floor(t)
-    if t ~= f then
-    local prev = self.history[id][f]
-    local cur = self.history[id][math.ceil(t)]
-    if cur and prev then
-      return table.interpolate(prev, cur, t - f)
-    end
-    return nil
-  end
-  return t == tick and self.players[id] or self.history[id][t]
+  assert(id and self.players[id])
+  return self.players[id]:get(t or tick)
 end
 
 function Players:with(ps, fn)
   if type(ps) == 'number' then
     fn(self:get(ps))
   elseif type(ps) == 'table' then
-    for _, id in ipairs(ps) do
+    for _, id in pairs(ps) do
       fn(self:get(id))
     end
   elseif type(ps) == 'function' then
@@ -94,11 +82,9 @@ function Players:with(ps, fn)
 end
 
 function Players:update()
-  self:with(self.active, f.ego('update'))
-  self:with(self.active, function(p)
-    self.history[p.id][tick] = p:copy()
-    self.history[p.id][tick - math.round(interp / tickRate + 10)] = nil
-  end)
+  for i = 1, #self.active do
+    self:get(self.active[i]):update()
+  end
 end
 
 local function mouseHandler(self, x, y, b)
@@ -120,7 +106,7 @@ Players.keypressed = keyHandler
 Players.keyreleased = keyHandler
 
 function Players:setClass(id, class, team)
-  local p = self:get(id)
+  local p = self.players[id]
   if not p.active then self:activate(id) end
   p.class = data.class[class]
   p.team = team

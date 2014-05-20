@@ -33,6 +33,10 @@ function PlayerServer:deactivate()
   Player.deactivate(self)
 end
 
+function PlayerServer:get(t)
+  return self
+end
+
 function PlayerServer:update()
   self:time()  
   self:logic()
@@ -117,7 +121,7 @@ function PlayerServer:trace(data, ping)
   if t > self.ack then
     
     -- Lag compensation
-    local oldPos = {}
+    --[[local oldPos = {}
     ctx.players:with(ctx.players.active, function(p)
       if p.id ~= self.id then
         oldPos[p.id] = {p.x, p.y}
@@ -128,46 +132,37 @@ function PlayerServer:trace(data, ping)
           p.shape:moveTo(p.x, p.y)
         end
       end
-    end)
+    end)]]
 
-    local p = ctx.players:get(self.id, t)
+    self.ack = t
+    self.input = data
+    self:move()
+    ctx.collision:resolve(self)
 
-    if p then
-      self.ack = t
-      p.input = data
-      p:move()
-      ctx.collision:resolve(p)
-      p:turn()
-      for i = t + 1, tick do
-        local dst = ctx.players:get(self.id, i)
-        table.merge(p, dst)
-      end
-   
-      do
-        local data = {}
-        data.x = math.round(p.x)
-        data.y = math.round(p.y)
-        data.angle = math.round((math.deg(p.angle) + 360) % 360)
+    do
+      local data = {}
+      data.x = math.round(self.x)
+      data.y = math.round(self.y)
+      data.angle = math.round((math.deg(self.angle) + 360) % 360)
 
-        local shield = 0
-        table.each(p.shields, function(s) shield = shield + s.health end)
-        data.health = math.round(p.health)
-        data.shield = math.round(shield)
+      local shield = 0
+      table.each(self.shields, function(s) shield = shield + s.health end)
+      data.health = math.round(self.health)
+      data.shield = math.round(shield)
 
-        data.id = p.id
-        data.tick = t
-        data.ack = self.ack
-        ctx.net:emit(evtSync, data)
-      end
+      data.id = self.id
+      data.tick = t
+      data.ack = self.ack
+      ctx.net:emit(evtSync, data)
     end
 
     -- Undo lag compensation
-    ctx.players:with(ctx.players.active, function(p)
+    --[[ctx.players:with(ctx.players.active, function(p)
       if oldPos[p.id] then
         p.x, p.y = unpack(oldPos[p.id])
         p.shape:moveTo(p.x, p.y)
       end
-    end)
+    end)]]
   end
 end
 
