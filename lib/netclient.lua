@@ -72,21 +72,24 @@ function NetClient:send(msg, data)
 end
 
 function NetClient:buffer(msg, data)
-  table.insert(self.messageBuffer, {msg, data})
-  self:sync()
+  --table.insert(self.messageBuffer, {msg, data})
+  --self:sync()
+  table.insert(self.messageBuffer, {msg, data, tick})
 end
 
 function NetClient:sync()
   if #self.messageBuffer == 0 then return end
   
   self.outStream:clear()
-  
-  while #self.messageBuffer > 0 do
-    self:pack(unpack(self.messageBuffer[1]))
+ 
+  while #self.messageBuffer > 0 and (tick - self.messageBuffer[1][3]) * tickRate >= .000 do
+    local msg, data, tick = unpack(self.messageBuffer[1])
+    self:pack(msg, data)
     table.remove(self.messageBuffer, 1)
   end
-  
-  self.server:send(tostring(self.outStream))
+ 
+  local res = tostring(self.outStream)
+  if #res > 0 then self.server:send(res) end
 end
 
 NetClient.emit = f.empty

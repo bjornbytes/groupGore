@@ -52,7 +52,7 @@ function Player:activate()
   self.maxSpeed = self.class.speed
   self.health = self.maxHealth
   self.radius = self.class.size
-  self.depth = self.id
+  self.depth = -self.id
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
   end
@@ -78,6 +78,15 @@ function Player:draw()
   if self.input then
     f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
     f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
+  end
+
+  if self.shape and love.keyboard.isDown(' ') then
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 100)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 100) end
+    self.shape:draw('fill')
+    if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)
+    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
+    self.shape:draw('line')
   end
 end
 

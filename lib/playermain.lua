@@ -64,6 +64,21 @@ function PlayerMain:draw()
 
   local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
   if p then Player.draw(p) end
+
+  if love.keyboard.isDown(' ') then
+    local server
+    for i = 1, #Context.list do
+      local c = Context.list[i]
+      if c and c.tag and c.tag == 'server' then
+        server = c
+        break
+      end
+    end
+
+    if server then
+      Player.draw(server.players:get(self.id))
+    end
+  end
 end
 
 function PlayerMain:drawPosition()
@@ -141,6 +156,7 @@ function PlayerMain:trace(data)
   end
   
   table.merge({x = state.x, y = state.y}, self)
+  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
 end
 
 function PlayerMain:copy()
