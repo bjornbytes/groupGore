@@ -1,48 +1,46 @@
-Player = {}
+Player = class()
 
 ----------------
 -- Core
 ----------------
-function Player:create()
-  return {
-    id = nil,
-    username = '',
-    class = nil,
-    team = nil,
-    active = false,
-    ded = false,
-    x = 0,
-    y = 0,
-    angle = 0,
-    speed = 0,
-    health = 0,
-    shield = 0,
-    maxSpeed = 0,
-    maxHealth = 0,
-    lifesteal = 0,
-    collision = {
-      shape = 'circle',
-      tag = 'player',
-      with = {
-        wall = function(self, other, dx, dy)
+function Player:init()
+  self.id = nil
+  self.username = ''
+  self.class = nil
+  self.team = nil
+  self.active = false
+  self.ded = false
+  self.x = 0
+  self.y = 0
+  self.angle = 0
+  self.speed = 0
+  self.health = 0
+  self.shield = 0
+  self.maxSpeed = 0
+  self.maxHealth = 0
+  self.lifesteal = 0
+  self.collision = {
+    shape = 'circle',
+    tag = 'player',
+    with = {
+      wall = function(self, other, dx, dy)
+        self.x, self.y = self.x + dx, self.y + dy
+        self.shape:moveTo(self.x, self.y)
+      end,
+      player = function(self, other, dx, dy)
+        if self.speed > 0 and other.team ~= self.team then
           self.x, self.y = self.x + dx, self.y + dy
           self.shape:moveTo(self.x, self.y)
-        end,
-        player = function(self, other, dx, dy)
-          if self.speed > 0 and other.team ~= self.team then
-            self.x, self.y = self.x + dx, self.y + dy
-            self.shape:moveTo(self.x, self.y)
-          end
         end
-      }
-    },
-    radius = 0,
-    depth = 0,
-    recoil = 0,
-    visible = 0,
-    lastHurt = 0,
-    slots = {{}, {}, {}, {}, {}}
+      end
+    }
   }
+  self.radius = 0
+  self.depth = 0
+  self.recoil = 0
+  self.visible = 0
+  self.lastHurt = 0
+  self.slots = {{}, {}, {}, {}, {}}
 end
 
 function Player:activate()

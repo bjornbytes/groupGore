@@ -1,5 +1,4 @@
-PlayerRobot = {}
-setmetatable(PlayerRobot, {__index = PlayerServer})
+PlayerRobot = extend(Player)
 
 function PlayerRobot:activate()
   PlayerServer.activate(self)

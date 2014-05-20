@@ -1,5 +1,4 @@
-PlayerDummy = {}
-setmetatable(PlayerDummy, {__index = Player})
+PlayerDummy = extend(Player)
 
 function PlayerDummy:activate()
   Player.activate(self)

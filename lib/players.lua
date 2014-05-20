@@ -11,10 +11,9 @@ function Players:init()
   self.history = {}
   
   for i = 1, 16 do
-    self.players[i] = Player:create()
+    self.players[i] = tags[ctx.tag]()
     self.players[i].id = i
     self.history[i] = {}
-    setmetatable(self.players[i], {__index = tags[ctx.tag]})
   end
   
   ctx.event:on(evtLeave, function(data)

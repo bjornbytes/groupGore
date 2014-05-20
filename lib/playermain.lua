@@ -1,5 +1,4 @@
-PlayerMain = {}
-setmetatable(PlayerMain, {__index = Player})
+PlayerMain = extend(Player)
 
 function PlayerMain:activate()
   self.input = {}
