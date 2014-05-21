@@ -41,6 +41,8 @@ function Player:init()
   self.visible = 0
   self.lastHurt = 0
   self.slots = {{}, {}, {}, {}, {}}
+  self.weapon = 1
+  self.skill = 1  
 end
 
 function Player:activate()
@@ -53,6 +55,7 @@ function Player:activate()
   self.depth = -self.id
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
+    if self.slots[i].type == 'skill' and self.skill == self.weapon then self.skill = i end
   end
   ctx.event:emit('collision.attach', {object = self})
 end
@@ -73,10 +76,8 @@ function Player:draw()
   elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.visible * 255) end
   if self.hurtHistory then love.graphics.setColor(255, 255, 255, 200) end
   love.graphics.draw(self.class.sprite, self.x, self.y, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
-  if self.input then
-    f.exe(self.slots[math.ceil(self.input.weapon)].draw, self, self.slots[math.ceil(self.input.weapon)])
-    f.exe(self.slots[math.ceil(self.input.skill)].draw, self, self.slots[math.ceil(self.input.skill)])
-  end
+  f.exe(self.slots[math.ceil(self.weapon)].draw, self, self.slots[math.ceil(self.weapon)])
+  f.exe(self.slots[math.ceil(self.skill)].draw, self, self.slots[math.ceil(self.skill)])
 
   if self.shape and love.keyboard.isDown(' ') then
     if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 100)
@@ -92,8 +93,8 @@ end
 ----------------
 -- Behavior
 ----------------
-function Player:move()
-  local w, a, s, d = self.input.w, self.input.a, self.input.s, self.input.d
+function Player:move(input)
+  local w, a, s, d = input.w, input.a, input.s, input.d
   local moving = w or a or s or d
   
   local up, down, left, right, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi
@@ -126,31 +127,36 @@ function Player:move()
   ctx.collision:resolve(self)
 end
 
-function Player:turn()
-  self.angle = math.anglerp(self.angle, math.direction(self.x, self.y, self.input.mx, self.input.my), math.min(15 * tickRate, 1))
+function Player:turn(input)
+  local d = math.direction(self.x, self.y, input.x, input.y)
+  self.angle = math.anglerp(self.angle, d, math.min(15 * tickRate, 1))
 end
 
-function Player:slot()
+function Player:slot(input)
   if self.ded then return end
+
+  if input.slot then
+    self[self.slots[input.slot].type] = input.slot
+  end
   
   for i = 1, 5 do
-    if self.slots[i].type ~= 'weapon' or self.input.weapon == i then
+    if self.slots[i].type ~= 'weapon' or self.weapon == i then
       f.exe(self.slots[i].update, self, self.slots[i])
     end
   end
   
-  local weapon = self.slots[self.input.weapon]
-  if self.input.l and weapon.canFire(self, weapon) then
-    ctx.net:emit(evtFire, {id = self.id, slot = self.input.weapon})
+  local weapon = self.slots[self.weapon]
+  if input.l and weapon.canFire(self, weapon) then
+    ctx.net:emit(evtFire, {id = self.id, slot = self.weapon})
   end
 
-  if self.input.reload then
+  if input.reload then
     weapon.reload(self, weapon)
   end
   
-  local skill = self.slots[self.input.skill]
-  if self.input.r and skill.canFire(self, skill) then
-    ctx.net:emit(evtFire, {id = self.id, slot = self.input.skill})
+  local skill = self.slots[self.skill]
+  if input.r and skill.canFire(self, skill) then
+    ctx.net:emit(evtFire, {id = self.id, slot = self.skill})
   end
   
   if self.recoil > 0 then self.recoil = self.recoil - math.min(self.recoil, 8 * tickRate) end

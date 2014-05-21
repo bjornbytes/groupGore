@@ -7,9 +7,9 @@ NetClient.signatures[msgClass] = {{'class', '4bits'}, {'team', '1bit'}}
 NetClient.signatures[msgInput] = {
   {'tick', '16bits'},
   {'w', 'bool'}, {'a', 'bool'}, {'s', 'bool'}, {'d', 'bool'},
-  {'mx', '12bits'}, {'my', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
-  {'weapon', '3bits'}, {'skill', '3bits'}, {'reload', 'bool'}
-  --delta = {{'w', 'a', 's', 'd'}, 'mx', 'my', 'weapon', 'l', 'r', 'skill', 'reload'}
+  {'x', '12bits'}, {'y', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
+  {'slot', '3bits'}, {'reload', 'bool'},
+  delta = {{'w', 'a', 's', 'd'}, {'x', 'y'}, 'l', 'r', 'slot', 'reload'}
 }
 NetClient.signatures[msgChat] = {{'message', 'string'}}
 

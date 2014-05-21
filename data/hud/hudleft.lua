@@ -12,8 +12,8 @@ function HudLeft:draw()
   
   local p = ctx.players:get(ctx.id)
   if p and p.active then
-    local clip = tostring(p.slots[p.input.weapon].currentClip)
-    local ammo = tostring(p.slots[p.input.weapon].currentAmmo)
+    local clip = tostring(p.slots[p.weapon].currentClip)
+    local ammo = tostring(p.slots[p.weapon].currentAmmo)
     
     g.setFont('BebasNeue', h(.065))
     local font = g:getFont()
