@@ -74,7 +74,7 @@ end
 
 function NetServer:quit()
   if self.host then
-    for i = 1, 16 do
+    for i = 1, ctx.players.max do
       if self.host:get_peer(i) then self.host:get_peer(i):disconnect_now() end
     end
   end
@@ -91,7 +91,7 @@ function NetServer:send(msg, peer, data)
 end
 
 function NetServer:emit(evt, data)
-  table.insert(self.eventBuffer, {evt, data})
+  table.insert(self.eventBuffer, {evt, data, tick})
   ctx.event:emit(evt, data)
 end
 
@@ -100,8 +100,9 @@ function NetServer:sync()
   
   self.outStream:clear()
   
-  while #self.eventBuffer > 0 do
-    self:pack(unpack(self.eventBuffer[1]))
+  while #self.eventBuffer > 0 and (tick - self.eventBuffer[1][3]) * tickRate >= .000 do
+    local msg, data, tick = unpack(self.eventBuffer[1])
+    self:pack(msg, data)
     table.remove(self.eventBuffer, 1)
   end
 
@@ -110,7 +111,7 @@ end
 
 function NetServer:snapshot(peer)
   local players = {}
-  for id = 1, 16 do
+  for id = 1, ctx.players.max do
     local p = ctx.players:get(id)
     if #p.username > 0 and id ~= self.peerToPlayer[peer] then
       table.insert(players, {
@@ -125,7 +126,7 @@ function NetServer:snapshot(peer)
 end
 
 function NetServer:nextPlayerId()
-  for i = 1, 16 do
+  for i = 1, ctx.players.max do
     if #ctx.players:get(i).username == 0 then return i end
   end
 end

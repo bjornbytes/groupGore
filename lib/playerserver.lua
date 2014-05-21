@@ -28,6 +28,55 @@ function PlayerServer:update()
   end
 end
 
+function PlayerServer:trace(data, ping)
+  local rewindTo = data.tick - ((ping / 1000) + interp) / tickRate
+  if data.tick > self.ack then
+    
+    -- Lag compensation
+    --[[local oldPos = {}
+    ctx.players:each(function(p)
+      if p.id ~= self.id then
+        oldPos[p.id] = {p.x, p.y}
+        local lerpd = ctx.players:get(p.id, rewindTo)
+        if lerpd then
+          p.x = lerpd.x
+          p.y = lerpd.y
+          p.shape:moveTo(p.x, p.y)
+        end
+      end
+    end)]]
+
+    self.ack = data.tick
+    self:move(data)
+    self:turn(data)
+    self:slot(data)
+
+    -- sync
+    local msg = {}
+    msg.x = math.round(self.x)
+    msg.y = math.round(self.y)
+    msg.angle = math.round((math.deg(self.angle) + 360) % 360)
+
+    local shield = 0
+    table.each(self.shields, function(s) shield = shield + s.health end)
+    msg.health = math.round(self.health)
+    msg.shield = math.round(shield)
+
+    msg.id = self.id
+    msg.tick = tick
+    msg.ack = self.ack
+    ctx.net:emit(evtSync, msg)
+
+    -- Undo lag compensation
+    --[[ctx.players:each(function(p)
+      if oldPos[p.id] then
+        p.x, p.y = unpack(oldPos[p.id])
+        p.shape:moveTo(p.x, p.y)
+      end
+    end)]]
+  end
+end
+
 function PlayerServer:time()
   self.ded = timer.rot(self.ded, function() ctx.net:emit(evtSpawn, {id = self.id}) end)
   if self.ded == 0 then self.ded = false end
@@ -88,55 +137,6 @@ function PlayerServer:spawn()
   table.clear(self.helpHistory)
 
   Player.spawn(self)
-end
-
-function PlayerServer:trace(data, ping)
-
-  local rewindTo = data.tick - ((ping / 1000) + interp) / tickRate
-  if data.tick > self.ack then
-    
-    -- Lag compensation
-    --[[local oldPos = {}
-    ctx.players:with(ctx.players.active, function(p)
-      if p.id ~= self.id then
-        oldPos[p.id] = {p.x, p.y}
-        local lerpd = ctx.players:get(p.id, rewindTo)
-        if lerpd then
-          p.x = lerpd.x
-          p.y = lerpd.y
-          p.shape:moveTo(p.x, p.y)
-        end
-      end
-    end)]]
-
-    self.ack = data.tick
-    self:move(data)
-    self:slot(data)
-
-    -- sync
-    local msg = {}
-    msg.x = math.round(self.x)
-    msg.y = math.round(self.y)
-    msg.angle = math.round((math.deg(self.angle) + 360) % 360)
-
-    local shield = 0
-    table.each(self.shields, function(s) shield = shield + s.health end)
-    msg.health = math.round(self.health)
-    msg.shield = math.round(shield)
-
-    msg.id = self.id
-    msg.tick = data.tick
-    msg.ack = self.ack
-    ctx.net:emit(evtSync, msg)
-
-    -- Undo lag compensation
-    --[[ctx.players:with(ctx.players.active, function(p)
-      if oldPos[p.id] then
-        p.x, p.y = unpack(oldPos[p.id])
-        p.shape:moveTo(p.x, p.y)
-      end
-    end)]]
-  end
 end
 
 PlayerServer.logic = f.empty

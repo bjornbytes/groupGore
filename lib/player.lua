@@ -69,7 +69,6 @@ end
 Player.update = f.empty
 
 function Player:draw()
-  love.graphics.reset()
   love.graphics.setColor(0, 0, 0, self.visible * 50)
   love.graphics.draw(self.class.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
   if self.team == purple then love.graphics.setColor(190, 160, 220, self.visible * 255)

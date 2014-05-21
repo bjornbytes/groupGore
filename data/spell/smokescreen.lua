@@ -13,13 +13,13 @@ function Smokescreen:activate()
 end
 
 function Smokescreen:deactivate()
-  ctx.players:with(ctx.players.active, function(p)
+  ctx.players:each(function(p)
     if ctx.buffs:get(p, 'smokescreen') then ctx.buffs:remove(p, 'smokescreen') end
   end)
 end
 
 function Smokescreen:update()
-  ctx.players:with(ctx.players.active, function(p)
+  ctx.players:each(function(p)
     if p.team ~= self.owner.team and math.distance(self.x, self.y, p.x, p.y) < self.radius then
       if not ctx.buffs:get(p, 'smokescreen') then ctx.buffs:add(p, 'smokescreen') end
     else

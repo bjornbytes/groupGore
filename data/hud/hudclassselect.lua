@@ -91,10 +91,6 @@ function HudClassSelect:keypressed(key)
 end
 
 function HudClassSelect:mousepressed(x, y, button)
-  return self.active
-end
-
-function HudClassSelect:mousereleased(x, y, button)
   if self.active and button == 'l' then
     for i = 1, #data.class do
       if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
@@ -120,7 +116,11 @@ function HudClassSelect:mousereleased(x, y, button)
     end
   end
   
-  if self.active then return true end
+  return self.active
+end
+
+function HudClassSelect:mousereleased(x, y, button)
+  return self.active
 end
 
 function HudClassSelect:drawClassDetails(index)

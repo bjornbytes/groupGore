@@ -71,7 +71,7 @@ function Hud:keyreleased(key)
 end
 
 function Hud:connecting()
-  g.setColor(0, 0, 0)
+  --[[g.setColor(0, 0, 0)
   g.rectangle('fill', 0, 0, g.getWidth(), g.getHeight())
   g.setColor(255, 255, 255)
   local str = 'Connecting...'
@@ -80,5 +80,5 @@ function Hud:connecting()
   if tick > (6 / tickRate) + 5 then str = str .. ' oshit' end
   if tick > (6 / tickRate) + 10 then str = str .. ' oshit' end
   if tick > 10 / tickRate then str = str .. '\n' str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3)) end
-  g.printf(str, 0, math.floor(g.height() / 2 - g.height(.02)), g.getWidth(), 'center')
+  g.printf(str, 0, math.floor(g.height() / 2 - g.height(.02)), g.getWidth(), 'center')]]
 end

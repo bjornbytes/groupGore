@@ -56,8 +56,7 @@ end
 function PlayerMain:draw()
   if self.ded then return end
 
-  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
-  Player.draw(p)
+  Player.draw(table.interpolate(self.prev, self, tickDelta / tickRate))
 
   if love.keyboard.isDown(' ') then
     local server
@@ -75,9 +74,19 @@ function PlayerMain:draw()
   end
 end
 
-function PlayerMain:drawPosition()
-  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
-  return p.x, p.y
+function PlayerMain:trace(data)
+  self.x, self.y = data.x, data.y
+  self.health, self.shield = data.health, data.shield
+
+  -- Discard inputs before the ack.
+  while self.inputs[1].tick < data.ack + 1 do
+    table.remove(self.inputs, 1)
+  end
+ 
+  -- Server reconciliation: Apply inputs that occurred after the ack.
+  for i = 1, #self.inputs do
+    self:move(self.inputs[i])
+  end
 end
 
 function PlayerMain:readInput()
@@ -110,28 +119,19 @@ function PlayerMain:fade()
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
     return ctx.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
   end
-  ctx.players:with(ctx.players.active, function(p)
+
+  ctx.players:each(function(p)
     if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
     else p.visible = math.min(p.visible + tickRate, 1) end
   end)
 end
 
+function PlayerMain:drawPosition()
+  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
+  return p.x, p.y
+end
+
 function PlayerMain:die()
   self.heartbeatSound:pause()
   Player.die(self)
-end
-
-function PlayerMain:trace(data)
-  self.x, self.y = data.x, data.y
-  self.health, self.shield = data.health, data.shield
-
-  -- Discard inputs before the ack.
-  while self.inputs[1].tick < data.ack + 1 do
-    table.remove(self.inputs, 1)
-  end
- 
-  -- Server reconciliation: Apply inputs that occurred after the ack.
-  for i = 1, #self.inputs do
-    self:move(self.inputs[i])
-  end
 end

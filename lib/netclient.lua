@@ -22,8 +22,7 @@ NetClient.receive[msgJoin] = function(self, event)
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
-  --tick = event.data.tick + math.round(self.server:round_trip_time() / 2 / 1000 / tickRate)
-  tick = event.data.tick
+  ctx.tick = event.data.tick
   --ctx.map:load(event.data.map)
   for i = 1, #event.data.players do
     local p = event.data.players[i]
@@ -75,6 +74,7 @@ function NetClient:buffer(msg, data)
   --table.insert(self.messageBuffer, {msg, data})
   --self:sync()
   table.insert(self.messageBuffer, {msg, data, tick})
+  self:sync()
 end
 
 function NetClient:sync()

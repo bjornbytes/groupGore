@@ -1,16 +1,12 @@
 Players = class()
+Players.max = 15
 
 function Players:init()
-  local tags = {
-    client = PlayerDummy,
-    server = PlayerServer
-  }
-  
   self.players = {}
   self.active = {}
   
-  for i = 1, 16 do
-    self.players[i] = tags[ctx.tag]()
+  for i = 1, self.max do
+    self.players[i] = ctx.tag == 'server' and PlayerServer() or PlayerDummy()
     self.players[i].id = i
   end
   
@@ -67,24 +63,14 @@ function Players:get(id, t)
   return self.players[id]:get(t or tick)
 end
 
-function Players:with(ps, fn)
-  if type(ps) == 'number' then
-    fn(self:get(ps))
-  elseif type(ps) == 'table' then
-    for _, id in pairs(ps) do
-      fn(self:get(id))
-    end
-  elseif type(ps) == 'function' then
-    for id, _ in pairs(table.filter(self.players, ps)) do
-      fn(self:get(id))
-    end
+function Players:each(fn)
+  for i = 1, #self.active do
+    fn(self:get(self.active[i]))
   end
 end
 
 function Players:update()
-  for i = 1, #self.active do
-    self:get(self.active[i]):update()
-  end
+  self:each(f.ego('update'))
 end
 
 local function mouseHandler(self, x, y, b)
@@ -116,7 +102,7 @@ end
 
 function Players:refresh()
   table.clear(self.active)
-  for i = 1, 16 do
+  for i = 1, self.max do
     if self.players[i].active then
       table.insert(self.active, i)
     end
