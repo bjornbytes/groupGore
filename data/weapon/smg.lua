@@ -25,4 +25,25 @@ SMG.anchory = 7
 SMG.tipx = 14
 SMG.tipy = 0
 
+----------------
+-- Crosshair
+----------------
+function SMG:crosshair()
+  local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
+  local vx, vy = ctx.view:mouseX(), ctx.view:mouseY()
+  local d = math.distance(p.x, p.y, vx, vy)
+  
+  local dir = p.angle
+  local dx, dy = p.class.handx, p.class.handy
+  x = x + math.dx(dx, dir) - math.dy(dy, dir)
+  y = y + math.dy(dx, dir) + math.dx(dy, dir)
+  
+  dx, dy = self.tipx, self.tipy
+  x = x + math.dx(dx, dir) - math.dy(dy, dir)
+  y = y + math.dy(dx, dir) + math.dx(dy, dir)
+
+  g.setColor(255, 255, 255)
+  g.circle('line', x, y, math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy))
+end
+
 return SMG
