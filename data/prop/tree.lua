@@ -6,19 +6,19 @@ Tree.collision = {}
 Tree.collision.shape = 'circle'
 Tree.collision.static = true
 
-Tree.activate = function(self, map)
+function Tree:activate(map)
   ctx.event:emit('collision.attach', {object = self})
   self.depth = -5
   if ctx.view then ctx.view:register(self) end
 end
 
-Tree.update = function(self)
+function Tree:update()
   if ctx.view then
     self.depth = -2000 + math.distance(ctx.view.x + ctx.view.w / 2, ctx.view.y + ctx.view.h / 2, self.x, self.y)
   end
 end
 
-Tree.draw = function(self)
+function Tree:draw()
   local x, y = ctx.view:three(self.x, self.y, 100)
   local image = data.media.graphics.map.tree
   if ctx.id and ctx.players:get(ctx.id) and ctx.players:get(ctx.id).active then
@@ -31,7 +31,7 @@ Tree.draw = function(self)
   love.graphics.draw(image, x, y, 0, self.radius / 20, self.radius / 20, image:getWidth() / 2, image:getHeight() / 2)
 end
 
-Tree.__tostring = function(self)
+function Tree:__tostring()
   return [[{
     kind = 'tree',
     x = ]] .. self.x .. [[,

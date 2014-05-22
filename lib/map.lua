@@ -1,5 +1,9 @@
 Map = class()
 
+-- ...
+purple = 0
+orange = 1
+
 local function safeLoad(file)
   local ok, chunk, result
   ok, chunk = pcall(love.filesystem.load, file)
@@ -13,36 +17,35 @@ end
 
 function Map:init(name)
   name = 'industria'
-  purple = 0
-  orange = 1
 
-  local dir = 'data/maps/' .. name .. '/'
+  local function dir(x) return 'data/maps/' .. name .. '/' .. x end
 
   self.props = {}
   self.tiles = {}
+  self.atlas = love.graphics.newImage(dir(name .. '.png'))
   
-  map = self
-  table.merge(safeLoad(dir .. name .. '.lua'), self)
-  local props = safeLoad(dir .. 'props.lua')
-  local tiles = safeLoad(dir .. 'tiles.lua')
-  map = nil
+  table.merge(safeLoad(dir(name .. '.lua')), self)
 
+  map = self
+  local props = safeLoad(dir('props.lua'))
+  local tiles = safeLoad(dir('tiles.lua'))
+  map = nil
+  
   table.merge(tiles, self.tiles)
   table.merge(props, self.props)
+
   self.props = table.map(self.props, function(prop)
     setmetatable(prop, {__index = data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
     f.exe(prop.activate, prop, self)
     return prop
   end)
 
-  self.atlas = love.graphics.newImage(dir .. name .. '.png')
-  self.batch = love.graphics.newSpriteBatch(self.atlas, #self.tiles + #self.props)
-
   self.textures = table.map(self.textures, function(tex)
     tex[5], tex[6] = self.atlas:getDimensions()
     return love.graphics.newQuad(unpack(tex))
   end)
 
+  self.batch = love.graphics.newSpriteBatch(self.atlas, #self.tiles + #self.props)
   self.batch:bind()
   self.batch:setColor(255, 255, 255)
   table.each(self.tiles, function(tile)
