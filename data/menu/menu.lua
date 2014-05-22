@@ -31,6 +31,8 @@ function Menu:keypressed(key)
   if key == 'escape' then love.event.quit()
   elseif key == 'backspace' then self:pop() end
   self.input:keypressed(key)
+  local page = self.pages[#self.pages]
+  f.exe(page.keypressed, page, key)
 end
 
 function Menu:textinput(char)

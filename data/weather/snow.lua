@@ -12,6 +12,7 @@ function Snow:init()
   self.image = data.media.graphics.effects.bgBlizzard
   self.image:setWrap('repeat', 'repeat')
   self.depth = 1
+  self.quad = love.graphics.newQuad(0, 0, love.graphics.getWidth(), love.graphics.getHeight(), self.image:getWidth(), self.image:getHeight())
 end
 
 function Snow:update()
@@ -32,9 +33,9 @@ function Snow:gui()
   
   for _, z in ipairs({64, 128, 256}) do
     local scale = 1 + (ctx.view:convertZ(z) / 500)
-    local quad = love.graphics.newQuad(x, y, love.graphics.getWidth(), love.graphics.getHeight(), self.image:getWidth(), self.image:getHeight())
 
-    love.graphics.draw(self.image, quad, 0, 0, 0, scale, scale)
+    self.quad:setViewport(x, y, love.graphics.getWidth(), love.graphics.getHeight())
+    love.graphics.draw(self.image, self.quad, 0, 0, 0, scale, scale)
     factor = factor + .1
   end
 end
