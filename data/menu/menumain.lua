@@ -12,17 +12,6 @@ function MenuMain:load()
   ctx.ribbon.margin = h(.1)
 end
 
-function MenuMain:mousepressed(x, y, button)
-  if button == 'l' then
-    local ribbon = ctx.ribbon:test(x, y)
-    
-    if ribbon == 1 then self:host()
-    elseif ribbon == 2 then self:join()
-    elseif ribbon == 3 then self:edit()
-    elseif ribbon == 4 then love.event.quit() end
-  end
-end
-
 function MenuMain:draw()
   local anchor = h(.3) + (h(.8) - h(.3)) / 2
 
@@ -33,6 +22,21 @@ function MenuMain:draw()
   g.printCenter('Join Game', w(.05), anchor - ctx.ribbon.margin * .5, false, true)
   g.printCenter('Editor', w(.05), anchor + ctx.ribbon.margin * .5, false, true)
   g.printCenter('Exit', w(.05), anchor + ctx.ribbon.margin * 1.5, false, true)
+end
+
+function MenuMain:keypressed(key)
+  if key == 'return' then self:host() end
+end
+
+function MenuMain:mousepressed(x, y, button)
+  if button == 'l' then
+    local ribbon = ctx.ribbon:test(x, y)
+    
+    if ribbon == 1 then self:host()
+    elseif ribbon == 2 then self:join()
+    elseif ribbon == 3 then self:edit()
+    elseif ribbon == 4 then love.event.quit() end
+  end
 end
 
 function MenuMain:host()

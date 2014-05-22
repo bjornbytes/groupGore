@@ -20,10 +20,8 @@ function MenuLogin:mousepressed(x, y, button)
   elseif ribbon == 3 then self:login() end
 end
 
-function MenuLogin:keyreleased(key)
-  if key == 'return' then
-    self:login()
-  end
+function MenuLogin:keypressed(key)
+  if key == 'return' then self:login() end
 end
 
 function MenuLogin:draw()
