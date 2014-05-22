@@ -4,6 +4,7 @@ local g = love.graphics
 
 function Hud:init()
   self.depth = -10000
+  self._debug = true
 
   self.players = HudPlayers()
   self.blood = HudBlood()
@@ -47,7 +48,7 @@ function Hud:gui()
   self.feed:draw()
   self.chat:draw()
   self:crosshair()
-  self.debug:draw()
+  if self._debug then self.debug:draw() end
 end
 
 function Hud:mousepressed(x, y, button)
@@ -64,7 +65,8 @@ end
 
 function Hud:keypressed(key)
   if self.chat:keypressed(key) then return true
-  elseif self.classSelect:keypressed(key) then return true end
+  elseif self.classSelect:keypressed(key) then return true
+  elseif key == '`' then self._debug = not self._debug end
 end
 
 function Hud:keyreleased(key)
