@@ -3,12 +3,9 @@ function love.run()
     love.math.setRandomSeed(os.time())
   end
 
-  tick = 0
   tickRate = .02
   tickDelta = 0
-  syncRate = .05
-  syncDelta = 0
-  interp = .1
+  interp = .2
   
   love.load(arg)
 
@@ -20,7 +17,6 @@ function love.run()
 
     tickDelta = tickDelta + delta
     while tickDelta >= tickRate do
-      tick = tick + 1
       tickDelta = tickDelta - tickRate
       
       love.event.pump()
@@ -32,18 +28,12 @@ function love.run()
       
       love.update()
     end
-
-    syncDelta = syncDelta + delta
-    if syncDelta >= syncRate then
-      love.sync()
-      syncDelta = 0
-    end
     
     love.graphics.clear()
     love.draw()
     love.graphics.present()
     
-    love.timer.sleep(.006)
+    love.timer.sleep(.001)
   end
 end
 

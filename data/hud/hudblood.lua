@@ -2,7 +2,7 @@ HudBlood = class()
 
 function HudBlood:draw()
   local p = ctx.players:get(ctx.id)
-  if p and p.active then
+  if p then
     local hp = math.lerp(ctx.hud.health.prevVal, ctx.hud.health.val, tickDelta / tickRate)
     local prc = hp / p.maxHealth
     local image = data.media.graphics.hud['hudBlood' .. 4 - math.floor(math.min(prc * 8, 3))]

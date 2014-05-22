@@ -91,10 +91,6 @@ function HudClassSelect:keypressed(key)
 end
 
 function HudClassSelect:mousepressed(x, y, button)
-  return self.active
-end
-
-function HudClassSelect:mousereleased(x, y, button)
   if self.active and button == 'l' then
     for i = 1, #data.class do
       if math.inside(x, y, w(.09) * i, h(.326), w(.08), w(.08)) then
@@ -112,15 +108,19 @@ function HudClassSelect:mousereleased(x, y, button)
       self.team = 1 - self.team
     elseif math.inside(x, y, w(.08), h(1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
       ctx.net:send(msgLeave)
-      Context:remove(ctx)
-      Context:add(Menu)
+      ctx.net.server:disconnect()
     elseif math.inside(x, y, w(.08), h(1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
       ctx.net:send(msgLeave)
+      ctx.net.server:disconnect()
       love.event.quit()
     end
   end
   
-  if self.active then return true end
+  return self.active
+end
+
+function HudClassSelect:mousereleased(x, y, button)
+  return self.active
 end
 
 function HudClassSelect:drawClassDetails(index)

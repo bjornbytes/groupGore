@@ -16,13 +16,13 @@ Adrenaline.drain = 20
 Adrenaline.rate = .5
 
 function Adrenaline:activate()
-  self.amount = self.owner.maxSpeed * .6
-  self.owner.maxSpeed = self.owner.maxSpeed + self.amount
+  self.amount = self.owner.class.speed * .6
+  self.owner.haste = self.owner.haste + self.amount
   self.hurtTimer = 0
 end
 
 function Adrenaline:deactivate()
-  self.owner.maxSpeed = self.owner.maxSpeed - self.amount
+  self.owner.haste = self.owner.haste - self.amount
 end
 
 function Adrenaline:update()

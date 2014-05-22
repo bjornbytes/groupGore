@@ -1,34 +1,27 @@
 Players = class()
+Players.max = 15
 
 function Players:init()
-  local tags = {
-    client = PlayerDummy,
-    server = PlayerServer
-  }
-  
   self.players = {}
   self.active = {}
-  self.history = {}
   
-  for i = 1, 16 do
-    self.players[i] = Player:create()
+  for i = 1, self.max do
+    self.players[i] = ctx.tag == 'server' and PlayerServer() or PlayerDummy()
     self.players[i].id = i
-    self.history[i] = {}
-    setmetatable(self.players[i], {__index = tags[ctx.tag]})
   end
   
   ctx.event:on(evtLeave, function(data)
     self:deactivate(data.id)
   end)
   
+  ctx.event:on(evtClass, function(data)
+    self:setClass(data.id, data.class, data.team)
+  end)
+  
   ctx.event:on(evtFire, function(data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
-  end)
-  
-  ctx.event:on(evtClass, function(data)
-    self:setClass(data.id, data.class, data.team)
   end)
   
   ctx.event:on(evtDamage, function(data)
@@ -41,8 +34,7 @@ function Players:init()
   end)
   
   ctx.event:on(evtDead, function(data)
-    local p = self:get(data.id)
-    p:die()
+    local p = self:get(data.id):die()
   end)
   
   ctx.event:on(evtSpawn, function(data)
@@ -53,93 +45,38 @@ function Players:init()
 end
 
 function Players:activate(id)
-  self.players[id].active = true
   if ctx.view then ctx.view:register(self.players[id]) end
-  self:refresh()
+  ctx.event:emit('collision.attach', {object = self.players[id]})
+  table.insert(self.active, id)
 end
 
 function Players:deactivate(id)
-  self.players[id].active = false
-  self.players[id]:deactivate()
   if ctx.view then ctx.view:unregister(self.players[id]) end
-  self:refresh()
+  ctx.event:emit('collision.detach', {object = self.players[id]})
+  for i = 1, self.max do
+    if self.active[i] == id then table.remove(self.active, i) break end
+  end
 end
 
 function Players:get(id, t)
-  if not id then return end
-  t = t or tick
-  local f = math.floor(t)
-    if t ~= f then
-    local prev = self.history[id][f]
-    local cur = self.history[id][math.ceil(t)]
-    if cur and prev then
-      return table.interpolate(prev, cur, t - f)
-    end
-    return nil
-  end
-  return t == tick and self.players[id] or self.history[id][t]
+  return self.players[id]:get(t or tick)
 end
 
-function Players:with(ps, fn)
-  if type(ps) == 'number' then
-    fn(self:get(ps))
-  elseif type(ps) == 'table' then
-    for _, id in ipairs(ps) do
-      fn(self:get(id))
-    end
-  elseif type(ps) == 'function' then
-    for id, _ in pairs(table.filter(self.players, ps)) do
-      fn(self:get(id))
-    end
+function Players:each(fn)
+  for i = 1, #self.active do
+    fn(self:get(self.active[i]))
   end
 end
 
 function Players:update()
-  self:with(self.active, f.ego('update'))
-  self:with(self.active, function(p)
-    self.history[p.id][tick] = p:copy()
-    self.history[p.id][tick - math.round(interp / tickRate + 10)] = nil
-  end)
+  self:each(f.ego('update'))
 end
-
-local function mouseHandler(self, x, y, b)
-  if not ctx.id then return end
-  local p = self:get(ctx.id)
-  if not p.active then return end
-  f.exe(p.mouseHandler, p, x, y, b)
-end
-Players.mousepressed = mouseHandler
-Players.mousereleased = mouseHandler
-
-local function keyHandler(self, key)
-  if not ctx.id then return end
-  local p = self:get(ctx.id)
-  if not p.active then return end
-  f.exe(p.keyHandler, p, key)
-end
-Players.keypressed = keyHandler
-Players.keyreleased = keyHandler
 
 function Players:setClass(id, class, team)
-  local p = self:get(id)
-  if not p.active then self:activate(id) end
+  local p = self.players[id]
+  if not table.has(self.active, id) then self:activate(id) end
   p.class = data.class[class]
   p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
   p:activate()
-end
-
-function Players:refresh()
-  table.clear(self.active)
-  for i = 1, 16 do
-    if self.players[i].active then
-      table.insert(self.active, i)
-    end
-  end
-end
-
-function Players:reset()
-  Players:with(self.active, function(p)
-    p:activate()
-  end)
 end

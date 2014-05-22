@@ -33,7 +33,7 @@ function Knife:update()
 end
 
 function Knife:draw()
-  local alpha = 255 * (self.hp / Knife.hp) * self.owner.visible
+  local alpha = 255 * (self.hp / Knife.hp) * self.owner.alpha
   love.graphics.setColor(self.target and {0, 255, 0, alpha * (100 / 255)} or {255, 0, 0, alpha * (100 / 255)})
   love.graphics.circle('fill', self.x, self.y, 12)
   love.graphics.setColor(self.target and {0, 255, 0, alpha} or {255, 0, 0, alpha})
