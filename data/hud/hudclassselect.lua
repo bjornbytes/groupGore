@@ -108,10 +108,10 @@ function HudClassSelect:mousepressed(x, y, button)
       self.team = 1 - self.team
     elseif math.inside(x, y, w(.08), h(1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
       ctx.net:send(msgLeave)
-      Context:remove(ctx)
-      Context:add(Menu)
+      ctx.net.server:disconnect()
     elseif math.inside(x, y, w(.08), h(1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
       ctx.net:send(msgLeave)
+      ctx.net.server:disconnect()
       love.event.quit()
     end
   end

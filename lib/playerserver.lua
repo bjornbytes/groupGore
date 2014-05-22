@@ -3,6 +3,7 @@ PlayerServer = extend(Player)
 function PlayerServer:activate()
   self.shields = {}
 
+  self.lastHurt = tick
   self.hurtHistory = {}
   self.helpHistory = {}
   

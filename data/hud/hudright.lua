@@ -11,7 +11,7 @@ function HudRight:draw()
   g.draw(data.media.graphics.hud.right, w(.80375), -h(.01))
   
   local p = ctx.players:get(ctx.id)
-  if p and p.active then
+  if p then
     g.setFont('BebasNeue', h(.052))
     
     if p.team == purple then love.graphics.setColor(190, 160, 220)

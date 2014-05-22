@@ -11,7 +11,7 @@ function HudLeft:draw()
   g.draw(data.media.graphics.hud.left, -w(.08), -h(.013))
   
   local p = ctx.players:get(ctx.id)
-  if p and p.active then
+  if p then
     local clip = tostring(p.slots[p.weapon].currentClip)
     local ammo = tostring(p.slots[p.weapon].currentAmmo)
     

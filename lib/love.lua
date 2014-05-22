@@ -5,8 +5,6 @@ function love.run()
 
   tickRate = .02
   tickDelta = 0
-  syncRate = .05
-  syncDelta = 0
   interp = .2
   
   love.load(arg)
@@ -29,12 +27,6 @@ function love.run()
       end
       
       love.update()
-    end
-
-    syncDelta = syncDelta + delta
-    if syncDelta >= syncRate then
-      love.sync()
-      syncDelta = 0
     end
     
     love.graphics.clear()

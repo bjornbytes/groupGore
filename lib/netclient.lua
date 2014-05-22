@@ -57,7 +57,6 @@ function NetClient:connect(event)
 end
 
 function NetClient:disconnect(event)
-  ctx.id = nil
   Context:remove(ctx)
   Context:add(Menu)
 end

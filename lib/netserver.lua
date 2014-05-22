@@ -39,13 +39,7 @@ NetServer.receive[msgJoin] = function(self, event)
   self:snapshot(event.peer)
 end
 
-NetServer.receive[msgLeave] = function(self, event)
-  local pid = self.peerToPlayer[event.peer]
-  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
-  self:emit(evtLeave, {id = pid, reason = 'left'})
-  self.peerToPlayer[event.peer] = nil
-  event.peer:disconnect_now()
-end
+NetServer.receive[msgLeave] = function(self, event) self:disconnect(event) end
 
 NetServer.receive[msgClass] = function(self, event)
   self:emit(evtClass, {id = self.peerToPlayer[event.peer], class = event.data.class, team = event.data.team})
@@ -82,6 +76,15 @@ end
 
 function NetServer:connect(event)
   self.peerToPlayer[event.peer] = self:nextPlayerId()
+end
+
+function NetServer:disconnect(event)
+  print('leaving')
+  local pid = self.peerToPlayer[event.peer]
+  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
+  self:emit(evtLeave, {id = pid, reason = 'left'})
+  self.peerToPlayer[event.peer] = nil
+  event.peer:disconnect_now()
 end
 
 function NetServer:send(msg, peer, data)

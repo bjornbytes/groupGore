@@ -12,7 +12,7 @@ end
 
 function HudHealth:update()
   local p = ctx.players:get(ctx.id)
-  if p and p.active then
+  if p then
     self.prevVal = self.val
     self.val = math.lerp(self.val, p.health, math.min(10 * tickRate, 1))
   end
@@ -39,7 +39,7 @@ function HudHealth:draw()
     love.graphics.translate(0, ctx.view.margin)
   end)
   
-  if p and p.active then
+  if p then
     local s = w(.4775) / 382
     local x = w(.5) - (self.canvas:getWidth() * s * .5)
     g.setColor(255, 255, 255, 90)

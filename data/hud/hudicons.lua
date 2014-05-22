@@ -14,7 +14,7 @@ end
 
 function HudIcons:update()
   local p = ctx.players:get(ctx.id)
-  if p and p.active then
+  if p then
     for i = 1, 5 do
       self.prevLabelAlphas[i] = self.labelAlphas[i]
       if p.weapon == i or p.skill == i then
@@ -30,7 +30,7 @@ end
 
 function HudIcons:draw()
   local p = ctx.players:get(ctx.id)
-  if p and p.active then
+  if p then
     local width = data.media.graphics.icons[p.slots[1].code]:getWidth()
     local s = g.minUnit(.08) / width
     for i = 1, 5 do

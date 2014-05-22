@@ -20,22 +20,24 @@ end
 
 function HudFeed:draw()
   g.setFont('pixel', 8)
+  local font = g.getFont()
   local alpha = math.min(self.alpha, 1)
   for i = 1, #self.entries do
     local k = self.entries[i]
-    g.setColor(0, 0, 0, 200 * alpha)
-    g.rectangle('fill', k.x, k.y, w(.14), h(.05))
-
-    local yy = h(.025) - (g.getFont():getHeight() / 2)
     local killer = ctx.players:get(k.kill)
+    local victim = ctx.players:get(k.id)
+    local width = math.max(w(.14), font:getWidth(killer.username) + font:getWidth(victim.username) + 24)
+    g.setColor(0, 0, 0, 200 * alpha)
+    g.rectangle('fill', k.x, k.y, width, h(.05))
+
+    local yy = h(.025) - (font:getHeight() / 2)
     if killer.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
     g.print(killer.username, k.x + 8, k.y + yy)
 
-    local victim = ctx.players:get(k.id)
     if victim.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
-    g.print(victim.username, k.x + w(.14) - g.getFont():getWidth(victim.username) - 9, k.y + yy)
+    g.print(victim.username, k.x + width - font:getWidth(victim.username) - 9, k.y + yy)
   end
 end
 
@@ -46,7 +48,11 @@ function HudFeed:insert(data)
   local t = table.copy(data)
   t.x = w()
   t.y = -h(.05)
-  t.targetX = w() - w(.14) - 4
+  g.setFont('pixel', 8)
+  local font = g.getFont()
+  local u1, u2 = ctx.players:get(data.kill).username, ctx.players:get(data.id).username
+  local width = math.max(w(.14), font:getWidth(u1) + font:getWidth(u2) + 24)
+  t.targetX = w() - width - 4
   t.targetY = 4 + h(.07)
   table.insert(self.entries, t)
   self.alpha = 4

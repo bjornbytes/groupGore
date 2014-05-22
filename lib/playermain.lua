@@ -4,8 +4,9 @@ function PlayerMain:activate()
   self.prev = setmetatable({}, {__index = self})
   self.inputs = {}
 
-  self.visible = 1
+  self.alpha = 1
   
+  self.lastHurt = tick
   self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
   self.heartbeatSound:pause()
 
@@ -79,7 +80,7 @@ function PlayerMain:trace(data)
   self.health, self.shield = data.health, data.shield
 
   -- Discard inputs before the ack.
-  while self.inputs[1].tick < data.ack + 1 do
+  while #self.inputs > 0 and self.inputs[1].tick < data.ack + 1 do
     table.remove(self.inputs, 1)
   end
  
@@ -121,14 +122,18 @@ function PlayerMain:fade()
   end
 
   ctx.players:each(function(p)
-    if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
-    else p.visible = math.min(p.visible + tickRate, 1) end
+    if shouldFade(p) then p.alpha = math.max(p.alpha - tickRate, 0)
+    else p.alpha = math.min(p.alpha + tickRate, 1) end
   end)
 end
 
 function PlayerMain:drawPosition()
   local p = table.interpolate(self.prev, self, tickDelta / tickRate)
   return p.x, p.y
+end
+
+function PlayerMain:hurt()
+  self.lastHurt = tick
 end
 
 function PlayerMain:die()

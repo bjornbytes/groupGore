@@ -46,16 +46,16 @@ function Players:init()
 end
 
 function Players:activate(id)
-  self.players[id].active = true
   if ctx.view then ctx.view:register(self.players[id]) end
-  self:refresh()
+  table.insert(self.active, id)
 end
 
 function Players:deactivate(id)
-  self.players[id].active = false
   self.players[id]:deactivate()
   if ctx.view then ctx.view:unregister(self.players[id]) end
-  self:refresh()
+  for i = 1, self.max do
+    if self.active[i] == id then table.remove(self.active, i) break end
+  end
 end
 
 function Players:get(id, t)
@@ -73,44 +73,11 @@ function Players:update()
   self:each(f.ego('update'))
 end
 
-local function mouseHandler(self, x, y, b)
-  if not ctx.id then return end
-  local p = self:get(ctx.id)
-  if not p.active then return end
-  f.exe(p.mouseHandler, p, x, y, b)
-end
-Players.mousepressed = mouseHandler
-Players.mousereleased = mouseHandler
-
-local function keyHandler(self, key)
-  if not ctx.id then return end
-  local p = self:get(ctx.id)
-  if not p.active then return end
-  f.exe(p.keyHandler, p, key)
-end
-Players.keypressed = keyHandler
-Players.keyreleased = keyHandler
-
 function Players:setClass(id, class, team)
   local p = self.players[id]
-  if not p.active then self:activate(id) end
+  if not table.has(self.active, id) then self:activate(id) end
   p.class = data.class[class]
   p.team = team
   for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
   p:activate()
-end
-
-function Players:refresh()
-  table.clear(self.active)
-  for i = 1, self.max do
-    if self.players[i].active then
-      table.insert(self.active, i)
-    end
-  end
-end
-
-function Players:reset()
-  Players:with(self.active, function(p)
-    p:activate()
-  end)
 end
