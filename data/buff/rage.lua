@@ -28,7 +28,7 @@ function Rage:deactivate()
 end
 
 function Rage:draw()
-  love.graphics.setColor(255, 0, 0, 100 * self.alpha)
+  love.graphics.setColor(255, 0, 0, 100 * self.alpha * self.owner.alpha)
   local owner = self.owner
   local x, y = owner:drawPosition()
   love.graphics.draw(owner.class.sprite, x, y, owner.angle, 1 + (.25 * self.alpha), 1 + (.25 * self.alpha), owner.class.anchorx, owner.class.anchory)
