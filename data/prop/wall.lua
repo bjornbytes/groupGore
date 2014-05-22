@@ -7,7 +7,21 @@ Wall.collision.shape = 'rectangle'
 Wall.collision.static = true
 Wall.collision.tag = 'wall'
 
-Wall.activate = function(self, map)
+local function perim(x, y, l, t, w, h)
+  local r, b = l + w, t + h
+
+  x, y = math.clamp(x, l, r), math.clamp(y, t, b)
+
+  local dl, dr, dt, db = math.abs(x - l), math.abs(x - r), math.abs(y - t), math.abs(y - b)
+  local m = math.min(dl, dr, dt, db)
+
+  if m == dt then return x, t end
+  if m == db then return x, b end
+  if m == dl then return l, y end
+  return r, y
+end
+
+function Wall:activate(map)
   ctx.event:emit('collision.attach', {object = self})
 
   self.image = data.media.graphics.map[map.wallTexture]
@@ -52,24 +66,12 @@ Wall.activate = function(self, map)
   self.meshY = self.y
 
   self.depth = -5
+  if ctx.view then ctx.view:register(self) end
 end
 
-Wall.update = function(self)
-  local function perim(x, y, l, t, w, h)
-    local r, b = l + w, t + h
-
-    x, y = math.clamp(x, l, r), math.clamp(y, t, b)
-
-    local dl, dr, dt, db = math.abs(x - l), math.abs(x - r), math.abs(y - t), math.abs(y - b)
-    local m = math.min(dl, dr, dt, db)
-
-    if m == dt then return x, t end
-    if m == db then return x, b end
-    if m == dl then return l, y end
-    return r, y
-  end
-
+function Wall:update()
   if ctx.view then
+    if not self:inView() then return end
     local x1, y1 = ctx.view.x + ctx.view.w / 2, ctx.view.y + ctx.view.h / 2
     local x2, y2 = perim(x1, y1, self.x, self.y, self.width, self.height)
     self.depth = math.clamp(math.distance(x1, y1, x2, y2) * ctx.view.scale - 1000, -4096, -16)
@@ -80,7 +82,9 @@ Wall.update = function(self)
   end
 end
 
-Wall.draw = function(self)
+function Wall:draw()
+  if not self:inView() then return end
+
   local v = ctx.view
   local ulx, uly = v:three(self.x, self.y, self.z)
   local urx, ury = v:three(self.x + self.width, self.y, self.z)
@@ -130,7 +134,13 @@ Wall.draw = function(self)
   end
 end
 
-Wall.updateMesh = function(self)
+function Wall:inView()
+  local x, y, w, h = self.x, self.y, self.width, self.height
+  local v = ctx.view
+  return x + w >= v.x and x <= v.x + v.w and y + h >= v.y and y <= v.y + v.h
+end
+
+function Wall:updateMesh()
   local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
 
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
@@ -149,7 +159,7 @@ Wall.updateMesh = function(self)
   self.meshY = self.y
 end
 
-Wall.__tostring = function(self)
+function Wall:__tostring()
   return [[{
     kind = 'wall',
     x = ]] .. self.x .. [[,

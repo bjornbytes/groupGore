@@ -9,6 +9,7 @@ Tree.collision.static = true
 Tree.activate = function(self, map)
   ctx.event:emit('collision.attach', {object = self})
   self.depth = -5
+  if ctx.view then ctx.view:register(self) end
 end
 
 Tree.update = function(self)

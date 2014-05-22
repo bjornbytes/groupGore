@@ -6,10 +6,17 @@ local industria = {}
 industria.name = 'Industria'
 industria.width = 2432
 industria.height = 3320
-industria.background = data.media.graphics.map.snow
 industria.wallTexture = 'wallSnow'
 industria.weather = 'snow'
 
+----------------
+-- Textures
+----------------
+industria.textures = {
+  background = {1, 1, 256, 256},
+  wall = {259, 1, 64, 64},
+  metal = {259, 67, 64, 64}
+}
 
 ----------------
 -- Spawn Points
