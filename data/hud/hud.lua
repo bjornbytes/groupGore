@@ -46,6 +46,7 @@ function Hud:gui()
   self.buffs:draw()
   self.feed:draw()
   self.chat:draw()
+  self:crosshair()
   self.debug:draw()
 end
 
@@ -81,4 +82,17 @@ function Hud:connecting()
   if tick > (6 / tickRate) + 10 then str = str .. ' oshit' end
   if tick > 10 / tickRate then str = str .. '\n' str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3)) end
   g.printf(str, 0, math.floor(g.height() / 2 - g.height(.02)), g.getWidth(), 'center')]]
+end
+
+function Hud:crosshair()
+  local p = ctx.players:get(ctx.id)
+  if p then
+    local weapon = p.slots[p.weapon]
+    if weapon.crosshair then
+      if love.mouse.isVisible() then love.mouse.setVisible(false) end
+      weapon:crosshair()
+    else
+      if not love.mouse.isVisible() then love.mouse.setVisible(true) end
+    end
+  end
 end

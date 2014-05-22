@@ -20,9 +20,11 @@ Shotgun.activate = function(self)
   
   self.len = 600
   self.bullets = {}
-  
-  for i = self.owner.angle - data.weapon.shotgun.spread, self.owner.angle + data.weapon.shotgun.spread + (.001), (2 * data.weapon.shotgun.spread / (data.weapon.shotgun.count - 1)) do
-    local ang, len = i, self.len    
+
+  local spread = data.weapon.shotgun.spread / (data.weapon.shotgun.count - 1)
+  local initial = self.owner.angle - spread * ((data.weapon.shotgun.count - 1) / 2)
+  for i = 1, data.weapon.shotgun.count do
+    local ang, len = initial + ((i - 1) * spread), self.len
     local hit, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {tag = 'wall', first = true})
     len = hit and d or len
     

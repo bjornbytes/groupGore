@@ -18,12 +18,24 @@ Shotgun.fireSpeed = .65
 Shotgun.reloadSpeed = 2
 Shotgun.clip = 4
 Shotgun.ammo = 16
-Shotgun.spread = .06
+Shotgun.spread = math.rad(12)
 Shotgun.recoil = 6
 Shotgun.count = 4
 Shotgun.anchorx = 14
 Shotgun.anchory = 4
 Shotgun.tipx = 29
 Shotgun.tipy = 0
+
+----------------
+-- Crosshair
+----------------
+function Shotgun:crosshair()
+  local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
+  local vx, vy = ctx.view:mouseX(), ctx.view:mouseY()
+  local d = math.distance(p.x, p.y, vx, vy)
+  local alpha = 50 + ((300 - math.clamp(d - 200, 0, 300)) / 300) * 205
+  g.setColor(255, 255, 255, alpha)
+  g.circle('line', x, y, math.abs(math.atan(self.spread) / 2) * math.distance(p.x, p.y, vx, vy))
+end
 
 return Shotgun

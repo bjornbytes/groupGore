@@ -16,6 +16,7 @@ end
 function HudClassSelect:update()
   self.angle = (self.angle + .65 * tickRate) % (2 * math.pi)
   if ctx.id and not ctx.players:get(ctx.id).active then self.active = true end
+  if not love.mouse.isVisible() then love.mouse.setVisible(true) end
 end
 
 function HudClassSelect:draw()
