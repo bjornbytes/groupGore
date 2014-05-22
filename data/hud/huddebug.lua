@@ -6,6 +6,7 @@ local w, h = g.width, g.height
 function HudDebug:draw()
   g.setColor(255, 255, 255, 100)
   local debug = love.timer.getFPS() .. 'fps'
+  debug = debug .. ', tick' .. math.round(tick / 10) * 10
   if ctx.net.server then
     debug = debug .. ', ' .. ctx.net.server:round_trip_time() .. 'ms'
     debug = debug .. ', ' .. math.floor(ctx.net.host:total_sent_data() / 1000 + .5) .. 'tx'

@@ -1,26 +1,12 @@
-PlayerMain = {}
-setmetatable(PlayerMain, {__index = Player})
+PlayerMain = extend(Player)
 
 function PlayerMain:activate()
-  self.input = {}
+  self.prev = setmetatable({}, {__index = self})
+  self.inputs = {}
+
+  self.alpha = 1
   
-  self.input.w = false
-  self.input.a = false
-  self.input.s = false
-  self.input.d = false
-  
-  self.input.mx = 0
-  self.input.my = 0
-  self.input.l = false
-  self.input.r = false
-  
-  self.input.weapon = 1
-  self.input.skill = 1
-  while self.slots[self.input.skill].type ~= 'skill' do self.input.skill = self.input.skill + 1 end
-  self.input.reload = false
-  
-  self.visible = 1
-  
+  self.lastHurt = tick
   self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
   self.heartbeatSound:pause()
 
@@ -29,21 +15,26 @@ function PlayerMain:activate()
   Player.activate(self)
 end
 
-function PlayerMain:deactivate()
-  self.input = nil
-
-  ctx.view:setTarget(nil)
-  
-  Player.deactivate(self)
+function PlayerMain:get(t)
+  assert(t == tick or t == tick - 1)
+  if t == tick then
+    return self
+  else
+    return self.prev
+  end
 end
 
 function PlayerMain:update()
   if self.ded then return end
   
-  self:poll()
-  self:move()
-  self:turn()
-  self:slot()
+  self.prev.x = self.x
+  self.prev.y = self.y
+  self.prev.angle = self.angle
+
+  local input = self:readInput()
+  self:move(input)
+  self:turn(input)
+  self:slot(input)
   self:fade()
   
   if self.health < self.maxHealth * .5 then
@@ -53,27 +44,52 @@ function PlayerMain:update()
   elseif not self.heartbeatSound:isPaused() then
     self.heartbeatSound:pause()
   end
-  
-  ctx.net:buffer(msgInput, table.merge({tick = tick}, table.copy(self.input)))
-
-  Player.update(self)
+ 
+  ctx.net:buffer(msgInput, self.inputs[#self.inputs])
 end
 
 function PlayerMain:draw()
   if self.ded then return end
-
-  local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
-  if p then Player.draw(p) end
+  Player.draw(table.interpolate(self.prev, self, tickDelta / tickRate))
 end
 
-function PlayerMain:drawPosition()
-  local p = ctx.players:get(self.id, tick - 1 + tickDelta / tickRate)
-  if p then return p.x, p.y end
-  return 0, 0
+function PlayerMain:trace(data)
+  self.x, self.y = data.x, data.y
+  self.health, self.shield = data.health, data.shield
+
+  -- Discard inputs before the ack.
+  while #self.inputs > 0 and self.inputs[1].tick < data.ack + 1 do
+    table.remove(self.inputs, 1)
+  end
+ 
+  -- Server reconciliation: Apply inputs that occurred after the ack.
+  for i = 1, #self.inputs do
+    self:move(self.inputs[i])
+  end
 end
 
-function PlayerMain:poll()
-  self.input.mx, self.input.my = ctx.view:mouseX(), ctx.view:mouseY()
+function PlayerMain:readInput()
+  assert(not self.inputs[tick])
+  local t = {tick = tick}
+  
+  for _, k in pairs({'w', 'a', 's', 'd'}) do
+    t[k] = love.keyboard.isDown(k)
+  end
+  
+  t.x = ctx.view:mouseX()
+  t.y = ctx.view:mouseY()
+  t.l = love.mouse.isDown('l')
+  t.r = love.mouse.isDown('r')
+
+  for i = 1, 5 do
+    if love.keyboard.isDown(tostring(i)) then t.slot = i break end
+  end
+
+  t.reload = love.keyboard.isDown('r')
+
+  table.insert(self.inputs, t)
+
+  return t
 end
 
 function PlayerMain:fade()
@@ -82,69 +98,23 @@ function PlayerMain:fade()
     if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
     return ctx.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
   end
-  ctx.players:with(ctx.players.active, function(p)
-    if shouldFade(p) then p.visible = math.max(p.visible - tickRate, 0)
-    else p.visible = math.min(p.visible + tickRate, 1) end
+
+  ctx.players:each(function(p)
+    if shouldFade(p) then p.alpha = math.max(p.alpha - tickRate, 0)
+    else p.alpha = math.min(p.alpha + tickRate, 1) end
   end)
+end
+
+function PlayerMain:drawPosition()
+  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
+  return p.x, p.y
+end
+
+function PlayerMain:hurt()
+  self.lastHurt = tick
 end
 
 function PlayerMain:die()
   self.heartbeatSound:pause()
   Player.die(self)
-end
-
-function PlayerMain:keyHandler(key)
-  if key == 'w' or key == 'a' or key == 's' or key == 'd' then
-    self.input[key] = love.keyboard.isDown(key)
-  elseif key == 'r' then
-    self.input.reload = love.keyboard.isDown(key)
-  elseif key:match('^[1-5]$') and love.keyboard.isDown(key) then
-    key = tonumber(key)
-    local slotType = self.slots[key].type
-    if self.input[slotType] ~= key then self.input[slotType] = key end
-  end
-end
-
-function PlayerMain:mouseHandler(x, y, button)
-  self.input[button] = love.mouse.isDown(button)
-end
-
-function PlayerMain:trace(data)
-  local p
-  local t = data.tick
-  local ack = data.ack
-  data.tick = nil
-  data.ack = nil
-  data.id = nil
-  data.angle = nil
-
-  self.health = data.health or self.health
-  self.shield = data.shield or self.shield
-  
-  local state = self:copy()
-  if not state then return end
-  
-  table.merge(data, state)
-  
-  for i = ack + 1, tick - 1 do
-    p = ctx.players:get(self.id, i)
-    if p then
-      state.input = p.input
-      state:move()
-      ctx.collision:resolve(state)
-    end
-  end
-  
-  p = ctx.players:get(self.id, tick - 1)
-  if p then
-    table.merge({x = state.x, y = state.y}, p)
-  end
-  
-  table.merge({x = state.x, y = state.y}, self)
-end
-
-function PlayerMain:copy()
-  return table.merge({
-    input = table.copy(self.input)
-  }, Player.copy(self))
 end

@@ -27,3 +27,7 @@ end
 function Spells:draw()
   table.with(self.spells, 'draw')
 end
+
+function Spells:post()
+  table.with(self.spells, 'post')
+end

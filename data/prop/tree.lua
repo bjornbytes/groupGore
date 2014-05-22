@@ -18,7 +18,6 @@ Tree.update = function(self)
 end
 
 Tree.draw = function(self)
-  love.graphics.reset()
   local x, y = ctx.view:three(self.x, self.y, 100)
   local image = data.media.graphics.map.tree
   if ctx.id and ctx.players:get(ctx.id) and ctx.players:get(ctx.id).active then

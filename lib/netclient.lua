@@ -7,9 +7,9 @@ NetClient.signatures[msgClass] = {{'class', '4bits'}, {'team', '1bit'}}
 NetClient.signatures[msgInput] = {
   {'tick', '16bits'},
   {'w', 'bool'}, {'a', 'bool'}, {'s', 'bool'}, {'d', 'bool'},
-  {'mx', '12bits'}, {'my', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
-  {'weapon', '3bits'}, {'skill', '3bits'}, {'reload', 'bool'}
-  --delta = {{'w', 'a', 's', 'd'}, 'mx', 'my', 'weapon', 'l', 'r', 'skill', 'reload'}
+  {'x', '12bits'}, {'y', '12bits'}, {'l', 'bool'}, {'r', 'bool'},
+  {'slot', '3bits'}, {'reload', 'bool'},
+  delta = {{'w', 'a', 's', 'd'}, {'x', 'y'}, 'l', 'r', 'slot', 'reload'}
 }
 NetClient.signatures[msgChat] = {{'message', 'string'}}
 
@@ -22,8 +22,7 @@ NetClient.receive[msgJoin] = function(self, event)
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
-  --tick = event.data.tick + math.round(self.server:round_trip_time() / 2 / 1000 / tickRate)
-  tick = event.data.tick
+  ctx.tick = event.data.tick
   --ctx.map:load(event.data.map)
   for i = 1, #event.data.players do
     local p = event.data.players[i]
@@ -58,7 +57,6 @@ function NetClient:connect(event)
 end
 
 function NetClient:disconnect(event)
-  ctx.id = nil
   Context:remove(ctx)
   Context:add(Menu)
 end
@@ -72,7 +70,9 @@ function NetClient:send(msg, data)
 end
 
 function NetClient:buffer(msg, data)
-  table.insert(self.messageBuffer, {msg, data})
+  --table.insert(self.messageBuffer, {msg, data})
+  --self:sync()
+  table.insert(self.messageBuffer, {msg, data, tick})
   self:sync()
 end
 
@@ -80,13 +80,15 @@ function NetClient:sync()
   if #self.messageBuffer == 0 then return end
   
   self.outStream:clear()
-  
-  while #self.messageBuffer > 0 do
-    self:pack(unpack(self.messageBuffer[1]))
+ 
+  while #self.messageBuffer > 0 and (tick - self.messageBuffer[1][3]) * tickRate >= .000 do
+    local msg, data, tick = unpack(self.messageBuffer[1])
+    self:pack(msg, data)
     table.remove(self.messageBuffer, 1)
   end
-  
-  self.server:send(tostring(self.outStream))
+ 
+  local res = tostring(self.outStream)
+  if #res > 0 then self.server:send(res) end
 end
 
 NetClient.emit = f.empty

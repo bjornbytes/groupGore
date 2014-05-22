@@ -13,7 +13,9 @@ NetServer.signatures[evtSync] = {
   {'angle', '10bits'},
   {'health', '10bits'},
   {'shield', '10bits'},
-  --delta = {'x', 'y', 'angle', 'health', 'shield'}
+  {'weapon', '3bits'},
+  {'skill', '3bits'},
+  delta = {'x', 'y', 'angle', 'health', 'shield', 'weapon', 'skill'}
 }
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
@@ -39,13 +41,7 @@ NetServer.receive[msgJoin] = function(self, event)
   self:snapshot(event.peer)
 end
 
-NetServer.receive[msgLeave] = function(self, event)
-  local pid = self.peerToPlayer[event.peer]
-  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
-  self:emit(evtLeave, {id = pid, reason = 'left'})
-  self.peerToPlayer[event.peer] = nil
-  event.peer:disconnect_now()
-end
+NetServer.receive[msgLeave] = function(self, event) self:disconnect(event) end
 
 NetServer.receive[msgClass] = function(self, event)
   self:emit(evtClass, {id = self.peerToPlayer[event.peer], class = event.data.class, team = event.data.team})
@@ -74,7 +70,7 @@ end
 
 function NetServer:quit()
   if self.host then
-    for i = 1, 16 do
+    for i = 1, ctx.players.max do
       if self.host:get_peer(i) then self.host:get_peer(i):disconnect_now() end
     end
   end
@@ -84,6 +80,15 @@ function NetServer:connect(event)
   self.peerToPlayer[event.peer] = self:nextPlayerId()
 end
 
+function NetServer:disconnect(event)
+  print('leaving')
+  local pid = self.peerToPlayer[event.peer]
+  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
+  self:emit(evtLeave, {id = pid, reason = 'left'})
+  self.peerToPlayer[event.peer] = nil
+  event.peer:disconnect_now()
+end
+
 function NetServer:send(msg, peer, data)
   self.outStream:clear()
   self:pack(msg, data)
@@ -91,7 +96,7 @@ function NetServer:send(msg, peer, data)
 end
 
 function NetServer:emit(evt, data)
-  table.insert(self.eventBuffer, {evt, data})
+  table.insert(self.eventBuffer, {evt, data, tick})
   ctx.event:emit(evt, data)
 end
 
@@ -100,8 +105,9 @@ function NetServer:sync()
   
   self.outStream:clear()
   
-  while #self.eventBuffer > 0 do
-    self:pack(unpack(self.eventBuffer[1]))
+  while #self.eventBuffer > 0 and (tick - self.eventBuffer[1][3]) * tickRate >= .000 do
+    local msg, data, tick = unpack(self.eventBuffer[1])
+    self:pack(msg, data)
     table.remove(self.eventBuffer, 1)
   end
 
@@ -110,13 +116,13 @@ end
 
 function NetServer:snapshot(peer)
   local players = {}
-  for id = 1, 16 do
+  for id = 1, ctx.players.max do
     local p = ctx.players:get(id)
     if #p.username > 0 and id ~= self.peerToPlayer[peer] then
       table.insert(players, {
         id = id,
         username = p.username,
-        class = p.active and p.class.id or 0,
+        class = p.class and p.class.id or 0,
         team = p.team or 0,
       })
     end
@@ -125,7 +131,7 @@ function NetServer:snapshot(peer)
 end
 
 function NetServer:nextPlayerId()
-  for i = 1, 16 do
+  for i = 1, ctx.players.max do
     if #ctx.players:get(i).username == 0 then return i end
   end
 end

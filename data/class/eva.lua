@@ -7,7 +7,6 @@ Eva.code = 'eva'
 ----------------
 Eva.health = 180
 Eva.speed  = 195
-Eva.size = 18
 
 
 ----------------
