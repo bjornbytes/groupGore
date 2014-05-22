@@ -17,6 +17,8 @@ function PlayerServer:get(t)
 end
 
 function PlayerServer:update()
+  if self.ded then return end
+
   self:time()  
   self:logic()
   
@@ -48,9 +50,12 @@ function PlayerServer:trace(data, ping)
     end)]]
 
     self.ack = data.tick
-    self:move(data)
-    self:turn(data)
-    self:slot(data)
+    
+    if not self.ded then
+      self:move(data)
+      self:turn(data)
+      self:slot(data)
+    end
 
     -- sync
     local msg = {}
@@ -95,9 +100,11 @@ function PlayerServer:hurt(data)
   while #self.hurtHistory > 0 and self.hurtHistory[1].tick < tick - (10 / tickRate) do
     table.remove(self.hurtHistory, 1)
   end
+  
   table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount, from = data.from})
   target.health = math.max(target.health - data.amount, 0)
   self.lastHurt = data.tick
+
   if target.health <= 0 then
     if target == self then
       self.ded = 5

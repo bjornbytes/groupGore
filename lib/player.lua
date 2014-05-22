@@ -54,6 +54,8 @@ end
 function Player:activate()
   self.x = ctx.map.spawn[self.team].x
   self.y = ctx.map.spawn[self.team].y
+
+  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
   
   for i = 1, 5 do
     f.exe(self.slots[i].activate, self, self.slots[i])
@@ -64,36 +66,18 @@ function Player:activate()
   self.health = self.maxHealth
 
   self.depth = -self.id
-
-  ctx.event:emit('collision.attach', {object = self})
-end
-
-function Player:deactivate()
-  self.x, self.y = 0, 0
-  self.username = ''
-  ctx.event:emit('collision.detach', {object = self})
 end
 
 Player.update = f.empty
 
 function Player:draw()
-  love.graphics.setColor(0, 0, 0, self.alpha * 50)
-  love.graphics.draw(self.class.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
-  if self.team == purple then love.graphics.setColor(190, 160, 220, self.alpha * 255)
-  elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.alpha * 255) end
-  if self.hurtHistory then love.graphics.setColor(255, 255, 255, 200) end
-  love.graphics.draw(self.class.sprite, self.x, self.y, self.angle, 1, 1, self.class.anchorx, self.class.anchory)
-  f.exe(self.slots[math.ceil(self.weapon)].draw, self, self.slots[math.ceil(self.weapon)])
-  f.exe(self.slots[math.ceil(self.skill)].draw, self, self.slots[math.ceil(self.skill)])
-
-  if self.shape and love.keyboard.isDown(' ') then
-    if self.team == purple then love.graphics.setColor(190, 160, 220, self.alpha * 100)
-    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.alpha * 100) end
-    self.shape:draw('fill')
-    if self.team == purple then love.graphics.setColor(190, 160, 220, self.alpha * 255)
-    elseif self.team == orange then love.graphics.setColor(240, 160, 140, self.alpha * 255) end
-    self.shape:draw('line')
-  end
+  local g, c = love.graphics, self.class
+  g.setColor(0, 0, 0, self.alpha * 50)
+  g.draw(c.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, c.anchorx, c.anchory)
+  g.setColor(self.team == purple and {190, 160, 200, self.alpha * 255} or {240, 160, 140, self.alpha * 255})
+  g.draw(c.sprite, self.x, self.y, self.angle, 1, 1, c.anchorx, c.anchory)
+  f.exe(self.slots[self.weapon].draw, self, self.slots[self.weapon])
+  f.exe(self.slots[self.skill].draw, self, self.slots[self.skill])
 end
 
 
@@ -109,20 +93,16 @@ function Player:move(input)
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
 
-  if dx or dy then
-    if not dx then dx = dy end
-    if not dy then dy = dx end
-    if dx == right and dy == down then dx = 0 end
-    
-    local dir = (dx + dy) / 2
-    local len = (self.class.speed + self.haste) * tickRate
-    self.x, self.y = self.x + math.dx(len, dir), self.y + math.dy(len, dir)
-  end
+  if not dx then dx = dy end
+  if not dy then dy = dx end
+  if dx == right and dy == down then dx = 0 end
   
-  if self.x < 0 then self.x = 0
-  elseif self.x > ctx.map.width then self.x = ctx.map.width end
-  if self.y < 0 then self.y = 0
-  elseif self.y > ctx.map.height then self.y = ctx.map.height end
+  local dir = (dx + dy) / 2
+  local len = (self.class.speed + self.haste) * tickRate
+  self.x, self.y = self.x + math.dx(len, dir), self.y + math.dy(len, dir)
+  
+  self.x = math.clamp(self.x, 0, ctx.map.width)
+  self.y = math.clamp(self.y, 0, ctx.map.height)
 
   ctx.collision:resolve(self)
   ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
@@ -134,7 +114,8 @@ function Player:turn(input)
 end
 
 function Player:slot(input)
-  if self.ded then return end
+  local weapon = self.slots[self.weapon]
+  local skill = self.slots[self.skill]
 
   if input.slot then
     self[self.slots[input.slot].type] = input.slot
@@ -146,21 +127,17 @@ function Player:slot(input)
     end
   end
   
-  local weapon = self.slots[self.weapon]
   if input.l and weapon.canFire(self, weapon) then
     ctx.net:emit(evtFire, {id = self.id, slot = self.weapon})
   end
-
-  if input.reload then
-    weapon.reload(self, weapon)
-  end
   
-  local skill = self.slots[self.skill]
   if input.r and skill.canFire(self, skill) then
     ctx.net:emit(evtFire, {id = self.id, slot = self.skill})
   end
+
+  if input.reload then weapon.reload(self, weapon) end
   
-  if self.recoil > 0 then self.recoil = self.recoil - math.min(self.recoil, 8 * tickRate) end
+  if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
 end
 
 Player.hurt = f.empty

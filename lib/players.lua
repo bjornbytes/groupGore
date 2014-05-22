@@ -14,14 +14,14 @@ function Players:init()
     self:deactivate(data.id)
   end)
   
+  ctx.event:on(evtClass, function(data)
+    self:setClass(data.id, data.class, data.team)
+  end)
+  
   ctx.event:on(evtFire, function(data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
     slot.fire(p, slot)
-  end)
-  
-  ctx.event:on(evtClass, function(data)
-    self:setClass(data.id, data.class, data.team)
   end)
   
   ctx.event:on(evtDamage, function(data)
@@ -34,8 +34,7 @@ function Players:init()
   end)
   
   ctx.event:on(evtDead, function(data)
-    local p = self:get(data.id)
-    p:die()
+    local p = self:get(data.id):die()
   end)
   
   ctx.event:on(evtSpawn, function(data)
@@ -47,19 +46,19 @@ end
 
 function Players:activate(id)
   if ctx.view then ctx.view:register(self.players[id]) end
+  ctx.event:emit('collision.attach', {object = self.players[id]})
   table.insert(self.active, id)
 end
 
 function Players:deactivate(id)
-  self.players[id]:deactivate()
   if ctx.view then ctx.view:unregister(self.players[id]) end
+  ctx.event:emit('collision.detach', {object = self.players[id]})
   for i = 1, self.max do
     if self.active[i] == id then table.remove(self.active, i) break end
   end
 end
 
 function Players:get(id, t)
-  assert(id and self.players[id])
   return self.players[id]:get(t or tick)
 end
 

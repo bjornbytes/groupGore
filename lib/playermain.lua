@@ -15,12 +15,6 @@ function PlayerMain:activate()
   Player.activate(self)
 end
 
-function PlayerMain:deactivate()
-  ctx.view:setTarget(nil)
-  
-  Player.deactivate(self)
-end
-
 function PlayerMain:get(t)
   assert(t == tick or t == tick - 1)
   if t == tick then
@@ -56,23 +50,7 @@ end
 
 function PlayerMain:draw()
   if self.ded then return end
-
   Player.draw(table.interpolate(self.prev, self, tickDelta / tickRate))
-
-  if love.keyboard.isDown(' ') then
-    local server
-    for i = 1, #Context.list do
-      local c = Context.list[i]
-      if c and c.tag and c.tag == 'server' then
-        server = c
-        break
-      end
-    end
-
-    if server then
-      Player.draw(server.players:get(self.id))
-    end
-  end
 end
 
 function PlayerMain:trace(data)
