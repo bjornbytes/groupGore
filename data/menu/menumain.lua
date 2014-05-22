@@ -8,8 +8,8 @@ function MenuMain:init()
 end
 
 function MenuMain:load()
-  ctx.ribbon.count = 5
-  ctx.ribbon.margin = h(.09)
+  ctx.ribbon.count = 4
+  ctx.ribbon.margin = h(.1)
 end
 
 function MenuMain:mousepressed(x, y, button)
@@ -19,7 +19,7 @@ function MenuMain:mousepressed(x, y, button)
     if ribbon == 1 then self:host()
     elseif ribbon == 2 then self:join()
     elseif ribbon == 3 then self:edit()
-    elseif ribbon == 5 then love.event.quit() end
+    elseif ribbon == 4 then love.event.quit() end
   end
 end
 
@@ -29,11 +29,10 @@ function MenuMain:draw()
   g.setFont('BebasNeue', h(.065))
   g.setColor(160, 160, 160)
   
-  g.printCenter('Host Game', w(.05), anchor - ctx.ribbon.margin * 2, false, true)
-  g.printCenter('Join Game', w(.05), anchor - ctx.ribbon.margin * 1, false, true)
-  g.printCenter('Editor', w(.05), anchor + ctx.ribbon.margin * 0, false, true)
-  g.printCenter('Something', w(.05), anchor + ctx.ribbon.margin * 1, false, true)
-  g.printCenter('Exit', w(.05), anchor + ctx.ribbon.margin * 2, false, true)
+  g.printCenter('Host Game', w(.05), anchor - ctx.ribbon.margin * 1.5, false, true)
+  g.printCenter('Join Game', w(.05), anchor - ctx.ribbon.margin * .5, false, true)
+  g.printCenter('Editor', w(.05), anchor + ctx.ribbon.margin * .5, false, true)
+  g.printCenter('Exit', w(.05), anchor + ctx.ribbon.margin * 1.5, false, true)
 end
 
 function MenuMain:host()
