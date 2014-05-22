@@ -13,9 +13,9 @@ Player.collision = {
       if other.team ~= self.team then
         dx, dy = dx / 2, dy / 2
         self.x, self.y = self.x + dx, self.y + dy
-        self.shape:moveTo(self.x, self.y)
+        ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
         other.x, other.y = other.x - dx, other.y - dy
-        other.shape:moveTo(other.x, other.y)
+        ctx.event:emit('collision.move', {object = other, x = other.x, y = other.y})
       end
     end
   }

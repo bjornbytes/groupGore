@@ -66,6 +66,8 @@ function PlayerMain:trace(data)
   for i = 1, #self.inputs do
     self:move(self.inputs[i])
   end
+
+  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
 end
 
 function PlayerMain:readInput()

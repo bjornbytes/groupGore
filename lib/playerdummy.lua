@@ -66,6 +66,7 @@ function PlayerDummy:trace(data)
   self.x, self.y, self.angle = data.x, data.y, data.angle
   self.health, self.shield = data.health or self.health, data.shield or self.shield
   self.weapon, self.skill = data.weapon or self.weapon, data.skill or self.skill
+  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
 end
 
 function PlayerDummy:drawPosition()
