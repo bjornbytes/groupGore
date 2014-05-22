@@ -7,6 +7,7 @@ jungleCarnage.name = 'Jungle Carnage'
 jungleCarnage.width = 1600
 jungleCarnage.height = 1200
 jungleCarnage.background = data.media.graphics.map.grass
+jungleCarnage.wallTexture = 'wallStone'
 
 
 ----------------
