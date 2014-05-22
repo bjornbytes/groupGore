@@ -13,7 +13,9 @@ NetServer.signatures[evtSync] = {
   {'angle', '10bits'},
   {'health', '10bits'},
   {'shield', '10bits'},
-  delta = {'x', 'y', 'angle', 'health', 'shield'}
+  {'weapon', '3bits'},
+  {'skill', '3bits'},
+  delta = {'x', 'y', 'angle', 'health', 'shield', 'weapon', 'skill'}
 }
 NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
@@ -120,7 +122,7 @@ function NetServer:snapshot(peer)
       table.insert(players, {
         id = id,
         username = p.username,
-        class = p.active and p.class.id or 0,
+        class = p.class and p.class.id or 0,
         team = p.team or 0,
       })
     end

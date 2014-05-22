@@ -68,6 +68,11 @@ function PlayerServer:trace(data, ping)
     msg.health = math.round(self.health)
     msg.shield = math.round(shield)
 
+    if data.slot then
+      msg.weapon = self.weapon
+      msg.skill = self.skill
+    end
+
     msg.id = self.id
     msg.tick = tick
     msg.ack = self.ack

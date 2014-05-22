@@ -59,6 +59,7 @@ function PlayerDummy:trace(data)
   }, self.historyMeta))
 
   self.x, self.y, self.angle = data.x, data.y, data.angle
+  self.weapon, self.skill = data.weapon or self.weapon, data.skill or self.skill
 end
 
 function PlayerDummy:drawPosition()
