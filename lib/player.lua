@@ -114,6 +114,8 @@ function Player:turn(input)
 end
 
 function Player:slot(input)
+  input = input or {}
+
   local weapon = self.slots[self.weapon]
   local skill = self.slots[self.skill]
 

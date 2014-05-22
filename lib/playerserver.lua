@@ -17,7 +17,7 @@ function PlayerServer:get(t)
 end
 
 function PlayerServer:update()
-  if self.ded then return end
+  if self.ded then return self:time() end
 
   self:time()  
   self:logic()
