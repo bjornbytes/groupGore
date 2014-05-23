@@ -7,7 +7,6 @@ end
 
 love.update = Context.update
 love.draw = Context.draw
-love.sync = Context.sync
 love.quit = Context.quit
 
 love.handlers = setmetatable({}, {__index = Context})
