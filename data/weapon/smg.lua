@@ -33,6 +33,7 @@ function SMG:crosshair()
   local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
   local vx, vy = ctx.view:mouseX(), ctx.view:mouseY()
   local d = math.distance(p.x, p.y, vx, vy)
+  local r = math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy) 
   
   local dir = p.angle
   local dx, dy = p.class.handx, p.class.handy
@@ -44,7 +45,11 @@ function SMG:crosshair()
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
 
   g.setColor(255, 255, 255)
-  g.circle('line', x, y, math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy))
+  g.circle('line', x, y, r)
+  g.line(x, y - r - 4, x, y - r + 4)
+  g.line(x - r - 4, y, x - r + 4, y)
+  g.line(x + r - 4, y, x + r + 4, y)
+  g.line(x, y + r - 4, x, y + r + 4)
 end
 
 return SMG
