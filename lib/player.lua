@@ -135,10 +135,12 @@ function Player:slot(input)
   end
   
   if input.l and weapon:canFire(self) then
+    weapon:fire(self)
     ctx.net:emit(evtFire, {id = self.id, slot = self.weapon})
   end
   
   if input.r and skill:canFire(self) then
+    skill:fire(self)
     ctx.net:emit(evtFire, {id = self.id, slot = self.skill})
   end
 
