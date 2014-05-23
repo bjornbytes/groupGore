@@ -21,7 +21,7 @@ function Players:init()
   ctx.event:on(evtFire, function(data)
     local p = self:get(data.id)
     local slot = p.slots[data.slot]
-    slot.fire(p, slot)
+    slot:fire(p)
   end)
   
   ctx.event:on(evtDamage, function(data)

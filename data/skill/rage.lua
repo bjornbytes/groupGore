@@ -12,17 +12,17 @@ Rage.type = 'passive'
 ----------------
 -- Behavior
 ----------------
-function Rage.activate(self, myRage)
+function Rage:activate(owner)
   --
 end
 
-function Rage.update(self, myRage)
-  if self.health < self.maxHealth * .5 then
-    if not ctx.buffs:get(self, 'rage') then
-      ctx.buffs:add(self, 'rage')
+function Rage:update(owner)
+  if owner.health < owner.maxHealth * .5 then
+    if not ctx.buffs:get(owner, 'rage') then
+      ctx.buffs:add(owner, 'rage')
     end
   else
-    ctx.buffs:remove(self, 'rage')
+    ctx.buffs:remove(owner, 'rage')
   end
 end
 

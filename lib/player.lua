@@ -58,7 +58,7 @@ function Player:activate()
   ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
   
   for i = 1, 5 do
-    f.exe(self.slots[i].activate, self, self.slots[i])
+    f.exe(self.slots[i].activate, self.slots[i], self)
     if self.slots[i].type == 'skill' and self.skill == self.weapon then self.skill = i end
   end
 
@@ -76,8 +76,8 @@ function Player:draw()
   g.draw(c.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, c.anchorx, c.anchory)
   g.setColor(self.team == purple and {190, 160, 200, self.alpha * 255} or {240, 160, 140, self.alpha * 255})
   g.draw(c.sprite, self.x, self.y, self.angle, 1, 1, c.anchorx, c.anchory)
-  f.exe(self.slots[self.weapon].draw, self, self.slots[self.weapon])
-  f.exe(self.slots[self.skill].draw, self, self.slots[self.skill])
+  f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
+  f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
 end
 
 
@@ -125,19 +125,19 @@ function Player:slot(input)
   
   for i = 1, 5 do
     if self.slots[i].type ~= 'weapon' or self.weapon == i then
-      f.exe(self.slots[i].update, self, self.slots[i])
+      f.exe(self.slots[i].update, self.slots[i], self)
     end
   end
   
-  if input.l and weapon.canFire(self, weapon) then
+  if input.l and weapon:canFire(self) then
     ctx.net:emit(evtFire, {id = self.id, slot = self.weapon})
   end
   
-  if input.r and skill.canFire(self, skill) then
+  if input.r and skill:canFire(self) then
     ctx.net:emit(evtFire, {id = self.id, slot = self.skill})
   end
 
-  if input.reload then weapon.reload(self, weapon) end
+  if input.reload then weapon:reload(self) end
   
   if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
 end

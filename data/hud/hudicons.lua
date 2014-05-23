@@ -42,7 +42,7 @@ function HudIcons:draw()
 
       local prc = 0      
       if p.slots[i].value then
-        prc = p.slots[i].value(p, p.slots[i]) * 100
+        prc = p.slots[i].value(p.slots[i], p) * 100
       end
 
       g.setColor(0, 0, 0, 128)
