@@ -116,12 +116,17 @@ end
 function Player:slot(input)
   input = input or {}
 
+  if input.slot then
+    local k = self.slots[input.slot].type
+    if self[k] ~= input.slot then
+      self[k] = input.slot
+      local slot = self.slots[input.slot]
+      f.exe(slot.select, slot, self)
+    end
+  end
+
   local weapon = self.slots[self.weapon]
   local skill = self.slots[self.skill]
-
-  if input.slot then
-    self[self.slots[input.slot].type] = input.slot
-  end
   
   for i = 1, 5 do
     if self.slots[i].type ~= 'weapon' or self.weapon == i then

@@ -14,8 +14,9 @@ Shotgun.type = 'weapon'
 ----------------
 Shotgun.image = data.media.graphics.shotgun
 Shotgun.damage = 25
-Shotgun.fireSpeed = .65
-Shotgun.reloadSpeed = 2
+Shotgun.fireTime = .65
+Shotgun.reloadTime = 2
+Shotgun.switchTime = .75
 Shotgun.clip = 4
 Shotgun.ammo = 16
 Shotgun.spread = math.rad(12)

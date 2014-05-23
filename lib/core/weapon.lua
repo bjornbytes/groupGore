@@ -2,9 +2,9 @@ Weapon = class()
 
 function Weapon:activate(owner)
   self.timers = {}
-  self.timers.switch = 0
   self.timers.shoot = 0
   self.timers.reload = 0
+  self.timers.switch = 0
   
   self.currentAmmo = self.ammo
   self.currentClip = self.clip
@@ -18,6 +18,7 @@ function Weapon:update(owner)
     self.currentAmmo = self.currentAmmo - amt
     ctx.event:emit('sound.play', {sound = 'reload'})
   end)
+  self.timers.switch = timer.rot(self.timers.switch)
 end
 
 function Weapon:draw(owner)
@@ -30,28 +31,30 @@ function Weapon:draw(owner)
 end
 
 function Weapon:select(owner)
-
+  self.timers.switch = self.switchTime
 end
 
 function Weapon:canFire(owner)
-  return self.timers.shoot == 0 and self.timers.reload == 0 and self.currentClip > 0
+  return self.timers.switch == 0 and self.timers.shoot == 0 and self.timers.reload == 0 and self.currentClip > 0
 end
 
 function Weapon:fire(owner)
   ctx.spells:activate(owner.id, data.spell[self.code])
   
-  self.timers.shoot = self.fireSpeed
+  self.timers.shoot = self.fireTime
   self.currentClip = self.currentClip - 1
-  if self.currentClip == 0 then self.timers.reload = self.reloadSpeed end
+  if self.currentClip == 0 then self.timers.reload = self.reloadTime end
   owner.recoil = self.recoil
 end
 
 function Weapon:reload(owner)
   if self.currentClip < self.clip and self.timers.reload == 0 then
-    self.timers.reload = self.reloadSpeed
+    self.timers.reload = self.reloadTime
   end
 end
 
 function Weapon:value(owner)
-  return self.timers.reload > 0 and (self.timers.reload / self.reloadSpeed) or 0
+  if self.timers.switch > 0 then return self.timers.switch / self.switchTime
+  elseif self.timers.reload > 0 then return self.timers.reload / self.reloadTime
+  else return 0 end
 end

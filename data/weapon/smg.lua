@@ -14,8 +14,9 @@ SMG.type = 'weapon'
 ----------------
 SMG.image = data.media.graphics.smg
 SMG.damage = 14
-SMG.fireSpeed = .15
-SMG.reloadSpeed = 1.6
+SMG.fireTime = .15
+SMG.reloadTime = 1.6
+SMG.switchTime = .5
 SMG.clip = 12
 SMG.ammo = 120
 SMG.spread = .03
