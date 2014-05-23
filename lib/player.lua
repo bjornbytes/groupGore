@@ -25,6 +25,8 @@ Player.collision = {
 -- Core
 ----------------
 function Player:init()
+  self.meta = {__index = self}
+  
   self.id = nil
   self.username = ''
   self.class = nil

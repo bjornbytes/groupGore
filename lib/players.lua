@@ -19,7 +19,7 @@ function Players:init()
   end)
   
   ctx.event:on(evtFire, function(data)
-    if data.id ~= ctx.id then
+    if ctx.id and data.id ~= ctx.id then
       local p = self:get(data.id)
       local slot = p.slots[data.slot]
       slot:fire(p)

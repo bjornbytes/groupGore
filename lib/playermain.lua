@@ -1,7 +1,7 @@
 PlayerMain = extend(Player)
 
 function PlayerMain:activate()
-  self.prev = setmetatable({}, {__index = self})
+  self.prev = setmetatable({}, self.meta)
   self.inputs = {}
 
   self.alpha = 1
