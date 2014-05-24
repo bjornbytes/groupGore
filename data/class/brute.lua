@@ -17,6 +17,7 @@ Brute.anchory = 22
 Brute.handx = 26
 Brute.handy = 5
 Brute.sprite = data.media.graphics.brute
+Brute.scale = 1
 Brute.quote = 'I AM BR00T'
 
 

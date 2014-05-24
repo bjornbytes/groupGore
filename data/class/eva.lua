@@ -12,11 +12,12 @@ Eva.speed  = 195
 ----------------
 -- Media
 ----------------
-Eva.anchorx = 15
-Eva.anchory = 17
-Eva.handx = 22
-Eva.handy = 0
+Eva.anchorx = 91
+Eva.anchory = 133
+Eva.handx = 294
+Eva.handy = 156
 Eva.sprite = data.media.graphics.eva
+Eva.scale = .2
 Eva.quote = '???'
 
 
