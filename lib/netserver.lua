@@ -8,16 +8,16 @@ NetServer.signatures[evtSync] = {
   {'id', '4bits'},
   {'tick', '16bits'},
   {'ack', '16bits'},
-  {'x', '12bits'},
-  {'y', '12bits'},
+  {'x', '12bits'}, {'y', '12bits'},
   {'angle', '10bits'},
-  {'health', '10bits'},
-  {'shield', '10bits'},
-  {'weapon', '3bits'},
-  {'skill', '3bits'},
+  {'health', '10bits'}, {'shield', '10bits'},
+  {'weapon', '3bits'}, {'skill', '3bits'},
   delta = {'x', 'y', 'angle', 'health', 'shield', 'weapon', 'skill'}
 }
-NetServer.signatures[evtFire] = {{'id', '4bits'}, {'slot', '3bits'}}
+NetServer.signatures[evtFire] = {
+  {'id', '4bits'}, {'slot', '3bits'}, {'mx', '12bits'}, {'my', '12bits'},
+  delta = {{'mx', 'my'}}
+}
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
 NetServer.signatures[evtDead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}}
 NetServer.signatures[evtSpawn] = {{'id', '4bits'}}

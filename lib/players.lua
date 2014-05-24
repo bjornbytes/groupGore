@@ -22,7 +22,7 @@ function Players:init()
     if ctx.id and data.id ~= ctx.id then
       local p = self:get(data.id)
       local slot = p.slots[data.slot]
-      slot:fire(p)
+      slot:fire(p, data.mx, data.my)
     end
   end)
   

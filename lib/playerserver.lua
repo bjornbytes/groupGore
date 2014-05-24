@@ -45,6 +45,8 @@ function PlayerServer:update()
       self:heal({amount = self.maxHealth * percentage * tickRate})
     end
   end
+
+  Player.update(self)
 end
 
 function PlayerServer:trace(data, ping)

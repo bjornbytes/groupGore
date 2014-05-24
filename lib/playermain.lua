@@ -3,6 +3,7 @@ PlayerMain = extend(Player)
 function PlayerMain:activate()
   self.prev = setmetatable({}, self.meta)
   self.inputs = {}
+  self.displaces = {}
 
   self.alpha = 1
   
@@ -16,7 +17,6 @@ function PlayerMain:activate()
 end
 
 function PlayerMain:get(t)
-  assert(t == tick or t == tick - 1)
   if t == tick then
     return self
   else
@@ -45,7 +45,9 @@ function PlayerMain:update()
     self.heartbeatSound:pause()
   end
  
-  ctx.net:buffer(msgInput, self.inputs[#self.inputs])
+  ctx.net:buffer(msgInput, input)
+
+  Player.update(self)
 end
 
 function PlayerMain:draw()
@@ -61,13 +63,14 @@ function PlayerMain:trace(data)
   while #self.inputs > 0 and self.inputs[1].tick < data.ack + 1 do
     table.remove(self.inputs, 1)
   end
- 
+
   -- Server reconciliation: Apply inputs that occurred after the ack.
   for i = 1, #self.inputs do
     self:move(self.inputs[i])
   end
 
-  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
+  ctx.collision:resolve(self)
+  self.x, self.y = self.shape:center()
 end
 
 function PlayerMain:readInput()

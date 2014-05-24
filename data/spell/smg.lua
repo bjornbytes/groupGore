@@ -16,7 +16,7 @@ SMG.activate = function(self)
   dx, dy = data.weapon.smg.tipx, data.weapon.smg.tipy
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
   self.angle = self.owner.angle
   self.angle = self.angle - (data.weapon.smg.spread / 2) + (love.math.random() * data.weapon.smg.spread)
   local hit, dis = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})

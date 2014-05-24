@@ -9,8 +9,9 @@ function PlayerDummy:activate()
 end
 
 function PlayerDummy:update()
-  if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self:slot()
+  
+  Player.update(self)
 end
 
 function PlayerDummy:get(t)
