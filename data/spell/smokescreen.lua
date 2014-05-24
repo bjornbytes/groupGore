@@ -1,31 +1,23 @@
-Smokescreen = {}
+local Smokescreen = {}
 
 Smokescreen.code = 'smokescreen'
 Smokescreen.duration = 6
-Smokescreen.radius = 145
+Smokescreen.radius = 160
 Smokescreen.image = data.media.graphics.effects.smoke
 
-function Smokescreen:activate()
+function Smokescreen:activate(mx, my)
   self.timer = self.duration
   self.angle = love.math.random() * math.pi * 2
-  self.x = self.owner.x
-  self.y = self.owner.y
-end
-
-function Smokescreen:deactivate()
-  ctx.players:each(function(p)
-    if ctx.buffs:get(p, 'smokescreen') then ctx.buffs:remove(p, 'smokescreen') end
-  end)
+  self.x, self.y = mx, my
 end
 
 function Smokescreen:update()
-  ctx.players:each(function(p)
-    if p.team ~= self.owner.team and math.distance(self.x, self.y, p.x, p.y) < self.radius then
-      if not ctx.buffs:get(p, 'smokescreen') then ctx.buffs:add(p, 'smokescreen') end
-    else
-      if ctx.buffs:get(p, 'smokescreen') then ctx.buffs:remove(p, 'smokescreen') end
+  if self.owner.cloak < 1 then
+    if math.distance(self.x, self.y, self.owner.x, self.owner.y) < self.radius then
+      self.owner.cloak = math.min(self.owner.cloak + (3 * tickRate), 1)
     end
-  end)
+  end
+
   self.timer = timer.rot(self.timer, function() ctx.spells:deactivate(self) end)
 end
 
