@@ -4,14 +4,14 @@ local function drawTick() return tick - (interp / tickRate) end
 
 function PlayerDummy:activate()
   self.history = {}
-  self.historyMeta = {__index = self}
 
   Player.activate(self)
 end
 
 function PlayerDummy:update()
-  if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self:slot()
+  
+  Player.update(self)
 end
 
 function PlayerDummy:get(t)
@@ -23,7 +23,7 @@ function PlayerDummy:get(t)
       y = self.y,
       angle = self.angle,
       tick = tick,
-    }, self.historyMeta)
+    }, self.meta)
   end
 
   while self.history[1].tick < tick - 1 / tickRate and #self.history > 2 do
@@ -61,7 +61,7 @@ function PlayerDummy:trace(data)
     y = data.y,
     angle = data.angle,
     tick = data.tick
-  }, self.historyMeta))
+  }, self.meta))
 
   self.x, self.y, self.angle = data.x, data.y, data.angle
   self.health, self.shield = data.health or self.health, data.shield or self.shield

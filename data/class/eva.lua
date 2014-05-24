@@ -6,7 +6,7 @@ Eva.code = 'eva'
 -- Stats
 ----------------
 Eva.health = 180
-Eva.speed  = 195
+Eva.speed  = 225
 
 
 ----------------
@@ -26,10 +26,10 @@ Eva.quote = '???'
 ----------------
 Eva.slots = {}
 
-Eva.slots[1] = data.weapon.knife
-Eva.slots[2] = data.skill.shadowdash
+Eva.slots[1] = data.weapon.dagger
+Eva.slots[2] = data.skill.dusk
 Eva.slots[3] = data.skill.smokescreen
-Eva.slots[4] = data.skill.shadowform
+Eva.slots[4] = data.skill.subterfuge
 Eva.slots[5] = data.skill.backstab
 
 return Eva

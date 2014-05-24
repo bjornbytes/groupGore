@@ -33,7 +33,7 @@ function Bloodlust:update()
     self.owner:heal({amount = self.heal * self.rate})
     self.healTimer = math.round(Bloodlust.rate / tickRate)
     self.timer = self.timer - self.rate
-    if self.timer <= 0 then ctx.buffs:remove(self.owner, 'bloodlust') end
+    if self.timer <= 0 then ctx.buffs:remove(self.owner, self.code) end
   end
 end
 

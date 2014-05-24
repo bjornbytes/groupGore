@@ -6,10 +6,12 @@ local w, h = g.width, g.height
 function HudPlayers:draw()
   g.setFont('aeromatics', h(.02))
   ctx.players:each(function(p)
-    if p.team == purple then g.setColor(190, 160, 220, p.alpha * 255)
-    elseif p.team == orange then g.setColor(240, 160, 140, p.alpha * 255) end
     local vx, vy = math.lerp(ctx.view.prevx, ctx.view.x, tickDelta / tickRate), math.lerp(ctx.view.prevy, ctx.view.y, tickDelta / tickRate)
     local px, py = p:drawPosition()
+    g.setColor(0, 0, 0, 100)
+    g.printCenter(p.username, (px - vx) * ctx.view.scale + 1, ((py - vy) * ctx.view.scale) - 60 + 1)
+    if p.team == purple then g.setColor(190, 160, 220, p.alpha * 255)
+    elseif p.team == orange then g.setColor(240, 160, 140, p.alpha * 255) end
     g.printCenter(p.username, (px - vx) * ctx.view.scale, ((py - vy) * ctx.view.scale) - 60)
 
     if not p.ded then

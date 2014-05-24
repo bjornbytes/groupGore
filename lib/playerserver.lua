@@ -6,14 +6,30 @@ function PlayerServer:activate()
   self.lastHurt = tick
   self.hurtHistory = {}
   self.helpHistory = {}
-  
+
+  self.history = {}
+
   self.ack = tick
 
   Player.activate(self)
 end
 
 function PlayerServer:get(t)
-  return self
+  if not self.history then return self end
+
+  while self.history[1] and self.history[1].tick < tick - 2 / tickRate do
+    table.remove(self.history, 1)
+  end
+
+  if #self.history == 0 then return self end
+
+  if self.history[#self.history].tick < t then return self end
+
+  for i = #self.history, 1, -1 do
+    if self.history[i].tick <= t then return self.history[i] end
+  end
+  
+  return self.history[1]
 end
 
 function PlayerServer:update()
@@ -29,25 +45,30 @@ function PlayerServer:update()
       self:heal({amount = self.maxHealth * percentage * tickRate})
     end
   end
+
+  Player.update(self)
 end
 
 function PlayerServer:trace(data, ping)
-  local rewindTo = data.tick - ((ping / 1000) + interp) / tickRate
   if data.tick > self.ack then
     
     -- Lag compensation
-    --[[local oldPos = {}
+    local target = data.tick - ((ping / 1000) + interp) / tickRate
+    local t1 = math.floor(target)
+    local factor = target - t1
+    local oldPos = {}
     ctx.players:each(function(p)
       if p.id ~= self.id then
         oldPos[p.id] = {p.x, p.y}
-        local lerpd = ctx.players:get(p.id, rewindTo)
-        if lerpd then
-          p.x = lerpd.x
-          p.y = lerpd.y
-          p.shape:moveTo(p.x, p.y)
-        end
+        local s1, s2 = p:get(t1), p:get(t1 + 1)
+        s1 = {x = s1.x, y = s1.y}
+        s2 = {x = s2.x, y = s2.y}
+        local lerpd = table.interpolate(s1, s2, factor)
+        p.x = lerpd.x
+        p.y = lerpd.y
+        ctx.event:emit('collision.move', {object = p, x = p.x, y = p.y})
       end
-    end)]]
+    end)
 
     self.ack = data.tick
     
@@ -56,6 +77,12 @@ function PlayerServer:trace(data, ping)
       self:turn(data)
       self:slot(data)
     end
+
+    table.insert(self.history, setmetatable({
+      x = self.x,
+      y = self.y,
+      tick = data.tick
+    }, self.meta))
 
     -- sync
     local msg = {}
@@ -79,12 +106,12 @@ function PlayerServer:trace(data, ping)
     ctx.net:emit(evtSync, msg)
 
     -- Undo lag compensation
-    --[[ctx.players:each(function(p)
+    ctx.players:each(function(p)
       if oldPos[p.id] then
         p.x, p.y = unpack(oldPos[p.id])
-        p.shape:moveTo(p.x, p.y)
+        ctx.event:emit('collision.move', {object = p, x = p.x, y = p.y})
       end
-    end)]]
+    end)
   end
 end
 

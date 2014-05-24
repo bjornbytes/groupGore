@@ -6,12 +6,12 @@ function Spells:init()
   if ctx.view then ctx.view:register(self) end
 end
 
-function Spells:activate(owner, kind)
+function Spells:activate(owner, kind, ...)
   local s = new(kind)
   s.owner = ctx.players:get(owner)
   self.spells[#self.spells + 1] = s
   s._idx = #self.spells
-  s:activate()
+  s:activate(...)
   return s
 end
 

@@ -2,30 +2,31 @@ local Smokescreen = {}
 
 Smokescreen.name = 'Smokescreen'
 Smokescreen.code = 'smokescreen'
-Smokescreen.text = 'Slow and blind enemies.'
+Smokescreen.text = 'Hide under a cover of smoke.'
 Smokescreen.type = 'skill'
 
+Smokescreen.needsMouse = true
 Smokescreen.cooldown = 14
 
-function Smokescreen:activate(smokescreen)
-  smokescreen.timer = 0
+function Smokescreen:activate(owner)
+  self.timer = 0
 end
 
-function Smokescreen:update(smokescreen)
-  smokescreen.timer = timer.rot(smokescreen.timer)
+function Smokescreen:update(owner)
+  self.timer = timer.rot(self.timer)
 end
 
-function Smokescreen:canFire(smokescreen)
-  return smokescreen.timer == 0
+function Smokescreen:canFire(owner)
+  return self.timer == 0
 end
 
-function Smokescreen:fire(smokescreen)
-  ctx.spells:activate(self.id, data.spell.smokescreen)
-  smokescreen.timer = smokescreen.cooldown
+function Smokescreen:fire(owner, mx, my)
+  ctx.spells:activate(owner.id, data.spell.smokescreen, mx, my)
+  self.timer = self.cooldown
 end
 
-function Smokescreen:value(smokescreen)
-  return smokescreen.timer / smokescreen.cooldown
+function Smokescreen:value(owner)
+  return self.timer / self.cooldown
 end
 
 return Smokescreen

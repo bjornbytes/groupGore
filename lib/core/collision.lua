@@ -63,9 +63,11 @@ function Collision:resolve(obj)
   shape.owner = obj
   obj.shape = shape
   self.hc:update()
-  self.hc:remove(shape)
 
   obj.shape = oldShape
+  obj.shape:moveTo(shape:center())
+
+  self.hc:remove(shape)
 end
 
 function Collision:pointTest(x, y, options)
