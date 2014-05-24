@@ -9,11 +9,11 @@ SMG.activate = function(self)
   
   local dir = self.owner.angle
   
-  local dx, dy = self.owner.class.handx, self.owner.class.handy
+  local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
   
-  dx, dy = data.weapon.smg.tipx, data.weapon.smg.tipy
+  dx, dy = data.weapon.smg.tipx * data.weapon.smg.scale, data.weapon.smg.tipy * data.weapon.smg.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
 

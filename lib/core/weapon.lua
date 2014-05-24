@@ -23,15 +23,16 @@ end
 
 function Weapon:draw(owner)
   local dir = owner.angle
-  local dx = owner.class.handx - owner.recoil
-  local dy = owner.class.handy
+  local dx = owner.class.handx * owner.class.scale - owner.recoil
+  local dy = owner.class.handy * owner.class.scale
   local x = owner.x + math.dx(dx, dir) - math.dy(dy, dir)
   local y = owner.y + math.dy(dx, dir) + math.dx(dy, dir)
-  love.graphics.draw(self.image, x, y, dir, 1, 1, self.anchorx, self.anchory)
+  love.graphics.draw(self.image, x, y, dir, self.scale, self.scale, self.anchorx, self.anchory)
 end
 
 function Weapon:select(owner)
   self.timers.switch = self.switchTime
+  ctx.event:emit('sound.play', {sound = 'switch'})
 end
 
 function Weapon:canFire(owner)

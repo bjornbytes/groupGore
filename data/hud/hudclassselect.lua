@@ -55,7 +55,7 @@ function HudClassSelect:draw()
       g.setColor(255, 255, 255, 150)
     end
 
-    g.draw(data.class[i].sprite, w(.09) * i + w(.04), h(.326) + w(.04), self.angle, 1, 1, data.class[i].anchorx, data.class[i].anchory)
+    g.draw(data.class[i].sprite, w(.09) * i + w(.04), h(.326) + w(.04), self.angle, data.class[i].scale, data.class[i].scale, data.class[i].anchorx, data.class[i].anchory)
   end
 
   g.setColor(hover and white or gray)

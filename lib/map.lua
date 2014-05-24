@@ -83,6 +83,10 @@ function Map:init(name)
       ctx.view:register(self.weather)
     end
   end
+
+  if self.soundscape then
+    ctx.event:emit('sound.loop', {sound = self.soundscape})
+  end
 end
 
 function Map:update()

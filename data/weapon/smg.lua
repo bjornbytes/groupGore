@@ -13,6 +13,7 @@ SMG.type = 'weapon'
 -- Data
 ----------------
 SMG.image = data.media.graphics.smg
+SMG.scale = 1
 SMG.damage = 14
 SMG.fireTime = .15
 SMG.reloadTime = 1.6
@@ -36,11 +37,11 @@ function SMG:crosshair()
   local r = math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy) 
   
   local dir = p.angle
-  local dx, dy = p.class.handx, p.class.handy
+  local dx, dy = p.class.handx * p.class.scale, p.class.handy * p.class.scale
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
   
-  dx, dy = self.tipx, self.tipy
+  dx, dy = self.tipx * self.scale, self.tipy * self.scale
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
 

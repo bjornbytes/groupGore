@@ -10,11 +10,11 @@ Shotgun.activate = function(self)
   
   local dir = self.owner.angle
   
-  local dx, dy = self.owner.class.handx, self.owner.class.handy
+  local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
   
-  dx, dy = data.weapon.shotgun.tipx, data.weapon.shotgun.tipy
+  dx, dy = data.weapon.shotgun.tipx * data.weapon.shotgun.scale, data.weapon.shotgun.tipy * data.weapon.shotgun.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
   

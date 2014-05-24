@@ -36,7 +36,7 @@ function Player:init()
   self.y = 0
   self.angle = 0
   
-  self.slots = {{}, {}, {}, {}, {}}
+  self.slots = {}
   self.weapon = 1
   self.skill = 1
   
@@ -57,14 +57,18 @@ end
 function Player:activate()
   self.x = ctx.map.spawn[self.team].x
   self.y = ctx.map.spawn[self.team].y
-
   ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
+
+  self.weapon = 1
+  self.skill = 1
   
+  table.clear(self.slots)
   for i = 1, 5 do
+    self.slots[i] = setmetatable({}, {__index = self.class.slots[i]})
     f.exe(self.slots[i].activate, self.slots[i], self)
     if self.slots[i].type == 'skill' and self.skill == self.weapon then self.skill = i end
   end
-
+  
   self.maxHealth = self.class.health
   self.health = self.maxHealth
 
@@ -77,14 +81,14 @@ function Player:update()
 end
 
 function Player:draw()
-  local g, c = love.graphics, self.class
+  local g, c, s = love.graphics, self.class, self.class.scale
   local alpha = self.alpha * (1 - (self.cloak / (self.team == ctx.players:get(ctx.id).team and 2 or 1)))
   g.setColor(0, 0, 0, alpha * 50)
-  g.draw(c.sprite, self.x + 4, self.y + 4, self.angle, 1, 1, c.anchorx, c.anchory)
+  g.draw(c.sprite, self.x + 4, self.y + 4, self.angle, s, s, c.anchorx, c.anchory)
   g.setColor(self.team == purple and {190, 160, 200, alpha * 255} or {240, 160, 140, alpha * 255})
-  g.draw(c.sprite, self.x, self.y, self.angle, 1, 1, c.anchorx, c.anchory)
   f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
   f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
+  g.draw(c.sprite, self.x, self.y, self.angle, s, s, c.anchorx, c.anchory)
 end
 
 

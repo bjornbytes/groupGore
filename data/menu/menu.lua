@@ -1,6 +1,8 @@
 Menu = class()
 
 function Menu:load()
+  love.audio.tags.all.stop()
+
   self.background = MenuBackground()
   self.ribbon = MenuRibbon()
   self.input = MenuInput()
@@ -17,6 +19,9 @@ function Menu:load()
   end
   
   self.container = Container()
+
+  local goregous = love.thread.newThread('data/goregous/goregous.lua')
+  goregous:start()
 end
 
 function Menu:draw()
@@ -28,6 +33,7 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
+  love.thread.getChannel('goregous.in'):push('login')
   if key == 'escape' then love.event.quit()
   elseif key == 'backspace' then self:pop() end
   self.input:keypressed(key)
@@ -64,4 +70,8 @@ function Menu:pop()
   table.remove(self.pages)
   local new = self.pages[#self.pages]
   if new and new.load then new:load() end
+end
+
+function Menu:threaderror(thread, e)
+  error(e)
 end

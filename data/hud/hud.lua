@@ -4,7 +4,7 @@ local g = love.graphics
 
 function Hud:init()
   self.depth = -10000
-  self._debug = true
+  self._debug = false
 
   self.players = HudPlayers()
   self.blood = HudBlood()

@@ -79,6 +79,5 @@ function Players:setClass(id, class, team)
   if not table.has(self.active, id) then self:activate(id) end
   p.class = data.class[class]
   p.team = team
-  for i = 1, 5 do setmetatable(p.slots[i], {__index = p.class.slots[i]}) end
   p:activate()
 end

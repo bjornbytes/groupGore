@@ -11,9 +11,9 @@ function Game:load()
   self.spells = Spells()
   self.buffs = Buffs()
   self.particles = Particles()
+  self.sound = Sound()
   self.map = Map()
   self.hud = Hud()
-  self.sound = Sound()
 end
 
 function Game:update()

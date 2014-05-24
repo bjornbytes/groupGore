@@ -22,7 +22,7 @@ end
 
 function Smokescreen:fire(owner, mx, my)
   ctx.spells:activate(owner.id, data.spell.smokescreen, mx, my)
-  self.timer = self.cooldown
+  self.timer = Smokescreen.cooldown
 end
 
 function Smokescreen:value(owner)

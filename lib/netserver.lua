@@ -81,7 +81,6 @@ function NetServer:connect(event)
 end
 
 function NetServer:disconnect(event)
-  print('leaving')
   local pid = self.peerToPlayer[event.peer]
   self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
   self:emit(evtLeave, {id = pid, reason = 'left'})

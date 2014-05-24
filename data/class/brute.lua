@@ -12,12 +12,12 @@ Brute.speed  = 150
 ----------------
 -- Media
 ----------------
-Brute.anchorx = 16
-Brute.anchory = 22
-Brute.handx = 26
-Brute.handy = 5
+Brute.anchorx = 121
+Brute.anchory = 172
+Brute.handx = 241
+Brute.handy = -40
 Brute.sprite = data.media.graphics.brute
-Brute.scale = 1
+Brute.scale = .2
 Brute.quote = 'I AM BR00T'
 
 

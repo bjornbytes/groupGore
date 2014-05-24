@@ -8,6 +8,7 @@ industria.width = 2432
 industria.height = 3320
 industria.wallTexture = 'wallSnow'
 industria.weather = 'snow'
+industria.soundscape = 'blizzard'
 
 ----------------
 -- Textures
