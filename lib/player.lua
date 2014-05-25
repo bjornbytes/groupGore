@@ -151,7 +151,7 @@ function Player:slot(input)
   
   if input.l and weapon:canFire(self) then
     weapon:fire(self, input.x, input.y)
-    ctx.net:emit(evtFire, {id = self.id, slot = self.weapon})
+    ctx.net:emit(evtFire, {id = self.id, slot = self.weapon, mx = input.x, my = input.y})
   end
   
   if input.r and skill:canFire(self) then

@@ -18,7 +18,7 @@ function Dagger:activate(owner)
   if self.target then
     backstab = math.abs(math.anglediff(self.target.angle, math.direction(self.target.x, self.target.y, self.owner.x, self.owner.y))) > math.pi / 2
     local damage = data.weapon.dagger.damage
-    if backstab then damage = target.health end
+    if backstab then damage = self.target.health end
     ctx.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
   end
   
