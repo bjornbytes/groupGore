@@ -55,19 +55,19 @@ function HudIcons:draw()
         table.insert(points, y + 1)
       end
       
-      insert(x, y + h(.036))
+      insert(x, y + (width * s / 2))
       insert(x, y)
       
       local function halp(val, xx, yy)
         if prc > val then
-          x = x + w(xx / 800)
-          y = y + w(yy / 800)
+          x = x + (xx * s)--w(xx / 800)
+          y = y + (yy * s)--w(yy / 800)
           prc = prc - val
           insert(x, y)
           return false
         else
-          x = x + ((prc / val) * w(xx / 800))
-          y = y + ((prc / val) * w(yy / 800))
+          x = x + ((prc / val) * (xx * s))--w(xx / 800))
+          y = y + ((prc / val) * (yy * s))--w(yy / 800))
           insert(x, y)
           return true
         end
