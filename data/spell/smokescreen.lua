@@ -2,7 +2,7 @@ local Smokescreen = {}
 
 Smokescreen.code = 'smokescreen'
 Smokescreen.duration = 6
-Smokescreen.radius = 160
+Smokescreen.radius = 165
 Smokescreen.image = data.media.graphics.effects.smoke
 
 function Smokescreen:activate(mx, my)

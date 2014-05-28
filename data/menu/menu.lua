@@ -20,8 +20,8 @@ function Menu:load()
   
   self.container = Container()
 
-  local goregous = love.thread.newThread('data/goregous/goregous.lua')
-  goregous:start()
+  --local goregous = love.thread.newThread('data/goregous/goregous.lua')
+  --goregous:start()
 end
 
 function Menu:draw()
