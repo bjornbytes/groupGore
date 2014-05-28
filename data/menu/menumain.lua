@@ -52,12 +52,11 @@ function MenuMain:host()
 end
 
 function MenuMain:join()
-  self:connect('localhost')
-  do return end
-  gorgeous:send(gorgeous.msgMatchmake, {}, function(data)
-    if #data.ip > 0 then self:connect(data.ip)
-    else print('No servers running :[') end
-  end)
+  if love.system.getClipboardText():match('%d+%.%d+%.%d+%.%d+') then
+    return self:connect(love.system.getClipboardText())
+  end
+
+  self:connect('')
 end
 
 function MenuMain:connect(ip)
