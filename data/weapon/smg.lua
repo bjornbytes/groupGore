@@ -20,7 +20,7 @@ SMG.reloadTime = 1.6
 SMG.switchTime = .5
 SMG.clip = 12
 SMG.ammo = 120
-SMG.spread = .03
+SMG.spread = .04
 SMG.recoil = 3
 SMG.anchorx = 15
 SMG.anchory = 7
@@ -32,25 +32,26 @@ SMG.tipy = 0
 ----------------
 function SMG:crosshair()
   local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
-  local vx, vy = ctx.view:mouseX(), ctx.view:mouseY()
+  local vx, vy, s = ctx.view:mouseX(), ctx.view:mouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
-  local r = math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy) 
+  local r = math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy) * s
+  local len = 4 * s
   
   local dir = p.angle
-  local dx, dy = p.class.handx * p.class.scale, p.class.handy * p.class.scale
+  local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
   
-  dx, dy = self.tipx * self.scale, self.tipy * self.scale
+  dx, dy = self.tipx * self.scale * s, self.tipy * self.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
 
   g.setColor(255, 255, 255)
-  g.circle('line', x, y, r)
-  g.line(x, y - r - 4, x, y - r + 4)
-  g.line(x - r - 4, y, x - r + 4, y)
-  g.line(x + r - 4, y, x + r + 4, y)
-  g.line(x, y + r - 4, x, y + r + 4)
+  g.circle('line', x, y, r )
+  g.line(x, y - r - len, x, y - r + len)
+  g.line(x - r - len, y, x - r + len, y)
+  g.line(x + r - len, y, x + r + len, y)
+  g.line(x, y + r - len, x, y + r + len)
 end
 
 return SMG

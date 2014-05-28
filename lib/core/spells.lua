@@ -9,15 +9,14 @@ end
 function Spells:activate(owner, kind, ...)
   local s = new(kind)
   s.owner = ctx.players:get(owner)
-  self.spells[#self.spells + 1] = s
-  s._idx = #self.spells
+  self.spells[s] = s
   s:activate(...)
   return s
 end
 
 function Spells:deactivate(s)
   f.exe(s.deactivate, s)
-  table.remove(self.spells, s._idx)
+  self.spells[s] = nil
 end
 
 function Spells:update()
@@ -26,8 +25,4 @@ end
 
 function Spells:draw()
   table.with(self.spells, 'draw')
-end
-
-function Spells:post()
-  table.with(self.spells, 'post')
 end

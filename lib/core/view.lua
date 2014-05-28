@@ -1,6 +1,8 @@
 View = class()
 
 function View:init()
+  love.window.setMode(0, 0, {fullscreen = true})
+
   self.x = 0
   self.y = 0
   self.w = 800

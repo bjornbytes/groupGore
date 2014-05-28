@@ -4,11 +4,13 @@ local g = love.graphics
 local w, h = g.width, g.height
 
 function HudLeft:draw()
+  local s = ctx.view.scale
+
   g.setColor(255, 255, 255, 64)
-  g.draw(data.media.graphics.hud.leftBg, -w(.0825), -h(.0083))
+  g.draw(data.media.graphics.hud.leftBg, -w(.0825), -h(.0083), 0, s, s)
   
   g.setColor(255, 255, 255)
-  g.draw(data.media.graphics.hud.left, -w(.08), -h(.013))
+  g.draw(data.media.graphics.hud.left, -w(.08), -h(.013), 0, s, s)
   
   local p = ctx.players:get(ctx.id)
   if p then

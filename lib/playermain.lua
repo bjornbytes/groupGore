@@ -8,6 +8,7 @@ function PlayerMain:activate()
   self.alpha = 1
   
   self.lastHurt = tick
+  if self.heartbeatSound then self.heartbeatSound:stop() end
   self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
   self.heartbeatSound:pause()
 

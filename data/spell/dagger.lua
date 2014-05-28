@@ -1,8 +1,8 @@
 local Dagger = {}
 Dagger.code = 'dagger'
 Dagger.hp = .5
-Dagger.radius = 14
-Dagger.distance = 55
+Dagger.radius = 18
+Dagger.distance = 45
 
 function Dagger:activate(owner)
   self.hp = Dagger.hp
@@ -27,15 +27,6 @@ end
 
 function Dagger:update(owner)
   self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
-end
-
-function Dagger:draw()
-  local g = love.graphics
-  local alpha = 255 * (self.hp / Dagger.hp) * self.owner.alpha
-  g.setColor(self.target and {0, 255, 0, alpha * (100 / 255)} or {255, 0, 0, alpha * (100 / 255)})
-  g.circle('fill', self.x, self.y, self.radius)
-  g.setColor(self.target and {0, 255, 0, alpha * (100 / 255)} or {255, 0, 0, alpha * (100 / 255)})
-  g.circle('line', self.x, self.y, self.radius)
 end
 
 return Dagger

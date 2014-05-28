@@ -26,9 +26,7 @@ function Dusk:update()
   end
 
   self.distance = self.distance - (self.speed * tickRate)
-  if self.distance <= 0 then
-    ctx.spells:deactivate(self)
-  end
+  if self.distance <= 0 then ctx.spells:deactivate(self) end
 end
 
 return Dusk

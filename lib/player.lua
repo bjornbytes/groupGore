@@ -72,6 +72,11 @@ function Player:activate()
   self.maxHealth = self.class.health
   self.health = self.maxHealth
 
+  ctx.buffs:removeAll(self)
+  self.lifesteal = 0
+  self.haste = 0
+  self.cloak = 0
+
   self.depth = -self.id
 end
 
@@ -151,12 +156,18 @@ function Player:slot(input)
   
   if input.l and weapon:canFire(self) then
     weapon:fire(self, input.x, input.y)
-    ctx.net:emit(evtFire, {id = self.id, slot = self.weapon, mx = input.x, my = input.y})
+
+    local msg = {id = self.id, slot = self.weapon}
+    if weapon.needsMouse then msg.mx, msg.my = input.x, input.y end
+    ctx.net:emit(evtFire, msg)
   end
   
   if input.r and skill:canFire(self) then
     skill:fire(self, input.x, input.y)
-    ctx.net:emit(evtFire, {id = self.id, slot = self.skill})
+    
+    local msg = {id = self.id, slot = self.skill}
+    if skill.needsMouse then msg.mx, msg.my = input.x, input.y end
+    ctx.net:emit(evtFire, msg)
   end
 
   if input.reload then weapon:reload(self) end

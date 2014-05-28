@@ -29,6 +29,7 @@ function HudIcons:update()
 end
 
 function HudIcons:draw()
+  local top = h(.1)
   local p = ctx.players:get(ctx.id)
   if p then
     local width = data.media.graphics.icons[p.slots[1].code]:getWidth()
@@ -36,9 +37,9 @@ function HudIcons:draw()
     for i = 1, 5 do
       local icon = data.media.graphics.icons[p.slots[i].code]
       local alpha = math.min(math.lerp(self.prevLabelAlphas[i], self.labelAlphas[i], tickDelta / tickRate), 1) * 200
-      local iconx = w(.5) - g.minUnit(.213) + g.minUnit(.106 * (i - 1))
+      local iconx = w(.5) - g.minUnit(.213) + g.minUnit(.1065 * (i - 1))
       g.setColor(255, 255, 255, math.max(alpha, 100) * (255 / 200))
-      g.draw(icon, iconx - (width / 2), h(.093), 0, s, s)
+      g.draw(icon, iconx - (width * s / 2), top, 0, s, s)
 
       local prc = 0      
       if p.slots[i].value then
@@ -46,7 +47,7 @@ function HudIcons:draw()
       end
 
       g.setColor(0, 0, 0, 128)
-      local x, y = iconx, h(.093)
+      local x, y = iconx, top
       
       local points = {}
       local function insert(x, y)
@@ -93,12 +94,12 @@ function HudIcons:draw()
       local strw, strh = g.getFont():getWidth(str), g.getFont():getHeight()
       
       g.setColor(0, 0, 0, alpha)
-      g.rectangle('fill', iconx - ((strw + 3) / 2), h(.093) + width + 1, strw + 3, strh + 2)
+      g.rectangle('fill', iconx - ((strw + 3) / 2), top + (width * s) + 1, strw + 3, strh + 2)
       
       if p.slots[i].type == 'weapon' then g.setColor(255, 150, 150, alpha)
       elseif p.slots[i].type == 'skill' then g.setColor(150, 150, 255, alpha)
       else g.setColor(255, 255, 255, alpha) end
-      g.printCenter(str, iconx, h(.093) + width + 2, true, false)
+      g.printCenter(str, iconx, top + (width * s) + 2, true, false)
     end
   end
 end
