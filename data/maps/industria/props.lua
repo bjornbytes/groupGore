@@ -711,4 +711,36 @@ return {
     height = 64,
     z = 64
   },
+  {
+    kind = 'teamwall',
+    x = 864,
+    y = 2720,
+    width = 64,
+    height = 128,
+    team = 1
+  },
+  {
+    kind = 'teamwall',
+    x = 1184,
+    y = 2720,
+    width = 64,
+    height = 128,
+    team = 1
+  },
+  {
+    kind = 'teamwall',
+    x = 1184,
+    y = 480,
+    width = 64,
+    height = 128,
+    team = 0
+  },
+  {
+    kind = 'teamwall',
+    x = 1504,
+    y = 480,
+    width = 64,
+    height = 128,
+    team = 0
+  }
 }

@@ -9,6 +9,12 @@ Player.collision = {
       self.x, self.y = self.x + dx, self.y + dy
       self.shape:moveTo(self.x, self.y)
     end,
+    teamwall = function(self, other, dx, dy)
+      if other.team ~= self.team then
+        self.x, self.y = self.x + dx, self.y + dy
+        self.shape:moveTo(self.x, self.y)
+      end
+    end,
     player = function(self, other, dx, dy)
       if other.team ~= self.team then
         dx, dy = dx / 2, dy / 2
