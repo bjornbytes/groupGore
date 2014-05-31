@@ -25,6 +25,8 @@ function Dagger:fire(owner)
   self.timer = self.cooldown
 end
 
+Dagger.reload = f.empty
+
 function Dagger:crosshair()
   local g, p, d, x, y = love.graphics, ctx.players:get(ctx.id), data.spell.dagger, love.mouse.getPosition()
   local v = ctx.view
