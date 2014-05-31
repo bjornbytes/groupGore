@@ -93,7 +93,7 @@ function View:follow()
   local dis, dir = math.vector(self.target.x, self.target.y, self:mouseX(), self:mouseY())
   local margin = 0.8
   
-  dis = dis / 2
+  dis = 0--dis / 10
  
   self.x = self.target.x + math.dx(dis, dir) - (self.w / 2)
   self.y = self.target.y + math.dy(dis, dir) - (self.h / 2)
