@@ -1,7 +1,7 @@
 View = class()
 
 function View:init()
-  love.window.setMode(0, 0, {fullscreen = false})
+  love.window.setMode(0, 0, {fullscreen = true})
   love.mouse.setGrabbed(true)
 
   self.x = 0
