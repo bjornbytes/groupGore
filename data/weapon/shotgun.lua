@@ -32,11 +32,11 @@ Shotgun.tipy = -10
 -- Crosshair
 ----------------
 function Shotgun:crosshair()
-  local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
+  local g, p, x, y = love.graphics, ctx.players:get(ctx.id), ctx.view:frameMouseX(), ctx.view:frameMouseY()
   local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
   local alpha = 50 + ((300 - math.clamp(d - 200, 0, 300)) / 300) * 205
-  
+
   local dir = p.angle
   local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
@@ -45,9 +45,13 @@ function Shotgun:crosshair()
   dx, dy = self.tipx * self.scale * s, self.tipy * self.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
+  local d2 = (math.distance(0, 0, p.class.handx, p.class.handy) * p.class.scale) + (math.distance(0, 0, self.tipx, self.tipy) * self.scale)
+  x = x - math.dx(math.min(d2, d) * s, dir)
+  y = y - math.dy(math.min(d2, d) * s, dir)
+
   g.setColor(255, 255, 255, alpha)
-  g.circle('line', x, y, math.abs(math.atan(self.spread / 2)) * math.distance(p.x, p.y, vx, vy) * s)
+  g.circle('line', x, y, math.abs(math.atan(self.spread / 2)) * math.max(math.distance(p.x, p.y, vx, vy) - d2, 0) * s)
 end
 
 return Shotgun

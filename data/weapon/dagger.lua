@@ -28,7 +28,7 @@ end
 Dagger.reload = f.empty
 
 function Dagger:crosshair()
-  local g, p, d, x, y = love.graphics, ctx.players:get(ctx.id), data.spell.dagger, love.mouse.getPosition()
+  local g, p, d, x, y = love.graphics, ctx.players:get(ctx.id), data.spell.dagger, ctx.view:frameMouseX(), ctx.view:frameMouseY()
   local v = ctx.view
   local t = (self.timer / self.cooldown)
   local o = (t ^ 2 * ((1 + 1.6) * t - 1.6)) * (d.radius + 10)
