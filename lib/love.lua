@@ -20,7 +20,6 @@ function love.run()
       tickDelta = tickDelta - tickRate
       
       love.event.pump()
-      local releases = {}
       for e, a, b, c, d in love.event.poll() do
         if e == 'quit' then f.exe(love.quit) love.audio.stop() return
         else love.handlers[e](a, b, c, d) end
