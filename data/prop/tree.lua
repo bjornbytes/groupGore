@@ -14,7 +14,7 @@ end
 
 function Tree:update()
   if ctx.view then
-    self.depth = -2000 + math.distance(ctx.view.x + ctx.view.w / 2, ctx.view.y + ctx.view.h / 2, self.x, self.y)
+    self.depth = -2000 + math.distance(ctx.view.x + ctx.view.width / 2, ctx.view.y + ctx.view.height / 2, self.x, self.y)
   end
 end
 

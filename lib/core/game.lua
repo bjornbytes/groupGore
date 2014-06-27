@@ -44,5 +44,6 @@ function Game:textinput(character) self.hud:textinput(character) end
 
 function Game:resize()
   self.view:resize()
+  self.hud:resize()
   Typo:resize()
 end

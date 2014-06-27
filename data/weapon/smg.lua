@@ -32,7 +32,7 @@ SMG.tipy = 0
 ----------------
 function SMG:crosshair()
   local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
-  local vx, vy, s = ctx.view:mouseX(), ctx.view:mouseY(), ctx.view.scale
+  local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
   local r = math.abs(math.atan(self.spread)) * math.distance(p.x, p.y, vx, vy) * s
   local len = 4 * s

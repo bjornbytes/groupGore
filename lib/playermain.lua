@@ -10,9 +10,9 @@ function PlayerMain:activate()
   self.lastHurt = tick
   if self.heartbeatSound then self.heartbeatSound:stop() end
   self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
-  self.heartbeatSound:pause()
+  if self.heartbeatSound then self.heartbeatSound:pause() end
 
-  ctx.view:setTarget(self)
+  ctx.view.target = self
 
   Player.activate(self)
 end
@@ -38,12 +38,14 @@ function PlayerMain:update()
   self:slot(input)
   self:fade()
   
-  if self.health < self.maxHealth * .5 then
-    if self.heartbeatSound:isPaused() then self.heartbeatSound:resume() end
-    local prc = self.health / self.maxHealth
-    self.heartbeatSound:setVolume(math.min(1 - ((prc - .3) / .2), 1.0))
-  elseif not self.heartbeatSound:isPaused() then
-    self.heartbeatSound:pause()
+  if self.heartbeatSound then
+    if self.health < self.maxHealth * .5 then
+      if self.heartbeatSound:isPaused() then self.heartbeatSound:resume() end
+      local prc = self.health / self.maxHealth
+      self.heartbeatSound:setVolume(math.min(1 - ((prc - .3) / .2), 1.0))
+    elseif not self.heartbeatSound:isPaused() then
+      self.heartbeatSound:pause()
+    end
   end
  
   ctx.net:buffer(msgInput, input)
@@ -82,8 +84,8 @@ function PlayerMain:readInput()
     t[k] = love.keyboard.isDown(k)
   end
   
-  t.x = ctx.view:mouseX()
-  t.y = ctx.view:mouseY()
+  t.x = ctx.view:worldMouseX()
+  t.y = ctx.view:worldMouseY()
   t.l = love.mouse.isDown('l')
   t.r = love.mouse.isDown('r')
 
@@ -121,6 +123,6 @@ function PlayerMain:hurt()
 end
 
 function PlayerMain:die()
-  self.heartbeatSound:pause()
+  if self.heartbeatSound then self.heartbeatSound:pause() end
   Player.die(self)
 end

@@ -59,8 +59,8 @@ function EditorScaler:mousepressed(x, y, button)
     if p then
       local x, y = ctx.view:transform(x, y)
       self.scaling = p
-      self.scaleOriginX = ctx.view:mouseX()
-      self.scaleOriginY = ctx.view:mouseY()
+      self.scaleOriginX = ctx.view:worldMouseX()
+      self.scaleOriginY = ctx.view:worldMouseY()
       p._scaleX = p.x
       p._scaleY = p.y
       if p.collision.shape == 'rectangle' then

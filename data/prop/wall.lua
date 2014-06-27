@@ -72,7 +72,7 @@ end
 function Wall:update()
   if ctx.view then
     if not self:inView() then return end
-    local x1, y1 = ctx.view.x + ctx.view.w / 2, ctx.view.y + ctx.view.h / 2
+    local x1, y1 = ctx.view.x + ctx.view.width / 2, ctx.view.y + ctx.view.height / 2
     local x2, y2 = perim(x1, y1, self.x, self.y, self.width, self.height)
     self.depth = math.clamp(math.distance(x1, y1, x2, y2) * ctx.view.scale - 1000, -4096, -16)
   end
@@ -98,7 +98,7 @@ function Wall:draw()
   self.top:setVertex(4, llx, lly, 0, h)
 
   love.graphics.setColor(255, 255, 255)
-  local y2 = ctx.view.y + (ctx.view.h / 2)
+  local y2 = ctx.view.y + (ctx.view.height / 2)
   if self.y > y2 then
     self.north:setVertex(3, urx, ury, w, h)
     self.north:setVertex(4, ulx, uly, 0, h)
@@ -111,7 +111,7 @@ function Wall:draw()
     love.graphics.draw(self.south, 0, 0)
   end
 
-  local x2 = ctx.view.x + (ctx.view.w / 2)
+  local x2 = ctx.view.x + (ctx.view.width / 2)
   if self.x > x2 then
     self.west:setVertex(2, ulx, uly, w, 0)
     self.west:setVertex(3, llx, lly, w, h)
@@ -130,7 +130,7 @@ end
 function Wall:inView()
   local x, y, w, h = self.x, self.y, self.width, self.height
   local v = ctx.view
-  return x + w >= v.x and x <= v.x + v.w and y + h >= v.y and y <= v.y + v.h
+  return x + w >= v.x and x <= v.x + v.width and y + h >= v.y and y <= v.y + v.height
 end
 
 function Wall:updateMesh()

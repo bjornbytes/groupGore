@@ -1,17 +1,17 @@
 HudBuffs = class()
 
 local g = love.graphics
-local w, h = love.graphics.width, love.graphics.height
 
 function HudBuffs:draw()
+  local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
   if p then
     g.setColor(255, 255, 255)
-    local xx = w(.01)
+    local xx = u * .01
     table.each(ctx.buffs.buffs, function(b)
       if b.owner == p then
-        g.rectangle('line', xx, h(.1), w(.02), w(.02))
-        xx = xx + w(.025)
+        g.rectangle('line', xx, v * .1, u * .02, u * .02)
+        xx = xx + u * .025
       end
     end)
   end

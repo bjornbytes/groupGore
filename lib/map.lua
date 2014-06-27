@@ -74,7 +74,8 @@ function Map:init(name)
   self.depth = 5
   if ctx.view then
     ctx.view:register(self)
-    ctx.view:setLimits(self.width, self.height)
+    ctx.view.xmax = self.width
+    ctx.view.ymax = self.height
   end
  
   if self.weather then

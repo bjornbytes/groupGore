@@ -1,7 +1,6 @@
 HudHealth = class()
 
 local g = love.graphics
-local w, h = g.width, g.height
 
 function HudHealth:init()
   local health = data.media.graphics.hud.health
@@ -19,6 +18,7 @@ function HudHealth:update()
 end
 
 function HudHealth:draw()
+  local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
   
   self.canvas:clear()
@@ -36,12 +36,12 @@ function HudHealth:draw()
     g.setBlendMode('alpha')
     
     love.graphics.push()
-    love.graphics.translate(0, ctx.view.margin)
+    love.graphics.translate(ctx.view.frame.x, ctx.view.frame.y)
   end)
   
   if p then
-    local s = w(.4775) / 382
-    local x = w(.5) - (self.canvas:getWidth() * s * .5)
+    local s = u * .4775 / 382
+    local x = u * .5 - (self.canvas:getWidth() * s * .5)
     g.setColor(255, 255, 255, 90)
     g.draw(self.canvas, x, 0, 0, s, s)
     g.setColor(255, 255, 255)

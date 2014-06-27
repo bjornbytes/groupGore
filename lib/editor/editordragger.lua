@@ -14,7 +14,7 @@ function EditorDragger:update()
   if self.dragging then
     ctx.selector:each(function(prop)
       local ox, oy = ctx.grid:snap(prop._dragX, prop._dragY)
-      local x, y = ctx.grid:snap(ctx.view:mouseX() - self.dragX, ctx.view:mouseY() - self.dragY)
+      local x, y = ctx.grid:snap(ctx.view:worldMouseX() - self.dragX, ctx.view:worldMouseY() - self.dragY)
       prop.x, prop.y = ox + x, oy + y
       ctx.event:emit('collision.move', {object = prop, x = ox + x, y = oy + y})
     end)
@@ -30,8 +30,8 @@ function EditorDragger:mousepressed(x, y, button)
       self.deselect = true
     end
     self.dragging = true
-    self.dragX = ctx.view:mouseX()
-    self.dragY = ctx.view:mouseY()
+    self.dragX = ctx.view:worldMouseX()
+    self.dragY = ctx.view:worldMouseY()
     ctx.selector:each(function(prop)
       prop._dragX = prop.x
       prop._dragY = prop.y

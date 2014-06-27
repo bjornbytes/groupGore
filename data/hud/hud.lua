@@ -21,6 +21,8 @@ function Hud:init()
   ctx.event:on(evtChat, function(data) self.chat:add(data) end)
   ctx.event:on(evtDead, function(data) self.feed:insert(data) end)
   ctx.view:register(self)
+
+  self:resize()
 end
 
 function Hud:update()
@@ -33,8 +35,6 @@ function Hud:update()
 end
 
 function Hud:gui()
-  g.reset()
-  
   if not ctx.id then return self:connecting() end
   if self.classSelect.active then return self.classSelect:draw() end
 
@@ -73,6 +73,11 @@ function Hud:keyreleased(key)
   if self.chat.active or self.classSelect.active then return true end
 end
 
+function Hud:resize()
+  self.u = ctx.view.frame.width
+  self.v = ctx.view.frame.height
+end
+
 function Hud:connecting()
   --[[g.setColor(0, 0, 0)
   g.rectangle('fill', 0, 0, g.getWidth(), g.getHeight())
@@ -97,4 +102,6 @@ function Hud:crosshair()
       if not love.mouse.isVisible() then love.mouse.setVisible(true) end
     end
   end
+
+  love.mouse.setVisible(true)
 end

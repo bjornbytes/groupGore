@@ -33,7 +33,7 @@ Shotgun.tipy = -10
 ----------------
 function Shotgun:crosshair()
   local g, p, x, y = love.graphics, ctx.players:get(ctx.id), love.mouse.getPosition()
-  local vx, vy, s = ctx.view:mouseX(), ctx.view:mouseY(), ctx.view.scale
+  local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
   local alpha = 50 + ((300 - math.clamp(d - 200, 0, 300)) / 300) * 205
   

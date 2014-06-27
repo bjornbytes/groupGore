@@ -73,7 +73,7 @@ function EditorMenu:mousepressed(x, y, button)
   if button == 'l' then
     for i = 1, #self.props do
       if math.inside(x, y, self.x, self.y + h(.09) + (g.getFont():getHeight() + 1) * i, self.w, g.getFont():getHeight()) then
-        local x, y = ctx.view.x + ctx.view.w / 2, ctx.view.y + ctx.view.h / 2
+        local x, y = ctx.view.x + ctx.view.width / 2, ctx.view.y + ctx.view.height / 2
         table.insert(ctx.map.props, ctx.map:initProp({
           kind = self.props[i],
           x = x,
