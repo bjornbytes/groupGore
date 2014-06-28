@@ -1,15 +1,18 @@
 Effects = class()
 
 function Effects:init()
+  self.active = love.graphics.isSupported('shader')
   self.effects = {}
   self:add('motionBlur')
 end
 
 function Effects:update()
+  if not self.active then return end
   table.with(self.effects, 'update')
 end
 
 function Effects:add(code)
+  if not self.active then return end
   local effect = new(data.effect[code])
   f.exe(effect.activate, effect)
   table.insert(self.effects, effect)
