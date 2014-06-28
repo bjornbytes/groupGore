@@ -9,6 +9,8 @@ function Menu:load()
   self.background = MenuBackground()
   self.ribbon = MenuRibbon()
   self.input = MenuInput()
+  self.loader = MenuLoader()
+  self.error = MenuError()
   self.back = MenuBack()
   self.login = MenuLogin()
   self.main = MenuMain()
@@ -23,8 +25,28 @@ function Menu:load()
   
   self.container = Container()
 
-  --local goregous = love.thread.newThread('data/goregous/goregous.lua')
-  --goregous:start()
+  local goregous = love.thread.newThread('data/goregous/goregous.lua')
+  goregous:start()
+end
+
+function Menu:update()
+  local outbox = love.thread.getChannel('goregous.out')
+  while outbox:getCount() > 0 do
+    local data = outbox:pop()
+    if data[1] == 'login' then
+      if data[2] == 'nickname already in use' then
+        self.loader:deactivate()
+        self.error:activate('Nickname already in use')
+      else
+        username = data[2]
+        self:push(self.main)
+        self.loader:deactivate()
+      end
+    end
+  end
+
+  self.loader:update()
+  self.error:update()
 end
 
 function Menu:draw()
@@ -33,10 +55,11 @@ function Menu:draw()
   self.back:draw()
   local page = self.pages[#self.pages]
   f.exe(page.draw, page)
+  self.loader:draw()
+  self.error:draw()
 end
 
 function Menu:keypressed(key)
-  love.thread.getChannel('goregous.in'):push('login')
   if key == 'escape' then love.event.quit()
   elseif key == 'backspace' then self:pop() end
   self.input:keypressed(key)

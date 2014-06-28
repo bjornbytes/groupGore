@@ -42,8 +42,10 @@ function MenuLogin:draw()
 end
 
 function MenuLogin:login()
-  username = ctx.input:val('nickname')
-  if #username > 0 then
-    ctx:push(ctx.main)
-  end
+  local text = ctx.input:val('nickname')
+  if #text == 0 then return end
+
+  love.thread.getChannel('goregous.in'):push({'login', text})
+
+  ctx.loader:activate('Logging in')
 end
