@@ -103,6 +103,4 @@ function Hud:crosshair()
       if not love.mouse.isVisible() then love.mouse.setVisible(true) end
     end
   end
-
-  love.mouse.setVisible(true)
 end
