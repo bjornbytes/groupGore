@@ -18,7 +18,7 @@ function Sound:play(_data)
   if _data.x and _data.y then
     sound:setPosition(_data.x, _data.y, _data.z or 0)
   end
-  sound:setAttenuationDistances(400, 1000)
+  sound:setAttenuationDistances(_data.minrange or 400, _data.maxrange or 1000)
   return sound
 end
 

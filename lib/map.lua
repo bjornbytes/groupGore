@@ -86,7 +86,7 @@ function Map:init(name)
   end
 
   if self.soundscape then
-    ctx.event:emit('sound.loop', {sound = self.soundscape})
+    ctx.event:emit('sound.loop', {sound = self.soundscape, minrange = 10000, maxrange = 10000})
   end
 end
 
