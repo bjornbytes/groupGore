@@ -5,7 +5,7 @@ function love.run()
 
   tickRate = .02
   tickDelta = 0
-  interp = .2
+  interp = .12
   
   love.load(arg)
 
