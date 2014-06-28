@@ -75,7 +75,7 @@ function HudClassSelect:draw()
 end
 
 function HudClassSelect:keypressed(key)
-  if key == 'escape' then self.active = not self.active end
+  if key == 'escape' and ctx.players:get(ctx.id).class then self.active = not self.active end
   
   if self.active then
     for i = 1, #data.class do
