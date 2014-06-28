@@ -6,13 +6,12 @@ local function invoke(x, k, ...) return x.editor[k](x, ...) end
 function EditorSelector:init()
   self.selection = {}
   self.active = false
-  self.depth = -10000
   self.lastClick = tick
   self.lastButton = nil
   self.dragging = false
   self.dragStartX = nil
   self.dragStartY = nil
-  ctx.view:register(self)
+  ctx.view:register(self, 'gui')
 end
 
 function EditorSelector:update()

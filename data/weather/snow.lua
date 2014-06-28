@@ -11,7 +11,6 @@ function Snow:init()
   self.dy = love.math.random() < .5 and -1 or 1
   self.image = data.media.graphics.effects.bgBlizzard
   self.image:setWrap('repeat', 'repeat')
-  self.depth = 1
   self.quad = love.graphics.newQuad(0, 0, love.graphics.getWidth(), love.graphics.getHeight(), self.image:getWidth(), self.image:getHeight())
 end
 

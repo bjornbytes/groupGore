@@ -81,7 +81,7 @@ function Map:init(name)
   if self.weather then
     self.weather = new(data.weather[self.weather])
     if ctx.view then
-      ctx.view:register(self.weather)
+      ctx.view:register(self.weather, 'gui')
     end
   end
 

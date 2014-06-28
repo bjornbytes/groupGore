@@ -21,6 +21,7 @@ data.load = function()
   
   data.media = {}
   data.media.graphics = setmetatable({_path = 'data/media/graphics'}, {__index = lookup('.png', love.graphics.newImage)})
+  data.media.shaders = setmetatable({_path = 'data/media/shaders'}, {__index = lookup('.shader', love.graphics.newShader)})
   data.media.sounds = setmetatable({_path = 'data/media/sounds'}, {__index = lookup('.ogg', love.audio.newSource)})
 
   -- Data
@@ -46,5 +47,6 @@ data.load = function()
   load('data/class', 'class')
   load('data/particle', 'particle')
   load('data/prop', 'prop')
+  load('data/effect', 'effect')
   load('data/weather', 'weather')
 end

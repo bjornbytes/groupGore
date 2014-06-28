@@ -1,8 +1,10 @@
 View = class()
 
+local g = love.graphics
+
 function View:init()
-  love.window.setMode(800, 600, {fullscreen = false})
-  love.mouse.setGrabbed(true)
+  love.window.setMode(800, 600, {fullscreen = false, resizable = true, vsync = false})
+  --love.mouse.setGrabbed(true)
 
   self.x = 0
   self.y = 0
@@ -19,7 +21,9 @@ function View:init()
   self.frame.width = love.window.getWidth()
   self.frame.height = love.window.getHeight()
 
-  self.toDraw = {}
+  self.draws = {}
+  self.guis = {}
+  self.effects = {}
   self.target = nil
 
   self:resize()
@@ -27,6 +31,9 @@ function View:init()
   self.prevx = 0
   self.prevy = 0
   self.prevscale = self.scale
+
+  self:register(data.media.shaders.motionBlur, 'shader')
+  self:register(data.media.shaders.reddify, 'shader')
 end
 
 function View:update()
@@ -36,65 +43,102 @@ function View:update()
   
   self:follow()
   self:contain()
+
+  table.sort(self.draws, function(a, b)
+    return a.depth > b.depth
+  end)
 end
 
 function View:draw()
-  love.graphics.push()
-  love.graphics.translate(self.frame.x, self.frame.y)
-
-  love.graphics.push()
   local x, y, s = unpack(table.interpolate({self.prevx, self.prevy, self.prevscale}, {self.x, self.y, self.scale}, tickDelta / tickRate))
-  love.graphics.scale(s)
-  love.graphics.translate(-x, -y)
-  
-  table.sort(self.toDraw, function(a, b)
-    return a.depth > b.depth
+  local w, h = g.getDimensions()
+
+  g.push()
+  g.translate(self.frame.x, self.frame.y)
+  g.scale(s)
+  g.translate(-x, -y)
+
+  self.canvas:clear()
+  self.backCanvas:clear()
+  self.canvas:renderTo(function()
+    for i = 1, #self.draws do self.draws[i]:draw() end
   end)
 
-  for _, v in ipairs(self.toDraw) do f.exe(v.draw, v) end
+  g.pop()
 
-  love.graphics.pop()
+  for i = 1, #self.effects do
+    g.setShader(self.effects[i].shader)
+    g.setCanvas(self.backCanvas)
+    g.draw(self.canvas)
+    g.setCanvas()
+    g.setShader()
+    self.canvas, self.backCanvas = self.backCanvas, self.canvas
+  end
 
-  for _, v in ipairs(self.toDraw) do f.exe(v.gui, v) end
+  g.draw(self.canvas)
+
+  g.push()
+  g.translate(self.frame.x, self.frame.y)
+
+  for i = 1, #self.guis do self.guis[i]:gui() end
   
-  local w, h = love.graphics.getDimensions()
-  love.graphics.pop()
+  g.pop()
 
-  love.graphics.setColor(0, 0, 0, 255)
-  love.graphics.rectangle('fill', 0, 0, w, self.frame.y)
-  love.graphics.rectangle('fill', 0, 0, self.frame.x, h)
-  love.graphics.rectangle('fill', 0, self.frame.y + self.frame.height, w, h - (self.frame.y + self.frame.height))
-  love.graphics.rectangle('fill', self.frame.x + self.frame.width, 0, w - (self.frame.x + self.frame.width), h)
+  g.setColor(0, 0, 0, 255)
+  g.rectangle('fill', 0, 0, w, self.frame.y)
+  g.rectangle('fill', 0, 0, self.frame.x, h)
+  g.rectangle('fill', 0, self.frame.y + self.frame.height, w, h - (self.frame.y + self.frame.height))
+  g.rectangle('fill', self.frame.x + self.frame.width, 0, w - (self.frame.x + self.frame.width), h)
 end
 
 function View:resize()
-  self.frame.x, self.frame.y = 0, 0
-  self.frame.width, self.frame.height = self.width, self.height
-  if (self.width / self.height) > (love.graphics.getWidth() / love.graphics.getHeight()) then
-    self.margin = math.max(math.round(((love.graphics.getHeight() - love.graphics.getWidth() * (self.height / self.width)) / 2)), 0)
-    self.scale = love.graphics.getWidth() / self.width
-    local margin = math.max(math.round(((love.graphics.getHeight() - love.graphics.getWidth() * (self.height / self.width)) / 2)), 0)
+  local w, h = love.graphics.getDimensions()
+  self.frame.x, self.frame.y, self.frame.width, self.frame.height = 0, 0, self.width, self.height
+  if (self.width / self.height) > (w / h) then
+    self.scale = w / self.width
+    local margin = math.max(math.round(((h - w * (self.height / self.width)) / 2)), 0)
     self.frame.y = margin
-    self.frame.height = love.graphics.getHeight() - 2 * margin
-    self.frame.width = love.graphics.width()
+    self.frame.height = h - 2 * margin
+    self.frame.width = w
   else
-    self.margin = math.max(math.round(((love.graphics.getWidth() - love.graphics.getHeight() * (self.width / self.height)) / 2)), 0)
-    self.scale = love.graphics.getHeight() / self.height
-    local margin = math.max(math.round(((love.graphics.getWidth() - love.graphics.getHeight() * (self.width / self.height)) / 2)), 0)
+    self.scale = h / self.height
+    local margin = math.max(math.round(((w - h * (self.width / self.height)) / 2)), 0)
     self.frame.x = margin
-    self.frame.width = love.graphics.getWidth() - 2 * margin
-    self.frame.height = love.graphics.getHeight()
+    self.frame.width = w - 2 * margin
+    self.frame.height = h
+  end
+
+  self.canvas = love.graphics.newCanvas(w, h, 'normal', 4)
+  self.backCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
+end
+
+function View:register(x, action)
+  action = action or 'draw'
+  if action == 'draw' then
+    table.insert(self.draws, x)
+    x.depth = x.depth or 0
+  elseif action == 'gui' then
+    table.insert(self.guis, x)
+  elseif action == 'effect' then
+    table.insert(self.effects, x)
   end
 end
 
-function View:register(x)
-  table.insert(self.toDraw, x)
-  x.depth = x.depth or 0
-end
-
 function View:unregister(x)
-  for i = 1, #self.toDraw do
-    if self.toDraw[i] == x then table.remove(self.toDraw, i) return end
+  if x.draw then
+    for i = 1, #self.draws do
+      if self.draws[i] == x then table.remove(self.draws, i) return end
+    end
+  end
+
+  if x.gui then
+    for i = 1, #self.guis do
+      if self.guis[i] == x then table.remove(self.guis, i) return end
+    end
+  end
+
+  for i = 1, #self.effects do
+    if self.effects[i] == x then table.remove(self.effects, i) return end
   end
 end
 

@@ -3,7 +3,6 @@ Hud = class()
 local g = love.graphics
 
 function Hud:init()
-  self.depth = -10000
   self._debug = false
 
   self.players = HudPlayers()
@@ -20,7 +19,7 @@ function Hud:init()
   
   ctx.event:on(evtChat, function(data) self.chat:add(data) end)
   ctx.event:on(evtDead, function(data) self.feed:insert(data) end)
-  ctx.view:register(self)
+  ctx.view:register(self, 'gui')
 
   self:resize()
 end
