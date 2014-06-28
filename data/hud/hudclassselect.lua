@@ -26,7 +26,6 @@ function HudClassSelect:update()
       self.offense = math.lerp(self.offense, data.class[i].offense, math.min(12 * tickRate, 1))
       self.defense = math.lerp(self.defense, data.class[i].defense, math.min(12 * tickRate, 1))
       self.utility = math.lerp(self.utility, data.class[i].utility, math.min(12 * tickRate, 1))
-      print(i)
     end
   end
 end
@@ -69,8 +68,10 @@ function HudClassSelect:draw()
       g.setColor(255, 255, 255, 150)
     end
 
+    local s = u * .08 / data.class[i].portrait:getWidth()
+    g.draw(data.class[i].portrait, u * .09 * i, v * .326, 0, s, s)
     g.setFont('pixel', 8)
-    g.printCenter(data.class[i].name, u * .09 * i + u * .04, v * .326 + u * .04)
+    g.print(data.class[i].name, u * .09 * i + 4, v * .326)
     g.setFont('BebasNeue', v * .065)
   end
 
@@ -142,29 +143,45 @@ function HudClassSelect:mousereleased(x, y, button)
 end
 
 function HudClassSelect:drawClassDetails(index)
+  local class = data.class[index]
   local u, v = ctx.hud.u, ctx.hud.v
   local fh = g.getFont():getHeight()
+  local yy = v * .318
   g.setColor(255, 255, 255)
-  g.print(data.class[index].name, u * .56, v * .243 + g.getFont():getHeight())
+  g.print(class.name, u * .56, yy)
   
-  g.setFont('pixel', 8)
-  g.setColor(255, 255, 255, 150)
-  g.print(data.class[index].quote, u * .56 + 2, v * .243 + fh * 2)
+  yy = yy + v * .08
+  g.setFont('BebasNeue', v * .03)
+  g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})
+  g.print(class.quote, u * .56 + 2, yy)
 
+  yy = yy + v * .045
   g.setFont('BebasNeue', v * .04)
-  g.print('offense\ndefense\nutility', u * .56 + 2, v * .243 + fh * 2.75)
+  g.setColor(255, 255, 255, 150)
+  g.print('offense\ndefense\nutility', u * .56 + 2, yy)
 
   g.setColor(84, 28, 28)
-  g.rectangle('fill', u * .65 + .5, v * .243 + fh * 2.75 + 4.5, u * .2 * (self.offense / 10), g.getFont():getHeight() - 8)
+  g.rectangle('fill', u * .65 + .5, yy + v * .012, u * .2 * (self.offense / 10), v * .025)
   g.setColor(70, 96, 67)
-  g.rectangle('fill', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + g.getFont():getHeight(), u * .2 * (self.defense / 10), g.getFont():getHeight() - 8)
+  g.rectangle('fill', u * .65 + .5, yy + v * .012 + g.getFont():getHeight(), u * .2 * (self.defense / 10), v * .025)
   g.setColor(30, 94, 99)
-  g.rectangle('fill', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + 2 * g.getFont():getHeight(), u * .2 * (self.utility / 10), g.getFont():getHeight() - 8)
+  g.rectangle('fill', u * .65 + .5, yy + v * .012 + 2 * g.getFont():getHeight(), u * .2 * (self.utility / 10), v * .025)
 
   g.setColor(255, 255, 255, 150)
-  g.rectangle('line', u * .65 + .5, v * .243 + fh * 2.75 + 4.5, u * .2, g.getFont():getHeight() - 8)
-  g.rectangle('line', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + g.getFont():getHeight(), u * .2, g.getFont():getHeight() - 8)
-  g.rectangle('line', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + 2 * g.getFont():getHeight(), u * .2, g.getFont():getHeight() - 8)
+  g.rectangle('line', u * .65 + .5, yy + v * .012, u * .2, v * .025)
+  g.rectangle('line', u * .65 + .5, yy + v * .012 + g.getFont():getHeight(), u * .2, v * .025)
+  g.rectangle('line', u * .65 + .5, yy + v * .012 + 2 * g.getFont():getHeight(), u * .2, v * .025)
+
+  yy = yy + v * .012 + 2 * g.getFont():getHeight() + v * .05
+  for i = 1, 5 do
+    local icon = data.media.graphics.icons[class.slots[i].code]
+    local s = u * .03 / icon:getWidth()
+    g.setColor(255, 255, 255)
+    g.draw(icon, u * .56 + 2, yy, 0, s, s)
+    g.setColor(255, 255, 255, 200)
+    g.print(class.slots[i].name, u * .56 + u * .01 + s * icon:getWidth(), yy - v * .002)
+    yy = yy + s * icon:getWidth() + v * .009
+  end
 
   g.setFont('BebasNeue', v * .065)
   g.setColor(255, 255, 255)
