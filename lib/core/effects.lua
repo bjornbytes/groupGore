@@ -4,6 +4,7 @@ function Effects:init()
   self.active = love.graphics.isSupported('shader')
   self.effects = {}
   self:add('motionBlur')
+  self:add('deathDesaturate')
 end
 
 function Effects:update()

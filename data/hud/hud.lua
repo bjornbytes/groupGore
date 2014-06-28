@@ -96,7 +96,7 @@ function Hud:crosshair()
   local p = ctx.players:get(ctx.id)
   if p then
     local weapon = p.slots[p.weapon]
-    if weapon.crosshair then
+    if not p.ded and weapon.crosshair then
       if love.mouse.isVisible() then love.mouse.setVisible(false) end
       weapon:crosshair()
     else

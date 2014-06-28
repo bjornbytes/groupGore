@@ -126,4 +126,5 @@ function PlayerMain:die()
   if self.heartbeatSound then self.heartbeatSound:pause() end
   Player.die(self)
   ctx.view:screenshake(20)
+  ctx.view.target = nil
 end

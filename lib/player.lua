@@ -195,11 +195,10 @@ function Player:die()
     vars = {x = self.x, y = self.y}
   })
   ctx.event:emit('sound.play', {sound = 'die', x = self.x, y = self.y})
-  ctx.buffs:removeAll(self)  
+  ctx.buffs:removeAll(self)
 
-  self.x, self.y = 0, 0
   self.alpha = 0
-  ctx.event:emit('collision.detach', {object = self})
+  ctx.event:emit('collision.move', {object = self, x = 0, y = 0})
 end
 
 function Player:spawn()
