@@ -13,6 +13,14 @@ function MenuServerList:load()
 end
 
 function MenuServerList:draw()
+  local x, y = love.mouse.getPosition()
+  local hover = math.inside(x, y, 0, h(.2), w(), h(.1))
+  g.setColor(0, 0, 0, hover and 50 or 0)
+  g.rectangle('fill', 0, h(.2), w(), h(.1))
+  g.setColor(hover and {255, 255, 255, 200} or {200, 200, 200, 200})
+  g.setFont('BebasNeue', h(.065))
+  g.printCenter('refresh', w(.05), h(.25), false, true)
+
   g.setColor(0, 0, 0, 100)
   g.rectangle('fill', 16, h(.3) + 16, w() - 32, h(.5) - 32)
   g.setFont('pixel', 8)
@@ -33,6 +41,7 @@ function MenuServerList:draw()
     g.setColor(255, 255, 255)
     g.print(self.servers[i].name, 32, yy)
   end
+
 end
 
 function MenuServerList:keypressed(key)
@@ -46,6 +55,10 @@ function MenuServerList:mousepressed(x, y, button)
       if math.inside(x, y, 16, yy, w() - 32, g.getFont():getHeight()) then
         ctx.main:connect(self.servers[i].ip)
       end
+    end
+
+    if math.inside(x, y, 0, h(.2), w(), h(.1)) then
+      self:refresh()
     end
   end
 end
