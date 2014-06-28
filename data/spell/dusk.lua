@@ -7,7 +7,7 @@ Dusk.speed = Dusk.distance * 10
 function Dusk:activate()
   self.angle = self.owner.angle
   self.health = Dusk.health
-  ctx.event:emit('sound.play', {sound = 'dash'})
+  ctx.event:emit('sound.play', {sound = 'dash', x = self.owner.x, y = self.owner.y})
 end
 
 function Dusk:update()

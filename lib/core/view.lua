@@ -1,7 +1,7 @@
 View = class()
 
 function View:init()
-  love.window.setMode(0, 0, {fullscreen = true})
+  love.window.setMode(800, 600, {fullscreen = false})
   love.mouse.setGrabbed(true)
 
   self.x = 0
@@ -118,7 +118,7 @@ function View:follow()
   local dis, dir = math.vector(self.target.x, self.target.y, self:worldMouseX(), self:worldMouseY())
   local margin = 0.8
   
-  dis = 0--dis / 10
+  dis = dis / 2
  
   self.x = self.target.x + math.dx(dis, dir) - (self.width / 2)
   self.y = self.target.y + math.dy(dis, dir) - (self.height / 2)

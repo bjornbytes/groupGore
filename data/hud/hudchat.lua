@@ -56,8 +56,8 @@ end
 function HudChat:keypressed(key)
   if self.active then
     if key == 'backspace' then self.message = self.message:sub(1, -2)
-    elseif key == 'return' then
-      if #self.message > 0 then
+    elseif key == 'return' or key == 'escape' then
+      if #self.message > 0 and key ~= 'escape' then
         ctx.net:send(msgChat, {
           message = self.message
         })

@@ -22,7 +22,7 @@ function Dagger:activate(owner)
     ctx.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
   end
   
-  ctx.event:emit('sound.play', {sound = backstab and 'backstab' or 'slash'})
+  ctx.event:emit('sound.play', {sound = backstab and 'backstab' or 'slash', x = self.x, y = self.y})
 end
 
 function Dagger:update(owner)

@@ -16,7 +16,7 @@ function Weapon:update(owner)
     local amt = math.min(self.clip - self.currentClip, self.currentAmmo)
     self.currentClip = self.currentClip + amt
     self.currentAmmo = self.currentAmmo - amt
-    ctx.event:emit('sound.play', {sound = 'reload'})
+    ctx.event:emit('sound.play', {sound = 'reload', x = owner.x, y = owner.y})
   end)
   self.timers.switch = timer.rot(self.timers.switch)
 end
@@ -32,7 +32,7 @@ end
 
 function Weapon:select(owner)
   self.timers.switch = self.switchTime
-  ctx.event:emit('sound.play', {sound = 'switch'})
+  ctx.event:emit('sound.play', {sound = 'switch', x = owner.x, y = owner.y})
 end
 
 function Weapon:canFire(owner)

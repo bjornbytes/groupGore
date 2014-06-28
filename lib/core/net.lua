@@ -28,7 +28,8 @@ end
 
 function Net:connectTo(ip, port)
   if not self.host then self:listen() end
-  self.host:connect(ip .. ':' .. port)
+  local peer = self.host:connect(ip .. ':' .. port)
+  peer:timeout(0, 5000, 10000)
 end
 
 function Net:update()

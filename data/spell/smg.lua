@@ -71,7 +71,7 @@ SMG.activate = function(self)
     end
   end
 
-  ctx.event:emit('sound.play', {sound = 'smg'})
+  ctx.event:emit('sound.play', {sound = 'smg', x = self.x, y = self.y})
 end
 
 SMG.update = function(self)

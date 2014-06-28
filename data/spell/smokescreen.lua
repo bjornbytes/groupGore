@@ -9,7 +9,7 @@ function Smokescreen:activate(mx, my)
   self.timer = Smokescreen.duration
   self.angle = love.math.random() * math.pi * 2
   self.x, self.y = mx, my
-  ctx.event:emit('sound.play', {sound = 'smoke'})
+  ctx.event:emit('sound.play', {sound = 'smoke', x = self.x, y = self.y})
 end
 
 function Smokescreen:update()

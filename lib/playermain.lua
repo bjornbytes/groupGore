@@ -79,7 +79,7 @@ end
 function PlayerMain:readInput()
   assert(not self.inputs[tick])
   local t = {tick = tick}
-  
+
   for _, k in pairs({'w', 'a', 's', 'd'}) do
     t[k] = love.keyboard.isDown(k)
   end

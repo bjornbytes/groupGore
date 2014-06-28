@@ -56,7 +56,7 @@ function MenuMain:join()
     return self:connect(love.system.getClipboardText())
   end
 
-  self:connect('')
+  self:connect('localhost')
 end
 
 function MenuMain:connect(ip)

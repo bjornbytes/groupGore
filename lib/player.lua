@@ -194,7 +194,7 @@ function Player:die()
     count = 64,
     vars = {x = self.x, y = self.y}
   })
-  ctx.event:emit('sound.play', {sound = 'die'})
+  ctx.event:emit('sound.play', {sound = 'die', x = self.x, y = self.y})
   ctx.buffs:removeAll(self)  
 
   self.x, self.y = 0, 0

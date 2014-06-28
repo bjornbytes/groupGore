@@ -3,6 +3,9 @@ Menu = class()
 function Menu:load()
   love.audio.tags.all.stop()
 
+  love.window.setMode(800, 600, {fullscreen = false, resizable = false})
+  love.mouse.setGrabbed(false)
+
   self.background = MenuBackground()
   self.ribbon = MenuRibbon()
   self.input = MenuInput()

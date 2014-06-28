@@ -24,6 +24,7 @@ function Game:update()
   self.particles:update()
   self.map:update()
   self.view:update()
+  self.sound:update()
   self.hud:update()
 end
 

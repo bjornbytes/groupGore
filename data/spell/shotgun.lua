@@ -88,7 +88,7 @@ Shotgun.activate = function(self)
     })
   end
 
-  ctx.event:emit('sound.play', {sound = 'shotgun'})
+  ctx.event:emit('sound.play', {sound = 'shotgun', x = self.x, y = self.y})
 end
 
 Shotgun.update = function(self)
