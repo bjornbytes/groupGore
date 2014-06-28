@@ -40,23 +40,12 @@ function MenuMain:mousepressed(x, y, button)
 end
 
 function MenuMain:host()
-  Context:add(Server)
-  self:connect('localhost')
-  do return end
-  gorgeous:send(gorgeous.msgServerCreate, {name = username .. '\'s server'}, function(data)
-    if data.success then  
-      Context:add(Server)
-      self:connect('localhost')
-    end
-  end)
+  love.thread.getChannel('goregous.in'):push({'createServer'})
+  ctx.loader:activate('Creating server')
 end
 
 function MenuMain:join()
-  if love.system.getClipboardText():match('%d+%.%d+%.%d+%.%d+') then
-    return self:connect(love.system.getClipboardText())
-  end
-
-  self:connect('localhost')
+  ctx:push(ctx.serverlist)
 end
 
 function MenuMain:connect(ip)
@@ -64,7 +53,6 @@ function MenuMain:connect(ip)
   serverPort = 6061
   Context:remove(self.menu)
   Context:add(Game)
-  tick = 1
   love.keyboard.setKeyRepeat(false)
 end
 

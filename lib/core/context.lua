@@ -18,10 +18,9 @@ function Context:run(key, ...)
   for i = #self.list, 1, -1 do
     ctx = self.list[i]
     if key == 'update' then
-      ctx.tick = ctx.tick or 0
-      ctx.tick = ctx.tick + 1
+      ctx.tick = (ctx.tick or 0) + 1
     end
-    tick = ctx.tick
+    tick = ctx.tick or 0
     if ctx[key] then ctx[key](ctx, ...) end
     ctx = nil
     tick = nil

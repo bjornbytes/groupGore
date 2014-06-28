@@ -14,6 +14,7 @@ function Menu:load()
   self.back = MenuBack()
   self.login = MenuLogin()
   self.main = MenuMain()
+  self.serverlist = MenuServerList()
 
   self.pages = {}
   
@@ -34,14 +35,29 @@ function Menu:update()
   while outbox:getCount() > 0 do
     local data = outbox:pop()
     if data[1] == 'login' then
-      if data[2] == 'nickname already in use' then
-        self.loader:deactivate()
-        self.error:activate('Nickname already in use')
-      else
+      self.loader:deactivate()
+      if data[2] == 'ok' then
         username = data[2]
         self:push(self.main)
-        self.loader:deactivate()
+      elseif data[2] == 'duplicate' then
+        self.error:activate('Nickname already in use')
+      else
+        self.error:activate('Problem logging in')
       end
+    elseif data[1] == 'createServer' then
+      self.loader:deactivate()
+      if data[2] == 'ok' then
+        Context:add(Server)
+        self.main:connect('localhost')
+      elseif data[2] == 'duplicate' then
+        self.error:activate('You are already running a server')
+      else
+        self.error:activate('Unable to create server')
+      end
+    elseif data[1] == 'listServers' then
+      table.remove(data, 1)
+      self.serverlist:setServers(data)
+      self.loader:deactivate()
     end
   end
 

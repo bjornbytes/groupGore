@@ -46,6 +46,5 @@ function MenuLogin:login()
   if #text == 0 then return end
 
   love.thread.getChannel('goregous.in'):push({'login', text})
-
   ctx.loader:activate('Logging in')
 end
