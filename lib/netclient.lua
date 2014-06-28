@@ -70,8 +70,6 @@ function NetClient:send(msg, data)
 end
 
 function NetClient:buffer(msg, data)
-  --table.insert(self.messageBuffer, {msg, data})
-  --self:sync()
   table.insert(self.messageBuffer, {msg, data, tick})
   self:sync()
 end
