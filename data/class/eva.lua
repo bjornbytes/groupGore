@@ -17,8 +17,12 @@ Eva.anchory = 133
 Eva.handx = 294
 Eva.handy = 156
 Eva.sprite = data.media.graphics.eva
+Eva.portrait = data.media.graphics.portraits.eva
 Eva.scale = .2
 Eva.quote = '???'
+Eva.offense = 8
+Eva.defense = 1
+Eva.utility = 6
 
 
 ----------------

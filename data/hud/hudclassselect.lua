@@ -6,6 +6,9 @@ function HudClassSelect:init()
   self.team = purple
   self.angle = 0
   self.active = true
+  self.offense = 0
+  self.defense = 0
+  self.utility = 0
   
   ctx.event:on(evtClass, function(data)
     self.active = false
@@ -15,6 +18,17 @@ end
 function HudClassSelect:update()
   self.angle = (self.angle + .65 * tickRate) % (2 * math.pi)
   if not love.mouse.isVisible() then love.mouse.setVisible(true) end
+
+  local u, v = ctx.hud.u, ctx.hud.v
+  local x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
+  for i = 1, #data.class do
+    if math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
+      self.offense = math.lerp(self.offense, data.class[i].offense, math.min(12 * tickRate, 1))
+      self.defense = math.lerp(self.defense, data.class[i].defense, math.min(12 * tickRate, 1))
+      self.utility = math.lerp(self.utility, data.class[i].utility, math.min(12 * tickRate, 1))
+      print(i)
+    end
+  end
 end
 
 function HudClassSelect:draw()
@@ -55,8 +69,9 @@ function HudClassSelect:draw()
       g.setColor(255, 255, 255, 150)
     end
 
-    local s = data.class[i].scale * ctx.view.scale * .75
-    g.draw(data.class[i].sprite, u * .09 * i + u * .04, v * .326 + u * .04, self.angle, s, s, data.class[i].anchorx, data.class[i].anchory)
+    g.setFont('pixel', 8)
+    g.printCenter(data.class[i].name, u * .09 * i + u * .04, v * .326 + u * .04)
+    g.setFont('BebasNeue', v * .065)
   end
 
   g.setColor(hover and white or gray)
@@ -135,6 +150,21 @@ function HudClassSelect:drawClassDetails(index)
   g.setFont('pixel', 8)
   g.setColor(255, 255, 255, 150)
   g.print(data.class[index].quote, u * .56 + 2, v * .243 + fh * 2)
+
+  g.setFont('BebasNeue', v * .04)
+  g.print('offense\ndefense\nutility', u * .56 + 2, v * .243 + fh * 2.75)
+
+  g.setColor(84, 28, 28)
+  g.rectangle('fill', u * .65 + .5, v * .243 + fh * 2.75 + 4.5, u * .2 * (self.offense / 10), g.getFont():getHeight() - 8)
+  g.setColor(70, 96, 67)
+  g.rectangle('fill', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + g.getFont():getHeight(), u * .2 * (self.defense / 10), g.getFont():getHeight() - 8)
+  g.setColor(30, 94, 99)
+  g.rectangle('fill', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + 2 * g.getFont():getHeight(), u * .2 * (self.utility / 10), g.getFont():getHeight() - 8)
+
+  g.setColor(255, 255, 255, 150)
+  g.rectangle('line', u * .65 + .5, v * .243 + fh * 2.75 + 4.5, u * .2, g.getFont():getHeight() - 8)
+  g.rectangle('line', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + g.getFont():getHeight(), u * .2, g.getFont():getHeight() - 8)
+  g.rectangle('line', u * .65 + .5, v * .243 + fh * 2.75 + 4.5 + 2 * g.getFont():getHeight(), u * .2, g.getFont():getHeight() - 8)
 
   g.setFont('BebasNeue', v * .065)
   g.setColor(255, 255, 255)
