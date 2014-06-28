@@ -32,6 +32,8 @@ function View:init()
   self.prevy = 0
   self.prevscale = self.scale
 
+  self.shake = 0
+
   self:register(data.media.shaders.motionBlur, 'shader')
   self:register(data.media.shaders.reddify, 'shader')
 end
@@ -44,6 +46,8 @@ function View:update()
   self:follow()
   self:contain()
 
+  self.shake = math.lerp(self.shake, 0, 8 * tickRate)
+
   table.sort(self.draws, function(a, b)
     return a.depth > b.depth
   end)
@@ -51,6 +55,10 @@ end
 
 function View:draw()
   local x, y, s = unpack(table.interpolate({self.prevx, self.prevy, self.prevscale}, {self.x, self.y, self.scale}, tickDelta / tickRate))
+  local shakex = 1 - (2 * love.math.noise(self.shake + x + tickDelta))
+  local shakey = 1 - (2 * love.math.noise(self.shake + y + tickDelta))
+  x = x + (shakex * self.shake)
+  y = y + (shakey * self.shake)
   local w, h = g.getDimensions()
 
   g.push()
@@ -185,4 +193,9 @@ end
 
 function View:frameMouseY()
   return love.mouse.getY() - self.frame.y
+end
+
+function View:screenshake(amount)
+  if self.shake > amount then self.shake = self.shake + (amount / 2) end
+  self.shake = amount
 end

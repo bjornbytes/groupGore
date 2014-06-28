@@ -23,6 +23,7 @@ function Dagger:activate(owner)
   end
   
   ctx.event:emit('sound.play', {sound = backstab and 'backstab' or 'slash', x = self.x, y = self.y})
+  if backstab and ctx.view then ctx.view:screenshake(25) end
 end
 
 function Dagger:update(owner)
