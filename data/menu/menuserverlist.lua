@@ -17,6 +17,12 @@ function MenuServerList:draw()
   g.rectangle('fill', 16, h(.3) + 16, w() - 32, h(.5) - 32)
   g.setFont('pixel', 8)
 
+  if #self.servers == 0 then
+    g.setColor(200, 50, 50)
+    g.printCenter('There are no online servers', w(.5), h(.3) + 16 + (h(.5) - 32) / 2)
+    return
+  end
+
   local x, y = love.mouse.getPosition()
   for i = 1, #self.servers do
     local yy = h(.3) + 24 + (g.getFont():getHeight() * (i - 1))
