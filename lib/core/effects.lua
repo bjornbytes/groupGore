@@ -6,6 +6,7 @@ function Effects:init()
   self:add('darkenBehind')
   self:add('motionBlur')
   self:add('deathDesaturate')
+  self:add('vignette')
 end
 
 function Effects:update()
