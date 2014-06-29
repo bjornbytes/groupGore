@@ -118,8 +118,9 @@ function PlayerMain:drawPosition()
   return p.x, p.y
 end
 
-function PlayerMain:hurt()
+function PlayerMain:hurt(data)
   self.lastHurt = tick
+  ctx.view:screenshake(math.clamp(data.amount, 0, 50) / 2)
 end
 
 function PlayerMain:die()
