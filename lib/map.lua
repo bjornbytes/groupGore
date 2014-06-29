@@ -88,6 +88,34 @@ function Map:init(name)
   if self.soundscape then
     ctx.event:emit('sound.loop', {sound = self.soundscape, minrange = 10000, maxrange = 10000})
   end
+
+  if ctx.view then
+    local working = love.graphics.newCanvas(self.width / 4, self.height / 4)
+    self.shadows = love.graphics.newCanvas(self.width / 4, self.height / 4)
+    self.shadows:renderTo(function()
+      love.graphics.setColor(0, 0, 0)
+      table.each(self.props, function(p)
+        if p.code == 'wall' then
+          love.graphics.rectangle('fill', p.x / 4, p.y / 4, p.width / 4, p.height / 4)
+        end
+      end)
+    end)
+    for i = 1, 3 do
+      data.media.shaders.horizontalBlur:send('amount', .0008)
+      working:renderTo(function()
+        love.graphics.setColor(255, 255, 255)
+        love.graphics.setShader(data.media.shaders.horizontalBlur)
+        love.graphics.draw(self.shadows)
+        love.graphics.setShader()
+      end)
+      data.media.shaders.verticalBlur:send('amount', .0008)
+      self.shadows:renderTo(function()
+        love.graphics.setShader(data.media.shaders.verticalBlur)
+        love.graphics.draw(working)
+        love.graphics.setShader()
+      end)
+    end
+  end
 end
 
 function Map:update()
@@ -97,6 +125,7 @@ end
 
 function Map:draw()
   love.graphics.draw(self.batch)
+  love.graphics.draw(self.shadows, 0, 0, 0, 4, 4)
 end
 
 function Map:score(team)
