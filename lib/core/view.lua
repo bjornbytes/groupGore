@@ -75,6 +75,7 @@ function View:draw()
   g.pop()
 
   for i = 1, #self.effects do
+    g.setColor(255, 255, 255)
     g.setShader(self.effects[i].shader)
     g.setCanvas(self.backCanvas)
     g.draw(self.canvas)

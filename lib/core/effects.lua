@@ -3,6 +3,7 @@ Effects = class()
 function Effects:init()
   self.active = love.graphics.isSupported('shader')
   self.effects = {}
+  self:add('darkenBehind')
   self:add('motionBlur')
   self:add('deathDesaturate')
 end
