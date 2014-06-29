@@ -7,7 +7,6 @@ function PlayerMain:activate()
 
   self.alpha = 1
   
-  self.lastHurt = tick
   if self.heartbeatSound then self.heartbeatSound:stop() end
   self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
   if self.heartbeatSound then self.heartbeatSound:pause() end
@@ -119,7 +118,6 @@ function PlayerMain:drawPosition()
 end
 
 function PlayerMain:hurt(data)
-  self.lastHurt = tick
   ctx.view:screenshake(math.clamp(data.amount, 0, 50) / 2)
 end
 

@@ -28,6 +28,8 @@ function Players:init()
   
   ctx.event:on(evtDamage, function(data)
     local to, from = self:get(data.id), self:get(data.from)
+    to.lastHurt = tick
+    from.lastDamageDealt = tick
     to:hurt(data)
     local oldAmt = data.amount
     data.amount = data.amount * from.lifesteal
@@ -36,7 +38,10 @@ function Players:init()
   end)
   
   ctx.event:on(evtDead, function(data)
-    local p = self:get(data.id):die()
+    local killer, victim = self:get(data.kill), self:get(data.id)
+    killer.kills = killer.kills + 1
+    victim.deaths = victim.deaths + 1
+    victim:die()
   end)
   
   ctx.event:on(evtSpawn, function(data)

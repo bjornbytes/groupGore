@@ -37,6 +37,9 @@ function Player:init()
   self.username = ''
   self.class = nil
   self.team = nil
+
+  self.kills = 0
+  self.deaths = 0
   
   self.x = 0
   self.y = 0
@@ -45,10 +48,12 @@ function Player:init()
   self.slots = {}
   self.weapon = 1
   self.skill = 1
-  
+
   self.health = 0
   self.maxHealth = 0
   self.shield = 0
+  self.lastHurt = tick
+  self.lastDamageDealt = tick
   self.ded = false
 
   self.lifesteal = 0

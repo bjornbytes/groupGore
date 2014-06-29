@@ -3,7 +3,6 @@ PlayerServer = extend(Player)
 function PlayerServer:activate()
   self.shields = {}
 
-  self.lastHurt = tick
   self.hurtHistory = {}
   self.helpHistory = {}
 
@@ -135,7 +134,6 @@ function PlayerServer:hurt(data)
   
   table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount, from = data.from})
   target.health = math.max(target.health - data.amount, 0)
-  self.lastHurt = data.tick
 
   if target.health <= 0 then
     if target == self then
