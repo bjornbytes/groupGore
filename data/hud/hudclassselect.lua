@@ -3,12 +3,13 @@ HudClassSelect = class()
 local g = love.graphics
 
 function HudClassSelect:init()
-  self.team = purple
+  self.team = love.math.random(purple, orange)
   self.angle = 0
   self.active = true
   self.offense = 0
   self.defense = 0
   self.utility = 0
+  self.teamCt = {0, 0}
   
   ctx.event:on(evtClass, function(data)
     self.active = false
@@ -28,6 +29,12 @@ function HudClassSelect:update()
       self.utility = math.lerp(self.utility, data.class[i].utility, math.min(12 * tickRate, 1))
     end
   end
+
+  self.teamCt[0] = 0
+  self.teamCt[1] = 0
+  ctx.players:each(function(p)
+    self.teamCt[p.team] = self.teamCt[p.team] + 1
+  end)
 end
 
 function HudClassSelect:draw()
@@ -88,6 +95,11 @@ function HudClassSelect:draw()
   
   g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})
   g.print(self.team == purple and 'purple' or 'orange', u * .32, v * .106)
+
+  g.setColor(190, 160, 220)
+  g.print(self.teamCt[0], u * .5, v * .106)
+  g.setColor(240, 160, 140)
+  g.print(self.teamCt[1], u * .5 + math.max(u * .05, g.getFont():getWidth(tostring(self.teamCt[0]))), v * .106)
 end
 
 function HudClassSelect:keypressed(key)
