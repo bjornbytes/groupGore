@@ -96,6 +96,15 @@ Shotgun.activate = function(self)
     }
   })
 
+  ctx.event:emit('particle.create', {
+    kind = 'shell',
+    vars = {
+      x = self.x,
+      y = self.y,
+      direction = self.owner.angle + love.math.random() * .8 - .4
+    }
+  })
+
   ctx.event:emit('sound.play', {sound = 'shotgun', x = self.x, y = self.y})
   if ctx.view then ctx.view:screenshake(5) end
 end
