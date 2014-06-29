@@ -19,16 +19,20 @@ SMG.activate = function(self)
 
   self.angle = self.owner.angle
   self.angle = self.angle - (data.weapon.smg.spread / 2) + (love.math.random() * data.weapon.smg.spread)
-  local hit, dis = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})
-  self.len = hit and dis or 900
-  
-  local target = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(self.len, self.angle), self.y + math.dy(self.len, self.angle), {
-    tag = 'player',
-    fn = function(p)
-      return p.team ~= self.owner.team
-    end,
-    first = true
-  })
+  self.len = 0
+  local target = nil
+  if not ctx.collision:lineTest(self.owner.x, self.owner.y, self.x, self.y, {tag = 'wall'}) then
+    local hit, dis = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})
+    self.len = hit and dis or 900
+    
+    target = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(self.len, self.angle), self.y + math.dy(self.len, self.angle), {
+      tag = 'player',
+      fn = function(p)
+        return p.team ~= self.owner.team
+      end,
+      first = true
+    })
+  end
 
   if target then
     self.len = math.distance(self.x, self.y, target.x, target.y)
@@ -46,7 +50,7 @@ SMG.activate = function(self)
     })
   end
 
-  if target and self.len < 900 then
+  if not target and self.len < 900 then
     for _ = 1, 4 do
       ctx.event:emit('particle.create', {
         kind = 'spark',
