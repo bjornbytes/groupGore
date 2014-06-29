@@ -20,9 +20,7 @@ end
 
 Spark.draw = function(self)
   love.graphics.setColor(255, 255, 0, self.alpha * 255)
-  love.graphics.setLineWidth(.5)
   love.graphics.line(self.x, self.y, self.x + math.dx(self.length, self.angle), self.y + math.dy(self.length, self.angle))
-  love.graphics.setLineWidth(1)
 end
 
 return Spark
