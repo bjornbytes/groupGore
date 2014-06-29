@@ -14,7 +14,11 @@ function HudFeed:update()
     k.y = math.lerp(k.y, k.targetY, 30 * tickRate)
   end
 
-  self.alpha = timer.rot(self.alpha)
+  if love.keyboard.isDown('tab') and self.alpha < 1.5 then
+    self.alpha = math.lerp(self.alpha, 1.5, math.min(5 * tickRate, 1))
+  else
+    self.alpha = timer.rot(self.alpha)
+  end
 end
 
 function HudFeed:draw()
