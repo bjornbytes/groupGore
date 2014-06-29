@@ -52,8 +52,8 @@ function Player:init()
   self.health = 0
   self.maxHealth = 0
   self.shield = 0
-  self.lastHurt = tick
-  self.lastDamageDealt = tick
+  self.lastHurt = -math.huge
+  self.lastDamageDealt = -math.huge
   self.ded = false
 
   self.lifesteal = 0

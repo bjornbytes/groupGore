@@ -6,6 +6,7 @@ function Menu:load()
   love.window.setMode(800, 600, {fullscreen = false, resizable = false})
   love.mouse.setGrabbed(false)
   love.mouse.setCursor(love.mouse.newCursor('data/media/graphics/cursor.png'))
+  love.mouse.setVisible(true)
 
   self.background = MenuBackground()
   self.ribbon = MenuRibbon()
