@@ -71,6 +71,14 @@ SMG.activate = function(self)
     end
   end
 
+  ctx.event:emit('particle.create', {
+    kind = 'muzzleFlash',
+    vars = {
+      owner = self.owner.id,
+      weapon = 'smg'
+    }
+  })
+
   ctx.event:emit('sound.play', {sound = 'smg', x = self.x, y = self.y})
 end
 

@@ -88,6 +88,14 @@ Shotgun.activate = function(self)
     })
   end
 
+  ctx.event:emit('particle.create', {
+    kind = 'muzzleFlash',
+    vars = {
+      owner = self.owner.id,
+      weapon = 'shotgun'
+    }
+  })
+
   ctx.event:emit('sound.play', {sound = 'shotgun', x = self.x, y = self.y})
   if ctx.view then ctx.view:screenshake(5) end
 end
