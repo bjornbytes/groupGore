@@ -29,7 +29,9 @@ function Players:init()
   ctx.event:on(evtDamage, function(data)
     local to, from = self:get(data.id), self:get(data.from)
     to.lastHurt = tick
-    from.lastDamageDealt = tick
+    if data.id ~= data.from then
+      from.lastDamageDealt = tick
+    end
     to:hurt(data)
     local oldAmt = data.amount
     data.amount = data.amount * from.lifesteal

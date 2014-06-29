@@ -51,19 +51,14 @@ function SMG:crosshair()
 
   local r = math.abs(math.atan(self.spread)) * math.max(math.distance(p.x, p.y, vx, vy) - d2, 0) * s
 
-  g.setColor(255, 255, 255, self.timers.switch > 0 and 128 or 255)
+  local alpha = self.timers.switch > 0 and 128 or 255
+  local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
+  g.setColor(table.interpolate({255, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
   g.circle('line', x, y, r )
   g.line(x, y - r - len, x, y - r + len)
   g.line(x - r - len, y, x - r + len, y)
   g.line(x + r - len, y, x + r + len, y)
   g.line(x, y + r - len, x, y + r + len)
-
-  local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
-  local offset = math.clamp(factor - .6, 0, 1) * 30 + 4
-  love.graphics.setColor(255, 255, 255, math.clamp(factor * 4.5, 0, 1) * 255)
-  for i = math.pi / 4, math.pi * 2, math.pi / 2 do
-    love.graphics.line(x + math.dx(offset, i), y + math.dy(offset, i), x + math.dx(offset + 8, i), y + math.dy(offset + 8, i))
-  end
 end
 
 return SMG

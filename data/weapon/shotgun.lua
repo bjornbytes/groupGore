@@ -51,16 +51,10 @@ function Shotgun:crosshair()
   x = x - math.dx(math.min(d2, d) * s, dir)
   y = y - math.dy(math.min(d2, d) * s, dir)
 
-  g.setColor(255, 255, 255, alpha)
+  local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
+  g.setColor(table.interpolate({255, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
   local radius = math.abs(math.atan(self.spread / 2)) * math.max(math.distance(p.x, p.y, vx, vy) - d2, 0) * s
   g.circle('line', x, y, radius)
-
-  local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
-  local offset = math.clamp(factor - .6, 0, 1) * 30 + 4
-  love.graphics.setColor(255, 255, 255, math.clamp(factor * 4.5, 0, 1) * 255)
-  for i = math.pi / 4, math.pi * 2, math.pi / 2 do
-    love.graphics.line(x + math.dx(offset, i), y + math.dy(offset, i), x + math.dx(offset + 8, i), y + math.dy(offset + 8, i))
-  end
 end
 
 return Shotgun

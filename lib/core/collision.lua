@@ -38,6 +38,7 @@ end
 
 function Collision:detach(data)
   self.hc:remove(data.object.shape)
+  data.object.shape = nil
 end
 
 function Collision:move(data)

@@ -203,7 +203,6 @@ function Player:die()
   ctx.buffs:removeAll(self)
 
   self.alpha = 0
-  ctx.event:emit('collision.move', {object = self, x = 0, y = 0})
 end
 
 function Player:spawn()
