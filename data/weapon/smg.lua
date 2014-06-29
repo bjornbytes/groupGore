@@ -51,7 +51,7 @@ function SMG:crosshair()
 
   local r = math.abs(math.atan(self.spread)) * math.max(math.distance(p.x, p.y, vx, vy) - d2, 0) * s
 
-  g.setColor(255, 255, 255)
+  g.setColor(255, 255, 255, self.timers.switch > 0 and 128 or 255)
   g.circle('line', x, y, r )
   g.line(x, y - r - len, x, y - r + len)
   g.line(x - r - len, y, x - r + len, y)

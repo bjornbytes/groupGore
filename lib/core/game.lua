@@ -5,6 +5,7 @@ Game.tag = 'client'
 function Game:load()
   self.event = Event()
   self.net = NetClient()
+  self.input = Input()
   self.view = View()
   self.collision = Collision()
   self.players = Players()

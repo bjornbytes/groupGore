@@ -25,6 +25,8 @@ function Hud:init()
 end
 
 function Hud:update()
+  ctx.input.keyboardEnabled = not self.chat.active and not self.classSelect.active
+  ctx.input.mouseEnabled = not self.classSelect.active
   if self.classSelect.active then return self.classSelect:update() end
 
   self.health:update()

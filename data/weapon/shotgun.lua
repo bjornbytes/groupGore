@@ -36,6 +36,7 @@ function Shotgun:crosshair()
   local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
   local alpha = 50 + ((300 - math.clamp(d - 200, 0, 300)) / 300) * 205
+  if self.timers.switch > 0 then alpha = alpha / 2 end
 
   local dir = p.angle
   local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s

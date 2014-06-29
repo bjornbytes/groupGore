@@ -81,19 +81,19 @@ function PlayerMain:readInput()
   local t = {tick = tick}
 
   for _, k in pairs({'w', 'a', 's', 'd'}) do
-    t[k] = love.keyboard.isDown(k)
+    t[k] = ctx.input:keyDown(k)
   end
   
   t.x = ctx.view:worldMouseX()
   t.y = ctx.view:worldMouseY()
-  t.l = love.mouse.isDown('l')
-  t.r = love.mouse.isDown('r')
+  t.l = ctx.input:mouseDown('l')
+  t.r = ctx.input:mouseDown('r')
 
   for i = 1, 5 do
-    if love.keyboard.isDown(tostring(i)) then t.slot = i break end
+    if ctx.input:keyDown(tostring(i)) then t.slot = i break end
   end
 
-  t.reload = love.keyboard.isDown('r')
+  t.reload = ctx.input:keyDown('r')
 
   table.insert(self.inputs, t)
 
