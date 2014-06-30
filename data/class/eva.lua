@@ -6,7 +6,7 @@ Eva.code = 'eva'
 -- Stats
 ----------------
 Eva.health = 180
-Eva.speed  = 225
+Eva.speed  = 245
 
 
 ----------------
