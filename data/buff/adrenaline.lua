@@ -28,7 +28,9 @@ end
 function Adrenaline:update()
   self.hurtTimer = self.hurtTimer - 1
   if self.hurtTimer <= 0 then
-    ctx.net:emit(evtDamage, {id = self.owner.id, amount = Adrenaline.drain * Adrenaline.rate, from = self.owner.id, tick = tick})
+    if self.owner.health > Adrenaline.drain * Adrenaline.rate then
+      ctx.net:emit(evtDamage, {id = self.owner.id, amount = Adrenaline.drain * Adrenaline.rate, from = self.owner.id, tick = tick})
+    end
     self.hurtTimer = math.round(Adrenaline.rate / tickRate)
     for _ = 1, 8 do
       ctx.event:emit('particle.create', {
