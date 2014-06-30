@@ -48,7 +48,7 @@ end
 function HudFeed:insert(data)
   local u, v = ctx.hud.u, ctx.hud.v
   while #self.entries > 3 do table.remove(self.entries, 1) end
-  if #self.entries == 3 then self.entries[1].targetX = w() end
+  if #self.entries == 3 then self.entries[1].targetX = u end
   for i = 1, #self.entries do self.entries[i].targetY = self.entries[i].targetY + v * .05 + 4 end
   local t = table.copy(data)
   t.x = u
