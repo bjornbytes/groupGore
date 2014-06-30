@@ -7,7 +7,7 @@ local outbox = love.thread.getChannel('goregous.out')
 local socket = (require('socket')).tcp()
 socket:settimeout(10)
 
-local _, e = socket:connect('107.4.63.70', 6060)
+local _, e = socket:connect('127.0.0.1', 6060)
 if e then error('Can\'t connect to goregous') end 
 
 socket:settimeout(0)
