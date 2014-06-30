@@ -36,23 +36,15 @@ function love.run()
   end
 end
 
-local function error_printer(msg, layer)
-  print((debug.traceback('Error: ' .. tostring(msg), 1 + (layer or 1)):gsub('\n[^\n]+$', '')))
-end
-
 function love.errhand(msg)
   msg = tostring(msg)
 
-  error_printer(msg, 2)
+  print((debug.traceback('Error: ' .. tostring(msg), 1 + 2):gsub('\n[^\n]+$', '')))
 
-  if not love.window or not love.graphics or not love.event then
-    return
-  end
+  if not love.window or not love.graphics or not love.event then return end
 
   if not love.graphics.isCreated() or not love.window.isCreated() then
-    if not pcall(love.window.setMode, 800, 600) then
-      return
-    end
+    if not pcall(love.window.setMode, 800, 600) then return end
   end
 
   -- Reset state.
@@ -108,19 +100,13 @@ function love.errhand(msg)
     love.event.pump()
 
     for e, a, b, c in love.event.poll() do
-      if e == "quit" then
-        return
-      end
-      if e == "keypressed" and a == "escape" then
-        return
-      end
+      if e == 'quit' then return end
+      if e == 'keypressed' and a == 'escape' then return end
     end
 
     draw()
 
-    if love.timer then
-      love.timer.sleep(0.1)
-    end
+    if love.timer then love.timer.sleep(0.1) end
   end
 end
 
