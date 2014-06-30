@@ -4,11 +4,11 @@ vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) 
     return Texel(texture, texture_coords) * color;
   }
 
-  vec4 output = Texel(texture, texture_coords) * .5;
+  vec4 result = Texel(texture, texture_coords) * .5;
   texture_coords -= velocity / 350;
-  output += Texel(texture, texture_coords) * .3;
+  result += Texel(texture, texture_coords) * .3;
   texture_coords -= velocity / 350;
-  output += Texel(texture, texture_coords) * .2;
+  result += Texel(texture, texture_coords) * .2;
 
-  return output * color;
+  return result * color;
 }

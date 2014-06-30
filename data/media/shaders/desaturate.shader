@@ -18,10 +18,10 @@ vec3 hsv2rgb(vec3 c) {
 }
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
-  vec4 output = Texel(texture, texture_coords);
-  vec3 hsv = rgb2hsv(output.rgb);
+  vec4 result = Texel(texture, texture_coords);
+  vec3 hsv = rgb2hsv(result.rgb);
   hsv.g *= amount;
-  output = vec4(hsv2rgb(hsv), output.a);
+  result = vec4(hsv2rgb(hsv), result.a);
 
-  return output * color;
+  return result * color;
 }
