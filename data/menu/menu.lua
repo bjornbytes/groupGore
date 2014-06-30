@@ -7,6 +7,7 @@ function Menu:load()
   love.mouse.setGrabbed(false)
   love.mouse.setCursor(love.mouse.newCursor('data/media/graphics/cursor.png'))
   love.mouse.setVisible(true)
+  love.keyboard.setKeyRepeat(true)
 
   self.background = MenuBackground()
   self.ribbon = MenuRibbon()

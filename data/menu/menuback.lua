@@ -20,5 +20,6 @@ end
 function MenuBack:mousepressed(x, y, button)
   if button == 'l' and math.inside(x, y, 0, h(.8), w(), h(.2)) then
     ctx:pop()
+    data.media.sounds.click:play()
   end
 end

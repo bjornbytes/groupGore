@@ -15,9 +15,8 @@ function Sound:play(_data)
   local name = _data.sound
   if self.mute then return end
   local sound = data.media.sounds[name]:play()
-  if _data.x and _data.y then
-    sound:setPosition(_data.x, _data.y, _data.z or 0)
-  end
+  sound:setRelative(_data.relative)
+  sound:setPosition(_data.x or 0, _data.y or 0, _data.z or 0)
   sound:setAttenuationDistances(_data.minrange or 400, _data.maxrange or 1000)
   return sound
 end

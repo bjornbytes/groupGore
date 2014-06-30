@@ -133,6 +133,7 @@ function HudClassSelect:mousereleased(x, y, button)
           class = i,
           team = self.team
         })
+        ctx.event:emit('sound.play', {sound = 'click', relative = true})
       end
     end
     
@@ -141,12 +142,15 @@ function HudClassSelect:mousereleased(x, y, button)
     local font = g.getFont()
     if math.inside(x, y, u * .08, v * .106, u * .24 + font:getWidth(str), font:getHeight()) then
       self.team = 1 - self.team
+      ctx.event:emit('sound.play', {sound = 'click', relative = true})
     elseif math.inside(x, y, u * .08, v * (1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
       ctx.net:send(msgLeave)
       ctx.net.server:disconnect()
+      ctx.event:emit('sound.play', {sound = 'click', relative = true})
     elseif math.inside(x, y, u * .08, v * (1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
       ctx.net:send(msgLeave)
       ctx.net.server:disconnect()
+      ctx.event:emit('sound.play', {sound = 'click', relative = true})
       love.event.quit()
     end
   end

@@ -24,10 +24,6 @@ function MenuMain:draw()
   g.printCenter('Exit', w(.05), anchor + ctx.ribbon.margin * 1.5, false, true)
 end
 
-function MenuMain:keypressed(key)
-  if key == 'return' then self:host() end
-end
-
 function MenuMain:mousepressed(x, y, button)
   if button == 'l' then
     local ribbon = ctx.ribbon:test(x, y)
@@ -36,6 +32,8 @@ function MenuMain:mousepressed(x, y, button)
     elseif ribbon == 2 then self:join()
     elseif ribbon == 3 then self:edit()
     elseif ribbon == 4 then love.event.quit() end
+
+    if ribbon then data.media.sounds.click:play() end
   end
 end
 

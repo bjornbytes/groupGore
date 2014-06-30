@@ -16,6 +16,8 @@ function MenuLogin:mousepressed(x, y, button)
 
   if ribbon == 1 then ctx.input:focusInput('nickname')
   elseif ribbon == 2 then self:login() end
+
+  if ribbon then data.media.sounds.click:play() end
 end
 
 function MenuLogin:keypressed(key)
@@ -47,4 +49,5 @@ function MenuLogin:login()
 
   love.thread.getChannel('goregous.in'):push({'login', username})
   ctx.loader:activate('Logging in')
+  data.media.sounds.click:play()
 end

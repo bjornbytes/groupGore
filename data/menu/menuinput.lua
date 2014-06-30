@@ -7,13 +7,17 @@ end
 
 function MenuInput:textinput(character)
   if self.focused then
-    if character:match('%w') then self.inputs[self.focused].val = self.inputs[self.focused].val .. character end
+    if character:match('%w') or character == '\b' then
+      self.inputs[self.focused].val = self.inputs[self.focused].val .. character
+      data.media.sounds.click:play()
+    end
   end
 end
 
 function MenuInput:keypressed(key)
-  if key == 'backspace' and self.focused then
+  if key == 'backspace' and self.focused and #self.inputs[self.focused].val > 0 then
     self.inputs[self.focused].val = self.inputs[self.focused].val:sub(1, -2)
+    data.media.sounds.click:play()
   elseif key == 'tab' then
     if not self.focused then
       self:focusInput(self.inputs[1])
@@ -24,6 +28,7 @@ function MenuInput:keypressed(key)
       end
       self:focusInput(self.inputs[idx % #self.inputs + 1])
     end
+    data.media.sounds.click:play()
   end
 end
 

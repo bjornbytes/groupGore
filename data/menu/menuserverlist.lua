@@ -66,6 +66,7 @@ end
 function MenuServerList:refresh()
   love.thread.getChannel('goregous.in'):push({'listServers'})
   ctx.loader:activate('Finding servers')
+  data.media.sounds.click:play()
 end
 
 function MenuServerList:setServers(servers)
