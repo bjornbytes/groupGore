@@ -18,7 +18,7 @@ function HudChat:update()
   local u, v = ctx.hud.u, ctx.hud.v
   self.timer = timer.rot(self.timer)
   if self.active then self.timer = 2 end
-  self.offset = math.lerp(self.offset, (self.timer == 0) and -(u * .35) - 4 or 0, tickRate * 30)
+  self.offset = math.lerp(self.offset, (self.timer == 0) and -(u * .35) - 4 or 0, math.min(tickRate * 30, 1))
 end
 
 function HudChat:draw()

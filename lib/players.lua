@@ -41,7 +41,9 @@ function Players:init()
   
   ctx.event:on(evtDead, function(data)
     local killer, victim = self:get(data.kill), self:get(data.id)
-    killer.kills = killer.kills + 1
+    if data.kill ~= data.id then
+      killer.kills = killer.kills + 1
+    end
     victim.deaths = victim.deaths + 1
     victim:die()
   end)

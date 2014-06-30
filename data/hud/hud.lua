@@ -14,6 +14,7 @@ function Hud:init()
   self.buffs = HudBuffs()
   self.feed = HudFeed()
   self.chat = HudChat()
+  self.scoreboard = HudScoreboard()
   self.classSelect = HudClassSelect()
   self.debug = HudDebug()
   
@@ -33,6 +34,7 @@ function Hud:update()
   self.chat:update()
   self.feed:update()
   self.icons:update()
+  self.scoreboard:update()
 end
 
 function Hud:gui()
@@ -48,6 +50,7 @@ function Hud:gui()
   self.buffs:draw()
   self.feed:draw()
   self.chat:draw()
+  self.scoreboard:draw()
   self:crosshair()
   if self._debug then self.debug:draw() end
 end

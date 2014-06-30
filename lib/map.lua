@@ -60,6 +60,7 @@ function Map:init(name)
   self.pointLimit = 5
 
   ctx.event:on(evtDead, function(data)
+    if data.id == data.kill then return end
     local team = 1 - ctx.players:get(data.id).team
     self:score(team)
     if self.points[team] >= self.pointLimit then
