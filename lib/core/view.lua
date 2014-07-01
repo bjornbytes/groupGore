@@ -3,7 +3,7 @@ View = class()
 local g = love.graphics
 
 function View:init()
-  --love.window.setMode(960, 600, {fullscreen = false, resizable = true, vsync = false})
+  love.window.setMode(960, 600, {fullscreen = false, resizable = true, vsync = false})
   --love.mouse.setGrabbed(true)
 
   self.x = 0
@@ -116,6 +116,9 @@ function View:resize()
 
   self.canvas = love.graphics.newCanvas(w, h, 'normal', 4)
   self.backCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
+  data.media.refresh('shaders')
+  data.media.refresh('graphics')
+  Typo.resize()
 end
 
 function View:register(x, action)

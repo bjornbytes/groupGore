@@ -50,5 +50,4 @@ function Game:resize()
   self.view:resize()
   self.hud:resize()
   self.effects:resize()
-  Typo:resize()
 end

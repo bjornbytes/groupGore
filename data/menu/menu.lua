@@ -3,7 +3,8 @@ Menu = class()
 function Menu:load()
   love.audio.tags.all.stop()
 
-  love.window.setMode(800, 600, {fullscreen = false, resizable = false})
+  love.window.setMode(800, 600, {fullscreen = false, resizable = true})
+  ctx:resize()
   love.mouse.setGrabbed(false)
   love.mouse.setCursor(love.mouse.newCursor('data/media/graphics/cursor.png'))
   love.mouse.setVisible(true)
@@ -95,7 +96,7 @@ function Menu:mousepressed(x, y, button)
 end
 
 function Menu:resize()
-  Typo:resize()
+  Typo.resize()
 end
 
 function Menu:push(page)

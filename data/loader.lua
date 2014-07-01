@@ -20,9 +20,14 @@ data.load = function()
   end
   
   data.media = {}
-  data.media.graphics = setmetatable({_path = 'data/media/graphics'}, {__index = lookup('.png', love.graphics.newImage)})
-  data.media.shaders = setmetatable({_path = 'data/media/shaders'}, {__index = lookup('.shader', love.graphics.newShader)})
-  data.media.sounds = setmetatable({_path = 'data/media/sounds'}, {__index = lookup('.ogg', love.audio.newSource)})
+  data.media.refresh = function(k)
+    if k == 'graphics' then data.media.graphics = setmetatable({_path = 'data/media/graphics'}, {__index = lookup('.png', love.graphics.newImage)})
+    elseif k == 'shaders' then data.media.shaders = setmetatable({_path = 'data/media/shaders'}, {__index = lookup('.shader', love.graphics.newShader)})
+    elseif k == 'sounds' then data.media.sounds = setmetatable({_path = 'data/media/sounds'}, {__index = lookup('.ogg', love.audio.newSource)}) end
+  end
+  data.media.refresh('graphics')
+  data.media.refresh('shaders')
+  data.media.refresh('sounds')
 
   -- Data
   local function load(dir, type, fn)
