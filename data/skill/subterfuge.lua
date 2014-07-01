@@ -10,7 +10,11 @@ function Subterfuge:activate(owner)
 		if data.kill == owner.id then
 			ctx.buffs:add(owner, 'subterfuge')
 		end
-	end)
+	end, self)
+end
+
+function Subterfuge:deactivate(owner)
+  ctx.event:remove(evtDead, self)
 end
 
 function Subterfuge:value(owner)

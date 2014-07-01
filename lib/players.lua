@@ -64,6 +64,7 @@ end
 function Players:deactivate(id)
   if ctx.view then ctx.view:unregister(self.players[id]) end
   ctx.event:emit('collision.detach', {object = self.players[id]})
+  self.players[id]:deactivate()
   for i = 1, self.max do
     if self.active[i] == id then table.remove(self.active, i) break end
   end
@@ -85,7 +86,13 @@ end
 
 function Players:setClass(id, class, team)
   local p = self.players[id]
-  if not table.has(self.active, id) then self:activate(id) end
+  if not table.has(self.active, id) then
+    self:activate(id)
+  else
+    table.each(p.slots, function(slot)
+      f.exe(slot.deactivate, slot, p)
+    end)
+  end
   p.class = data.class[class]
   p.team = team
   p:activate()

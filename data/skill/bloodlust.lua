@@ -17,7 +17,11 @@ function Bloodlust:activate(owner)
     if data.kill == owner.id and data.id ~= owner.id then
       ctx.buffs:add(owner, 'bloodlust')
     end
-  end)
+  end, self)
+end
+
+function Bloodlust:deactivate(owner)
+  ctx.event:remove(evtDead, self)
 end
 
 function Bloodlust:value(owner)

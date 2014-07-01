@@ -91,6 +91,10 @@ function Player:activate()
   self.depth = -self.id
 end
 
+function Player:deactivate()
+  self.username = ''
+end
+
 function Player:update()
   if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self.cloak = timer.rot(self.cloak)
@@ -189,6 +193,7 @@ Player.heal = f.empty
 
 function Player:die()
   self.ded = 5
+  self.x, self.y = 0, 0
  
   ctx.event:emit('particle.create', {
     kind = 'skull',

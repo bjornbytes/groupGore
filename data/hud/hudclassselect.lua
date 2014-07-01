@@ -12,7 +12,7 @@ function HudClassSelect:init()
   self.teamCt = {0, 0}
   
   ctx.event:on(evtClass, function(data)
-    self.active = false
+    if data.id == ctx.id then self.active = false end
   end)
 end
 
