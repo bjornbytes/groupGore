@@ -4,7 +4,7 @@ Dagger.hp = .5
 Dagger.radius = 18
 Dagger.distance = 45
 
-function Dagger:activate(owner)
+function Dagger:activate(visions)
   self.hp = Dagger.hp
   
   self.angle = self.owner.angle
@@ -18,7 +18,10 @@ function Dagger:activate(owner)
   if self.target then
     backstab = math.abs(math.anglediff(self.target.angle, math.direction(self.target.x, self.target.y, self.owner.x, self.owner.y))) > math.pi / 2
     local damage = data.weapon.dagger.damage
-    if backstab then damage = self.target.health end
+    if backstab then
+      if visions[self.target.id] == 3 then damage = self.target.health
+      else damage = damage * 2 end
+    end
     ctx.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
   end
   
@@ -26,7 +29,7 @@ function Dagger:activate(owner)
   if backstab and ctx.view then ctx.view:screenshake(25) end
 end
 
-function Dagger:update(owner)
+function Dagger:update()
   self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
 end
 

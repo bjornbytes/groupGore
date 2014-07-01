@@ -5,6 +5,7 @@ Dusk.code = 'dusk'
 Dusk.text = 'Move through the shadows.'
 Dusk.type = 'skill'
 
+Dusk.needsMouse = true
 Dusk.cooldown = 8
 
 function Dusk:activate(owner)

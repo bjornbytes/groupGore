@@ -10,10 +10,21 @@ Dagger.cooldown = .8
 
 function Dagger:activate(owner)
   self.timer = 0
+  self.visions = {}
 end
 
 function Dagger:update(owner)
   self.timer = timer.rot(self.timer)
+  ctx.players:each(function(p)
+    if p.id ~= owner.id then
+      self.visions[p.id] = self.visions[p.id] or 0
+      if math.abs(math.anglediff(p.angle, math.direction(p.x, p.y, owner.x, owner.y))) > math.pi / 2 or owner.cloak > 0 or ctx.collision:lineTest(p.x, p.y, owner.x, owner.y, {tag = 'wall'}) then
+        self.visions[p.id] = math.min(self.visions[p.id] + tickRate, 3)
+      else
+        self.visions[p.id] = math.max(self.visions[p.id] - tickRate, 0)
+      end
+    end
+  end)
 end
 
 function Dagger:canFire(owner)
@@ -21,8 +32,26 @@ function Dagger:canFire(owner)
 end
 
 function Dagger:fire(owner)
-  ctx.spells:activate(owner.id, data.spell.dagger)
+  ctx.spells:activate(owner.id, data.spell.dagger, self.visions)
   self.timer = self.cooldown
+end
+
+function Dagger:draw(owner)
+  if owner.id == ctx.id then
+    local r, g, b, a = love.graphics.getColor()
+    for i, v in pairs(self.visions) do
+      local p = ctx.players:get(i)
+      if p and v == 3 then
+        local alpha = p.alpha * (1 - (p.cloak / (p.team == ctx.players:get(ctx.id).team and 2 or 1)))
+        love.graphics.setColor(150, 0, 0, 255 * alpha)
+        love.graphics.setLineWidth(3)
+        love.graphics.line(p.x - 10, p.y - 90, p.x + 10, p.y - 70)
+        love.graphics.line(p.x - 10, p.y - 70, p.x + 10, p.y - 90)
+        love.graphics.setLineWidth(1)
+      end
+    end
+    love.graphics.setColor(r, g, b, a)
+  end
 end
 
 Dagger.reload = f.empty
