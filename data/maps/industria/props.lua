@@ -742,5 +742,47 @@ return {
     width = 64,
     height = 128,
     team = 0
-  }
+  },
+  {
+    kind = 'boundswall',
+    x = 0,
+    y = 0,
+    width = 2432,
+    height = 352
+  },
+  {
+    kind = 'boundswall',
+    x = 1952,
+    y = 352,
+    width = 480,
+    height = 2968
+  },
+  {
+    kind = 'boundswall',
+    x = 0,
+    y = 352,
+    width = 480,
+    height = 2968
+  },
+  {
+    kind = 'boundswall',
+    x = 480,
+    y = 2976,
+    width = 1472,
+    height = 344
+  },
+  {
+    kind = 'boundswall',
+    x = 480,
+    y = 2208,
+    width = 192,
+    height = 256
+  },
+  {
+    kind = 'boundswall',
+    x = 1760,
+    y = 864,
+    width = 192,
+    height = 256
+  },
 }
