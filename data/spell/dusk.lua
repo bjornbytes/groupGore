@@ -1,18 +1,25 @@
 local Dusk = {}
 
 Dusk.code = 'dusk'
-Dusk.distance = 160
-Dusk.speed = Dusk.distance * 10
+Dusk.maxDistance = 300
 
-function Dusk:activate()
+function Dusk:activate(mx, my)
   self.angle = self.owner.angle
   self.health = Dusk.health
-  ctx.event:emit('sound.play', {sound = 'dash', x = self.owner.x, y = self.owner.y})
-end
+  self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
+  self.tx, self.ty = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
 
-function Dusk:update()
-  self.owner.x = self.owner.x + math.dx(self.speed * tickRate, self.angle)
-  self.owner.y = self.owner.y + math.dy(self.speed * tickRate, self.angle)
+  local s = 1
+  local d = 10
+  local tx, ty = self.tx, self.ty
+  while ctx.collision:circleTest(tx, ty, self.owner.radius, {tag = 'wall'}) do
+    tx = self.tx + math.dx(d * s, self.angle)
+    ty = self.ty + math.dy(d * s, self.angle)
+    s = -s
+    if s == 1 then d = d + 10 end
+  end
+
+  self.owner.x, self.owner.y = tx, ty
   ctx.event:emit('collision.move', {object = self.owner, x = self.owner.x, y = self.owner.y})
   ctx.collision:resolve(self.owner)
   if self.owner.inputs then
@@ -25,8 +32,8 @@ function Dusk:update()
     })
   end
 
-  self.distance = self.distance - (self.speed * tickRate)
-  if self.distance <= 0 then ctx.spells:deactivate(self) end
+  ctx.event:emit('sound.play', {sound = 'dash', x = self.owner.x, y = self.owner.y})
+  ctx.spells:deactivate(self)
 end
 
 return Dusk

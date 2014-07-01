@@ -9,27 +9,30 @@ Dusk.cooldown = 8
 
 function Dusk:activate(owner)
   self.timer = 0
-  self.stacks = 2
 end
 
 function Dusk:update(owner)
-  self.timer = timer.rot(self.timer, function()
-  	if self.stacks == 0 then self.stacks = 2 end
-  end)
+  self.timer = timer.rot(self.timer)
+  if self.timer > 1 and owner.cloak > 0 then self.timer = 1 end
 end
 
 function Dusk:canFire(owner)
-  return self.timer == 0 and self.stacks > 0
+  return self.timer == 0
 end
 
 function Dusk:fire(owner, mx, my)
   ctx.spells:activate(owner.id, data.spell.dusk, mx, my)
-  self.stacks = self.stacks - 1
-  self.timer = self.stacks == 0 and self.cooldown or .15
+  self.timer = owner.cloak > 0 and 1 or self.cooldown
+end
+
+function Dusk:draw(owner)
+  local r, g, b, a = love.graphics.getColor()
+  love.graphics.setColor(255, 255, 255, 30)
+  love.graphics.circle('line', owner.x, owner.y, data.spell.dusk.maxDistance)
+  love.graphics.setColor(r, g, b, a)
 end
 
 function Dusk:value(owner)
-	if self.stacks > 0 then return self.timer / .15 end
   return self.timer / self.cooldown
 end
 
