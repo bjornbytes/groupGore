@@ -90,7 +90,7 @@ function Map:init(name)
     ctx.event:emit('sound.loop', {sound = self.soundscape, relative = true})
   end
 
-  if ctx.view then
+  if ctx.view and love.graphics.isSupported('shader') then
     local working = love.graphics.newCanvas(self.width / 4, self.height / 4)
     self.shadows = love.graphics.newCanvas(self.width / 4, self.height / 4)
     self.shadows:renderTo(function()
