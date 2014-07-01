@@ -1,6 +1,6 @@
 require 'require'
 
-function love.load(arg)  
+function love.load(arg)
   data.load()
   Context:add(Menu)
 end
@@ -11,4 +11,5 @@ love.quit = Context.quit
 
 love.handlers = setmetatable({}, {__index = Context})
 
-if arg[2] == 'test' then require 'test/test' end
+env = arg[2] or 'release'
+if env == 'test' then require 'test/test' end

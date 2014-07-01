@@ -64,9 +64,8 @@ function MenuServerList:mousepressed(x, y, button)
 end
 
 function MenuServerList:refresh()
-  love.thread.getChannel('goregous.in'):push({'listServers'})
+  goregous:send({'listServers'})
   ctx.loader:activate('Finding servers')
-  data.media.sounds.click:play()
 end
 
 function MenuServerList:setServers(servers)

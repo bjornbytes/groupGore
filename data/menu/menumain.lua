@@ -32,13 +32,11 @@ function MenuMain:mousepressed(x, y, button)
     elseif ribbon == 2 then self:join()
     elseif ribbon == 3 then self:edit()
     elseif ribbon == 4 then love.event.quit() end
-
-    if ribbon then data.media.sounds.click:play() end
   end
 end
 
 function MenuMain:host()
-  love.thread.getChannel('goregous.in'):push({'createServer'})
+  goregous:send({'createServer'})
   ctx.loader:activate('Creating server')
 end
 

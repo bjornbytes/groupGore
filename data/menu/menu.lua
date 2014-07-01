@@ -29,14 +29,12 @@ function Menu:load()
   
   self.container = Container()
 
-  local goregous = love.thread.newThread('data/goregous/goregous.lua')
-  goregous:start()
+  goregous = goregous or Context:add(Goregous)
 end
 
 function Menu:update()
-  local outbox = love.thread.getChannel('goregous.out')
-  while outbox:getCount() > 0 do
-    local data = outbox:pop()
+  while #goregous.messages > 0 do
+    local data = goregous.messages[1]
     if data[1] == 'login' then
       self.loader:deactivate()
       if data[2] == 'ok' then
@@ -61,6 +59,7 @@ function Menu:update()
       self.serverlist:setServers(data)
       self.loader:deactivate()
     end
+    table.remove(goregous.messages, 1)
   end
 
   self.loader:update()

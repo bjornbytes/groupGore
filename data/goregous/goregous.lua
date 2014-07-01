@@ -1,38 +1,31 @@
-require 'love.filesystem'
-local timer = require 'love.timer'
+Goregous = class()
 
-local inbox = love.thread.getChannel('goregous.in')
-local outbox = love.thread.getChannel('goregous.out')
+function Goregous:init()
+  self.socket = (require('socket')).tcp()
+  self.socket:settimeout(10)
+  local ip = (env == 'local') and '127.0.0.1' or '71.210.238.44'
+  local _, e = self.socket:connect(ip, 6060)
+  if e then error('Can\'t connect to goregous') end
+  self.socket:settimeout(0)
+  self.messages = {}
+end
 
-local socket = (require('socket')).tcp()
-socket:settimeout(10)
-
-local _, e = socket:connect('107.4.63.70', 6060)
-if e then error('Can\'t connect to goregous') end 
-
-socket:settimeout(0)
-
-while true do
-  while inbox:getCount() > 0 do
-    local data = inbox:pop()
-    if data == 'quit' then
-      socket:close()
-      return
-    end
-    print('Sending ' .. data[1])
-    socket:send(table.concat(data, ',') .. '\n')
-  end
-
+function Goregous:update()
   while true do
-    local str = socket:receive('*l')
+    str = self.socket:receive('*l')
     if not str then break end
-    print('Received "' .. str .. '"')
     local data = {}
     for word in string.gmatch(str, '([^,]+)') do
       table.insert(data, word)
     end
-    outbox:push(data)
+    table.insert(self.messages, data)
   end
+end
 
-  love.timer.sleep(.1)
+function Goregous:quit()
+  self.socket:close()
+end
+
+function Goregous:send(data)
+  self.socket:send(table.concat(data, ',') .. '\n')
 end
