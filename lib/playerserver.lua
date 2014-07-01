@@ -55,16 +55,17 @@ function PlayerServer:trace(data, ping)
     local target = data.tick - ((ping / 1000) + interp) / tickRate
     local t1 = math.floor(target)
     local factor = target - t1
-    local oldPos = {}
+    local oldData = {}
     ctx.players:each(function(p)
       if p.id ~= self.id then
-        oldPos[p.id] = {p.x, p.y}
+        oldData[p.id] = {p.x, p.y, p.angle}
         local s1, s2 = p:get(t1), p:get(t1 + 1)
-        s1 = {x = s1.x, y = s1.y}
-        s2 = {x = s2.x, y = s2.y}
+        s1 = {x = s1.x, y = s1.y, angle = s1.angle}
+        s2 = {x = s2.x, y = s2.y, angle = s2.angle}
         local lerpd = table.interpolate(s1, s2, factor)
         p.x = lerpd.x
         p.y = lerpd.y
+        p.angle = lerpd.angle
         ctx.event:emit('collision.move', {object = p, x = p.x, y = p.y})
       end
     end)
@@ -80,6 +81,7 @@ function PlayerServer:trace(data, ping)
     table.insert(self.history, setmetatable({
       x = self.x,
       y = self.y,
+      angle = self.angle,
       tick = data.tick
     }, self.meta))
 
@@ -106,8 +108,8 @@ function PlayerServer:trace(data, ping)
 
     -- Undo lag compensation
     ctx.players:each(function(p)
-      if oldPos[p.id] then
-        p.x, p.y = unpack(oldPos[p.id])
+      if oldData[p.id] then
+        p.x, p.y, p.angle = unpack(oldData[p.id])
         ctx.event:emit('collision.move', {object = p, x = p.x, y = p.y})
       end
     end)
