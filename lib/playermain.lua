@@ -100,11 +100,12 @@ function PlayerMain:readInput()
 end
 
 function PlayerMain:fade()
+  local s = self.ded and self.killer or self
   local function shouldFade(p)
-    if p.team == self.team then return false end
-    local vision = self.ded and 2 * math.pi or math.pi / 2
-    if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > vision then return true end
-    return ctx.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
+    if p.team == s.team then return false end
+    local vision = s.ded and 2 * math.pi or math.pi / 2
+    if math.abs(math.anglediff(s.angle, math.direction(s.x, s.y, p.x, p.y))) > vision then return true end
+    return ctx.collision:lineTest(s.x, s.y, p.x, p.y, {tag = 'wall', first = true})
   end
 
   ctx.players:each(function(p)
@@ -127,4 +128,5 @@ function PlayerMain:die()
   Player.die(self)
   ctx.view:screenshake(20)
   ctx.view.target = nil
+  ctx.view.target = self.killer
 end

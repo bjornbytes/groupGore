@@ -55,6 +55,7 @@ function Player:init()
   self.lastHurt = -math.huge
   self.lastDamageDealt = -math.huge
   self.ded = false
+  self.killer = nil
 
   self.lifesteal = 0
   self.haste = 0
@@ -82,6 +83,7 @@ function Player:activate()
   
   self.maxHealth = self.class.health
   self.health = self.maxHealth
+  self.killer = nil
 
   ctx.buffs:removeAll(self)
   self.lifesteal = 0
@@ -102,7 +104,7 @@ end
 
 function Player:draw()
   local g, c, s = love.graphics, self.class, self.class.scale
-  local alpha = self.alpha * (1 - (self.cloak / (self.team == ctx.players:get(ctx.id).team and 2 or 1)))
+  local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
   g.setColor(0, 0, 0, alpha * 50)
   g.draw(c.sprite, self.x + 4, self.y + 4, self.angle, s, s, c.anchorx, c.anchory)
   g.setColor(self.team == purple and {190, 160, 200, alpha * 255} or {240, 160, 140, alpha * 255})
@@ -191,7 +193,7 @@ end
 Player.hurt = f.empty
 Player.heal = f.empty
 
-function Player:die()
+function Player:die(data)
   self.ded = 5
   self.x, self.y = 0, 0
  

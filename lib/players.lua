@@ -45,6 +45,7 @@ function Players:init()
       killer.kills = killer.kills + 1
     end
     victim.deaths = victim.deaths + 1
+    victim.killer = killer
     victim:die()
   end)
   
