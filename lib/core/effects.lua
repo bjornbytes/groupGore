@@ -14,6 +14,11 @@ function Effects:update()
   table.with(self.effects, 'update')
 end
 
+function Effects:resize()
+  if not self.active then return end
+  table.with(self.effects, 'resize')
+end
+
 function Effects:add(code)
   if not self.active then return end
   local effect = new(data.effect[code])

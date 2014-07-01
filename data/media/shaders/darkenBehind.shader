@@ -1,9 +1,10 @@
 extern number playerDirection;
 extern vec2 playerPosition;
-extern number screenHeight;
+extern vec4 frame;
 
 vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords) {
-  screen_coords.y = screenHeight - screen_coords.y;
+  screen_coords.x -= frame.x;
+  screen_coords.y = (frame.y + frame.w) - screen_coords.y;
   vec4 result = Texel(texture, texture_coords);
 
   float dir = atan(screen_coords.y - playerPosition.y, screen_coords.x - playerPosition.x) * (180 / 3.14159265);
