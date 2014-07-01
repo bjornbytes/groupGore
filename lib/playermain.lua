@@ -25,7 +25,10 @@ function PlayerMain:get(t)
 end
 
 function PlayerMain:update()
-  if self.ded then return self:fade() end
+  if self.ded then
+    self.ded = timer.rot(self.ded)
+    return self:fade()
+  end
   
   self.prev.x = self.x
   self.prev.y = self.y

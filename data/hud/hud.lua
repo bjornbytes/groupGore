@@ -15,6 +15,7 @@ function Hud:init()
   self.feed = HudFeed()
   self.chat = HudChat()
   self.scoreboard = HudScoreboard()
+  self.dead = HudDead()
   self.classSelect = HudClassSelect()
   self.debug = HudDebug()
   
@@ -52,7 +53,8 @@ function Hud:gui()
   self.feed:draw()
   self.chat:draw()
   self.scoreboard:draw()
-  self:crosshair( )
+  self.dead:draw()
+  self:crosshair()
   if self._debug then self.debug:draw() end
 end
 
