@@ -3,7 +3,7 @@ View = class()
 local g = love.graphics
 
 function View:init()
-  love.window.setMode(960, 600, {fullscreen = false, resizable = true, vsync = false})
+  --love.window.setMode(960, 600, {fullscreen = false, resizable = true, vsync = false})
   --love.mouse.setGrabbed(true)
 
   self.x = 0
@@ -33,9 +33,6 @@ function View:init()
   self.prevscale = self.scale
 
   self.shake = 0
-
-  self:register(data.media.shaders.motionBlur, 'shader')
-  self:register(data.media.shaders.reddify, 'shader')
 end
 
 function View:update()

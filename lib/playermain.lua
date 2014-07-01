@@ -8,7 +8,7 @@ function PlayerMain:activate()
   self.alpha = 1
   
   if self.heartbeatSound then self.heartbeatSound:stop() end
-  self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat'})
+  self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat', gui = true})
   if self.heartbeatSound then self.heartbeatSound:pause() end
 
   ctx.view.target = self

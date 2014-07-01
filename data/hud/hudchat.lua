@@ -52,7 +52,7 @@ end
 function HudChat:textinput(character)
   if self.active then
     self.message = self.message .. character
-    ctx.event:emit('sound.play', {sound = 'click', relative = true})
+    ctx.event:emit('sound.play', {sound = 'click', gui = true})
   end
 end
 
@@ -68,7 +68,7 @@ function HudChat:keypressed(key)
       self.active = false
       self.message = ''
       love.keyboard.setKeyRepeat(false)
-      ctx.event:emit('sound.play', {sound = 'click', relative = true})
+      ctx.event:emit('sound.play', {sound = 'click', gui = true})
     end
     
     return true
@@ -76,7 +76,7 @@ function HudChat:keypressed(key)
     self.active = true
     self.message = ''
     love.keyboard.setKeyRepeat(true)
-    ctx.event:emit('sound.play', {sound = 'click', relative = true})
+    ctx.event:emit('sound.play', {sound = 'click', gui = true})
   end
 end
 

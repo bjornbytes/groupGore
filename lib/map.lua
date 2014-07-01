@@ -87,7 +87,7 @@ function Map:init(name)
   end
 
   if self.soundscape then
-    ctx.event:emit('sound.loop', {sound = self.soundscape, relative = true})
+    ctx.event:emit('sound.loop', {sound = self.soundscape, gui = true})
   end
 
   if ctx.view and love.graphics.isSupported('shader') then
