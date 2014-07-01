@@ -1,9 +1,9 @@
-local Dusk = {}
+local RocketBoots = {}
 
-Dusk.code = 'dusk'
-Dusk.maxDistance = 300
+RocketBoots.code = 'rocketboots'
+RocketBoots.maxDistance = 410
 
-function Dusk:activate(mx, my)
+function RocketBoots:activate(mx, my)
   self.angle = self.owner.angle
   self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
   self.tx, self.ty = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
@@ -31,8 +31,7 @@ function Dusk:activate(mx, my)
     })
   end
 
-  ctx.event:emit('sound.play', {sound = 'dash', x = self.owner.x, y = self.owner.y})
   ctx.spells:deactivate(self)
 end
 
-return Dusk
+return RocketBoots

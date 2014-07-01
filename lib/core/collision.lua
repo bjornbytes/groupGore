@@ -115,18 +115,24 @@ end
 
 function Collision:circleTest(x, y, r, options)
   local circle = self.hc:addCircle(x, y, r)
-  local tag, fn = options.tag, options.fn
+  local tag, fn, all = options.tag, options.fn, options.all
+  local res = all and {} or nil
   
   for shape in pairs(circle:neighbors()) do
     if circle:collidesWith(shape) then
       if (not tag) or shape.owner.collision.tag == tag then
         if (not fn) or fn(shape.owner) then
-          self.hc:remove(circle)
-          return shape.owner
+          if all then
+            table.insert(res, shape.owner)
+          else
+            self.hc:remove(circle)
+            return shape.owner
+          end
         end
       end
     end
   end
   
   self.hc:remove(circle)
+  return res
 end
