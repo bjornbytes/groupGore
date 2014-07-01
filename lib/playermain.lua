@@ -25,7 +25,7 @@ function PlayerMain:get(t)
 end
 
 function PlayerMain:update()
-  if self.ded then return end
+  if self.ded then return self:fade() end
   
   self.prev.x = self.x
   self.prev.y = self.y
@@ -102,7 +102,8 @@ end
 function PlayerMain:fade()
   local function shouldFade(p)
     if p.team == self.team then return false end
-    if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > math.pi / 2 then return true end
+    local vision = self.ded and 2 * math.pi or math.pi / 2
+    if math.abs(math.anglediff(self.angle, math.direction(self.x, self.y, p.x, p.y))) > vision then return true end
     return ctx.collision:lineTest(self.x, self.y, p.x, p.y, {tag = 'wall', first = true})
   end
 
