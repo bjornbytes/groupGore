@@ -22,7 +22,8 @@ function Hud:init()
   ctx.event:on(evtDead, function(data) self.feed:insert(data) end)
   ctx.view:register(self, 'gui')
 
-  self:resize()
+  self.u = ctx.view.frame.width
+  self.v = ctx.view.frame.height
 end
 
 function Hud:update()
@@ -51,7 +52,7 @@ function Hud:gui()
   self.feed:draw()
   self.chat:draw()
   self.scoreboard:draw()
-  self:crosshair()
+  self:crosshair( )
   if self._debug then self.debug:draw() end
 end
 
@@ -80,6 +81,7 @@ end
 function Hud:resize()
   self.u = ctx.view.frame.width
   self.v = ctx.view.frame.height
+  self.feed:resize()
 end
 
 function Hud:connecting()

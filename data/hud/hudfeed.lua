@@ -30,18 +30,22 @@ function HudFeed:draw()
     local k = self.entries[i]
     local killer = ctx.players:get(k.kill)
     local victim = ctx.players:get(k.id)
-    local width = math.max(u * .14, font:getWidth(killer.username) + font:getWidth(victim.username) + 24)
-    g.setColor(0, 0, 0, 200 * alpha)
-    g.rectangle('fill', k.x, k.y, width, v * .05)
+    local width = math.max(math.min(u * .14, 150), font:getWidth(killer.username) + font:getWidth(victim.username) + 24)
+    local height = font:getHeight() + 8
+    g.setColor(0, 0, 0, 180 * alpha)
+    local xx, yy = math.round(k.x) + .5, math.round(k.y) + .5
+    g.rectangle('fill', xx, yy, width, height)
+    local val = 30 + ((k.kill == ctx.id or k.id == ctx.id) and 225 or 0)
+    g.setColor(val, val, val, 180 * alpha)
+    g.rectangle('line', xx, yy, width, height)
 
-    local yy = v * .025 - (font:getHeight() / 2)
     if killer.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
-    g.print(killer.username, k.x + 8, k.y + yy)
+    g.print(killer.username, k.x + 8, k.y + 4)
 
     if victim.team == purple then g.setColor(190, 160, 220, 255 * alpha)
     else g.setColor(240, 160, 140, 255 * alpha) end
-    g.print(victim.username, k.x + width - font:getWidth(victim.username) - 9, k.y + yy)
+    g.print(victim.username, k.x + width - font:getWidth(victim.username) - 9, k.y + 4)
   end
 end
 
@@ -56,9 +60,25 @@ function HudFeed:insert(data)
   g.setFont('pixel', 8)
   local font = g.getFont()
   local u1, u2 = ctx.players:get(data.kill).username, ctx.players:get(data.id).username
-  local width = math.max(u * .14, font:getWidth(u1) + font:getWidth(u2) + 24)
+  t.u1 = u1
+  t.u2 = u2
+  local width = math.max(math.min(u * .14, 150), font:getWidth(u1) + font:getWidth(u2) + 24)
   t.targetX = u - width - 4
   t.targetY = 4 + v * .07
   table.insert(self.entries, t)
   self.alpha = 4
+end
+
+function HudFeed:resize()
+  local u, v = ctx.hud.u, ctx.hud.v
+  g.setFont('pixel', 8)
+  local font = g.getFont()
+  for i = 1, #self.entries do
+    local entry = self.entries[i]
+    local width = math.max(math.min(u * .14, 150), font:getWidth(entry.u1) + font:getWidth(entry.u2) + 24)
+    entry.targetX = u - width - 4
+    entry.x = entry.targetX
+    entry.targetY = 4 + (v * .07) + ((i - 1) * v * .05 + 4)
+    entry.y = entry.targetY
+  end
 end
