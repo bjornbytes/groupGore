@@ -3,8 +3,9 @@ View = class()
 local g = love.graphics
 
 function View:init()
-  love.window.setMode(960, 600, {fullscreen = false, resizable = true, vsync = false})
-  --love.mouse.setGrabbed(true)
+  local w, h, fullscreen, resizable = 0, 0, true, false
+  if env ~= 'release' then w, h, fullscreen, resizable = 960, 600, false, true end
+  love.window.setMode(w, h, {fullscreen = fullscreen, resizable = resizable, vsync = false})
 
   self.x = 0
   self.y = 0

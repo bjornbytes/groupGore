@@ -5,12 +5,6 @@ local g = love.graphics
 function HudLeft:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local s = ctx.view.scale
-
-  g.setColor(255, 255, 255, 64)
-  g.draw(data.media.graphics.hud.leftBg, -u * .0825, -v * .0083, 0, s, s)
-  
-  g.setColor(255, 255, 255)
-  g.draw(data.media.graphics.hud.left, -u * .08, -v * .013, 0, s, s)
   
   local p = ctx.players:get(ctx.id)
   if p then
@@ -18,6 +12,12 @@ function HudLeft:draw()
     local ammo = tostring(p.slots[p.weapon].currentAmmo)
 
     if clip ~= 'nil' and ammo ~= 'nil' then
+      g.setColor(255, 255, 255, 64)
+      g.draw(data.media.graphics.hud.leftBg, -u * .0825, -v * .0083, 0, s, s)
+      
+      g.setColor(255, 255, 255)
+      g.draw(data.media.graphics.hud.left, -u * .08, -v * .013, 0, s, s)
+
       g.setFont('BebasNeue', v * .065)
       local font = g:getFont()
       g.setColor(0, 0, 0, 100)
