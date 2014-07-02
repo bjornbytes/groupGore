@@ -43,7 +43,12 @@ function Player:init()
   
   self.x = 0
   self.y = 0
+  self.z = 0
   self.angle = 0
+  self.drawX = 0
+  self.drawY = 0
+  self.drawAngle = 0
+  self.drawScale = 0
   
   self.slots = {}
   self.weapon = 1
@@ -100,17 +105,18 @@ end
 function Player:update()
   if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self.cloak = timer.rot(self.cloak)
+  if ctx.view then self.depth = ctx.view:threeDepth(self.x, self.y, self.z) end
 end
 
 function Player:draw()
-  local g, c, s = love.graphics, self.class, self.class.scale
+  local g, c, x, y, a, s = love.graphics, self.class, self.drawX, self.drawY, self.drawAngle, self.drawScale * self.class.scale
   local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
   g.setColor(0, 0, 0, alpha * 50)
-  g.draw(c.sprite, self.x + 4, self.y + 4, self.angle, s, s, c.anchorx, c.anchory)
+  g.draw(c.sprite, self.x + 4, self.y + 4, a, s, s, c.anchorx, c.anchory)
   g.setColor(self.team == purple and {190, 160, 200, alpha * 255} or {240, 160, 140, alpha * 255})
   f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
   f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
-  g.draw(c.sprite, self.x, self.y, self.angle, s, s, c.anchorx, c.anchory)
+  g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
 end
 
 

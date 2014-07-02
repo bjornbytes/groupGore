@@ -30,8 +30,7 @@ end
 function Rage:draw()
   love.graphics.setColor(255, 0, 0, 100 * self.alpha * self.owner.alpha)
   local owner = self.owner
-  local x, y = owner:drawPosition()
-  local s = self.owner.class.scale * (1 + (.25 * self.alpha))
+  local x, y, s = owner.drawX, owner.drawY, owner.drawScale * owner.class.scale * (1 + (.25 * self.alpha))
   love.graphics.draw(owner.class.sprite, x, y, owner.angle, s, s, owner.class.anchorx, owner.class.anchory)
 end
 

@@ -74,7 +74,7 @@ function Wall:update()
     if not self:inView() then return end
     local x1, y1 = ctx.view.x + ctx.view.width / 2, ctx.view.y + ctx.view.height / 2
     local x2, y2 = perim(x1, y1, self.x, self.y, self.width, self.height)
-    self.depth = math.clamp(math.distance(x1, y1, x2, y2) * ctx.view.scale - 1000, -4096, -16)
+    self.depth = math.clamp(math.distance(x1, y1, x2, y2) * ctx.view.scale - 1000 - self.z, -4096, -16)
   end
 
   if self.meshX ~= self.x or self.meshY ~= y then

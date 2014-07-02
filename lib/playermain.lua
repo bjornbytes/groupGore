@@ -32,6 +32,7 @@ function PlayerMain:update()
   
   self.prev.x = self.x
   self.prev.y = self.y
+  self.prev.z = self.z
   self.prev.angle = self.angle
 
   local input = self:readInput()
@@ -57,11 +58,15 @@ end
 
 function PlayerMain:draw()
   if self.ded then return end
-  Player.draw(table.interpolate(self.prev, self, tickDelta / tickRate))
+  local lerpd = table.interpolate(self.prev, self, tickDelta / tickRate)
+  self.drawAngle = lerpd.angle
+  self.drawX, self.drawY = ctx.view:three(lerpd.x, lerpd.y, lerpd.z)
+  self.drawScale = 1 + (ctx.view:convertZ(lerpd.z) / 500)
+  Player.draw(lerpd)
 end
 
 function PlayerMain:trace(data)
-  self.x, self.y = data.x, data.y
+  self.x, self.y = data.x / 10, data.y / 10
   self.health, self.shield = data.health, data.shield
 
   -- Discard inputs before the ack.
@@ -115,11 +120,6 @@ function PlayerMain:fade()
     if shouldFade(p) then p.alpha = math.max(p.alpha - tickRate, 0)
     else p.alpha = math.min(p.alpha + tickRate, 1) end
   end)
-end
-
-function PlayerMain:drawPosition()
-  local p = table.interpolate(self.prev, self, tickDelta / tickRate)
-  return p.x, p.y
 end
 
 function PlayerMain:hurt(data)

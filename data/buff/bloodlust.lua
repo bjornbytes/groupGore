@@ -39,8 +39,8 @@ end
 
 function Bloodlust:draw()
   love.graphics.setColor(128, 0, 0, 128)
-  local x, y = self.owner:drawPosition()
-  love.graphics.circle('fill', x, y, self.owner.radius * (1 + math.sin((self.timer + self.healTimer) * 50) / 4))
+  local x, y, s = self.owner.drawX, self.owner.drawY, self.owner.drawScale
+  love.graphics.circle('fill', x, y, self.owner.radius * s * (1 + math.sin((self.timer + self.healTimer) * 50) / 4))
 end
 
 function Bloodlust:stack()

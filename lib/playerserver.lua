@@ -58,7 +58,7 @@ function PlayerServer:trace(data, ping)
     local oldData = {}
     ctx.players:each(function(p)
       if p.id ~= self.id then
-        oldData[p.id] = {p.x, p.y, p.angle}
+        oldData[p.id] = {p.x, p.y, p.z, p.angle}
         local s1, s2 = p:get(t1), p:get(t1 + 1)
         s1 = {x = s1.x, y = s1.y, angle = s1.angle}
         s2 = {x = s2.x, y = s2.y, angle = s2.angle}
@@ -81,14 +81,16 @@ function PlayerServer:trace(data, ping)
     table.insert(self.history, setmetatable({
       x = self.x,
       y = self.y,
+      z = self.z,
       angle = self.angle,
       tick = data.tick
     }, self.meta))
 
     -- sync
     local msg = {}
-    msg.x = math.round(self.x)
-    msg.y = math.round(self.y)
+    msg.x = math.round(self.x * 10)
+    msg.y = math.round(self.y * 10)
+    msg.z = math.round(self.z)
     msg.angle = math.round((math.deg(self.angle) + 360) % 360)
 
     local shield = 0

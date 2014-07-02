@@ -11,7 +11,7 @@ function Cleave:activate()
   })
 
   table.each(self.targets, function(t)
-    ctx.net:emit(evtDamage, {id = t.id, amount = data.weapon.cleave.damage, from = self.owner.id, tick = tick})
+    ctx.net:emit(evtDamage, {id = t.id, amount = data.skill.cleave.damage, from = self.owner.id, tick = tick})
   end)
 
   ctx.event:emit('sound.play', {sound = 'dash', x = self.owner.x, y = self.owner.y})

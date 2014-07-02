@@ -21,6 +21,7 @@ function PlayerDummy:get(t)
     return setmetatable({
       x = self.x,
       y = self.y,
+      z = self.z,
       angle = self.angle,
       tick = tick,
     }, self.meta)
@@ -49,27 +50,28 @@ end
 
 function PlayerDummy:draw()
   if self.ded then return end
-  local p = table.interpolate(self:get(drawTick()), self:get(drawTick() + 1), tickDelta / tickRate)
-  Player.draw(p)
+  local lerpd = table.interpolate(self:get(drawTick()), self:get(drawTick() + 1), tickDelta / tickRate)
+  self.drawAngle = lerpd.angle
+  self.drawX, self.drawY = ctx.view:three(lerpd.x, lerpd.y, lerpd.z)
+  self.drawScale = 1 + (ctx.view:convertZ(lerpd.z) / 500)
+  Player.draw(lerpd)
 end
 
 function PlayerDummy:trace(data)
   if data.angle then data.angle = math.rad(data.angle) end
+  if data.x then data.x = data.x / 10 end
+  if data.y then data.y = data.y / 10 end
   
   table.insert(self.history, setmetatable({
     x = data.x,
     y = data.y,
+    z = data.z,
     angle = data.angle,
     tick = data.tick
   }, self.meta))
 
-  self.x, self.y, self.angle = data.x, data.y, data.angle
+  self.x, self.y, self.z, self.angle = data.x, data.y, data.z, data.angle
   self.health, self.shield = data.health or self.health, data.shield or self.shield
   self.weapon, self.skill = data.weapon or self.weapon, data.skill or self.skill
   ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
-end
-
-function PlayerDummy:drawPosition()
-  local p = table.interpolate(self:get(drawTick()), self:get(drawTick() + 1), tickDelta / tickRate)
-  return p.x, p.y
 end

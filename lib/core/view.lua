@@ -152,12 +152,17 @@ function View:unregister(x)
 end
 
 function View:convertZ(z)
-  return (.8 * z) ^ (1 + (.0008 * z))  
+  return (.8 * z) ^ (1 + (.0008 * z))
 end
 
 function View:three(x, y, z)
+  local sx, sy = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
   z = self:convertZ(z)
-  return x - (z * ((self.x + self.width / 2 - x) / 500)), y - (z * ((self.y + self.height / 2 - y) / 500))
+  return x - (z * ((sx + self.width / 2 - x) / 500)), y - (z * ((sy + self.height / 2 - y) / 500))
+end
+
+function View:threeDepth(x, y, z)
+  return math.clamp(math.distance(x, y, self.x + self.width / 2, self.y + self.height / 2) * self.scale - 1000 - z, -4096, -16)
 end
 
 function View:contain()

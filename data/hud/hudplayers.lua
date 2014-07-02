@@ -7,7 +7,7 @@ function HudPlayers:draw()
   ctx.players:each(function(p)
     if not p.ded then
       local vx, vy = math.lerp(ctx.view.prevx, ctx.view.x, tickDelta / tickRate), math.lerp(ctx.view.prevy, ctx.view.y, tickDelta / tickRate)
-      local px, py = p:drawPosition()
+      local px, py = p.drawX, p.drawY
       local alpha = p.alpha * (1 - (p.cloak / (p.team == ctx.players:get(ctx.id).team and 2 or 1)))
       g.setColor(0, 0, 0, 150 * alpha)
       g.printCenter(p.username, (px - vx) * ctx.view.scale + 1, ((py - vy) * ctx.view.scale) - 60 + 1)

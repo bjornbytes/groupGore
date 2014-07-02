@@ -22,12 +22,13 @@ function Weapon:update(owner)
 end
 
 function Weapon:draw(owner)
-  local dir = owner.angle
-  local dx = owner.class.handx * owner.class.scale - owner.recoil
-  local dy = owner.class.handy * owner.class.scale
-  local x = owner.x + math.dx(dx, dir) - math.dy(dy, dir)
-  local y = owner.y + math.dy(dx, dir) + math.dx(dy, dir)
-  love.graphics.draw(self.image, x, y, dir, self.scale, self.scale, self.anchorx, self.anchory)
+  local dir = owner.drawAngle
+  local x, y, s = owner.drawX, owner.drawY, owner.drawScale
+  local dx = owner.class.handx * owner.class.scale * s - owner.recoil
+  local dy = owner.class.handy * owner.class.scale * s
+  x = x + math.dx(dx, dir) - math.dy(dy, dir)
+  y = y + math.dy(dx, dir) + math.dx(dy, dir)
+  love.graphics.draw(self.image, x, y, dir, self.scale * s, self.scale * s, self.anchorx, self.anchory)
 end
 
 function Weapon:select(owner)
