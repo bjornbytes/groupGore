@@ -6,8 +6,8 @@ MuzzleFlash.code = 'muzzleFlash'
 MuzzleFlash.activate = function(self)
   self.maxHealth = .2
   self.health = self.maxHealth
-  self.scale = 1.5
-  self.alpha = .6
+  self.scale = 2.5
+  self.alpha = 1
   self.image = data.media.graphics.effects.muzzleFlash1
 end
 
@@ -20,7 +20,8 @@ MuzzleFlash.update = function(self)
     self.image = data.media.graphics.effects.muzzleFlash3
   end
 
-  self.alpha = self.alpha - (.6 / self.maxHealth) * tickRate
+  self.alpha = self.alpha - (1 / self.maxHealth) * tickRate
+  self.scale = math.lerp(self.scale, 0.5, 5 * tickRate)
 
   local owner = ctx.players:get(self.owner)
   local weapon = data.weapon[self.weapon]
