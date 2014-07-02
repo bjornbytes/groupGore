@@ -21,11 +21,11 @@ function Buffs:add(player, code)
   return buff
 end
 
-function Buffs:remove(player, code)
+function Buffs:remove(player, code, stack)
   local buff, i = self:get(player, code)
   if buff then
-    f.exe(buff.deactivate, buff)
-    table.remove(self.buffs, i)
+    f.exe(stack and buff.unstack or buff.deactivate, buff)
+    if not stack then table.remove(self.buffs, i) end
   end
 end
 

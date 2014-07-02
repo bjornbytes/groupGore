@@ -6,11 +6,13 @@ Player.collision = {
   tag = 'player',
   with = {
     wall = function(self, other, dx, dy)
-      self.x, self.y = self.x + dx, self.y + dy
-      self.shape:moveTo(self.x, self.y)
+      if self.z == 0 then
+        self.x, self.y = self.x + dx, self.y + dy
+        self.shape:moveTo(self.x, self.y)
+      end
     end,
     teamwall = function(self, other, dx, dy)
-      if other.team ~= self.team then
+      if other.team ~= self.team and self.z == 0 then
         self.x, self.y = self.x + dx, self.y + dy
         self.shape:moveTo(self.x, self.y)
       end
