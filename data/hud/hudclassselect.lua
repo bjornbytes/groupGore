@@ -70,9 +70,9 @@ function HudClassSelect:draw()
     if math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
       hover = true
       self:drawClassDetails(i)
-      g.setColor(255, 255, 255)
+      g.setColor(255, 255, 255, data.class[i].locked and 50 or 255)
     else
-      g.setColor(255, 255, 255, 150)
+      g.setColor(255, 255, 255, data.class[i].locked and 50 or 150)
     end
 
     local s = u * .08 / data.class[i].portrait:getWidth()
@@ -107,7 +107,7 @@ function HudClassSelect:keypressed(key)
   
   if self.active then
     for i = 1, #data.class do
-      if key == tostring(i) then
+      if not data.class[i].locked and key == tostring(i) then
         ctx.net:send(msgClass, {
           class = i,
           team = ctx.id > 1 and 1 or 0
@@ -128,7 +128,7 @@ function HudClassSelect:mousereleased(x, y, button)
 
   if self.active and button == 'l' then
     for i = 1, #data.class do
-      if math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
+      if not data.class[i].locked and math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
         ctx.net:send(msgClass, {
           class = i,
           team = self.team
