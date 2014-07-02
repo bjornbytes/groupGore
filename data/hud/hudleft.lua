@@ -20,12 +20,18 @@ function HudLeft:draw()
     if clip ~= 'nil' and ammo ~= 'nil' then
       g.setFont('BebasNeue', v * .065)
       local font = g:getFont()
-      g.setColor(255, 255, 255)
-      g.printCenter(clip .. ' /', u * .055, -v * .004, true, false)
+      g.setColor(0, 0, 0, 100)
+      g.printCenter(clip .. ' /', u * .035 + 2, -v * .004 + 2, true, false)
+      if p.team == purple then g.setColor(190, 160, 220)
+      else g.setColor(240, 160, 140) end
+      g.printCenter(clip .. ' /', u * .035, -v * .004, true, false)
       
       g.setFont('BebasNeue', v * .045)
-      g.setColor(255, 255, 255, 153)
-      g.printCenter(ammo, u * .0575 + (font:getWidth(clip .. ' /') / 2) + (g.getFont():getWidth(ammo) / 2), v * .015, true, false)
+      g.setColor(0, 0, 0, 100)
+      g.printCenter(ammo, u * .0375 + (font:getWidth(clip .. ' /') / 2) + (g.getFont():getWidth(ammo) / 2) + 2, v * .015 + 2, true, false)
+      if p.team == purple then g.setColor(190, 160, 220)
+      else g.setColor(240, 160, 140, 220) end
+      g.printCenter(ammo, u * .0375 + (font:getWidth(clip .. ' /') / 2) + (g.getFont():getWidth(ammo) / 2), v * .015, true, false)
     end
   end
 end
