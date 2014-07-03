@@ -155,7 +155,7 @@ end
 
 function Player:turn(input)
   local d = math.direction(self.x, self.y, input.x, input.y)
-  self.angle = math.anglerp(self.angle, d, math.min(15 * tickRate, 1))
+  self.angle = math.anglerp(self.angle, d, math.min(10 * tickRate, 1))
 end
 
 function Player:slot(input)
