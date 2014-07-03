@@ -118,6 +118,12 @@ function Player:draw()
   g.setColor(self.team == purple and {190, 160, 200, alpha * 255} or {240, 160, 140, alpha * 255})
   f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
   f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
+  data.media.shaders.outline:send('dimensions', {c.sprite:getDimensions()})
+  data.media.shaders.outline:send('size', 16)
+  g.setShader(data.media.shaders.outline)
+  g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
+  g.setShader()
+  g.setColor(self.team == purple and {222, 200, 230, alpha * 255} or {250, 210, 200, alpha * 255})
   g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
 end
 
