@@ -91,29 +91,31 @@ function Map:init(name)
   end
 
   if ctx.view and love.graphics.isSupported('shader') then
-    local working = love.graphics.newCanvas(self.width / 4, self.height / 4)
-    self.shadows = love.graphics.newCanvas(self.width / 4, self.height / 4)
+    local downsample = 4
+    local working = love.graphics.newCanvas(self.width / downsample, self.height / downsample)
+    self.shadows = love.graphics.newCanvas(self.width / downsample, self.height / downsample)
     self.shadows:renderTo(function()
       love.graphics.setColor(0, 0, 0)
+      love.graphics.push()
+      love.graphics.scale(1 / downsample)
       table.each(self.props, function(p)
         if p.code == 'wall' then
-          love.graphics.rectangle('fill', p.x / 4, p.y / 4, p.width / 4, p.height / 4)
+          love.graphics.rectangle('fill', p.x, p.y, p.width, p.height)
         end
       end)
+      love.graphics.pop()
     end)
+    data.media.shaders.horizontalBlur:send('amount', .0008)
+    data.media.shaders.verticalBlur:send('amount', .0008)
+    love.graphics.setColor(255, 255, 255)
     for i = 1, 3 do
-      data.media.shaders.horizontalBlur:send('amount', .0008)
+      love.graphics.setShader(data.media.shaders.horizontalBlur)
       working:renderTo(function()
-        love.graphics.setColor(255, 255, 255)
-        love.graphics.setShader(data.media.shaders.horizontalBlur)
         love.graphics.draw(self.shadows)
-        love.graphics.setShader()
       end)
-      data.media.shaders.verticalBlur:send('amount', .0008)
+      love.graphics.setShader(data.media.shaders.verticalBlur)
       self.shadows:renderTo(function()
-        love.graphics.setShader(data.media.shaders.verticalBlur)
         love.graphics.draw(working)
-        love.graphics.setShader()
       end)
     end
   end

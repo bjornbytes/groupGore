@@ -19,8 +19,13 @@ Spark.update = function(self)
 end
 
 Spark.draw = function(self)
-  love.graphics.setColor(255, 255, 0, self.alpha * 255)
-  love.graphics.line(self.x, self.y, self.x + math.dx(self.length, self.angle), self.y + math.dy(self.length, self.angle))
+  local function doDraw()
+    love.graphics.setColor(255, 255, 200, self.alpha * 255)
+    love.graphics.line(self.x, self.y, self.x + math.dx(self.length, self.angle), self.y + math.dy(self.length, self.angle))
+  end
+
+  doDraw()
+  ctx.effects:get('bloom'):render(doDraw)
 end
 
 return Spark

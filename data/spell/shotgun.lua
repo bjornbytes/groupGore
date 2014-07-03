@@ -19,7 +19,7 @@ Shotgun.activate = function(self)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
 
   
-  self.len = 600
+  self.len = 800
   self.bullets = {}
 
   if not ctx.collision:lineTest(self.owner.x, self.owner.y, self.x, self.y, {tag = 'wall'}) then
@@ -117,10 +117,15 @@ Shotgun.update = function(self)
 end
 
 Shotgun.draw = function(self)
-  love.graphics.setColor(255, 255, 255, (self.hp / Shotgun.hp) * 255)
-  for _, bullet in pairs(self.bullets) do
-    love.graphics.line(self.x, self.y, self.x + math.dx(bullet.dis, bullet.dir), self.y + math.dy(bullet.dis, bullet.dir))
+  local function doDraw()
+    love.graphics.setColor(255, 255, 255, (self.hp / Shotgun.hp) * 255)
+    for _, bullet in pairs(self.bullets) do
+      love.graphics.line(self.x, self.y, self.x + math.dx(bullet.dis, bullet.dir), self.y + math.dy(bullet.dis, bullet.dir))
+    end
   end
+
+  doDraw()
+  ctx.effects:get('bloom'):render(doDraw)
 end
 
 return Shotgun

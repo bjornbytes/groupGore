@@ -52,21 +52,13 @@ function View:update()
 end
 
 function View:draw()
-  local x, y, s = unpack(table.interpolate({self.prevx, self.prevy, self.prevscale}, {self.x, self.y, self.scale}, tickDelta / tickRate))
-  local shakex = 1 - (2 * love.math.noise(self.shake + x + tickDelta))
-  local shakey = 1 - (2 * love.math.noise(self.shake + y + tickDelta))
-  x = x + (shakex * self.shake)
-  y = y + (shakey * self.shake)
   local w, h = g.getDimensions()
 
-  g.push()
-  g.translate(self.frame.x, self.frame.y)
-  g.scale(s)
-  g.translate(-x, -y)
+  self:worldPush()
 
-  self.canvas:clear()
-  self.backCanvas:clear()
-  self.canvas:renderTo(function()
+  self.sourceCanvas:clear()
+  self.targetCanvas:clear()
+  self.sourceCanvas:renderTo(function()
     for i = 1, #self.draws do self.draws[i]:draw() end
   end)
 
@@ -74,15 +66,19 @@ function View:draw()
 
   for i = 1, #self.effects do
     g.setColor(255, 255, 255)
-    g.setShader(self.effects[i].shader)
-    g.setCanvas(self.backCanvas)
-    g.draw(self.canvas)
+    if self.effects[i].applyEffect then
+      self.effects[i]:applyEffect(self.sourceCanvas, self.targetCanvas)
+    else
+      g.setShader(self.effects[i].shader)
+      g.setCanvas(self.targetCanvas)
+      g.draw(self.sourceCanvas)
+    end
     g.setCanvas()
     g.setShader()
-    self.canvas, self.backCanvas = self.backCanvas, self.canvas
+    self.sourceCanvas, self.targetCanvas = self.targetCanvas, self.sourceCanvas
   end
 
-  g.draw(self.canvas)
+  g.draw(self.sourceCanvas)
 
   g.push()
   g.translate(self.frame.x, self.frame.y)
@@ -115,8 +111,8 @@ function View:resize()
     self.frame.height = h
   end
 
-  self.canvas = love.graphics.newCanvas(w, h, 'normal', 4)
-  self.backCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
+  self.sourceCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
+  self.targetCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
   data.media.refresh('shaders')
   data.media.refresh('graphics')
   Typo.resize()
@@ -205,4 +201,17 @@ end
 function View:screenshake(amount)
   if self.shake > amount then self.shake = self.shake + (amount / 2) end
   self.shake = amount
+end
+
+function View:worldPush()
+  local x, y, s = unpack(table.interpolate({self.prevx, self.prevy, self.prevscale}, {self.x, self.y, self.scale}, tickDelta / tickRate))
+  local shakex = 1 - (2 * love.math.noise(self.shake + x + tickDelta))
+  local shakey = 1 - (2 * love.math.noise(self.shake + y + tickDelta))
+  x = x + (shakex * self.shake)
+  y = y + (shakey * self.shake)
+
+  g.push()
+  g.translate(self.frame.x, self.frame.y)
+  g.scale(s)
+  g.translate(-x, -y)
 end

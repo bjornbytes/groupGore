@@ -38,8 +38,13 @@ MuzzleFlash.update = function(self)
 end
 
 MuzzleFlash.draw = function(self)
-  love.graphics.setColor(255, 255, 255, self.alpha * 255)
-  love.graphics.draw(self.image, self.x, self.y, self.angle, self.scale, self.scale, 0, self.image:getHeight() / 2)
+  local function doDraw(diminish)
+    love.graphics.setColor(255, 255, 255, self.alpha * 255 / diminish)
+    love.graphics.draw(self.image, self.x, self.y, self.angle, self.scale * diminish, self.scale * diminish, 0, self.image:getHeight() / 2)
+  end
+
+  doDraw(1.5)
+  ctx.effects:get('bloom'):render(f.cur(doDraw, 1.65))
 end
 
 return MuzzleFlash
