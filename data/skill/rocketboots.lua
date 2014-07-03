@@ -26,10 +26,12 @@ function RocketBoots:fire(owner, mx, my)
 end
 
 function RocketBoots:draw(owner)
-  local r, g, b, a = love.graphics.getColor()
-  love.graphics.setColor(255, 255, 255, 30)
-  love.graphics.circle('line', owner.x, owner.y, data.spell.rocketboots.maxDistance)
-  love.graphics.setColor(r, g, b, a)
+  if owner.id == ctx.id then
+    local r, g, b, a = love.graphics.getColor()
+    love.graphics.setColor(255, 255, 255, 30)
+    love.graphics.circle('line', owner.x, owner.y, data.spell.rocketboots.maxDistance)
+    love.graphics.setColor(r, g, b, a)
+  end
 end
 
 function RocketBoots:value(owner)
