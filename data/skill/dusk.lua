@@ -27,10 +27,12 @@ function Dusk:fire(owner, mx, my)
 end
 
 function Dusk:draw(owner)
-  local r, g, b, a = love.graphics.getColor()
-  love.graphics.setColor(255, 255, 255, 30)
-  love.graphics.circle('line', owner.x, owner.y, data.spell.dusk.maxDistance)
-  love.graphics.setColor(r, g, b, a)
+  if owner.id == ctx.id then
+    local r, g, b, a = love.graphics.getColor()
+    love.graphics.setColor(255, 255, 255, 30)
+    love.graphics.circle('line', owner.x, owner.y, data.spell.dusk.maxDistance)
+    love.graphics.setColor(r, g, b, a)
+  end
 end
 
 function Dusk:value(owner)
