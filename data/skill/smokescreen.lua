@@ -33,7 +33,7 @@ function Smokescreen:gui(owner)
   if self.targetAlpha > 0 then
     local g, v = love.graphics, ctx.view
     g.setColor(255, 255, 255, self.targetAlpha * 255)
-    g.circle('line', v:frameMouseX(), v:frameMouseY(), data.spell.smokescreen.radius)
+    g.circle('line', v:frameMouseX(), v:frameMouseY(), data.spell.smokescreen.radius, 100)
   end
 end
 
