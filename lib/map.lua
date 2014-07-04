@@ -58,15 +58,19 @@ function Map:init(name)
   self.points[purple] = 0
   self.points[orange] = 0
   self.pointLimit = 5
+  self.winner = nil
+  self.restartTimer = 0
 
   ctx.event:on(evtDead, function(data)
-    if data.id == data.kill then return end
+    if self.restartTimer > 0 or data.id == data.kill then return end
     local team = 1 - ctx.players:get(data.id).team
     self:score(team)
     if self.points[team] >= self.pointLimit then
       ctx.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
       self.points[purple] = 0
       self.points[orange] = 0
+      self.winner = team
+      self.restartTimer = 8
     end
   end)
 
@@ -124,6 +128,10 @@ end
 function Map:update()
   table.each(self.props, function(p) f.exe(p.update, p) end)
   if self.weather then self.weather:update() end
+  self.restartTimer = timer.rot(self.restartTimer, function()
+    self.winner = nil
+    ctx.players:restart()
+  end)
 end
 
 function Map:draw()

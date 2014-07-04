@@ -85,6 +85,12 @@ function Players:update()
   self:each(f.ego('update'))
 end
 
+function Players:restart()
+  self:each(function(p)
+    ctx.net:emit(evtSpawn, {id = p.id})
+  end)
+end
+
 function Players:setClass(id, class, team)
   local p = self.players[id]
   if not table.has(self.active, id) then

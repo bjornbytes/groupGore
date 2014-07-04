@@ -34,7 +34,7 @@ end
 function PlayerServer:update()
   if self.ded then return self:time() end
 
-  self:time()  
+  self:time()
   self:logic()
   
   if self.health < self.maxHealth and not self.ded then
