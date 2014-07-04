@@ -17,6 +17,14 @@ function Dusk:activate(mx, my)
     s = -s
     if s == 1 then d = d + 10 end
   end
+  if d > 10 or s == -1 then
+    s = -s
+    while not ctx.collision:circleTest(tx, ty, self.owner.radius, {tag = 'wall'}) do
+      tx = self.tx + math.dx(d * s, self.angle)
+      ty = self.ty + math.dy(d * s, self.angle)
+      d = d - 1
+    end
+  end
 
   self.owner.x, self.owner.y = tx, ty
   self.owner.moving = true
