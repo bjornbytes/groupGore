@@ -60,3 +60,7 @@ function Weapon:value(owner)
   elseif self.timers.reload > 0 then return self.timers.reload / self.reloadTime
   else return 0 end
 end
+
+function Weapon:ammoValue(owner)
+  return self.currentClip, self.currentAmmo
+end

@@ -33,6 +33,7 @@ function Hud:update()
   ctx.input.mouseEnabled = not self.classSelect.active
   if self.classSelect.active then return self.classSelect:update() end
 
+  self.left:update()
   self.health:update()
   self.chat:update()
   self.feed:update()
