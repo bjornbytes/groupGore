@@ -67,11 +67,16 @@ function Map:init(name)
     self:score(team)
     if self.points[team] >= self.pointLimit then
       ctx.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
-      self.points[purple] = 0
-      self.points[orange] = 0
       self.winner = team
       self.restartTimer = 8
     end
+  end)
+
+  ctx.event:on('game.restart', function(data)
+    self.points[purple] = 0
+    self.points[orange] = 0
+    self.winner = nil
+    self.restartTimer = 0
   end)
 
   f.exe(self.activate, self)
@@ -130,7 +135,7 @@ function Map:update()
   if self.weather then self.weather:update() end
   self.restartTimer = timer.rot(self.restartTimer, function()
     self.winner = nil
-    ctx.players:restart()
+    ctx.event:emit('game.restart')
   end)
 end
 

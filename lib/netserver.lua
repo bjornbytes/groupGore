@@ -55,7 +55,34 @@ NetServer.receive[msgChat] = function(self, event)
   local pid = self.peerToPlayer[event.peer]
   local username = ctx.players:get(pid).username
   local color = ctx.players:get(pid).team == 0 and 'purple' or 'orange'
-  self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. event.data.message:gsub('god', 'light'):gsub('fuck', 'd\'arvit')})
+  local message = event.data.message
+  if message:sub(1, 1) == '/' then
+    local data = {}
+    for word in string.gmatch(message, '([^ ]+)') do
+      table.insert(data, word)
+    end
+    local function permissionDenied(id) self:send(evtChat, event.peer, {message = '{red}permission denied'}) end
+    local handlers = {
+      ['/restart'] = function(data)
+        if username ~= ctx.owner then return permissionDenied() end
+        ctx.event:emit('game.restart')
+        self:send(evtChat, event.peer, {message = '{red}game restarted'})
+      end,
+
+      ['/bjorn'] = function(data)
+        self:emit(evtChat, {message = '{purple}-_-'})
+      end,
+
+      default = function(data)
+        self:send(evtChat, event.peer, {message = '{red}unknown command "' .. data[1]:sub(2) .. '"'})
+      end
+    }
+    handlers['/reset'] = handlers['/restart']
+    handlers['/refresh'] = handlers['/restart']
+
+    return (handlers[data[1]] or handlers.default)(data)
+  end
+  self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. message})
 end
 
 function NetServer:init()

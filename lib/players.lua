@@ -54,6 +54,12 @@ function Players:init()
     p.ded = false
     p:spawn()
   end)
+
+  ctx.event:on('game.restart', function(data)
+    self:each(function(p)
+      ctx.net:emit(evtSpawn, {id = p.id})
+    end)
+  end)
 end
 
 function Players:activate(id)
@@ -83,12 +89,6 @@ end
 
 function Players:update()
   self:each(f.ego('update'))
-end
-
-function Players:restart()
-  self:each(function(p)
-    ctx.net:emit(evtSpawn, {id = p.id})
-  end)
 end
 
 function Players:setClass(id, class, team)

@@ -48,7 +48,8 @@ function Menu:update()
     elseif data[1] == 'createServer' then
       self.loader:deactivate()
       if data[2] == 'ok' then
-        Context:add(Server)
+        local server = Context:add(Server)
+        server.owner = username
         self.main:connect('localhost')
       elseif data[2] == 'duplicate' then
         self.error:activate('You are already running a server')
