@@ -16,6 +16,7 @@ function Hud:init()
   self.chat = HudChat()
   self.scoreboard = HudScoreboard()
   self.dead = HudDead()
+  self.gameOver = HudGameOver()
   self.classSelect = HudClassSelect()
   self.debug = HudDebug()
   
@@ -37,6 +38,7 @@ function Hud:update()
   self.feed:update()
   self.icons:update()
   self.scoreboard:update()
+  self.gameOver:update()
 end
 
 function Hud:gui()
@@ -54,6 +56,7 @@ function Hud:gui()
   self.chat:draw()
   self.scoreboard:draw()
   self.dead:draw()
+  self.gameOver:draw()
   self:crosshair()
   if self._debug then self.debug:draw() end
 end
@@ -84,6 +87,7 @@ function Hud:resize()
   self.u = ctx.view.frame.width
   self.v = ctx.view.frame.height
   self.feed:resize()
+  self.chat:resize()
 end
 
 function Hud:connecting()

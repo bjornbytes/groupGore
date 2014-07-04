@@ -67,7 +67,6 @@ function HudChat:keypressed(key)
       end
       self.active = false
       self.message = ''
-      love.keyboard.setKeyRepeat(false)
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
     end
     
@@ -75,7 +74,6 @@ function HudChat:keypressed(key)
   elseif key == 'return' then
     self.active = true
     self.message = ''
-    love.keyboard.setKeyRepeat(true)
     ctx.event:emit('sound.play', {sound = 'click', gui = true})
   end
 end
@@ -94,7 +92,19 @@ function HudChat:add(data)
   while g.getFont():getHeight() * select(2, g.getFont():getWrap(self.log, width)) > (v * .25 - 2) do
     self.log = self.log:sub(2)
   end
+
+  self.log = '{white}' .. self.log
   
+  self:refresh()
+  self.timer = math.min(2 + (#message / 50), 5)
+end
+
+function HudChat:resize()
+  self:refresh()
+end
+
+function HudChat:refresh(width)
+  local u, v = ctx.hud.u, ctx.hud.v
+  local width = u * .35
   self.richText = rich.new({self.log, width, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}})
-  self.timer = 2
 end
