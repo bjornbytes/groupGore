@@ -79,7 +79,9 @@ function PlayerMain:trace(data)
     self:move(self.inputs[i])
   end
 
+  self.moving = true
   ctx.collision:update()
+  self.moving = nil
 end
 
 function PlayerMain:readInput()
