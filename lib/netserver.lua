@@ -61,12 +61,29 @@ NetServer.receive[msgChat] = function(self, event)
     for word in string.gmatch(message, '([^ ]+)') do
       table.insert(data, word)
     end
-    local function permissionDenied(id) self:send(evtChat, event.peer, {message = '{red}permission denied'}) end
+    local function reply(message) self:send(evtChat, event.peer, {message = '{red}' .. message}) end
     local handlers = {
       ['/restart'] = function(data)
-        if username ~= ctx.owner then return permissionDenied() end
+        if username ~= ctx.owner then return reply('permission denied') end
         ctx.event:emit('game.restart')
-        self:send(evtChat, event.peer, {message = '{red}game restarted'})
+        reply('game restarted')
+      end,
+
+      ['/kick'] = function(data)
+        if username ~= ctx.owner then return reply('permission denied') end
+        if not data[2] or #data[2] == 0 then return reply('who are we kicking?') end
+        if data[2] == ctx.owner then return reply('don\'t be so masokicktic! *pats on back*') end
+        local player, peer
+        for i = 1, ctx.players.max do
+          if ctx.players:get(i).username == data[2] then player = i break end
+        end
+        if not player then return self:send(evtChat, event.peer, {message = '{red}couldn\'t find player "' .. data[2] .. '"'}) end
+        for i = 1, ctx.players.max do
+          local p = self.host:get_peer(i)
+          if self.peerToPlayer[p] == player then peer = p break end
+        end
+        if not peer then return self:send(evtChat, event.peer, {message = '{red}"' .. data[2] .. '" doesn\'t seem to be connected'}) end
+        self:disconnect({peer = peer, reason = 'kicked'})
       end,
 
       ['/bjorn'] = function(data)
@@ -79,6 +96,7 @@ NetServer.receive[msgChat] = function(self, event)
     }
     handlers['/reset'] = handlers['/restart']
     handlers['/refresh'] = handlers['/restart']
+    handlers['/sakujo'] = handlers['/kick']
 
     return (handlers[data[1]] or handlers.default)(data)
   end
@@ -109,8 +127,9 @@ end
 
 function NetServer:disconnect(event)
   local pid = self.peerToPlayer[event.peer]
-  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left!'})
-  self:emit(evtLeave, {id = pid, reason = 'left'})
+  local reason = event.reason or 'left'
+  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left (' .. reason .. ')'})
+  self:emit(evtLeave, {id = pid, reason = reason})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
 end
