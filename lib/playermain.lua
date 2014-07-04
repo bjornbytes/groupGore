@@ -38,7 +38,7 @@ function PlayerMain:update()
   local input = self:readInput()
   self:move(input)
   self:turn(input)
-  self:slot(input)
+  self:slot(input, self.prev.input)
   self:fade()
   
   if self.heartbeatSound then
@@ -54,6 +54,8 @@ function PlayerMain:update()
   ctx.net:buffer(msgInput, input)
 
   Player.update(self)
+
+  self.prev.input = input
 end
 
 function PlayerMain:draw()

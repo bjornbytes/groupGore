@@ -74,10 +74,12 @@ function PlayerServer:trace(data, ping)
 
     self.ack = data.tick
     
+    local prev = self:get(data.tick - 1)
+    if prev then prev = prev.input end
     if not self.ded then
       self:move(data)
       self:turn(data)
-      self:slot(data)
+      self:slot(data, prev)
     end
 
     table.insert(self.history, setmetatable({
@@ -85,6 +87,7 @@ function PlayerServer:trace(data, ping)
       y = self.y,
       z = self.z,
       angle = self.angle,
+      input = data,
       tick = data.tick
     }, self.meta))
 

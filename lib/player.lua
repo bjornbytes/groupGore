@@ -51,6 +51,8 @@ function Player:init()
   self.slots = {}
   self.weapon = 1
   self.skill = 1
+  self.weaponDirty = false
+  self.skillDirty = false
 
   self.health = 0
   self.maxHealth = 0
@@ -113,11 +115,6 @@ function Player:draw()
   g.setColor(self.team == purple and {190, 160, 200, alpha * 255} or {240, 160, 140, alpha * 255})
   f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
   f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
-  data.media.shaders.outline:send('dimensions', {c.sprite:getDimensions()})
-  data.media.shaders.outline:send('size', 16)
-  g.setShader(data.media.shaders.outline)
-  g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
-  g.setShader()
   g.setColor(self.team == purple and {222, 200, 230, alpha * 255} or {250, 210, 200, alpha * 255})
   g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
 end
@@ -160,12 +157,14 @@ function Player:turn(input)
   self.angle = math.anglerp(self.angle, d, math.min(10 * tickRate, 1))
 end
 
-function Player:slot(input)
-  input = input or {}
+function Player:slot(input, prev)
+  input, prev = input or {}, prev or {}
+  local ldown, lpress, lrelease = input.l, input.l and not prev.l, not input.l and prev.l
+  local rdown, rpress, rrelease = input.r, input.r and not prev.r, not input.r and prev.r
 
   if input.slot then
     local k = self.slots[input.slot].type
-    if self[k] ~= input.slot then
+    if self[k] ~= input.slot and (not self.slots[self[k]] or not self.slots[self[k]].targeting) then
       self[k] = input.slot
       local slot = self.slots[input.slot]
       f.exe(slot.select, slot, self)
@@ -174,27 +173,48 @@ function Player:slot(input)
 
   local weapon = self.slots[self.weapon]
   local skill = self.slots[self.skill]
+  local function fire(slot)
+    local obj = self.slots[slot]
+    local msg = {id = self.id, slot = slot, mx = obj.needsMouse and input.x, my = obj.needsMouse and input.y}
+    obj:fire(self, input.x, input.y)
+    if obj.targeted then obj.targeting = false end
+    ctx.net:emit(evtFire, msg)
+  end
   
   for i = 1, 5 do
     if self.slots[i].type ~= 'weapon' or self.weapon == i then
       f.exe(self.slots[i].update, self.slots[i], self)
     end
   end
-  
-  if input.l and weapon:canFire(self) then
-    weapon:fire(self, input.x, input.y)
 
-    local msg = {id = self.id, slot = self.weapon}
-    if weapon.needsMouse then msg.mx, msg.my = input.x, input.y end
-    ctx.net:emit(evtFire, msg)
+  if lpress and skill.targeting then
+    skill.targeting = false
+    self.weaponDirty = true
   end
-  
-  if input.r and skill:canFire(self) then
-    skill:fire(self, input.x, input.y)
-    
-    local msg = {id = self.id, slot = self.skill}
-    if skill.needsMouse then msg.mx, msg.my = input.x, input.y end
-    ctx.net:emit(evtFire, msg)
+
+  if rpress and weapon.targeting then
+    weapon.targeting = false
+    self.skillDirty = true
+  end
+
+  if weapon:canFire(self) then
+    if not ldown then self.weaponDirty = false end
+    if not self.weaponDirty then
+      if lpress then weapon.targeting = weapon.targeted end
+      if (weapon.targeted and weapon.targeting and lrelease) or (not weapon.targeted and ldown) then
+        fire(self.weapon)
+      end
+    end
+  end
+
+  if skill:canFire(self) then
+    if not rdown then self.skillDirty = false end
+    if not self.skillDirty then
+      if rpress then skill.targeting = skill.targeted end
+      if (skill.targeted and skill.targeting and rrelease) or (not skill.targeted and rdown) then
+        fire(self.skill)
+      end
+    end
   end
 
   if input.reload then weapon:reload(self) end

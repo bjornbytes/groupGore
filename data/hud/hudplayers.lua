@@ -33,4 +33,11 @@ function HudPlayers:draw()
       g.rectangle('line', x0, y0, totalWidth, 10)
     end
   end)
+
+  local p = ctx.players:get(ctx.id)
+  if p then
+    for i = 1, 5 do
+      f.exe(p.slots[i].gui, p.slots[i], p)
+    end
+  end
 end
