@@ -42,7 +42,9 @@ function Collision:detach(data)
 end
 
 function Collision:move(data)
-  local x, y = data.x, data.y
+  local x, y = data.x or data.object.x, data.y or data.object.y
+  if not x or not y then return end
+
   if data.object.collision.shape == 'rectangle' then
     x = x + data.object.width / 2
     y = y + data.object.height / 2
@@ -51,24 +53,20 @@ function Collision:move(data)
   data.object.shape:moveTo(x, y)
 end
 
-function Collision:resolve(obj)
-  local oldShape = rawget(obj, 'shape')
-
-  local shape
-  if obj.collision.shape == 'rectangle' then
-    shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
-  elseif obj.collision.shape == 'circle' then
-    shape = self.hc:addCircle(obj.x, obj.y, obj.radius)
+function Collision:update()
+  for shape in self.hc:activeShapes() do
+    if shape.owner then
+      self:move({object = shape.owner})
+    end
   end
 
-  shape.owner = obj
-  obj.shape = shape
   self.hc:update()
 
-  obj.shape = oldShape
-  obj.shape:moveTo(shape:center())
-
-  self.hc:remove(shape)
+  for shape in self.hc:activeShapes() do
+    if shape.owner then
+      self:move({object = shape.owner})
+    end
+  end
 end
 
 function Collision:pointTest(x, y, options)

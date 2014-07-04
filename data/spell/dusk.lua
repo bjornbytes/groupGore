@@ -19,8 +19,7 @@ function Dusk:activate(mx, my)
   end
 
   self.owner.x, self.owner.y = tx, ty
-  ctx.event:emit('collision.move', {object = self.owner, x = self.owner.x, y = self.owner.y})
-  ctx.collision:resolve(self.owner)
+  ctx.collision:update()
   if self.owner.inputs then
     table.insert(self.owner.inputs, {
       tick = tick + 1,
