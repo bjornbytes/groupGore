@@ -23,6 +23,7 @@ function Server:update()
   self.buffs:update()
   self.players:update()
   self.spells:update()
+  self.map:update()
   self.net:sync()
 end
 
