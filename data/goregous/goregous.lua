@@ -3,7 +3,7 @@ Goregous = class()
 function Goregous:init()
   self.socket = (require('socket')).tcp()
   self.socket:settimeout(10)
-  local ip = (env == 'local') and '127.0.0.1' or '71.210.238.44'
+  local ip = (env == 'local') and '127.0.0.1' or '67.0.161.178'
   local _, e = self.socket:connect(ip, 6060)
   if e then error('Can\'t connect to goregous') end
   self.socket:settimeout(0)
