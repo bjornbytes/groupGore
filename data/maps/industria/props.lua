@@ -785,4 +785,11 @@ return {
     width = 192,
     height = 256
   },
+  {
+    kind = 'roof',
+    x = 1120,
+    y = 1504,
+    width = 192,
+    height = 320
+  },
 }
