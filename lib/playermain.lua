@@ -79,8 +79,7 @@ function PlayerMain:trace(data)
     self:move(self.inputs[i])
   end
 
-  ctx.collision:resolve(self)
-  self.x, self.y = self.shape:center()
+  ctx.collision:update()
 end
 
 function PlayerMain:readInput()

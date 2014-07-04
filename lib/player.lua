@@ -8,23 +8,19 @@ Player.collision = {
     wall = function(self, other, dx, dy)
       if self.z == 0 then
         self.x, self.y = self.x + dx, self.y + dy
-        self.shape:moveTo(self.x, self.y)
       end
     end,
     teamwall = function(self, other, dx, dy)
       if other.team ~= self.team and self.z == 0 then
         self.x, self.y = self.x + dx, self.y + dy
-        self.shape:moveTo(self.x, self.y)
       end
     end,
     player = function(self, other, dx, dy)
-      --[[if other.team ~= self.team then
-        dx, dy = dx / 2, dy / 2
-        self.x, self.y = self.x + dx, self.y + dy
-        ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
-        other.x, other.y = other.x - dx, other.y - dy
-        ctx.event:emit('collision.move', {object = other, x = other.x, y = other.y})
-      end]]
+      if other.team ~= self.team then
+        if self.moving then
+          self.x, self.y = self.x + dx, self.y + dy
+        end
+      end
     end
   }
 }
@@ -76,7 +72,6 @@ end
 function Player:activate()
   self.x = ctx.map.spawn[self.team].x
   self.y = ctx.map.spawn[self.team].y
-  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
 
   self.weapon = 1
   self.skill = 1
@@ -155,8 +150,9 @@ function Player:move(input)
   self.x = math.clamp(self.x, 0, ctx.map.width)
   self.y = math.clamp(self.y, 0, ctx.map.height)
 
-  ctx.collision:resolve(self)
-  ctx.event:emit('collision.move', {object = self, x = self.x, y = self.y})
+  self.moving = true
+  ctx.collision:update()
+  self.moving = nil
 end
 
 function Player:turn(input)
