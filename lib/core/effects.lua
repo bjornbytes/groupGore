@@ -8,6 +8,7 @@ function Effects:init()
   self:add('motionBlur')
   self:add('deathDesaturate')
   self:add('vignette')
+  self:add('antialias')
 end
 
 function Effects:update()

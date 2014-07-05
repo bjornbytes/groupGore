@@ -4,7 +4,7 @@ local g = love.graphics
 
 function View:init()
   local w, h, fullscreen, resizable = 0, 0, true, false
-  if env ~= 'release' then w, h, fullscreen, resizable = 960, 600, false, true end
+  if false and env ~= 'release' then w, h, fullscreen, resizable = 960, 600, false, true end
   love.window.setMode(w, h, {fullscreen = fullscreen, resizable = resizable, vsync = false})
 
   self.x = 0
@@ -111,8 +111,8 @@ function View:resize()
     self.frame.height = h
   end
 
-  self.sourceCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
-  self.targetCanvas = love.graphics.newCanvas(w, h, 'normal', 4)
+  self.sourceCanvas = love.graphics.newCanvas(w, h)
+  self.targetCanvas = love.graphics.newCanvas(w, h)
   data.media.refresh('shaders')
   data.media.refresh('graphics')
   Typo.resize()
