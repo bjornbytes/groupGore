@@ -27,7 +27,8 @@ end
 function PlayerMain:update()
   if self.ded then
     self.ded = timer.rot(self.ded)
-    return self:fade()
+    self:fade()
+    return Player.update(self)
   end
   
   self.prev.x = self.x

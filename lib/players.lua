@@ -93,13 +93,7 @@ end
 
 function Players:setClass(id, class, team)
   local p = self.players[id]
-  if not table.has(self.active, id) then
-    self:activate(id)
-  else
-    table.each(p.slots, function(slot)
-      f.exe(slot.deactivate, slot, p)
-    end)
-  end
+  if not table.has(self.active, id) then self:activate(id) end
   p.class = data.class[class]
   p.team = team
   p:activate()

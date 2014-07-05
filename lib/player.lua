@@ -78,9 +78,12 @@ function Player:activate()
   self.weapon = 1
   self.skill = 1
   
+  table.each(self.slots, function(slot)
+    f.exe(slot.deactivate, slot, self)
+  end)
   table.clear(self.slots)
   for i = 1, 5 do
-    if not self.slots[i] then self.slots[i] = setmetatable({}, {__index = self.class.slots[i]}) end
+    self.slots[i] = setmetatable({}, {__index = self.class.slots[i]})
     f.exe(self.slots[i].activate, self.slots[i], self)
     if self.slots[i].type == 'skill' and self.skill == self.weapon then self.skill = i end
   end
@@ -104,6 +107,10 @@ end
 function Player:update()
   if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self.cloak = timer.rot(self.cloak)
+  if self.ded then
+    self.x, self.y = 0, 0
+    ctx.event:emit('collision.move', {object = self})
+  end
   if ctx.view then self.depth = ctx.view:threeDepth(self.x, self.y, self.z) end
 end
 

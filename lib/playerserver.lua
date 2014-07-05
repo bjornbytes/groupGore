@@ -32,7 +32,10 @@ function PlayerServer:get(t)
 end
 
 function PlayerServer:update()
-  if self.ded then return self:time() end
+  if self.ded then
+    self:time()
+    return Player.update(self)
+  end
 
   self:time()
   self:logic()
@@ -54,7 +57,7 @@ function PlayerServer:trace(data, ping)
     -- Lag compensation
     local oldData = {}
     if ping > 0 then
-      local target = data.tick - ((ping / 1000) + interp) / tickRate
+      local target = data.tick - (((ping / 2) / 1000) + interp) / tickRate
       local t1 = math.floor(target)
       local factor = target - t1
       ctx.players:each(function(p)
