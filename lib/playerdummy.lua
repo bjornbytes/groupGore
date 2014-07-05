@@ -9,7 +9,9 @@ function PlayerDummy:activate()
 end
 
 function PlayerDummy:update()
-  self:slot()
+  if not self.ded then
+    self:slot()
+  end
   
   Player.update(self)
 end
