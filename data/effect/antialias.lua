@@ -7,7 +7,7 @@ function Antialias:init()
 end
 
 function Antialias:resize()
-  self.shader:send('step', {1 / love.graphics.getWidth(), 1 / love.graphics.getHeight()})
+  self.shader:send('stepsize', {1 / love.graphics.getWidth(), 1 / love.graphics.getHeight()})
 end
 
 return Antialias
