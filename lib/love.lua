@@ -87,7 +87,7 @@ function love.errhand(msg)
     goregous:send({'error', msg .. '|' .. p:gsub('\n', '|')})
   end
 
-  local _, lines = font:getWrap(p, love.graphics.getWidth() - 140)
+  local _, lines = font:getWrap(msg, love.graphics.getWidth() - 140)
 
   local function draw()
     love.graphics.clear()
@@ -96,7 +96,7 @@ function love.errhand(msg)
     love.graphics.setColor(192, 0, 0, 255)
     love.graphics.printf(msg, 64, 64 + font:getHeight() * 4, love.graphics.getWidth() - 64)
     love.graphics.setColor(255, 255, 255, 128)
-    love.graphics.printf(p, 64, 64 + font:getHeight() * 6, love.graphics.getWidth() - 64)
+    love.graphics.printf(p, 64, 64 + font:getHeight() * (5 + lines), love.graphics.getWidth() - 64)
     love.graphics.present()
   end
 
