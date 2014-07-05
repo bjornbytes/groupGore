@@ -5,7 +5,7 @@ Vignette.shader = data.media.shaders.vignette
 function Vignette:init()
   self.radius = .85
   self.shader:send('radius', self.radius)
-  self.shader:send('smooth', .45)
+  self.shader:send('blur', .45)
   self:resize()
 end
 
