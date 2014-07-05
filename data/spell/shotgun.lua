@@ -109,7 +109,6 @@ Shotgun.activate = function(self)
   })
 
   ctx.event:emit('sound.play', {sound = 'shotgun', x = self.x, y = self.y})
-  if ctx.view then ctx.view:screenshake(5) end
 end
 
 Shotgun.update = function(self)
