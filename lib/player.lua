@@ -80,7 +80,7 @@ function Player:activate()
   
   table.clear(self.slots)
   for i = 1, 5 do
-    self.slots[i] = setmetatable({}, {__index = self.class.slots[i]})
+    if not self.slots[i] then self.slots[i] = setmetatable({}, {__index = self.class.slots[i]}) end
     f.exe(self.slots[i].activate, self.slots[i], self)
     if self.slots[i].type == 'skill' and self.skill == self.weapon then self.skill = i end
   end
@@ -223,9 +223,8 @@ end
 Player.hurt = f.empty
 Player.heal = f.empty
 
-function Player:die(data)
+function Player:die()
   self.ded = 5
-  self.x, self.y = 0, 0
  
   ctx.event:emit('particle.create', {
     kind = 'skull',
@@ -240,6 +239,8 @@ function Player:die(data)
   ctx.buffs:removeAll(self)
 
   self.alpha = 0
+  self.x, self.y = 0, 0
+  ctx.event:emit('collision.move', {object = self})
 end
 
 function Player:spawn()
