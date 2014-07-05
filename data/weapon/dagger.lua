@@ -41,7 +41,7 @@ function Dagger:draw(owner)
     local r, g, b, a = love.graphics.getColor()
     for i, v in pairs(self.visions) do
       local p = ctx.players:get(i)
-      if p and p.team ~= owner.team and v == 3 then
+      if p and not p.ded and p.team ~= owner.team and v == 3 then
         local alpha = p.alpha * (1 - (p.cloak / (p.team == ctx.players:get(ctx.id).team and 2 or 1)))
         love.graphics.setColor(150, 0, 0, 255 * alpha)
         love.graphics.setLineWidth(3)
