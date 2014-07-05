@@ -4,7 +4,7 @@ local g = love.graphics
 
 function View:init()
   local w, h, fullscreen, resizable = 0, 0, true, false
-  if false and env ~= 'release' then w, h, fullscreen, resizable = 960, 600, false, true end
+  if env ~= 'release' then w, h, fullscreen, resizable = 640, 480, false, true end
   love.window.setMode(w, h, {fullscreen = fullscreen, resizable = resizable, vsync = false})
 
   self.x = 0
