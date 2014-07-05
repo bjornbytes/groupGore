@@ -22,7 +22,8 @@ NetClient.receive[msgJoin] = function(self, event)
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
-  ctx.tick = event.data.tick
+  ctx.tick = event.data.tick + math.floor(((event.peer:round_trip_time() / 2) / 1000) / tickRate)
+  if env ~= 'release' then ctx.tick = event.data.tick end
   --ctx.map:load(event.data.map)
   for i = 1, #event.data.players do
     local p = event.data.players[i]
@@ -53,7 +54,10 @@ end
 
 function NetClient:connect(event)
   self.server = event.peer
-  self:send(msgJoin, {username = username})
+  local waitFor = (env == 'release') and 5 or 0
+  self:buffer(msgJoin, {username = username}, tick + (waitFor / tickRate))
+  event.peer:ping_interval(100)
+  event.peer:ping()
 end
 
 function NetClient:disconnect(event)
@@ -69,9 +73,8 @@ function NetClient:send(msg, data)
   self.server:send(tostring(self.outStream))
 end
 
-function NetClient:buffer(msg, data)
-  table.insert(self.messageBuffer, {msg, data, tick})
-  self:sync()
+function NetClient:buffer(msg, data, t)
+  table.insert(self.messageBuffer, {msg, data, t or tick})
 end
 
 function NetClient:sync()
@@ -79,7 +82,7 @@ function NetClient:sync()
   
   self.outStream:clear()
  
-  while #self.messageBuffer > 0 and (tick - self.messageBuffer[1][3]) * tickRate >= .000 do
+  while #self.messageBuffer > 0 and tick >= self.messageBuffer[1][3] do
     local msg, data, tick = unpack(self.messageBuffer[1])
     self:pack(msg, data)
     table.remove(self.messageBuffer, 1)

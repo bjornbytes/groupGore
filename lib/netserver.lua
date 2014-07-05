@@ -48,7 +48,7 @@ NetServer.receive[msgClass] = function(self, event)
 end
 
 NetServer.receive[msgInput] = function(self, event)
-  ctx.players:get(self.peerToPlayer[event.peer]):trace(event.data, event.peer:last_round_trip_time())
+  ctx.players:get(self.peerToPlayer[event.peer]):trace(event.data, event.peer:round_trip_time())
 end
 
 NetServer.receive[msgChat] = function(self, event)
@@ -123,6 +123,8 @@ end
 
 function NetServer:connect(event)
   self.peerToPlayer[event.peer] = self:nextPlayerId()
+  event.peer:ping_interval(100)
+  event.peer:ping()
 end
 
 function NetServer:disconnect(event)
