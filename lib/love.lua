@@ -83,6 +83,10 @@ function love.errhand(msg)
   p = string.gsub(p, '\t', '')
   p = string.gsub(p, '%[string "(.-)"%]', '%1')
 
+  if goregous then
+    goregous:send({'error', msg .. '|' .. p:gsub('\n', '|')})
+  end
+
   local _, lines = font:getWrap(p, love.graphics.getWidth() - 140)
 
   local function draw()
