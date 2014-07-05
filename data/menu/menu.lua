@@ -27,8 +27,6 @@ function Menu:load()
   else
     self:push(self.main)
   end
-  
-  self.container = Container()
 
   goregous = goregous or Context:add(Goregous)
 end
