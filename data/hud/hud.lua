@@ -97,10 +97,10 @@ function Hud:connecting()
   g.setColor(255, 255, 255)
   g.setFont('pixel', 8)
   local str = 'Connecting...'
-  if tick > 5 / tickRate then str = str .. '\noshit' end
-  if tick > 6 / tickRate then str = str .. ' oshit' end
-  if tick > (6 / tickRate) + 5 then str = str .. ' oshit' end
-  if tick > (6 / tickRate) + 10 then str = str .. ' oshit' end
+  if tick > 6 / tickRate then str = str .. '\noshit' end
+  if tick > 7 / tickRate then str = str .. ' oshit' end
+  if tick > (7 / tickRate) + 5 then str = str .. ' oshit' end
+  if tick > (7 / tickRate) + 10 then str = str .. ' oshit' end
   if tick > 10 / tickRate then str = str .. '\n' str = str .. string.rep('fuck', math.min(10, (tick - (10 / tickRate)) / 3)) end
   local _, lines = g.getFont():getWrap(str, self.u)
   g.printf(str, 0, self.v * .5 - g.getFont():getHeight() * lines * .5, self.u, 'center')
