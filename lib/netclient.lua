@@ -46,7 +46,9 @@ function NetClient:init()
   
   ctx.event:on(evtSync, function(data)
     local p = ctx.players:get(data.id)
-    p:trace(data)
+    if p and p.active then
+      p:trace(data)
+    end
   end)
 
   Net.init(self)

@@ -86,6 +86,10 @@ NetServer.receive[msgChat] = function(self, event)
         self:disconnect({peer = peer, reason = 'kicked'})
       end,
 
+      ['/roll'] = function(data)
+        self:emit(evtChat, {message = '{red}' .. username .. ' rolled {green}' .. love.math.random(1, 100)})
+      end,
+
       ['/bjorn'] = function(data)
         self:emit(evtChat, {message = '{purple}-_-'})
       end,
@@ -119,10 +123,13 @@ function NetServer:quit()
       if self.host:get_peer(i) then self.host:get_peer(i):disconnect_now() end
     end
   end
+  self.host:flush()
+  self.host = nil
 end
 
 function NetServer:connect(event)
   self.peerToPlayer[event.peer] = self:nextPlayerId()
+  event.peer:timeout(0, 0, 3000)
   event.peer:ping_interval(100)
   event.peer:ping()
 end
