@@ -5,6 +5,8 @@ local g = love.graphics
 function HudFeed:init()
   self.entries = {}
   self.alpha = 0
+
+  ctx.event:on(evtDead, function(data) self:insert(data) end)
 end
 
 function HudFeed:update()

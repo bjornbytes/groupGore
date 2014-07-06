@@ -74,6 +74,7 @@ end
 function Player:activate()
   self.x = ctx.map.spawn[self.team].x
   self.y = ctx.map.spawn[self.team].y
+  self.z = 0
 
   self.weapon = 1
   self.skill = 1

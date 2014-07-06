@@ -21,7 +21,6 @@ function Hud:init()
   self.debug = HudDebug()
   
   ctx.event:on(evtChat, function(data) self.chat:add(data) end)
-  ctx.event:on(evtDead, function(data) self.feed:insert(data) end)
   ctx.view:register(self, 'gui')
 
   self.u = ctx.view.frame.width

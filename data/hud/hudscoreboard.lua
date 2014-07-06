@@ -5,6 +5,7 @@ local g = love.graphics
 function HudScoreboard:init()
   ctx.event:on(evtClass, function(data) self:refresh() end)
   ctx.event:on(evtDead, function(data) self:refresh() end)
+  ctx.event:on(evtLeave, function(data) self:refresh() end)
 
   self.names = {[0] = '', [1] = ''}
   self.ks = {[0] = '', [1] = ''}

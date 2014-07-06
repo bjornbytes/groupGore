@@ -2,28 +2,21 @@ local lust = {}
 lust.level = 0
 
 -- Setup
-if love.math then
-  love.math.setRandomSeed(os.time())
-end
+if love.math then love.math.setRandomSeed(os.time()) end
 
-tick = 0
 tickRate = .02
 tickDelta = 0
-syncRate = .05
-syncDelta = 0
-interp = .1
+interp = .12
 delta = 0
 
 local update = love.update
 love.update = function()
-  tick = tick + 1
   love.event.pump()
   for e, a, b, c, d in love.event.poll() do
     if e == 'quit' then f.exe(love.quit) love.audio.stop() return
     else love.handlers[e](a, b, c, d) end
   end
   update()
-  love.sync()
 end
 love.load = function() end
 --

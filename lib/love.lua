@@ -1,7 +1,5 @@
 function love.run()
-  if love.math then
-    love.math.setRandomSeed(os.time())
-  end
+  if love.math then love.math.setRandomSeed(os.time()) end
 
   tickRate = .02
   tickDelta = 0
