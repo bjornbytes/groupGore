@@ -1,9 +1,9 @@
 local DeathDesaturate = {}
 DeathDesaturate.code = 'deathDesaturate'
-DeathDesaturate.shader = data.media.shaders.desaturate
 
 function DeathDesaturate:init()
   self.amount = 1
+  self:resize()
 end
 
 function DeathDesaturate:update()
@@ -14,6 +14,10 @@ function DeathDesaturate:update()
   end
 
   self.shader:send('amount', self.amount)
+end
+
+function DeathDesaturate:resize()
+  self.shader = data.media.shaders.desaturate
 end
 
 return DeathDesaturate

@@ -1,6 +1,5 @@
 local DarkenBehind = {}
 DarkenBehind.code = 'darkenBehind'
-DarkenBehind.shader = data.media.shaders.darkenBehind
 
 function DarkenBehind:init()
   self:resize()
@@ -16,6 +15,7 @@ function DarkenBehind:update()
 end
 
 function DarkenBehind:resize()
+  self.shader = data.media.shaders.darkenBehind
   self.shader:send('frame', {ctx.view.frame.x, ctx.view.frame.y, ctx.view.frame.width, ctx.view.frame.height})
 end
 

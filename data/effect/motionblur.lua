@@ -1,6 +1,9 @@
 local MotionBlur = {}
 MotionBlur.code = 'motionBlur'
-MotionBlur.shader = data.media.shaders.motionBlur
+
+function MotionBlur:init()
+  self:resize()
+end
 
 function MotionBlur:update()
   local v = ctx.view
@@ -9,6 +12,10 @@ function MotionBlur:update()
     local dir = math.direction(v.x, v.y, v.prevx, v.prevy)
     self.shader:send('velocity', {math.dx(d, dir), math.dy(d, dir)})
   end
+end
+
+function MotionBlur:resize()
+  self.shader = data.media.shaders.motionBlur
 end
 
 return MotionBlur

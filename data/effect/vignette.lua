@@ -1,12 +1,11 @@
 local Vignette = {}
 Vignette.code = 'vignette'
-Vignette.shader = data.media.shaders.vignette
 
 function Vignette:init()
   self.radius = .85
+  self:resize()
   self.shader:send('radius', self.radius)
   self.shader:send('blur', .45)
-  self:resize()
 end
 
 function Vignette:update()
@@ -22,6 +21,7 @@ function Vignette:update()
 end
 
 function Vignette:resize()
+  self.shader = data.media.shaders.vignette
   self.shader:send('frame', {ctx.view.frame.x, ctx.view.frame.y, ctx.view.frame.width, ctx.view.frame.height})
 end
 
