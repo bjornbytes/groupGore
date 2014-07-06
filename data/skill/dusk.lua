@@ -90,6 +90,7 @@ end
 function Dusk:gui(owner)
   if self.targetAlpha > 0.1 then
     local g, v = love.graphics, ctx.view
+    g.pop()
     ctx.view:worldPush()
     g.setColor(255, 255, 255, self.targetAlpha * 255)
     g.circle('line', owner.drawX, owner.drawY, data.spell.dusk.maxDistance, 100)
@@ -100,7 +101,6 @@ function Dusk:gui(owner)
       local g, c, a, s = love.graphics, self.class, self.drawAngle, self.drawScale * self.class.scale
       local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
       g.setColor(0, 0, 0, alpha * 50)
-      g.draw(c.sprite, self.x + 4, self.y + 4, a, s, s, c.anchorx, c.anchory)
       g.setColor(self.team == purple and {190, 160, 200, alpha * 100} or {240, 160, 140, alpha * 100})
       f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
       f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
@@ -108,6 +108,8 @@ function Dusk:gui(owner)
       g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
     end
     g.pop()
+    g.push()
+    g.translate(v.frame.x, v.frame.y)
   end
 end
 
