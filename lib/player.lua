@@ -35,6 +35,7 @@ function Player:init()
   self.username = ''
   self.class = nil
   self.team = nil
+  self.active = false
 
   self.kills = 0
   self.deaths = 0
@@ -72,6 +73,7 @@ function Player:init()
 end
 
 function Player:activate()
+  self.active = true
   self.x = ctx.map.spawn[self.team].x
   self.y = ctx.map.spawn[self.team].y
   self.z = 0
@@ -102,6 +104,7 @@ function Player:activate()
 end
 
 function Player:deactivate()
+  self.active = false
   self.username = ''
 end
 
@@ -162,7 +165,7 @@ end
 
 function Player:turn(input)
   local d = math.direction(self.x, self.y, input.x, input.y)
-  self.angle = math.anglerp(self.angle, d, math.min(10 * tickRate, 1))
+  self.angle = math.anglerp(self.angle, d, math.min(25 * tickRate, 1))
 end
 
 function Player:slot(input, prev)

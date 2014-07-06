@@ -37,6 +37,7 @@ function Menu:update()
     if data[1] == 'login' then
       self.loader:deactivate()
       if data[2] == 'ok' then
+        love.filesystem.write('username', username)
         self:push(self.main)
       elseif data[2] == 'duplicate' then
         self.error:activate('Nickname already in use')
