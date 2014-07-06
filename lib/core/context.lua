@@ -27,10 +27,13 @@ function Context:run(key, ...)
   end
 end
 
-function Context:remove(ctx)
+function Context:remove(ctx, ...)
   for i = 1, #self.list do
     if self.list[i] == ctx then
-      return table.remove(self.list, i)
+      f.exe(ctx.unload, ctx, ...)
+      table.remove(self.list, i)
+      collectgarbage()
+      return
     end
   end
 end

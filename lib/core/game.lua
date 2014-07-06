@@ -36,6 +36,11 @@ function Game:draw()
   self.view:draw()
 end
 
+function Game:unload()
+  self.net:send(msgLeave)
+  self.net.host:flush()
+end
+
 function Game:quit()
   self.net:send(msgLeave)
   self.net.host:flush()

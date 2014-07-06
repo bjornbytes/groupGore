@@ -5,11 +5,11 @@ local g = love.graphics
 function View:init()
   local w, h, fullscreen, resizable = 0, 0, true, false
   if env ~= 'release' then w, h, fullscreen, resizable = 640, 480, false, true end
-  love.window.setMode(w, h, {fullscreen = fullscreen, resizable = resizable, vsync = false})
+  love.window.setMode(w, h, {fullscreen = fullscreen, fullscreentype = 'desktop', resizable = resizable, vsync = false})
 
   self.x = 0
   self.y = 0
-  self.width = 960
+  self.width = 800
   self.height = 600
   self.xmin = 0
   self.ymin = 0
@@ -116,6 +116,8 @@ function View:resize()
   data.media.refresh('shaders')
   data.media.refresh('graphics')
   Typo.resize()
+  data.load()
+  collectgarbage()
 end
 
 function View:register(x, action)
@@ -175,8 +177,8 @@ function View:follow()
   
   dis = dis / 2
  
-  self.x = self.target.x + math.dx(dis, dir) - (self.width / 2)
-  self.y = self.target.y + math.dy(dis, dir) - (self.height / 2)
+  self.x = math.lerp(self.x, self.target.x + math.dx(dis, dir) - (self.width / 2), math.min(25 * tickRate, 1))
+  self.y = math.lerp(self.y, self.target.y + math.dy(dis, dir) - (self.height / 2), math.min(25 * tickRate, 1))
   
   self.x = math.clamp(self.x, self.target.x - (self.width * margin), self.target.x + (self.width * margin) - self.width)
   self.y = math.clamp(self.y, self.target.y - (self.height * margin), self.target.y + (self.height * margin) - self.height)

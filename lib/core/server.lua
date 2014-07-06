@@ -18,6 +18,10 @@ function Server:load()
   end
 end
 
+function Server:unload()
+  self.net:quit()
+end
+
 function Server:update()
   self.net:update()
   self.buffs:update()

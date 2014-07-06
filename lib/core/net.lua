@@ -24,12 +24,13 @@ end
 
 function Net:listen(port)
   self.host = enet.host_create(port and '*:' .. port or nil)
+  if not self.host then error('Error creating the connection') end
 end
 
 function Net:connectTo(ip, port)
   if not self.host then self:listen() end
   local peer = self.host:connect(ip .. ':' .. port)
-  peer:timeout(0, 5000, 10000)
+  peer:timeout(0, 0, 3000)
 end
 
 function Net:update()
