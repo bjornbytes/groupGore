@@ -10,6 +10,9 @@ function PlayerServer:activate()
 
   self.ack = tick
 
+  self.spawnTimer = 0
+  self.spawnMultiplier = 0
+
   Player.activate(self)
 end
 
@@ -46,6 +49,24 @@ function PlayerServer:update()
       percentage = (1 + (percentage * 7)) / 100
       self:heal({amount = self.maxHealth * percentage * tickRate})
     end
+  end
+
+  self.spawnTimer = timer.rot(self.spawnTimer)
+  if self.spawnTimer == 0 then
+    local spawn = ctx.collision:circleTest(self.x, self.y, self.radius, {tag = 'spawnroom'})
+    if spawn then
+      self.spawnMultiplier = self.spawnMultiplier + 1
+      local amount = 8 * self.spawnMultiplier
+      if spawn.team == self.team then
+        self.health = math.min(self.health + amount, self.maxHealth)
+      else
+        ctx.event:emit(evtDamage, {id = self.id, amount = amount, from = self.id, tick = tick})
+      end
+    else
+      self.spawnMultiplier = 0
+    end
+
+    self.spawnTimer = .5
   end
 
   Player.update(self)

@@ -792,4 +792,20 @@ return {
     width = 192,
     height = 320
   },
+  {
+    kind = 'spawnroom',
+    x = 1248,
+    y = 416,
+    width = 256,
+    height = 256,
+    team = 0
+  },
+  {
+    kind = 'spawnroom',
+    x = 928,
+    y = 2656,
+    width = 256,
+    height = 256,
+    team = 1
+  }
 }
