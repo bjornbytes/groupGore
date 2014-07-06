@@ -2,9 +2,9 @@ local Crate = {}
 Crate.name = 'Crate'
 Crate.code = 'crate'
 
-Crate.width = 48
-Crate.height = 48
-Crate.z = 48
+Crate.width = 64
+Crate.height = 64
+Crate.z = 32
 
 Crate.collision = {}
 Crate.collision.shape = 'rectangle'
@@ -26,50 +26,62 @@ local function perim(x, y, l, t, w, h)
 end
 
 function Crate:activate(map)
-  self.x = self.x - self.width / 2
-  self.y = self.y - self.height / 2
-  self.x1, self.y1, self.x2, self.y2 = self.x, self.y, self.x + self.width, self.y + self.height
+  if not Crate.texture then 
+    local x, y, w, h = map.textures.crate:getViewport()
+    Crate.texture = love.graphics.newCanvas(w, h)
+    Crate.texture:renderTo(function()
+      love.graphics.draw(map.atlas, map.textures.crate)
+    end)
+    Crate.texture:setWrap('repeat', 'repeat')
+  end
+
+  local cx, cy = self.x + self.width / 2, self.y + self.height / 2
+  self.ulx = (((self.x) - cx) * math.cos(self.angle)) - (((self.y) - cy) * math.sin(self.angle)) + cx
+  self.uly = (((self.x) - cx) * math.sin(self.angle)) + (((self.y) - cy) * math.cos(self.angle)) + cy
+  self.urx = (((self.x + self.width) - cx) * math.cos(self.angle)) - (((self.y) - cy) * math.sin(self.angle)) + cx
+  self.ury = (((self.x + self.width) - cx) * math.sin(self.angle)) + (((self.y) - cy) * math.cos(self.angle)) + cy
+  self.llx = (((self.x) - cx) * math.cos(self.angle)) - (((self.y + self.height) - cy) * math.sin(self.angle)) + cx
+  self.lly = (((self.x) - cx) * math.sin(self.angle)) + (((self.y + self.height) - cy) * math.cos(self.angle)) + cy
+  self.lrx = (((self.x + self.width) - cx) * math.cos(self.angle)) - (((self.y + self.height) - cy) * math.sin(self.angle)) + cx
+  self.lry = (((self.x + self.width) - cx) * math.sin(self.angle)) + (((self.y + self.height) - cy) * math.cos(self.angle)) + cy
 
   ctx.event:emit('collision.attach', {object = self})
   self.shape:rotate(self.angle)
-
-  self.image = data.media.graphics.map[map.wallTexture]
-  self.image:setWrap('repeat', 'repeat')
 
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
-  }, self.image)
+  }, self.texture)
 
   self.north = love.graphics.newMesh({
-    {self.x, self.y, 0, 0, 0, 0, 0},
-    {self.x + self.width, self.y, 1, 0, 0, 0, 0},
+    {self.ulx, self.uly, 0, 0, 0, 0, 0},
+    {self.urx, self.ury, 1, 0, 0, 0, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
-  }, self.image)
+  }, self.texture)
 
   self.south = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
-    {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
-    {self.x, self.y + self.height, 0, 1, 0, 0, 0}
-  }, self.image)
+    {self.lrx, self.lry, 1, 1, 0, 0, 0},
+    {self.llx, self.lly, 0, 1, 0, 0, 0}
+  }, self.texture)
 
   self.east = love.graphics.newMesh({
     {0, 0, 0, 0},
-    {self.x + self.width, self.y, 1, 0, 0, 0, 0},
-    {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
+    {self.urx, self.ury, 1, 0, 0, 0, 0},
+    {self.lrx, self.lry, 1, 1, 0, 0, 0},
     {0, 0, 0, 1}
-  }, self.image)
+  }, self.texture)
 
   self.west = love.graphics.newMesh({
-    {self.x, self.y, 0, 0, 0, 0, 0},
+    {self.ulx, self.uly, 0, 0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
-    {self.x, self.y + self.height, 0, 1, 0, 0, 0}
-  }, self.image)
+    {self.llx, self.lly, 0, 1, 0, 0, 0}
+  }, self.texture)
 
   self.meshX = self.x
   self.meshY = self.y
@@ -82,7 +94,7 @@ function Crate:update()
     if not self:inView() then return end
     local x1, y1 = ctx.view.x + ctx.view.width / 2, ctx.view.y + ctx.view.height / 2
     local x2, y2 = perim(x1, y1, self.x, self.y, self.width, self.height)
-    self.depth = math.clamp(math.distance(x1, y1, x2, y2) * ctx.view.scale - 1000 - self.z, -4096, -16)
+    self.depth = math.clamp(math.distance(x1, y1, x2, y2) * ctx.view.scale - 10 - self.z, -4096, -16)
   end
 
   if self.meshX ~= self.x or self.meshY ~= y then
@@ -94,11 +106,11 @@ function Crate:draw()
   if not self:inView() then return end
 
   local v = ctx.view
-  local ulx, uly = v:three(self.x, self.y, self.z)
-  local urx, ury = v:three(self.x + self.width, self.y, self.z)
-  local llx, lly = v:three(self.x, self.y + self.height, self.z)
-  local lrx, lry = v:three(self.x + self.width, self.y + self.height, self.z)
-  local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
+  local ulx, uly = v:three(self.ulx, self.uly, self.z)
+  local urx, ury = v:three(self.urx, self.ury, self.z)
+  local llx, lly = v:three(self.llx, self.lly, self.z)
+  local lrx, lry = v:three(self.lrx, self.lry, self.z)
+  local w, h = 1, 1
 
   self.top:setVertex(1, ulx, uly, 0, 0)
   self.top:setVertex(2, urx, ury, w, 0)
@@ -106,27 +118,29 @@ function Crate:draw()
   self.top:setVertex(4, llx, lly, 0, h)
 
   love.graphics.setColor(255, 255, 255)
-  local y2 = ctx.view.y + (ctx.view.height / 2)
-  if self.y > y2 then
+  local dif = math.anglediff(self.angle, math.direction(self.ulx, self.uly, v.x + (v.width / 2), v.y + (v.height / 2)))
+  if dif < 0 then
     self.north:setVertex(3, urx, ury, w, h)
     self.north:setVertex(4, ulx, uly, 0, h)
     love.graphics.draw(self.north, 0, 0)
   end
 
-  if self.y + self.height < y2 then
+  local dif = math.anglediff(self.angle, math.direction(self.llx, self.lly, v.x + (v.width / 2), v.y + (v.height / 2)))
+  if dif > 0 then
     self.south:setVertex(1, llx, lly, 0, 0)
     self.south:setVertex(2, lrx, lry, w, 0)
     love.graphics.draw(self.south, 0, 0)
   end
 
-  local x2 = ctx.view.x + (ctx.view.width / 2)
-  if self.x > x2 then
+  local dif = math.anglediff(self.angle + math.pi / 2, math.direction(self.ulx, self.uly, v.x + (v.width / 2), v.y + (v.height / 2)))
+  if dif > 0 then
     self.west:setVertex(2, ulx, uly, w, 0)
     self.west:setVertex(3, llx, lly, w, h)
     love.graphics.draw(self.west, 0, 0)
   end
 
-  if self.x + self.width < x2 then
+  local dif = math.anglediff(self.angle + math.pi / 2, math.direction(self.lrx, self.lry, v.x + (v.width / 2), v.y + (v.height / 2)))
+  if dif < 0 then
     self.east:setVertex(1, urx, ury, 0, 0)
     self.east:setVertex(4, lrx, lry, 0, h)
     love.graphics.draw(self.east, 0, 0)
@@ -142,7 +156,7 @@ function Crate:inView()
 end
 
 function Crate:updateMesh()
-  local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
+  --[[local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
 
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
   self.north:setVertex(2, self.x + self.width, self.y, w, 0, 0, 0, 0)
@@ -157,7 +171,7 @@ function Crate:updateMesh()
   self.west:setVertex(4, self.x, self.y + self.height, 0, h, 0, 0, 0)
 
   self.meshX = self.x
-  self.meshY = self.y
+  self.meshY = self.y]]
 end
 
 function Crate:__tostring()

@@ -2,7 +2,7 @@ Particles = class()
 
 function Particles:init()
   self.particles = {}
-  self.depth = 0
+  self.depth = -100
   if ctx.view then ctx.view:register(self) end
   ctx.event:on('particle.create', f.cur(self.create, self))
 end

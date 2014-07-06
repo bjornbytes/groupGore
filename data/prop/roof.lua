@@ -21,17 +21,24 @@ end
 function Roof:activate(map)
   if ctx.view then
     ctx.view:register(self)
-    self.alpha = 1
 
-    self.image = data.media.graphics.map[map.wallTexture]
-    self.image:setWrap('repeat', 'repeat')
+    if not Roof.texture then 
+      local x, y, w, h = map.textures.wall:getViewport()
+      Roof.texture = love.graphics.newCanvas(w, h)
+      Roof.texture:renderTo(function()
+        love.graphics.draw(map.atlas, map.textures.wall)
+      end)
+      Roof.texture:setWrap('repeat', 'repeat')
+    end
+
+    self.alpha = 1
 
     self.top = love.graphics.newMesh({
       {0, 0, 0, 0},
       {0, 0, 1, 0},
       {0, 0, 1, 1},
       {0, 0, 0, 1}
-    }, self.image)
+    }, self.texture)
   end
 end
 
@@ -58,7 +65,7 @@ function Roof:draw()
   local urx, ury = v:three(self.x + self.width, self.y, self.z)
   local llx, lly = v:three(self.x, self.y + self.height, self.z)
   local lrx, lry = v:three(self.x + self.width, self.y + self.height, self.z)
-  local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
+  local w, h = self.width / self.texture:getWidth(), self.height / self.texture:getHeight()
 
   self.top:setVertex(1, ulx, uly, 0, 0)
   self.top:setVertex(2, urx, ury, w, 0)

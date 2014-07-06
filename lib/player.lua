@@ -10,6 +10,11 @@ Player.collision = {
         self.x, self.y = self.x + dx, self.y + dy
       end
     end,
+    shortwall = function(self, other, dx, dy)
+      if self.z == 0 then
+        self.x, self.y = self.x + dx, self.y + dy
+      end
+    end,
     teamwall = function(self, other, dx, dy)
       if other.team ~= self.team and self.z == 0 then
         self.x, self.y = self.x + dx, self.y + dy

@@ -807,5 +807,17 @@ return {
     width = 256,
     height = 256,
     team = 1
+  },
+  {
+    kind = 'crate',
+    x = 1472,
+    y = 1760,
+    angle = math.pi / 3
+  },
+  {
+    kind = 'crate',
+    x = 896,
+    y = 1568,
+    angle = -math.pi / 3
   }
 }

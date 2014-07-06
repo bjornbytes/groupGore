@@ -34,15 +34,15 @@ function Map:init(name)
   table.merge(tiles, self.tiles)
   table.merge(props, self.props)
 
+  self.textures = table.map(self.textures, function(tex)
+    tex[5], tex[6] = self.atlas:getDimensions()
+    return love.graphics.newQuad(unpack(tex))
+  end)
+
   self.props = table.map(self.props, function(prop)
     setmetatable(prop, {__index = data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
     f.exe(prop.activate, prop, self)
     return prop
-  end)
-
-  self.textures = table.map(self.textures, function(tex)
-    tex[5], tex[6] = self.atlas:getDimensions()
-    return love.graphics.newQuad(unpack(tex))
   end)
 
   self.batch = love.graphics.newSpriteBatch(self.atlas, #self.tiles + #self.props)

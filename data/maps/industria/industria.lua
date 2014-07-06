@@ -16,7 +16,8 @@ industria.soundscape = 'blizzard'
 industria.textures = {
   background = {1, 1, 256, 256},
   wall = {259, 1, 64, 64},
-  metal = {259, 67, 64, 64}
+  metal = {259, 67, 64, 64},
+  crate = {259, 133, 64, 64}
 }
 
 ----------------

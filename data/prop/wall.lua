@@ -22,45 +22,51 @@ local function perim(x, y, l, t, w, h)
 end
 
 function Wall:activate(map)
-  ctx.event:emit('collision.attach', {object = self})
+  if not Wall.texture then 
+    local x, y, w, h = map.textures.wall:getViewport()
+    Wall.texture = love.graphics.newCanvas(w, h)
+    Wall.texture:renderTo(function()
+      love.graphics.draw(map.atlas, map.textures.wall)
+    end)
+    Wall.texture:setWrap('repeat', 'repeat')
+  end
 
-  self.image = data.media.graphics.map[map.wallTexture]
-  self.image:setWrap('repeat', 'repeat')
+  ctx.event:emit('collision.attach', {object = self})
 
   self.top = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
-  }, self.image)
+  }, self.texture)
 
   self.north = love.graphics.newMesh({
     {self.x, self.y, 0, 0, 0, 0, 0},
     {self.x + self.width, self.y, 1, 0, 0, 0, 0},
     {0, 0, 1, 1},
     {0, 0, 0, 1}
-  }, self.image)
+  }, self.texture)
 
   self.south = love.graphics.newMesh({
     {0, 0, 0, 0},
     {0, 0, 1, 0},
     {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
     {self.x, self.y + self.height, 0, 1, 0, 0, 0}
-  }, self.image)
+  }, self.texture)
 
   self.east = love.graphics.newMesh({
     {0, 0, 0, 0},
     {self.x + self.width, self.y, 1, 0, 0, 0, 0},
     {self.x + self.width, self.y + self.height, 1, 1, 0, 0, 0},
     {0, 0, 0, 1}
-  }, self.image)
+  }, self.texture)
 
   self.west = love.graphics.newMesh({
     {self.x, self.y, 0, 0, 0, 0, 0},
     {0, 0, 1, 0},
     {0, 0, 1, 1},
     {self.x, self.y + self.height, 0, 1, 0, 0, 0}
-  }, self.image)
+  }, self.texture)
 
   self.meshX = self.x
   self.meshY = self.y
@@ -90,7 +96,7 @@ function Wall:draw()
   local urx, ury = v:three(self.x + self.width, self.y, self.z)
   local llx, lly = v:three(self.x, self.y + self.height, self.z)
   local lrx, lry = v:three(self.x + self.width, self.y + self.height, self.z)
-  local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
+  local w, h = self.width / self.texture:getWidth(), self.height / self.texture:getHeight()
 
   self.top:setVertex(1, ulx, uly, 0, 0)
   self.top:setVertex(2, urx, ury, w, 0)
@@ -134,7 +140,7 @@ function Wall:inView()
 end
 
 function Wall:updateMesh()
-  local w, h = self.width / self.image:getWidth(), self.height / self.image:getHeight()
+  local w, h = self.width / self.texture:getWidth(), self.height / self.texture:getHeight()
 
   self.north:setVertex(1, self.x, self.y, 0, 0, 0, 0, 0)
   self.north:setVertex(2, self.x + self.width, self.y, w, 0, 0, 0, 0)
