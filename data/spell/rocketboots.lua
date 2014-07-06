@@ -11,6 +11,7 @@ function RocketBoots:activate(mx, my)
   self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
   self.speed = self.distance / self.duration
   self.tx, self.ty = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
+  self.owner.haste = -1000
 
   local s = 1
   local d = 10
@@ -47,6 +48,7 @@ function RocketBoots:update()
 
   self.hp = timer.rot(self.hp, function()
     self.owner.z = 0
+    self.owner.haste = self.owner.haste + 1000
     local targets = ctx.collision:circleTest(self.owner.x, self.owner.y, self.radius, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, all = true})
     table.each(targets, function(p)
       ctx.buffs:add(p, self.empowered and 'rocketbootsstun' or 'rocketbootsslow')

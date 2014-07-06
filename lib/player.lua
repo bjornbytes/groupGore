@@ -160,7 +160,7 @@ function Player:move(input)
   if dx == right and dy == down then dx = 0 end
   
   local dir = (dx + dy) / 2
-  local len = (self.class.speed + self.haste) * tickRate
+  local len = math.max((self.class.speed + self.haste) * tickRate, 0)
   self.x, self.y = self.x + math.dx(len, dir), self.y + math.dy(len, dir)
 
   self.x = math.clamp(self.x, 0, ctx.map.width)
