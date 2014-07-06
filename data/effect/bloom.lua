@@ -4,9 +4,7 @@ Bloom.code = 'bloom'
 local g = love.graphics
 
 function Bloom:init()
-  local w, h = g.getDimensions()
-  self.canvas = g.newCanvas(w / 4, h / 4)
-  self.working = g.newCanvas(w / 4, h / 4)
+  self:resize()
 end
 
 function Bloom:update()
@@ -55,6 +53,12 @@ function Bloom:applyEffect(source, target)
 
   self.canvas:clear()
   self.working:clear()
+end
+
+function Bloom:resize()
+  local w, h = g.getDimensions()
+  self.canvas = g.newCanvas(w / 4, h / 4)
+  self.working = g.newCanvas(w / 4, h / 4)
 end
 
 return Bloom
