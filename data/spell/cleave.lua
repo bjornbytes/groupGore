@@ -18,6 +18,7 @@ function Cleave:activate()
   table.each(self.targets, function(t)
     local damage = data.skill.cleave.damage
     if math.distance(self.owner.x, self.owner.y, t.x, t.y) > Cleave.radius * .65 then damage = damage / 2 end
+    if self.empowered then damage = damage * 1.5 end
     ctx.net:emit(evtDamage, {id = t.id, amount = data.skill.cleave.damage, from = self.owner.id, tick = tick})
     if self.empowered then
       local d = math.distance(t.x, t.y, self.owner.x, self.owner.y) - self.owner.radius - t.radius

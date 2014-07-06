@@ -8,7 +8,7 @@ RocketBoots.radius = 100
 function RocketBoots:activate(mx, my)
   self.hp = self.duration
   self.angle = self.owner.angle
-self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
+  self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
   self.speed = self.distance / self.duration
   self.tx, self.ty = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
 

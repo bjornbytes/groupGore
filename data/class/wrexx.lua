@@ -2,7 +2,6 @@ local Wrexx = {}
 Wrexx.name = 'Wrexx'
 Wrexx.code = 'wrexx'
 
-Wrexx.locked = env == 'release'
 
 ----------------
 -- Stats
