@@ -8,7 +8,7 @@ Wrexx.locked = env == 'release'
 -- Stats
 ----------------
 Wrexx.health = 260
-Wrexx.speed  = 150
+Wrexx.speed  = 190
 
 
 ----------------

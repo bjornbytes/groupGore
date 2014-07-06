@@ -5,23 +5,15 @@ Overexertion.code = 'overexertion'
 Overexertion.text = 'The Power'
 Overexertion.type = 'skill'
 
-Overexertion.cooldown = 8
 Overexertion.cost = 40
 
-function Overexertion:activate(owner)
-  self.timer = 0
-end
-
-function Overexertion:update(owner)
-  self.timer = timer.rot(self.timer)
-end
-
 function Overexertion:canFire(owner)
-  return false
+  return owner.health > self.cost and not ctx.buffs:get(owner, 'overexertion')
 end
 
-function Overexertion:fire()
-  --
+function Overexertion:fire(owner)
+  ctx.net:emit(evtDamage, {id = owner.id, amount = self.cost, from = owner.id, tick = tick})
+  ctx.buffs:add(owner, 'overexertion')
 end
 
 return Overexertion

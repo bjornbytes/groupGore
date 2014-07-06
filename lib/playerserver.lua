@@ -77,6 +77,7 @@ function PlayerServer:trace(data, ping)
     
     -- Lag compensation
     local oldData = {}
+    local newData = {}
     if ping > 0 then
       local target = data.tick - (((ping / 2) / 1000) + interp) / tickRate
       local t1 = math.floor(target)
@@ -90,6 +91,7 @@ function PlayerServer:trace(data, ping)
           local lerpd = table.interpolate(s1, s2, factor)
           p.x = lerpd.x
           p.y = lerpd.y
+          newData[p.id] = {p.x, p.y}
           p.angle = lerpd.angle
           ctx.event:emit('collision.move', {object = p})
         end
@@ -140,7 +142,9 @@ function PlayerServer:trace(data, ping)
     -- Undo lag compensation
     ctx.players:each(function(p)
       if oldData[p.id] then
+        local offsetx, offsety = p.x - newData[p.id][1], p.y - newData[p.id][2]
         p.x, p.y, p.angle = unpack(oldData[p.id])
+        p.x, p.y = p.x + offsetx, p.y + offsety
       end
     end)
   end

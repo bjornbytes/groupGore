@@ -66,6 +66,7 @@ function Player:init()
   self.lifesteal = 0
   self.haste = 0
   self.cloak = 0
+  self.stun = 0
 
   self.depth = 0
   self.recoil = 0
@@ -99,6 +100,7 @@ function Player:activate()
   self.lifesteal = 0
   self.haste = 0
   self.cloak = 0
+  self.stun = 0
 
   self.depth = -self.id
 end
@@ -111,11 +113,15 @@ end
 function Player:update()
   if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self.cloak = timer.rot(self.cloak)
+  self.stun = timer.rot(self.stun)
   if self.ded then
     self.x, self.y = 0, 0
     ctx.event:emit('collision.move', {object = self})
   end
-  if ctx.view then self.depth = ctx.view:threeDepth(self.x, self.y, self.z) end
+  if ctx.view then
+    self.depth = ctx.view:threeDepth(self.x, self.y, self.z)
+    if self.z > 0 then self.depth = self.depth - 100 end
+  end
 end
 
 function Player:draw()
@@ -135,6 +141,8 @@ end
 -- Behavior
 ----------------
 function Player:move(input)
+  if self.stun > 0 then return end
+
   if input.reposition then
     self.x, self.y = input.reposition.x, input.reposition.y
   end
@@ -164,11 +172,14 @@ function Player:move(input)
 end
 
 function Player:turn(input)
+  if self.stun > 0 then return end
   local d = math.direction(self.x, self.y, input.x, input.y)
   self.angle = math.anglerp(self.angle, d, math.min(25 * tickRate, 1))
 end
 
 function Player:slot(input, prev)
+  if self.stun > 0 then return end
+
   input, prev = input or {}, prev or {}
   local ldown, lpress, lrelease = input.l, input.l and not prev.l, not input.l and prev.l
   local rdown, rpress, rrelease = input.r, input.r and not prev.r, not input.r and prev.r
