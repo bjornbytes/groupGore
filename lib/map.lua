@@ -23,7 +23,7 @@ function Map:init(name)
   self.props = {}
   self.tiles = {}
   self.atlas = love.graphics.newImage(dir(name .. '.png'))
-  
+
   table.merge(safeLoad(dir(name .. '.lua')), self)
 
   map = self
@@ -108,8 +108,8 @@ function Map:init(name)
       love.graphics.push()
       love.graphics.scale(1 / downsample)
       table.each(self.props, function(p)
-        if p.code == 'wall' then
-          love.graphics.rectangle('fill', p.x, p.y, p.width, p.height)
+        if p.code == 'wall' or p.code == 'crate' then
+          p.shape:draw('fill')
         end
       end)
       love.graphics.pop()

@@ -819,5 +819,17 @@ return {
     x = 896,
     y = 1568,
     angle = -math.pi / 3
+  },
+  {
+    kind = 'crate',
+    x = 1056,
+    y = 1952,
+    angle = 0
+  },
+  {
+    kind = 'crate',
+    x = 1312,
+    y = 1312,
+    angle = 0
   }
 }

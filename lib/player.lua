@@ -1,6 +1,6 @@
 Player = class()
 
-Player.radius = 20
+Player.radius = 28
 Player.collision = {
   shape = 'circle',
   tag = 'player',
