@@ -55,6 +55,10 @@ function Weapon:reload(owner)
   end
 end
 
+function Weapon:ammoPack(owner)
+  self.currentAmmo = math.min(self.currentAmmo + math.ceil(self.ammo / 4), self.ammo)
+end
+
 function Weapon:value(owner)
   if self.timers.switch > 0 then return self.timers.switch / self.switchTime
   elseif self.timers.reload > 0 then return self.timers.reload / self.reloadTime

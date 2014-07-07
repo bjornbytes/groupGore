@@ -831,5 +831,33 @@ return {
     x = 1312,
     y = 1312,
     angle = 0
+  },
+  {
+    kind = 'crate',
+    x = 672,
+    y = 1696,
+    angle = 0
+  },
+  {
+    kind = 'crate',
+    x = 672,
+    y = 1696,
+    angle = 0
+  },
+  {
+    kind = 'crate',
+    x = 1696,
+    y = 1568,
+    angle = 0
+  },
+  {
+    kind = 'ammopack',
+    x = 704,
+    y = 1664
+  },
+  {
+    kind = 'ammopack',
+    x = 1728,
+    y = 1664
   }
 }
