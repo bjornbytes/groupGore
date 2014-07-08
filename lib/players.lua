@@ -35,7 +35,9 @@ function Players:init()
     to:hurt(data)
     local oldAmt = data.amount
     data.amount = data.amount * from.lifesteal
-    from:heal(data)
+    if data.id ~= data.from then
+      from:heal(data)
+    end
     data.amount = oldAmt
     ctx.event:emit('particle.create', {
       kind = 'arcadetext',

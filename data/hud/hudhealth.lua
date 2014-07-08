@@ -46,5 +46,10 @@ function HudHealth:draw()
     g.draw(self.canvas, x, 0, 0, s, s)
     g.setColor(255, 255, 255)
     g.draw(data.media.graphics.hud.health, x, 0, 0, s, s)
+    g.setFont('BebasNeue', v * .04)
+    g.setColor(100, 0, 0, 150)
+    g.printCenter(math.ceil(p.health) .. ' / ' .. p.maxHealth, u * .5 + 2, data.media.graphics.hud.health:getHeight() * s / 2 + 2 + (v * .003))
+    g.setColor(255, 255, 255, 255)
+    g.printCenter(math.ceil(p.health) .. ' / ' .. p.maxHealth, u * .5, data.media.graphics.hud.health:getHeight() * s / 2 + (v * .003))
   end
 end
