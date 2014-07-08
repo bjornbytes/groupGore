@@ -62,7 +62,6 @@ function NetClient:quit()
   self:send(msgLeave)
   self.host:flush()
   self.server:disconnect()
-  self.host = nil
 end
 
 function NetClient:connect(event)
