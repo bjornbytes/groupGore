@@ -69,16 +69,46 @@ function Rune:refillAmmo(player)
     end
     if ctx.id == player.id then
       ctx.event:emit('sound.play', {sound = 'reload', x = self.x, y = self.y})
+      ctx.event:emit('particle.create', {
+        kind = 'arcadetext',
+        vars = {
+          x = player.x,
+          y = player.y,
+          str = '+ammo'
+        }
+      })
     end
   end
 end
 
 function Rune:refillHealth(player)
   player.health = math.min(player.health + (player.maxHealth / 4), player.maxHealth)
+  if ctx.id == player.id then
+    ctx.event:emit('sound.play', {sound = 'reload', x = self.x, y = self.y})
+    ctx.event:emit('particle.create', {
+      kind = 'arcadetext',
+      vars = {
+        x = player.x,
+        y = player.y,
+        str = '+health'
+      }
+    })
+  end
 end
 
 function Rune:speedBoost(player)
   ctx.buffs:add(player, 'runespeedboost')
+  if ctx.id == player.id then
+    ctx.event:emit('sound.play', {sound = 'reload', x = self.x, y = self.y})
+    ctx.event:emit('particle.create', {
+      kind = 'arcadetext',
+      vars = {
+        x = player.x,
+        y = player.y,
+        str = '+speed'
+      }
+    })
+  end
 end
 
 return Rune

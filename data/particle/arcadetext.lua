@@ -22,16 +22,16 @@ end
 
 ArcadeText.gui = function(self)
   local g, v = love.graphics, ctx.view
-  local a, amt = math.min(self.alpha, 1), math.round(tonumber(self.amount))
+  local a = math.min(self.alpha, 1)
   local x = math.lerp(self.prevx or self.x, self.x, tickDelta / tickRate)
   local y = math.lerp(self.prevy or self.y, self.y, tickDelta / tickRate)
   x = (x - v.x) * v.scale
   y = (y - v.y) * v.scale
   g.setFont('pixel', 8)
   g.setColor(0, 0, 0, 255 * a)
-  g.printCenter(amt, x + 1, y + 1)
+  g.printCenter(self.str, x + 1, y + 1)
   g.setColor(255, 255, 255, 255 * a)
-  g.printCenter(amt, x, y)
+  g.printCenter(self.str, x, y)
 end
 
 return ArcadeText

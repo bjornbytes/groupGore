@@ -44,7 +44,7 @@ function Players:init()
       vars = {
         x = to.x,
         y = to.y,
-        amount = data.amount
+        str = tostring(math.round(tonumber(data.amount)))
       }
     })
   end)
