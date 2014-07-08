@@ -18,6 +18,7 @@ SMG.activate = function(self)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
 
   self.angle = self.owner.angle
+  love.math.setRandomSeed(tick * 123456789 % (2 ^ 50), tick * 987654321 % (2 ^ 50))
   self.angle = self.angle - (data.weapon.smg.spread / 2) + (love.math.random() * data.weapon.smg.spread)
   self.len = 0
   local target = nil
