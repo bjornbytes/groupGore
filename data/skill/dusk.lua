@@ -51,8 +51,10 @@ function Dusk:update(owner)
       end
       owner.x, owner.y = tx, ty
       owner.moving = true
+			owner.ghosting = true
       ctx.collision:update()
       owner.moving = nil
+			owner.ghosting = nil
       self.targetGhostX, self.targetGhostY = owner.x, owner.y
       owner.x, owner.y = ox, oy
       ctx.event:emit('collision.move', {object = owner})

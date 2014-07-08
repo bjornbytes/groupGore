@@ -55,7 +55,7 @@ function Weapon:reload(owner)
   end
 end
 
-function Weapon:ammoPack(owner)
+function Weapon:refillAmmo(owner)
   self.currentAmmo = math.min(self.currentAmmo + math.ceil(self.ammo / 4), self.ammo)
 end
 
