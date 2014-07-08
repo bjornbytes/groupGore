@@ -32,6 +32,7 @@ function Players:init()
     if data.id ~= data.from then
       from.lastDamageDealt = tick
     end
+    data.amount = data.amount * to.damageInMultiplier * from.damageOutMultiplier
     to:hurt(data)
     local oldAmt = data.amount
     data.amount = data.amount * from.lifesteal

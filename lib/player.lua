@@ -72,6 +72,8 @@ function Player:init()
   self.haste = 0
   self.cloak = 0
   self.stun = 0
+  self.damageOutMultiplier = 1
+  self.damageInMultiplier = 1
 
   self.depth = 0
   self.recoil = 0
@@ -106,6 +108,8 @@ function Player:activate()
   self.haste = 0
   self.cloak = 0
   self.stun = 0
+  self.damageOutMultiplier = 1
+  self.damageInMultiplier = 1
 
   self.depth = -self.id
 end
