@@ -11,4 +11,8 @@ function SpawnRoom:activate()
   ctx.event:emit('collision.attach', {object = self})
 end
 
+function SpawnRoom:deactivate()
+  ctx.event:emit('collision.detach', {object = self})
+end
+
 return SpawnRoom

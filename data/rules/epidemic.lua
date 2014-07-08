@@ -2,7 +2,7 @@ local Epidemic = {}
 
 Epidemic.code = 'epidemic'
 
-function Epidemic:init()
+function Epidemic:init(map)
   self.winner = nil
   self.restartTimer = 0
   self.timer = 5 * 60
@@ -27,6 +27,14 @@ function Epidemic:init()
     self.winner = nil
     self.restartTimer = 0
   end)
+
+  for i = #map.props, 1, -1 do
+    local p = map.props[i]
+    if (p.code == 'spawnroom' or p.code == 'teamwall') and p.team == purple then
+      p:deactivate()
+      table.remove(map.props, i)
+    end
+  end
 end
 
 function Epidemic:update()

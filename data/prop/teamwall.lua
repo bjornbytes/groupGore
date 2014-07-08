@@ -12,6 +12,11 @@ function TeamWall:activate()
   if ctx.view then ctx.view:register(self) end
 end
 
+function TeamWall:deactivate()
+  ctx.event:emit('collision.detach', {object = self})
+  if ctx.view then ctx.view:unregister(self) end
+end
+
 function TeamWall:draw()
   if ctx.id and ctx.players:get(ctx.id).team ~= self.team then
     love.graphics.setColor(150, 0, 0, (1 + math.sin(.0005 * tick / tickRate)) * 20)

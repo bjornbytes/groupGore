@@ -76,6 +76,11 @@ function Wall:activate(map)
   if ctx.view then ctx.view:register(self) end
 end
 
+function Wall:deactivate()
+  ctx.event:emit('collision.detach', {object = self})
+  if ctx.view then ctx.view:unregister(self) end
+end
+
 function Wall:update()
   if ctx.view then
     if not self:inView() then return end
