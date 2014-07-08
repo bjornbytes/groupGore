@@ -136,11 +136,16 @@ end
 
 function NetServer:disconnect(event)
   local pid = self.peerToPlayer[event.peer]
+	local username = ctx.players:get(pid).username
   local reason = event.reason or 'left'
-  self:emit(evtChat, {message = '{white}' .. ctx.players:get(pid).username .. ' has left (' .. reason .. ')'})
+  self:emit(evtChat, {message = '{white}' .. username .. ' has left (' .. reason .. ')'})
   self:emit(evtLeave, {id = pid, reason = reason})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
+	if username == ctx.owner then
+		goregous:send({'killServer'})
+		Context:remove(ctx)
+	end
 end
 
 function NetServer:send(msg, peer, data)

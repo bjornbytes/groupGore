@@ -135,7 +135,7 @@ function Map:update()
   if self.weather then self.weather:update() end
   self.restartTimer = timer.rot(self.restartTimer, function()
     self.winner = nil
-    ctx.event:emit('game.restart')
+    ctx.event:emit('game.end')
   end)
 end
 

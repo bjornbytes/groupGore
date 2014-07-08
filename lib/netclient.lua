@@ -51,6 +51,13 @@ function NetClient:init()
     end
   end)
 
+	ctx.event:on('game.quit', function(data)
+		self:send(msgLeave)
+		self.server:disconnect()
+		self.host:flush()
+		self.host = nil
+	end)
+
   Net.init(self)
 end
 

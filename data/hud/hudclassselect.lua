@@ -144,21 +144,11 @@ function HudClassSelect:mousereleased(x, y, button)
       self.team = 1 - self.team
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
     elseif math.inside(x, y, u * .08, v * (1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
-      ctx.net:send(msgLeave)
-      ctx.net.server:disconnect()
+			ctx.event:emit('game.quit')
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
-      for i = 1, #Context.list do
-        if getmetatable(Context.list[i]).__index == Server then
-          goregous:send({'killServer'})
-          Context:remove(Context.list[i])
-          break
-        end
-      end
       Context:remove(ctx)
       Context:add(Menu)
     elseif math.inside(x, y, u * .08, v * (1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
-      ctx.net:send(msgLeave)
-      ctx.net.server:disconnect()
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
       love.event.quit()
     end
