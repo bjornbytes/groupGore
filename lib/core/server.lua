@@ -16,10 +16,11 @@ function Server:load()
     setmetatable(p, {__index = PlayerRobot})
     self.net:emit(evtClass, {id = i, class = 1, team = i % 2})
   end
-end
 
-function Server:unload()
-  self.net:quit()
+  self.event:on('game.quit', function()
+    goregous:send({'killServer'})
+    Context:remove(ctx)
+  end)
 end
 
 function Server:update()

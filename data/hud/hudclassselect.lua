@@ -141,13 +141,11 @@ function HudClassSelect:mousereleased(x, y, button)
     g.setFont('BebasNeue', v * .065)
     local font = g.getFont()
     if math.inside(x, y, u * .08, v * .106, u * .24 + font:getWidth(str), font:getHeight()) then
+      ctx.event:emit('sound.play', {sound = 'click', gui = true})
       self.team = 1 - self.team
-      ctx.event:emit('sound.play', {sound = 'click', gui = true})
     elseif math.inside(x, y, u * .08, v * (1 - .213) - font:getHeight(), font:getWidth('Disconnect'), font:getHeight()) then
-			ctx.event:emit('game.quit')
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
-      Context:remove(ctx)
-      Context:add(Menu)
+      ctx.event:emit('game.quit')
     elseif math.inside(x, y, u * .08, v * (1 - .106) - font:getHeight(), font:getWidth('Exit'), font:getHeight()) then
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
       love.event.quit()

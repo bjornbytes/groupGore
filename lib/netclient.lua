@@ -51,14 +51,18 @@ function NetClient:init()
     end
   end)
 
-	ctx.event:on('game.quit', function(data)
-		self:send(msgLeave)
-		self.server:disconnect()
-		self.host:flush()
-		self.host = nil
-	end)
+  ctx.event:on('game.quit', function(data)
+    self:quit()
+  end)
 
   Net.init(self)
+end
+
+function NetClient:quit()
+  self:send(msgLeave)
+  self.host:flush()
+  self.server:disconnect()
+  self.host = nil
 end
 
 function NetClient:connect(event)
@@ -70,8 +74,7 @@ function NetClient:connect(event)
 end
 
 function NetClient:disconnect(event)
-  Context:remove(ctx)
-  Context:add(Menu)
+  ctx.event:emit('game.quit')
 end
 
 function NetClient:send(msg, data)

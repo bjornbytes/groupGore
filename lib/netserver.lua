@@ -114,6 +114,10 @@ function NetServer:init()
   self.peerToPlayer = {}
   self.eventBuffer = {}
 
+  ctx.event:on('game.quit', function(data)
+    self:quit()
+  end)
+
   Net.init(self)
 end
 
@@ -136,16 +140,15 @@ end
 
 function NetServer:disconnect(event)
   local pid = self.peerToPlayer[event.peer]
-	local username = ctx.players:get(pid).username
+  local username = ctx.players:get(pid).username
   local reason = event.reason or 'left'
   self:emit(evtChat, {message = '{white}' .. username .. ' has left (' .. reason .. ')'})
   self:emit(evtLeave, {id = pid, reason = reason})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
-	if username == ctx.owner then
-		goregous:send({'killServer'})
-		Context:remove(ctx)
-	end
+  if username == ctx.owner then
+    ctx.event:emit('game.quit')
+  end
 end
 
 function NetServer:send(msg, peer, data)
@@ -155,12 +158,13 @@ function NetServer:send(msg, peer, data)
 end
 
 function NetServer:emit(evt, data)
+  if not self.host then return end
   table.insert(self.eventBuffer, {evt, data, tick})
   ctx.event:emit(evt, data)
 end
 
 function NetServer:sync()
-  if #self.eventBuffer == 0 then return end
+  if #self.eventBuffer == 0 or not self.host then return end
   
   self.outStream:clear()
   

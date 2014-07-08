@@ -16,6 +16,11 @@ function Game:load()
   self.sound = Sound()
   self.map = Map()
   self.hud = Hud()
+
+  self.event:on('game.quit', function(data)
+    Context:remove(ctx)
+    Context:add(Menu)
+  end)
 end
 
 function Game:update()
@@ -36,14 +41,8 @@ function Game:draw()
   self.view:draw()
 end
 
-function Game:unload()
-  self.net:send(msgLeave)
-  self.net.host:flush()
-end
-
 function Game:quit()
-  self.net:send(msgLeave)
-  self.net.host:flush()
+  self.net:quit()
 end
 
 function Game:mousepressed(...) self.hud:mousepressed(...) end 

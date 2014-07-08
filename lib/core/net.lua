@@ -34,8 +34,8 @@ function Net:connectTo(ip, port)
 end
 
 function Net:update()
-  if not self.host then return end
   while true do
+    if not self.host then break end
     local event = self.host:service()
     if not event then break end
     
