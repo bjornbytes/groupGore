@@ -17,12 +17,12 @@ function HudRight:draw()
     g.setFont('BebasNeue', v * .052)
     
     g.setColor(0, 0, 0, 100)
-    g.print(tostring(ctx.map.points[p.team]), u * .85 + 2, -v * .008 + 2)
+    g.print(tostring(ctx.map.rules.points[p.team]), u * .85 + 2, -v * .008 + 2)
     if p.team == purple then g.setColor(190, 160, 220)
     else g.setColor(240, 160, 140) end
-    g.print(tostring(ctx.map.points[p.team]), u * .85, -v * .008)
+    g.print(tostring(ctx.map.rules.points[p.team]), u * .85, -v * .008)
     
-    local str = tostring(ctx.map.points[1 - p.team])
+    local str = tostring(ctx.map.rules.points[1 - p.team])
     local x = u * (.80375 + (data.media.graphics.hud.right:getWidth() * s / u) - .0525) - g.getFont():getWidth(str)
     g.setColor(0, 0, 0, 100)
     g.print(str, x + 2, -v * .008 + 2)

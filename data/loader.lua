@@ -52,6 +52,7 @@ data.load = function()
   load('data/class', 'class')
   load('data/particle', 'particle')
   load('data/prop', 'prop')
+  load('data/rules', 'rules')
   load('data/effect', 'effect')
   load('data/weather', 'weather')
 end
