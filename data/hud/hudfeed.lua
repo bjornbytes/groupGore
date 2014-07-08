@@ -53,14 +53,14 @@ end
 
 function HudFeed:insert(data)
   local u, v = ctx.hud.u, ctx.hud.v
-  while #self.entries > 3 do table.remove(self.entries, 1) end
-  if #self.entries == 3 then self.entries[1].targetX = u end
-  for i = 1, #self.entries do self.entries[i].targetY = self.entries[i].targetY + v * .05 + 4 end
+  g.setFont('pixel', 8)
+  local font = g.getFont()
+  while #self.entries > 4 do table.remove(self.entries, 1) end
+  if #self.entries == 4 then self.entries[1].targetX = u end
+  for i = 1, #self.entries do self.entries[i].targetY = self.entries[i].targetY + font:getHeight() + 16 end
   local t = table.copy(data)
   t.x = u
   t.y = -v * .05
-  g.setFont('pixel', 8)
-  local font = g.getFont()
   local u1, u2 = ctx.players:get(data.kill).username, ctx.players:get(data.id).username
   t.u1 = u1
   t.u2 = u2
@@ -79,8 +79,11 @@ function HudFeed:resize()
     local entry = self.entries[i]
     local width = math.max(math.min(u * .14, 150), font:getWidth(entry.u1) + font:getWidth(entry.u2) + 24)
     entry.targetX = u - width - 4
+    if i == 1 and #self.entries == 5 then
+      entry.targetX = u
+    end
     entry.x = entry.targetX
-    entry.targetY = 4 + (v * .07) + ((i - 1) * v * .05 + 4)
+    entry.targetY = 4 + (v * .07) + ((#self.entries - i) * (font:getHeight() + 16))
     entry.y = entry.targetY
   end
 end
