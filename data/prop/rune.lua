@@ -4,6 +4,7 @@ Rune.code = 'rune'
 
 Rune.width = 32
 Rune.height = 32
+Rune.effects = {'refillAmmo', 'refillHealth', 'speedBoost'}
 
 Rune.collision = {}
 Rune.collision.shape = 'rectangle'
@@ -11,11 +12,10 @@ Rune.collision.static = true
 Rune.collision.tag = 'rune'
 Rune.collision.with = {
   player = function(self, other, dx, dy)
-    if not self.timer and not player.ghosting then
+    if not self.timer and not other.ghosting then
       self.timer = 12
       self[self.effect](self, other)
-      local t = {'refillAmmo', 'refillHealth', 'speedBoost'}
-      self.effect = t[love.math.random(3)]
+      self.effect = self.effects[love.math.random(3)]
     end
   end
 }
@@ -24,6 +24,7 @@ function Rune:activate()
   self.x = self.x - (self.width / 2)
   self.y = self.y - (self.height / 2)
   ctx.event:emit('collision.attach', {object = self})
+  self.effect = self.effects[love.math.random(3)]
   if ctx.view then ctx.view:register(self) end
 end
 

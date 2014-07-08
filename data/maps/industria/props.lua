@@ -851,12 +851,12 @@ return {
     angle = 0
   },
   {
-    kind = 'ammopack',
+    kind = 'rune',
     x = 704,
     y = 1664
   },
   {
-    kind = 'ammopack',
+    kind = 'rune',
     x = 1728,
     y = 1664
   }
