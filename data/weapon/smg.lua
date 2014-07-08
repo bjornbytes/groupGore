@@ -14,8 +14,8 @@ SMG.type = 'weapon'
 ----------------
 SMG.image = data.media.graphics.smg
 SMG.scale = 1
-SMG.damage = 14
-SMG.fireTime = .12
+SMG.damage = 15
+SMG.fireTime = .13
 SMG.reloadTime = 1.6
 SMG.switchTime = .5
 SMG.clip = 12
