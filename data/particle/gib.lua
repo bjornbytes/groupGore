@@ -12,6 +12,8 @@ function Gib:activate()
   self.alpha = 1
   local i = 1 + love.math.random(6)
   self.image = data.media.graphics.effects['gib' .. i]
+  self.depth = -9
+  ctx.view:register(self)
 end
 
 function Gib:update()

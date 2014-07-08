@@ -11,6 +11,8 @@ Shell.activate = function(self)
   self.image = data.media.graphics.effects.shell
   self.scale = 1
   self.speedDecay = 5 + love.math.random() * 3
+  self.depth = -2
+  ctx.view:register(self)
 end
 
 Shell.update = function(self)

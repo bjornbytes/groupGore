@@ -9,6 +9,7 @@ MuzzleFlash.activate = function(self)
   self.scale = 2.5
   self.alpha = 1
   self.image = data.media.graphics.effects.muzzleFlash1
+  ctx.view:register(self)
 end
 
 MuzzleFlash.update = function(self)

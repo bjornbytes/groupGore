@@ -37,6 +37,14 @@ function Players:init()
     data.amount = data.amount * from.lifesteal
     from:heal(data)
     data.amount = oldAmt
+    ctx.event:emit('particle.create', {
+      kind = 'arcadetext',
+      vars = {
+        x = to.x,
+        y = to.y,
+        amount = data.amount
+      }
+    })
   end)
   
   ctx.event:on(evtDead, function(data)

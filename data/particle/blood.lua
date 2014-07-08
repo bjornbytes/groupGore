@@ -8,6 +8,8 @@ Blood.activate = function(self)
   self.scale = .2 + love.math.random() * .2
   self.angle = love.math.random() * math.pi * 2
   self.image = data.media.graphics.effects['blood' .. love.math.random(4)]
+  self.depth = -1
+  ctx.view:register(self)
 end
 
 Blood.update = function(self)

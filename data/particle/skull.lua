@@ -8,6 +8,8 @@ Skull.activate = function(self)
   self.scale = 1
   self.alpha = 1
   self.image = data.media.graphics.effects.skull
+  self.depth = -10
+  ctx.view:register(self)
 end
 
 Skull.update = function(self)

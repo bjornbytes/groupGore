@@ -8,6 +8,8 @@ Spark.activate = function(self)
   self.alpha = .6 + love.math.random() * .4
   self.length = love.math.random(4, 12)
   self.angle = 0
+  self.depth = -8
+  ctx.view:register(self)
 end
 
 Spark.update = function(self)
