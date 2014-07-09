@@ -54,7 +54,7 @@ function Map:init(name)
   end)
   self.batch:unbind()
 
-  self.rules = new(data.rules.epidemic, self)
+  self.rules = new(data.rules.deatmatch, self)
 
   f.exe(self.activate, self)
 

@@ -17,7 +17,7 @@ function PlayerServer:activate()
 end
 
 function PlayerServer:get(t)
-  if not self.history then return self end
+  if not self.history or t == tick then return self end
 
   while self.history[1] and self.history[1].tick < tick - 2 / tickRate do
     table.remove(self.history, 1)
@@ -42,7 +42,7 @@ function PlayerServer:update()
 
   self:time()
   self:logic()
-  
+
   if self.health < self.maxHealth and not self.ded then
     local percentage = ((tick - self.lastHurt) - (3 / tickRate)) / (10 / tickRate)
     if percentage > 0 then
