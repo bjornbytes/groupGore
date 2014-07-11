@@ -22,7 +22,6 @@ function StaticGrenade:update()
   self.x, self.y = self.x + math.dx(self.speed * tickRate, self.angle), self.y + math.dy(self.speed * tickRate, self.angle)
   self.z = self.z + self.zVel * tickRate
   self.zVel = self.zVel + self.zAcc * tickRate
-  if ctx.id == self.owner.id then print(self.z) end
 
   self.hp = timer.rot(self.hp, function()
     local targets = ctx.collision:circleTest(self.x, self.y, self.radius, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, all = true})

@@ -1,7 +1,7 @@
 local EnergyRifle = {}
 EnergyRifle.code = 'energyrifle'
 
-EnergyRifle.speed = 1800
+EnergyRifle.speed = 1600
 
 function EnergyRifle:activate()
   self.x = self.owner.x

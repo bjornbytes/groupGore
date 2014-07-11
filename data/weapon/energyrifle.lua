@@ -14,7 +14,7 @@ EnergyRifle.type = 'weapon'
 ----------------
 EnergyRifle.image = data.media.graphics.smg
 EnergyRifle.scale = 1
-EnergyRifle.damage = 20
+EnergyRifle.damage = 15
 EnergyRifle.fireTime = .35
 EnergyRifle.reloadTime = 1.5
 EnergyRifle.switchTime = .3

@@ -16,8 +16,9 @@ PlasmaCannon.image = data.media.graphics.smg
 PlasmaCannon.scale = 1
 PlasmaCannon.targeted = true
 PlasmaCannon.maxCharge = 1.5
-PlasmaCannon.minDamage = 10
-PlasmaCannon.maxDamage = 70
+PlasmaCannon.overcharge = 2.5
+PlasmaCannon.minDamage = 5
+PlasmaCannon.maxDamage = 65
 PlasmaCannon.fireTime = 1
 PlasmaCannon.switchTime = .5
 PlasmaCannon.ammo = 10
@@ -45,8 +46,16 @@ function PlasmaCannon:update()
   self.timers.fire = timer.rot(self.timers.fire)
   self.timers.switch = timer.rot(self.timers.switch)
 
-  if self.targeting then self.charge = math.min(self.charge + tickRate, self.maxCharge)
-  else self.charge = 0 end
+  if self.targeting then
+    self.charge = math.min(self.charge + tickRate, self.overcharge)
+    if self.charge == self.overcharge then
+      self.timers.fire = self.fireTime
+      self.charge = 0
+      self.targeting = false
+    end
+  else
+    self.charge = 0
+  end
 end
 
 function PlasmaCannon:draw(owner)
@@ -63,9 +72,9 @@ function PlasmaCannon:canFire()
 end
 
 function PlasmaCannon:fire(owner)
-  ctx.spells:activate(owner.id, data.spell.plasmacannon, self.charge)
+  ctx.spells:activate(owner.id, data.spell.plasmacannon, math.min(self.charge, self.maxCharge))
   
-  self.timers.shoot = self.fireTime
+  self.timers.fire = self.fireTime
   self.currentAmmo = self.currentAmmo - 1
   self.charge = 0
   owner.recoil = self.recoil
@@ -107,7 +116,7 @@ function PlasmaCannon:crosshair()
   x = x - math.dx(math.min(d2, d) * s, dir)
   y = y - math.dy(math.min(d2, d) * s, dir)
 
-  local radius = (30 + (self.charge / self.maxCharge) * 120) * s
+  local radius = (30 + (math.min(self.charge, self.maxCharge) / self.maxCharge) * 120) * s
   local alpha = self.timers.switch > 0 and 128 or 255
   local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
   g.setColor(table.interpolate({255, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
