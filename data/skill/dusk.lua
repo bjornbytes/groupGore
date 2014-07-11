@@ -34,7 +34,7 @@ function Dusk:update(owner)
       local d = 10
       local tx, ty = self.targetGhostX, self.targetGhostY
       local iter = false
-      while ctx.collision:circleTest(tx, ty, owner.radius, {tag = 'wall'}) do
+      while ctx.collision:circleTest(tx, ty, owner.radius, {tag = 'wall'}) or tx <= 0 or ty <= 0 or tx >= ctx.map.width or ty >= ctx.map.height do
         tx = self.targetGhostX + math.dx(d * s, angle)
         ty = self.targetGhostY + math.dy(d * s, angle)
         s = -s

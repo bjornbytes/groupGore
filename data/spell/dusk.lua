@@ -11,7 +11,7 @@ function Dusk:activate(mx, my)
   local s = 1
   local d = 10
   local tx, ty = self.tx, self.ty
-  while ctx.collision:circleTest(tx, ty, self.owner.radius, {tag = 'wall'}) do
+  while ctx.collision:circleTest(tx, ty, self.owner.radius, {tag = 'wall'}) or tx <= 0 or ty <= 0 or tx >= ctx.map.width or ty >= ctx.map.height do
     tx = self.tx + math.dx(d * s, self.angle)
     ty = self.ty + math.dy(d * s, self.angle)
     s = -s
