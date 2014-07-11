@@ -40,6 +40,7 @@ function PlasmaCannon:activate()
   self.currentAmmo = self.ammo
 
   self.charge = 0
+  self.targetAlpha = 0
 end
 
 function PlasmaCannon:update()
@@ -53,8 +54,10 @@ function PlasmaCannon:update()
       self.charge = 0
       self.targeting = false
     end
+    self.targetAlpha = math.lerp(self.targetAlpha, 1, math.min(10 * tickRate, 1))
   else
     self.charge = 0
+    self.targetAlpha = math.lerp(self.targetAlpha, 0, math.min(10 * tickRate, 1))
   end
 end
 
@@ -102,6 +105,7 @@ function PlasmaCannon:crosshair()
   local g, p, x, y = love.graphics, ctx.players:get(ctx.id), ctx.view:frameMouseX(), ctx.view:frameMouseY()
   local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
+  local len = (8 * s) + (8 * math.min(self.charge, self.maxCharge) / self.maxCharge)
   
   local dir = p.angle
   local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s
@@ -116,11 +120,21 @@ function PlasmaCannon:crosshair()
   x = x - math.dx(math.min(d2, d) * s, dir)
   y = y - math.dy(math.min(d2, d) * s, dir)
 
-  local radius = (30 + (math.min(self.charge, self.maxCharge) / self.maxCharge) * 120) * s
   local alpha = self.timers.switch > 0 and 128 or 255
   local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
-  g.setColor(table.interpolate({255, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
-  g.circle('line', x, y, radius)
+  g.setColor(table.interpolate({0, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
+  g.line(x, y - len, x, y + len)
+  g.line(x - len, y, x + len, y)
+  g.line(x - len, y, x + len, y)
+  g.line(x, y - len, x, y + len)
+
+  g.setColor(0, 255, 255, 200 * self.targetAlpha)
+  g.rectangle('fill', x - 30 + .5, y - 40 + .5, 30 * math.min(self.charge, self.maxCharge) / self.maxCharge, 8)
+  g.setColor(255, 0, 0, 200 * self.targetAlpha * (self.charge / self.overcharge))
+  g.rectangle('fill', x + .5, y - 40 + .5, 30 * math.max(self.charge - self.maxCharge, 0) / (self.overcharge - self.maxCharge), 8)
+  g.setColor(255, 255, 255, 255 * self.targetAlpha)
+  g.rectangle('line', x - 30 + .5, y - 40 + .5, 60, 8)
+  g.line(x + .5, y - 40 + .5, x + .5, y - 32 + .5)
 end
 
 return PlasmaCannon

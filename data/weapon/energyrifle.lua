@@ -50,7 +50,7 @@ function EnergyRifle:crosshair()
 
   local alpha = self.timers.switch > 0 and 128 or 255
   local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
-  g.setColor(table.interpolate({255, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
+  g.setColor(table.interpolate({0, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
   g.line(x, y - len, x, y + len)
   g.line(x - len, y, x + len, y)
   g.line(x - len, y, x + len, y)
