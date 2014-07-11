@@ -1,14 +1,14 @@
 local PlasmaCannon = {}
-PlasmaCannon.code = 'pulsecannon'
+PlasmaCannon.code = 'plasmacannon'
 
 function PlasmaCannon:activate(charge)
-	local weapon = data.weapon.pulsecannon
-  self.speed = 1000 + (charge / weapon.maxCharge) * 2500
-	self.damage = weapon.minDamage + (charge / weapon.maxCharge) * (weapon.maxDamage - weapon.minDamage)
-	self.radius = 30 + (charge / weapon.maxCharge) * 120
-  self.x, self.y = self.owner.x, self.owner,y
+  local weapon = data.weapon.plasmacannon
+  self.speed = 800 + (charge / weapon.maxCharge) * 3000
+  self.damage = weapon.minDamage + (charge / weapon.maxCharge) * (weapon.maxDamage - weapon.minDamage)
+  self.radius = 30 + (charge / weapon.maxCharge) * 120
+  self.x, self.y = self.owner.x, self.owner.y
   self.angle = self.owner.angle
-	self.ded = false
+  self.ded = false
 
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, self.angle) - math.dy(dy, self.angle)
@@ -53,16 +53,26 @@ function PlasmaCannon:update()
   if wall then dis = d end
   local tx, ty = self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle)
 
-  local target = ctx.collision:lineTest(self.x, self.y, tx, ty, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, first = true})
-  self.x, self.y = tx, ty
+  local target, d = ctx.collision:lineTest(self.x, self.y, tx, ty, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, first = true})
+  if target and d < dis then d = dis end
   if target or wall then
-		local targets = ctx.collision:circleTest(self.x, self.y, self.radius, {tag = 'player', fn = function() return p.team ~= self.owner.team end, all = true})
-		table.each(self.targets, function(p)
-			ctx.net:emit(evtDamage, {id = p.id, amount = self.damage, from = self.owner.id, tick = tick})
-			ctx.buffs:add(p, 'plasmasickness')
-		end)
-		self.ded = true
+    self.x, self.y = self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle)
+    local targets = ctx.collision:circleTest(self.x, self.y, self.radius, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, all = true})
+    table.each(targets, function(p)
+      ctx.net:emit(evtDamage, {id = p.id, amount = self.damage, from = self.owner.id, tick = tick})
+      ctx.buffs:add(p, 'plasmasickness')
+    end)
+    self.ded = true
+  else
+    self.x, self.y = tx, ty
   end
+end
+
+function PlasmaCannon:draw()
+  local g = love.graphics
+  local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  g.setColor(0, 255, 255)
+  g.circle('fill', x, y, 10)
 end
 
 return PlasmaCannon

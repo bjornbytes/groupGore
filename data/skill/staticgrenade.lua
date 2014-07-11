@@ -33,7 +33,7 @@ function StaticGrenade:gui(owner)
   if self.targetAlpha > 0 then
     local g, v = love.graphics, ctx.view
     g.setColor(255, 255, 255, self.targetAlpha * 255)
-    g.circle('line', v:frameMouseX(), v:frameMouseY(), data.spell.staticgrenadeimpact.radius * v.scale, 100)
+    g.circle('line', v:frameMouseX(), v:frameMouseY(), data.spell.staticgrenade.radius * v.scale, 100)
   end
 end
 

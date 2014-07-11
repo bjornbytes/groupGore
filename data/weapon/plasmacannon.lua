@@ -17,7 +17,7 @@ PlasmaCannon.scale = 1
 PlasmaCannon.targeted = true
 PlasmaCannon.maxCharge = 1.5
 PlasmaCannon.minDamage = 10
-PlasmaCannon.maxDamage = 65
+PlasmaCannon.maxDamage = 70
 PlasmaCannon.fireTime = 1
 PlasmaCannon.switchTime = .5
 PlasmaCannon.ammo = 10
@@ -31,8 +31,7 @@ PlasmaCannon.tipy = 0
 ----------------
 -- Behavior
 ----------------
-
-function PlasmaCannon:init()
+function PlasmaCannon:activate()
   self.timers = {}
   self.timers.fire = 0
   self.timers.switch = 0
@@ -46,15 +45,16 @@ function PlasmaCannon:update()
   self.timers.fire = timer.rot(self.timers.fire)
   self.timers.switch = timer.rot(self.timers.switch)
 
-  if self.targeting then self.charge = math.min(self.charge + tickRate, self.maxCharge) end
+  if self.targeting then self.charge = math.min(self.charge + tickRate, self.maxCharge)
+  else self.charge = 0 end
 end
 
-function PlasmaCannon:draw()
-  Weapon.draw(self)
+function PlasmaCannon:draw(owner)
+  Weapon.draw(self, owner)
 end
 
-function PlasmaCannon:select()
-  Weapon.switch(self)
+function PlasmaCannon:select(owner)
+  Weapon.select(self, owner)
   self.charge = 0
 end
 
@@ -93,7 +93,6 @@ function PlasmaCannon:crosshair()
   local g, p, x, y = love.graphics, ctx.players:get(ctx.id), ctx.view:frameMouseX(), ctx.view:frameMouseY()
   local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
-  local len = 8 * s
   
   local dir = p.angle
   local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s
@@ -108,13 +107,11 @@ function PlasmaCannon:crosshair()
   x = x - math.dx(math.min(d2, d) * s, dir)
   y = y - math.dy(math.min(d2, d) * s, dir)
 
+  local radius = (30 + (self.charge / self.maxCharge) * 120) * s
   local alpha = self.timers.switch > 0 and 128 or 255
   local factor = (1 - (math.clamp(tick - p.lastDamageDealt, 0, .4 / tickRate) / (.4 / tickRate))) ^ 2
   g.setColor(table.interpolate({255, 255, 255, alpha}, {255, 0, 0, alpha}, factor))
-  g.line(x, y - len, x, y + len)
-  g.line(x - len, y, x + len, y)
-  g.line(x - len, y, x + len, y)
-  g.line(x, y - len, x, y + len)
+  g.circle('line', x, y, radius)
 end
 
 return PlasmaCannon

@@ -1,9 +1,9 @@
 local EnergyRifle = {}
 EnergyRifle.code = 'energyrifle'
 
-EnergyRifle.speed = 2000
+EnergyRifle.speed = 1800
 
-EnergyRifle.activate = function(self)
+function EnergyRifle:activate()
   self.x = self.owner.x
   self.y = self.owner.y
   self.prevx = self.x
@@ -45,7 +45,7 @@ EnergyRifle.activate = function(self)
   end
 end
 
-EnergyRifle.update = function(self)
+function EnergyRifle:update()
   if self.ded then return ctx.spells:deactivate(self) end
 
   self.prevx, self.prevy = self.x, self.y
@@ -57,14 +57,14 @@ EnergyRifle.update = function(self)
   local target = ctx.collision:lineTest(self.x, self.y, tx, ty, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, first = true})
   if target then
     ctx.net:emit(evtDamage, {id = target.id, amount = data.weapon.energyrifle.damage, from = self.owner.id, tick = tick})
-		ctx.buffs:add(target, 'plasmasickness')
+    ctx.buffs:add(target, 'plasmasickness')
   end
 
   self.ded = wall or target
   self.x, self.y = tx, ty
 end
 
-EnergyRifle.draw = function(self)
+function EnergyRifle:draw()
   local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
   local function doDraw()
     love.graphics.setColor(255, 255, 255)
