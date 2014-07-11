@@ -72,6 +72,8 @@ function Player:init()
   self.haste = 0
   self.cloak = 0
   self.stun = 0
+	self.disarm = 0
+	self.silence = 0
   self.damageOutMultiplier = 1
   self.damageInMultiplier = 1
 
@@ -123,6 +125,8 @@ function Player:update()
   if self.recoil > 0 then self.recoil = math.lerp(self.recoil, 0, math.min(5 * tickRate, 1)) end
   self.cloak = timer.rot(self.cloak)
   self.stun = timer.rot(self.stun)
+	self.disarm = timer.rot(self.disarm)
+	self.silence = timer.rot(self.silence)
   if self.ded then
     self.x, self.y = 0, 0
     ctx.event:emit('collision.move', {object = self})
@@ -228,7 +232,7 @@ function Player:slot(input, prev)
     self.skillDirty = true
   end
 
-  if weapon:canFire(self) then
+  if disarm == 0 and weapon:canFire(self) then
     if not ldown then self.weaponDirty = false end
     if not self.weaponDirty then
       if lpress then weapon.targeting = weapon.targeted end
@@ -238,7 +242,7 @@ function Player:slot(input, prev)
     end
   end
 
-  if skill:canFire(self) then
+  if silence == 0 and skill:canFire(self) then
     if not rdown then self.skillDirty = false end
     if not self.skillDirty then
       if rpress then skill.targeting = skill.targeted end

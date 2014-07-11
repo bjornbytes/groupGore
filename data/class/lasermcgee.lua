@@ -34,9 +34,9 @@ LaserMcGee.utility = 6
 LaserMcGee.slots = {}
 
 LaserMcGee.slots[1] = data.weapon.energyrifle
-LaserMcGee.slots[2] = data.weapon.shotgun
-LaserMcGee.slots[3] = data.skill.dusk
-LaserMcGee.slots[4] = data.skill.cleave
-LaserMcGee.slots[5] = data.skill.rage
+LaserMcGee.slots[2] = data.weapon.plasmacannon
+LaserMcGee.slots[3] = data.skill.staticgrenade
+LaserMcGee.slots[4] = data.skill.lazor
+LaserMcGee.slots[5] = data.skill.plasmasickness
 
 return LaserMcGee

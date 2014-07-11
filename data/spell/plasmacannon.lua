@@ -1,21 +1,20 @@
-local EnergyRifle = {}
-EnergyRifle.code = 'energyrifle'
+local PlasmaCannon = {}
+PlasmaCannon.code = 'pulsecannon'
 
-EnergyRifle.speed = 2000
-
-EnergyRifle.activate = function(self)
-  self.x = self.owner.x
-  self.y = self.owner.y
-  self.prevx = self.x
-  self.prevy = self.y
+function PlasmaCannon:activate(charge)
+	local weapon = data.weapon.pulsecannon
+  self.speed = 1000 + (charge / weapon.maxCharge) * 2500
+	self.damage = weapon.minDamage + (charge / weapon.maxCharge) * (weapon.maxDamage - weapon.minDamage)
+	self.radius = 30 + (charge / weapon.maxCharge) * 120
+  self.x, self.y = self.owner.x, self.owner,y
   self.angle = self.owner.angle
-  self.ded = false
-  
+	self.ded = false
+
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, self.angle) - math.dy(dy, self.angle)
   self.y = self.y + math.dy(dx, self.angle) + math.dx(dy, self.angle)
   
-  dx, dy = data.weapon.energyrifle.tipx * data.weapon.energyrifle.scale, data.weapon.energyrifle.tipy * data.weapon.energyrifle.scale
+  dx, dy = weapon.tipx * weapon.scale, weapon.tipy * weapon.scale
   self.x = self.x + math.dx(dx, self.angle) - math.dy(dy, self.angle)
   self.y = self.y + math.dy(dx, self.angle) + math.dx(dy, self.angle)
 
@@ -45,7 +44,7 @@ EnergyRifle.activate = function(self)
   end
 end
 
-EnergyRifle.update = function(self)
+function PlasmaCannon:update()
   if self.ded then return ctx.spells:deactivate(self) end
 
   self.prevx, self.prevy = self.x, self.y
@@ -55,24 +54,13 @@ EnergyRifle.update = function(self)
   local tx, ty = self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle)
 
   local target = ctx.collision:lineTest(self.x, self.y, tx, ty, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, first = true})
-  if target then
-    ctx.net:emit(evtDamage, {id = target.id, amount = data.weapon.energyrifle.damage, from = self.owner.id, tick = tick})
-		ctx.buffs:add(target, 'plasmasickness')
-  end
-
-  self.ded = wall or target
   self.x, self.y = tx, ty
-end
-
-EnergyRifle.draw = function(self)
-  local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
-  local function doDraw()
-    love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(data.media.graphics.effects.pulse, x, y, self.angle, 2, 2, 20, 2)
+  if target or wall then
+		local targets = ctx.collision:circleTest(self.x, self.y, self.radius, {tag = 'player', fn = function() return p.team ~= self.owner.team end, all = true})
+		table.each(self.targets, function(p)
+			ctx.net:emit(evtDamage, {id = p.id, amount = self.damage, from = self.owner.id, tick = tick})
+			ctx.buffs:add(p, 'plasmasickness')
+		end)
+		self.ded = true
   end
-
-  doDraw()
-  ctx.effects:get('bloom'):render(doDraw)
 end
-
-return EnergyRifle
