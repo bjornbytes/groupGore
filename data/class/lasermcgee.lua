@@ -2,8 +2,6 @@ local LaserMcGee = {}
 LaserMcGee.name = 'Laser McGee'
 LaserMcGee.code = 'lasermcgee'
 
-LaserMcGee.locked = env == 'release'
-
 
 ----------------
 -- Stats
