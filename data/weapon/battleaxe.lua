@@ -39,11 +39,11 @@ function BattleAxe:crosshair()
   end
 
   g.setColor(255, 255, 255, 255 * (1 - p.cloak / 2))
-  g.setLineWidth(2 + p.cloak)
+  g.setLineWidth(2)
   for i = 1, 4 do
     local ang = p.angle - math.pi / 4 + (i * math.pi / 2)
-    local x1, y1 = x + math.dx(b.radius - 4 - o, ang), y + math.dy(b.radius - 4 - o, ang)
-    local x2, y2 = x + math.dx(b.radius + 4 - o, ang), y + math.dy(b.radius + 4 - o, ang)
+    local x1, y1 = x + math.dx(b.radius / 2 - 4 - o, ang), y + math.dy(b.radius / 2 - 4 - o, ang)
+    local x2, y2 = x + math.dx(b.radius / 2 + 4 - o, ang), y + math.dy(b.radius / 2 + 4 - o, ang)
     g.line(x1, y1, x2, y2)
   end
   g.setLineWidth(1)
