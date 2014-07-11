@@ -88,9 +88,9 @@ function Collision:lineTest(x1, y1, x2, y2, options)
   local dis = math.distance(x1, y1, x2, y2)
   local _x1, _y1 = math.min(x1, x2), math.min(y1, y2)
   local _x2, _y2 = math.max(x1, x2), math.max(y1, y2)
-  local tag, fn, first = options.tag, options.fn, options.first
+  local tag, fn, first, all = options.tag, options.fn, options.first, options.all
   local mindis = first and math.huge or nil
-  local res = nil
+  local res = all and {} or nil
   
   for shape in pairs(self.hc:shapesInRange(_x1, _y1, _x2, _y2)) do
     if (not tag) or shape.owner.collision.tag == tag then
@@ -98,7 +98,11 @@ function Collision:lineTest(x1, y1, x2, y2, options)
       if intersects and d >= 0 and d <= 1 then
         if (not fn) or fn(shape.owner) then
           if not first then
-            return shape.owner, d * dis
+            if all then
+              table.insert(res, shape.owner)
+            else
+              return shape.owner, d * dis
+            end
           elseif d * dis < mindis then
             mindis = d * dis
             res = shape.owner
@@ -108,7 +112,7 @@ function Collision:lineTest(x1, y1, x2, y2, options)
     end
   end
   
-  return res, mindis
+  return res, first and mindis or nil
 end
 
 function Collision:circleTest(x, y, r, options)
