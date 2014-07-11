@@ -64,3 +64,5 @@ function PlasmaCannon:update()
 		self.ded = true
   end
 end
+
+return PlasmaCannon
