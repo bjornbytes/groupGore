@@ -62,6 +62,14 @@ function PlasmaCannon:update()
       ctx.net:emit(evtDamage, {id = p.id, amount = self.damage, from = self.owner.id, tick = tick})
       ctx.buffs:add(p, 'plasmasickness')
     end)
+    ctx.event:emit('particle.create', {
+      kind = 'plasmacannon',
+      vars = {
+        x = self.x,
+        y = self.y,
+        radius = self.radius
+      }
+    })
     self.ded = true
   else
     self.x, self.y = tx, ty

@@ -1,7 +1,6 @@
 local StaticGrenade = {}
 
 StaticGrenade.code = 'staticgrenade'
-StaticGrenade.maxDistance = 410
 StaticGrenade.duration = .8
 StaticGrenade.radius = 100
 
@@ -9,7 +8,7 @@ function StaticGrenade:activate(mx, my)
   self.x, self.y = self.owner.x, self.owner.y
   self.hp = self.duration
   self.angle = self.owner.angle
-  self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
+  self.distance = math.distance(self.owner.x, self.owner.y, mx, my)
   self.speed = self.distance / self.duration
   self.tx, self.ty = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
 
@@ -29,6 +28,14 @@ function StaticGrenade:update()
       ctx.buffs:add(p, 'staticgrenade')
       ctx.buffs:remove(p, 'plasmasickness')
     end)
+    ctx.event:emit('particle.create', {
+      kind = 'staticgrenade',
+      vars = {
+        x = self.x,
+        y = self.y,
+        radius = self.radius
+      }
+    })
     ctx.spells:deactivate(self)
   end)
 end
