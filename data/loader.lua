@@ -1,5 +1,7 @@
 data = {}
 data.load = function()
+	love.filesystem.unmount('data.zip')
+	if love.filesystem.exists('data.zip') then love.filesystem.mount('data.zip', 'data') end
 
   -- Media
   local function lookup(ext, fn)
