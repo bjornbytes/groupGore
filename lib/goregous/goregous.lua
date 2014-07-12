@@ -4,48 +4,16 @@ function Goregous:init()
   self.socket = (require('socket')).tcp()
   self.socket:settimeout(10)
   local ip = (env == 'local') and '127.0.0.1' or '67.0.161.178'
-	ip = '127.0.0.1'
+  ip = '127.0.0.1'
   local _, e = self.socket:connect(ip, 6060)
   if e then error('Can\'t connect to goregous') end
   self.messages = {}
 
-	self:send({'version', love.system.getOS(), love.filesystem.read('version')})
-	local bytes = tonumber(self.socket:receive('*l'))
-	if bytes > 0 then
-		local code = self.socket:receive(bytes)
-		if love.system.getOS() == 'OS X' then
-			local app = love.filesystem.getWorkingDirectory() .. '/groupGore.app'
-			local file = io.open(app .. '.zip', 'w')
-			file:write(code)
-			file:close()
-			print('wrote code to ' .. app .. '.zip')
-			os.execute('unzip -o ' .. app .. '.zip')
-			print('unzipped.')
-			os.execute('rm ' .. app .. '.zip')
-			print('removed zip.')
-			os.execute('open ' .. app .. ' --args local')
-			print('opening ' .. app)
-		elseif love.system.getOS() == 'Windows' then
-			local src = love.filesystem.getWorkingDirectory() .. '\\groupGore.exe'
-			local dst = love.filesystem.getWorkingDirectory() .. '\\groupGore.exe.old'
-			os.execute('move ' .. src .. ' ' .. dst)
-			local file = io.open(love.filesystem.getWorkingDirectory() .. '\\groupGore.exe', 'w+')
-			file:write(code)
-			file:close()
-			os.execute(src)
-		end
+  if love.filesystem.exists('version') or env == 'release' then
+    self:patch()
+  end
 
-		local bytes = tonumber(self.socket:receive('*l'))
-		local data = self.socket:receive(bytes)
-		love.filesystem.write('data.zip', data)
-
-		--self.socket:close()
-		--love.event.quit()
-
-		--return
-	end
-
-	self.socket:settimeout(0)
+  if self.socket then self.socket:settimeout(0) end
 end
 
 function Goregous:update()
@@ -66,4 +34,58 @@ end
 
 function Goregous:send(data)
   self.socket:send(table.concat(data, ',') .. '\n')
+end
+
+function Goregous:patch()
+  local version = love.filesystem.read('version'):match('%w')
+  local os = love.system.getOS()
+  if os == 'OS X' then os = 'OSX' end
+
+  self:send({'version', version, os})
+
+  local bytes = tonumber(self.socket:receive('*l'))
+  if bytes == 0 then return false end
+  local code, data, patched
+  
+  code = self.socket:receive(bytes)
+  data = self.socket:receive(tonumber(socket:receive('*l')))
+  patched = self['patch' .. os](self, code, data)
+
+  if patched then
+    self.socket:close()
+    love.event.quit()
+  end
+end
+
+function Goregous:patchWindows(code, data)
+  local src = love.filesystem.getWorkingDirectory() .. '\\groupGore.exe'
+  local dst = love.filesystem.getWorkingDirectory() .. '\\groupGore.exe.old'
+  os.execute('move ' .. src .. ' ' .. dst)
+
+  local file = io.open(love.filesystem.getWorkingDirectory() .. '\\groupGore.exe', 'w')
+  file:write(code)
+  file:close()
+
+  love.filesystem.write('data.zip', data)
+
+  os.execute(src)
+end
+
+function Goregous:patchOSX(code, data)
+  local app = love.filesystem.getWorkingDirectory() .. '/groupGore.app'
+  local zip = app .. '.zip'
+
+  local file = io.open(zip, 'w')
+  file:write(code)
+  file:close()
+
+  love.filesystem.write('data.zip', data)
+
+  os.execute('unzip -o ' .. zip)
+  os.execute('rm ' .. zip)
+  os.execute('open ' .. app .. ' --args local')
+end
+
+function Goregous:patchLinux()
+  --
 end
