@@ -93,7 +93,7 @@ end
 
 function Spell:lerpInit(vars)
 	self._prev = {}
-	if not vars then vars = {'x', 'y'}
+	if not vars then vars = {'x', 'y'} end
 	for i = 1, #vars do self._prev[vars[i]] = 0 end
 end
 

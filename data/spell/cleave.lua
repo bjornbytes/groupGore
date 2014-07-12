@@ -38,7 +38,7 @@ function Cleave:draw()
 	self:drawCircle('fill')
 	self:drawCircle('fill', {radius = self.radius * .65})
   love.graphics.setColor(255, 255, 255, 255 * (self.hp / Cleave.hp))
-	self:drawCircle('line'
+	self:drawCircle('line')
 end
 
 return Cleave
