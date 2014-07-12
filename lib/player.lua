@@ -80,8 +80,7 @@ function Player:init()
   self.depth = 0
   self.recoil = 0
   self.alpha = 0
-	self.canvas = love.graphics.newCanvas(200, 200)
-	self.backCanvas = love.graphics.newCanvas(200, 200)
+  self.canvasDirty = true
 end
 
 function Player:activate()
@@ -116,7 +115,7 @@ function Player:activate()
   self.damageInMultiplier = 1
 
   self.depth = -self.id
-	self.canvasDirty = true
+  self.canvasDirty = true
 end
 
 function Player:deactivate()
@@ -141,34 +140,16 @@ function Player:update()
 end
 
 function Player:draw()
-	local g, c, x, y, a, s, w, h = love.graphics, self.class, self.drawX, self.drawY, self.drawAngle, self.drawScale, self.canvas:getDimensions()
-	local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
-
-	if self.canvasDirty then
-		self.canvasDirty = false
-		data.media.shaders.outline:send('dimensions', {self.canvas:getDimensions()})
-		data.media.shaders.outline:send('size', 16)
-		self.canvas:clear()
-		self.backCanvas:clear()
-		self.backCanvas:renderTo(function()
-			f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
-			f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
-			if self.team == purple then g.setColor(222, 200, 230)
-			else g.setColor(250, 210, 200) end
-			local s = self.class.scale
-			g.draw(c.sprite, w / 2, h / 2, 0, s, s, c.anchorx, c.anchory)
-		end)
-		self.canvas:renderTo(function()
-			g.setShader(data.media.shaders.outline)
-			g.draw(self.backCanvas)
-			g.setShader()
-			g.draw(self.backCanvas)
-		end)
-	end
-
-	g.setColor(0, 0, 0, alpha * 50)
-	g.draw(c.sprite, self.x + 4, self.y + 4, a, s, s, c.anchorx, c.anchory)
-	g.draw(self.canvas, x, y, a, s, s, w / 2, h / 2)
+  local g, c, x, y, a, s = love.graphics, self.class, self.drawX, self.drawY, self.drawAngle, self.drawScale * self.class.scale
+  local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
+  if self.canvasDirty then self:refreshCanvas() end
+  g.setColor(0, 0, 0, alpha * 50)
+  g.draw(c.sprite, self.x + 4, self.y + 4, a, s, s, c.anchorx, c.anchory)
+  g.setColor(255, 255, 255, alpha * 255)
+  g.draw(self.canvas, x, y, a, s, s, self.canvasAnchorX, self.canvasAnchorY)
+  g.setColor(self.team == purple and {222, 200, 230, alpha * 255} or {250, 210, 200, alpha * 255})
+  g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
+  f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
 end
 
 
@@ -225,7 +206,7 @@ function Player:slot(input, prev)
       self[k] = input.slot
       local slot = self.slots[input.slot]
       f.exe(slot.select, slot, self)
-			self.canvasDirty = true
+      self.canvasDirty = true
     end
   end
 
@@ -303,4 +284,84 @@ end
 
 function Player:spawn()
   self:activate()
+end
+
+function Player:refreshCanvas()
+  local g, c, wep = love.graphics, self.class, self.slots[self.weapon]
+  local margin = 16
+  local w, h = 0, 0
+  self = ctx.players:get(self.id)
+
+  if not wep.image then
+    self.canvasAnchorX, self.canvasAnchorY = c.anchorx + margin, c.anchory + margin
+    w, h = (2 * margin) + c.sprite:getWidth(), (2 * margin) + c.sprite:getHeight()
+  else
+    local ws = wep.scale / c.scale
+    local ax, ay = c.anchorx, c.anchory
+    local px1, py1, px2, py2 = 0, 0, c.sprite:getWidth(), c.sprite:getHeight()
+    local dx, dy = c.handx - self.recoil, c.handy
+    local wx1 = ax + math.dx(dx, 0) - math.dy(dy, 0) - (wep.anchorx * ws)
+    local wy1 = ay + math.dy(dx, 0) + math.dx(dy, 0) - (wep.anchory * ws)
+    local wx2 = wx1 + wep.image:getWidth() * ws
+    local wy2 = wy1 + wep.image:getHeight() * ws
+    if wx1 < 0 then
+      ax = ax + wx1
+      px1, px2 = px1 + wx1, px2 + wx1
+      wx1, wx2 = wx1 + wx1, wx2 + wx1
+    end
+    if wy1 < 0 then
+      ay = ay + wy1
+      py1, py2 = py1 + wy1, py2 + wy1
+      wy1, wy2 = wy1 + wy1, wy2 + wy2
+    end
+    px1, py1, px2, py2 = px1 + margin, py1 + margin, px2 + margin, py2 + margin
+    wx1, wy1, wx2, wy2 = wx1 + margin, wy1 + margin, wx2 + margin, wy2 + margin
+    ax, ay = ax + margin, ay + margin
+    w, h = math.max(px2, wx2) + margin, math.max(py2, wy2) + margin
+    self.canvasAnchorX, self.canvasAnchorY = ax, ay
+  end
+
+  if not self.canvas or self.canvas:getWidth() < w or self.canvas:getHeight() < h then
+    self.canvas = g.newCanvas(w, h)
+    self.backCanvas = g.newCanvas(w, h)
+  end
+
+  g.pop()
+  if self.team == purple then
+    self.canvas:clear(190, 160, 220, 0)
+    self.backCanvas:clear(190, 160, 220, 0)
+    g.setColor(190, 160, 220)
+  else
+    self.canvas:clear(240, 160, 140, 0)
+    self.backCanvas:clear(240, 160, 140, 0)
+    g.setColor(240, 160, 140)
+  end
+  self.canvas:renderTo(function()
+    g.setShader(data.media.shaders.colorize)
+    g.draw(c.sprite, self.canvasAnchorX, self.canvasAnchorY, 0, 1, 1, c.anchorx, c.anchory)
+    if wep.image then
+      local dx, dy = c.handx - self.recoil, c.handy
+      local wx = self.canvasAnchorX + math.dx(dx, 0) - math.dy(dy, 0)
+      local wy = self.canvasAnchorY + math.dy(dx, 0) + math.dx(dy, 0)
+      g.draw(wep.image, wx, wy, 0, wep.scale / c.scale, wep.scale / c.scale, wep.anchorx, wep.anchory)
+    end
+    g.setShader()
+  end)
+  data.media.shaders.horizontalBlur:send('amount', .008)
+  data.media.shaders.verticalBlur:send('amount', .008)
+  g.setColor(255, 255, 255)
+  for i = 1, 3 do
+    g.setShader(data.media.shaders.horizontalBlur)
+    self.backCanvas:renderTo(function()
+      g.draw(self.canvas)
+    end)
+    g.setShader(data.media.shaders.verticalBlur)
+    self.canvas:renderTo(function()
+      g.draw(self.backCanvas)
+    end)
+  end
+  g.setShader()
+  ctx.view:worldPush()
+
+  self.canvasDirty = false
 end
