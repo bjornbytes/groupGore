@@ -80,6 +80,8 @@ function Player:init()
   self.depth = 0
   self.recoil = 0
   self.alpha = 0
+	self.canvas = love.graphics.newCanvas(200, 200)
+	self.backCanvas = love.graphics.newCanvas(200, 200)
 end
 
 function Player:activate()
@@ -114,6 +116,7 @@ function Player:activate()
   self.damageInMultiplier = 1
 
   self.depth = -self.id
+	self.canvasDirty = true
 end
 
 function Player:deactivate()
@@ -138,15 +141,34 @@ function Player:update()
 end
 
 function Player:draw()
-  local g, c, x, y, a, s = love.graphics, self.class, self.drawX, self.drawY, self.drawAngle, self.drawScale * self.class.scale
-  local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
-  g.setColor(0, 0, 0, alpha * 50)
-  g.draw(c.sprite, self.x + 4, self.y + 4, a, s, s, c.anchorx, c.anchory)
-  g.setColor(self.team == purple and {190, 160, 200, alpha * 255} or {240, 160, 140, alpha * 255})
-  f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
-  f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
-  g.setColor(self.team == purple and {222, 200, 230, alpha * 255} or {250, 210, 200, alpha * 255})
-  g.draw(c.sprite, x, y, a, s, s, c.anchorx, c.anchory)
+	local g, c, x, y, a, s, w, h = love.graphics, self.class, self.drawX, self.drawY, self.drawAngle, self.drawScale, self.canvas:getDimensions()
+	local alpha = self.alpha * (1 - (self.cloak / ((self.team == ctx.players:get(ctx.id).team or (ctx.players:get(ctx.id).killer and ctx.players:get(ctx.id).killer.id == self.id)) and 2 or 1)))
+
+	if self.canvasDirty then
+		self.canvasDirty = false
+		data.media.shaders.outline:send('dimensions', {self.canvas:getDimensions()})
+		data.media.shaders.outline:send('size', 16)
+		self.canvas:clear()
+		self.backCanvas:clear()
+		self.backCanvas:renderTo(function()
+			f.exe(self.slots[self.weapon].draw, self.slots[self.weapon], self)
+			f.exe(self.slots[self.skill].draw, self.slots[self.skill], self)
+			if self.team == purple then g.setColor(222, 200, 230)
+			else g.setColor(250, 210, 200) end
+			local s = self.class.scale
+			g.draw(c.sprite, w / 2, h / 2, 0, s, s, c.anchorx, c.anchory)
+		end)
+		self.canvas:renderTo(function()
+			g.setShader(data.media.shaders.outline)
+			g.draw(self.backCanvas)
+			g.setShader()
+			g.draw(self.backCanvas)
+		end)
+	end
+
+	g.setColor(0, 0, 0, alpha * 50)
+	g.draw(c.sprite, self.x + 4, self.y + 4, a, s, s, c.anchorx, c.anchory)
+	g.draw(self.canvas, x, y, a, s, s, w / 2, h / 2)
 end
 
 
@@ -203,6 +225,7 @@ function Player:slot(input, prev)
       self[k] = input.slot
       local slot = self.slots[input.slot]
       f.exe(slot.select, slot, self)
+			self.canvasDirty = true
     end
   end
 
