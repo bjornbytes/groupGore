@@ -18,9 +18,9 @@ function BattleAxe:update()
 end
 
 function BattleAxe:draw()
-  love.graphics.setColor(255, 255, 255, 50 * (self.hp / BattleAxe.hp))
+  love.graphics.setColor(255, 255, 255, 50 * (self.timer / BattleAxe.duration))
 	self:drawCircle('fill')
-  love.graphics.setColor(255, 255, 255, 255 * (self.hp / BattleAxe.hp))
+  love.graphics.setColor(255, 255, 255, 255 * (self.timer / BattleAxe.duration))
 	self:drawCircle('line')
 end
 

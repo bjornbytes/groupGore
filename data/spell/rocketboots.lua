@@ -40,7 +40,7 @@ function RocketBoots:activate(mx, my)
 end
 
 function RocketBoots:update()
-	self:moveOwner(self.speed * tickRate)
+  self:moveOwner(self.speed * tickRate)
   self.owner.z = self.owner.z + self.zVel * tickRate
   self.zVel = self.zVel + self.zAcc * tickRate
   if self.owner.inputs then
@@ -56,7 +56,7 @@ function RocketBoots:update()
   self:rot(function()
     self.owner.z = 0
     self.owner.haste = self.owner.haste + 1000
-		self.x, self.y = self.owner.x, self.owner.y
+    self.x, self.y = self.owner.x, self.owner.y
     table.each(self:enemiesInRadius(), function(p)
       ctx.buffs:add(p, self.empowered and 'rocketbootsstun' or 'rocketbootsslow')
     end)

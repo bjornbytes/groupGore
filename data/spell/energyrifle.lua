@@ -4,7 +4,8 @@ EnergyRifle.code = 'energyrifle'
 EnergyRifle.speed = 1600
 
 function EnergyRifle:activate()
-	self:mirrorOwner()
+  self:mirrorOwner()
+  self:lerpInit()
   self.ded = false
   
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
@@ -44,7 +45,7 @@ end
 function EnergyRifle:update()
   if self.ded then return ctx.spells:deactivate(self) end
 
-	self:lerpUpdate()
+  self:lerpUpdate()
 
   local dis = self.speed * tickRate
   local wall, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle), {tag = 'wall'})
