@@ -1,36 +1,25 @@
-local Dagger = {}
+local Dagger = extend(Spell)
 Dagger.code = 'dagger'
-Dagger.hp = .5
 Dagger.radius = 18
 Dagger.distance = 45
 
 function Dagger:activate(visions)
-  self.hp = Dagger.hp
-  
-  self.angle = self.owner.angle
-  self.x, self.y = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
-  self.target = ctx.collision:circleTest(self.x, self.y, self.radius, {
-    tag = 'player',
-    fn = function(p) return p.team ~= self.owner.team end
-  })
-  
-  local backstab = false
-  if self.target then
-    backstab = math.abs(math.anglediff(self.target.angle, math.direction(self.target.x, self.target.y, self.owner.x, self.owner.y))) > math.pi / 2
-    local damage = data.weapon.dagger.damage
-    if backstab then
-      if visions[self.target.id] == 3 then damage = self.target.health
-      else damage = damage * 2 end
-    end
-    ctx.net:emit(evtDamage, {id = self.target.id, amount = damage, from = self.owner.id, tick = tick})
-  end
+	self:mirrorOwner()
+	self:move(self.distance)
+
+	self:damageInRadius(function(enemy)
+		local backstab = math.abs(math.anglediff(enemy.angle, math.direction(enemy.x, enemy.y, self.x, self.y))) > math.pi / 2
+		local damage = data.weapon.dagger.damage
+		if backstab then
+			if visions[enemy.id] == 3 then damage = enemy.health
+			else damage = damage * 2 end
+		end
+		if backstab and ctx.view then ctx.view:screenshake(25) end
+		return damage
+	end)
   
   ctx.event:emit('sound.play', {sound = backstab and 'backstab' or 'slash', x = self.x, y = self.y})
-  if backstab and ctx.view then ctx.view:screenshake(25) end
-end
-
-function Dagger:update()
-  self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
+	ctx.spells:deactivate(self)
 end
 
 return Dagger

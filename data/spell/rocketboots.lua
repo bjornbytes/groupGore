@@ -1,4 +1,4 @@
-local RocketBoots = {}
+local RocketBoots = extend(Spell)
 
 RocketBoots.code = 'rocketboots'
 RocketBoots.maxDistance = 410
@@ -6,7 +6,7 @@ RocketBoots.duration = 1
 RocketBoots.radius = 100
 
 function RocketBoots:activate(mx, my)
-  self.hp = self.duration
+  self.timer = self.duration
   self.angle = self.owner.angle
   self.distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
   self.tx, self.ty = self.owner.x + math.dx(self.distance, self.angle), self.owner.y + math.dy(self.distance, self.angle)
@@ -40,7 +40,7 @@ function RocketBoots:activate(mx, my)
 end
 
 function RocketBoots:update()
-  self.owner.x, self.owner.y = self.owner.x + math.dx(self.speed * tickRate, self.angle), self.owner.y + math.dy(self.speed * tickRate, self.angle)
+	self:moveOwner(self.speed * tickRate)
   self.owner.z = self.owner.z + self.zVel * tickRate
   self.zVel = self.zVel + self.zAcc * tickRate
   if self.owner.inputs then
@@ -53,14 +53,13 @@ function RocketBoots:update()
     })
   end
 
-  self.hp = timer.rot(self.hp, function()
+  self:rot(function()
     self.owner.z = 0
     self.owner.haste = self.owner.haste + 1000
-    local targets = ctx.collision:circleTest(self.owner.x, self.owner.y, self.radius, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, all = true})
-    table.each(targets, function(p)
+		self.x, self.y = self.owner.x, self.owner.y
+    table.each(self:enemiesInRadius(), function(p)
       ctx.buffs:add(p, self.empowered and 'rocketbootsstun' or 'rocketbootsslow')
     end)
-    ctx.spells:deactivate(self)
   end)
 end
 

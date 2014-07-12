@@ -1,4 +1,4 @@
-local Lazor = {}
+local Lazor = extend(Spell)
 Lazor.code = 'lazor'
 
 Lazor.maxCharge = 1.2
@@ -8,8 +8,7 @@ Lazor.width = 28
 function Lazor:activate()
   self.charge = 0
   self.owner.haste = self.owner.haste - (self.owner.class.speed * .5)
-  self.angle = self.owner.angle
-  self.x, self.y = self.owner.x, self.owner.y
+	self:mirrorOwner()
 end
 
 function Lazor:deactivate()

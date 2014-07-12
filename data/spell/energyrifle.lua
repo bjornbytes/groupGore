@@ -1,14 +1,10 @@
-local EnergyRifle = {}
+local EnergyRifle = extend(Spell)
 EnergyRifle.code = 'energyrifle'
 
 EnergyRifle.speed = 1600
 
 function EnergyRifle:activate()
-  self.x = self.owner.x
-  self.y = self.owner.y
-  self.prevx = self.x
-  self.prevy = self.y
-  self.angle = self.owner.angle
+	self:mirrorOwner()
   self.ded = false
   
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
@@ -48,7 +44,8 @@ end
 function EnergyRifle:update()
   if self.ded then return ctx.spells:deactivate(self) end
 
-  self.prevx, self.prevy = self.x, self.y
+	self:lerpUpdate()
+
   local dis = self.speed * tickRate
   local wall, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle), {tag = 'wall'})
   if wall then dis = d end
@@ -65,7 +62,7 @@ function EnergyRifle:update()
 end
 
 function EnergyRifle:draw()
-  local x, y = math.lerp(self.prevx, self.x, tickDelta / tickRate), math.lerp(self.prevy, self.y, tickDelta / tickRate)
+  local x, y = self:lerpGet()
   local function doDraw()
     love.graphics.setColor(255, 255, 255)
     love.graphics.draw(data.media.graphics.effects.pulse, x, y, self.angle, 2, 2, 20, 2)
