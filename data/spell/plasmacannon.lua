@@ -1,4 +1,4 @@
-local PlasmaCannon = {}
+locl PlasmaCannon = {}
 PlasmaCannon.code = 'plasmacannon'
 
 function PlasmaCannon:activate(charge)
@@ -6,9 +6,8 @@ function PlasmaCannon:activate(charge)
   self.speed = 800 + (charge / weapon.maxCharge) * 3000
   self.damage = weapon.minDamage + (charge / weapon.maxCharge) * (weapon.maxDamage - weapon.minDamage)
   self.radius = 30 + (charge / weapon.maxCharge) * 120
-  self.x, self.y = self.owner.x, self.owner.y
-  self.angle = self.owner.angle
   self.ded = false
+  self:mirrorOwner()
 
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, self.angle) - math.dy(dy, self.angle)
@@ -37,11 +36,10 @@ function PlasmaCannon:activate(charge)
     }
   })
 
-  ctx.event:emit('sound.play', {sound = 'pulse', x = self.x, y = self.y})
+  self:playSound('pulse')
 
-  if ctx.collision:lineTest(self.owner.x, self.owner.y, self.x, self.y, {tag = 'wall'}) then
-    ctx.spells:deactivate(self)
-  end
+  local d = math.distance(self.owner.x, self.owner.y, self.x, self.y)
+  if self:wallDistance(d) < d then self:die() end
 end
 
 function PlasmaCannon:update()

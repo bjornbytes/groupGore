@@ -9,8 +9,7 @@ function BattleAxe:activate(visions)
 	self:mirrorOwner()
 	self:move(self.distance)
 	self:damageInRadius(data.weapon.battleaxe.damage)
-
-  ctx.event:emit('sound.play', {sound = 'dash', x = self.x, y = self.y})
+  self:playSound('dash')
 end
 
 function BattleAxe:update()

@@ -26,7 +26,7 @@ function Cleave:activate()
 		end)
 	end
 
-  ctx.event:emit('sound.play', {sound = 'dash', x = self.owner.x, y = self.owner.y})
+	self:playSound('dash')
 end
 
 function Cleave:update()

@@ -1,10 +1,10 @@
 local Shotgun = {}
 Shotgun.code = 'shotgun'
 
-Shotgun.hp = .1
+Shotgun.duration = .1
 
 Shotgun.activate = function(self)
-  self.hp = Shotgun.hp
+  self.timer = self.duration
   self.x = self.owner.x
   self.y = self.owner.y
   
@@ -108,11 +108,11 @@ Shotgun.activate = function(self)
     }
   })
 
-  ctx.event:emit('sound.play', {sound = 'shotgun', x = self.x, y = self.y})
+  self:playSound('shotgun')
 end
 
 Shotgun.update = function(self)
-  self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
+  self:rot()
 end
 
 Shotgun.draw = function(self)

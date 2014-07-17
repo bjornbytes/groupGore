@@ -38,7 +38,7 @@ function Lazor:update()
         ctx.buffs:remove(p, 'plasmasickness')
       end)
     end
-    ctx.spells:deactivate(self)
+    self:die()
   end
 end
 

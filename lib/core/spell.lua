@@ -48,6 +48,34 @@ function Spell:wallDistance(range)
   local wall, distance = ctx.collision:lineTest(self.x, self.y, x2, y2, {tag = 'wall', first = true})
   return wall and distance or range
 end
+  ctx.spells:deactivate(self)
+  ctx.spells:deactivate(self)
+
+function Spell:resolveCircle(x, y, r, options)
+  options = options or {}
+  local ox, oy = x, y
+  local angle = options.angle or self.angle
+  local sign = 1
+  local distance = 0
+  local function move() x, y = ox + math.dx(distance * sign, angle), oy + math.dy(distance * sign, angle) end
+  while ctx.collision:circleTest(x, y, self.owner.radius, {tag = 'wall'}) or not math.inside(x, y, 0, 0, ctx.map.width, ctx.map.height) do
+    sign = -sign
+    if sign == 1 then distance = distance + 10 end
+    move()
+  end
+
+  if distance > 0 or sign == -1 then
+    repeat
+      distance = distance - 1
+      move()
+    until collision:circleTest(x, y, self.owner.radius, {tag = 'wall'})
+
+    distance = distance + 1
+    move()
+  end
+
+  return x, y
+end
 
 function Spell:rot(fn)
   self.timer = self.timer - tickRate
@@ -56,6 +84,10 @@ function Spell:rot(fn)
     ctx.spells:deactivate(self)
     return true
   end
+end
+
+function Spell:die()
+  return ctx.spells:deactivate(self)
 end
 
 function Spell:enemiesInRadius(options)
@@ -114,4 +146,17 @@ end
 function Spell:drawCircle(how, options)
   options = options or {}
   love.graphics.circle(how, options.x or self.x, options.y or self.y, options.radius or self.radius)
+end
+
+function Spell:drawImage(options)
+  options = options or {}
+  local image = self.image or options.image
+  local x, y, a, s = self.x or options.x, self.y or options.y, self.angle or options.angle, self.scale or options.scale
+  local ax, ay = self.anchorx or options.anchorx, self.anchory or options.anchory
+  love.graphics.draw(image, x, y, a, s, s, ax, ay)
+end
+
+function Spell:playSound(sound, options)
+  options = options or {}
+  ctx.event:emit('sound.play', table.merge({sound = sound}, options))
 end

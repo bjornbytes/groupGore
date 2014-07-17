@@ -21,8 +21,8 @@ function Dagger:activate(visions)
     return damage
   end)
   
-  ctx.event:emit('sound.play', {sound = backstabbed and 'backstab' or 'slash', x = self.x, y = self.y})
-  ctx.spells:deactivate(self)
+	self:playSound(backstabbed and 'backstab' or 'slash')
+	self:die()
 end
 
 return Dagger

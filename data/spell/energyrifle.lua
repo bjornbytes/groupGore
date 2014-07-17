@@ -1,6 +1,10 @@
 local EnergyRifle = extend(Spell)
 EnergyRifle.code = 'energyrifle'
 
+EnergyRifle.image = data.media.graphics.effects.pulse
+EnergyRifle.scale = 2
+EnergyRifle.anchorx = 20
+EnergyRifle.anchory = 2
 EnergyRifle.speed = 1600
 
 function EnergyRifle:activate()
@@ -35,7 +39,7 @@ function EnergyRifle:activate()
     }
   })
 
-  ctx.event:emit('sound.play', {sound = 'pulse', x = self.x, y = self.y})
+  self:playSound('pulse')
 
   if ctx.collision:lineTest(self.owner.x, self.owner.y, self.x, self.y, {tag = 'wall'}) then
     ctx.spells:deactivate(self)
@@ -43,30 +47,25 @@ function EnergyRifle:activate()
 end
 
 function EnergyRifle:update()
-  if self.ded then return ctx.spells:deactivate(self) end
-
   self:lerpUpdate()
 
-  local dis = self.speed * tickRate
-  local wall, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle), {tag = 'wall'})
-  if wall then dis = d end
-  local tx, ty = self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle)
-
-  local target = ctx.collision:lineTest(self.x, self.y, tx, ty, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, first = true})
-  if target then
-    ctx.net:emit(evtDamage, {id = target.id, amount = data.weapon.energyrifle.damage, from = self.owner.id, tick = tick})
-    ctx.buffs:add(target, 'plasmasickness')
+  local distance = self.speed * tickRate
+  local wallDistance = self:wallDistance(distance)
+  local enemy = self:enemiesInLine(wallDistance)
+  if enemy then
+    ctx.buffs:add(enemy, 'plasmasickness')
+    self:damageEnemies(enemy, data.weapon.energyrifle.damage)
   end
 
-  self.ded = wall or target
-  self.x, self.y = tx, ty
+  self:move(wallDistance)
+  if wallDistance < distance or enemy then self:die() end
 end
 
 function EnergyRifle:draw()
   local x, y = self:lerpGet()
   local function doDraw()
     love.graphics.setColor(255, 255, 255)
-    love.graphics.draw(data.media.graphics.effects.pulse, x, y, self.angle, 2, 2, 20, 2)
+    self:drawImage({x = x, y = y})
   end
 
   doDraw()
