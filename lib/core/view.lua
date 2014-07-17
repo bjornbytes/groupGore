@@ -3,9 +3,11 @@ View = class()
 local g = love.graphics
 
 function View:init()
-  local w, h, fullscreen, resizable = 0, 0, true, false
-  if env ~= 'release' then w, h, fullscreen, resizable = 640, 480, false, true end
-  love.window.setMode(w, h, {fullscreen = fullscreen, fullscreentype = 'desktop', resizable = resizable, vsync = false})
+  love.window.setMode(ctx.options.windowWidth, ctx.options.windowHeight, {
+		fullscreen = ctx.options.fullscreen,
+		fullscreentype = ctx.options.borderless and 'desktop' or 'normal',
+		vsync = ctx.options.vsync
+	})
 
   self.x = 0
   self.y = 0

@@ -48,7 +48,7 @@ function MenuMain:connect(ip)
   serverIp = ip
   serverPort = 6061
   Context:remove(self.menu)
-  Context:add(Game)
+  Context:add(Game, ctx.options.data)
   love.keyboard.setKeyRepeat(false)
 end
 

@@ -2,7 +2,8 @@ Game = class()
 
 Game.tag = 'client'
 
-function Game:load()
+function Game:load(options)
+	self.options = options
   self.event = Event()
   self.net = NetClient()
   self.input = Input()
