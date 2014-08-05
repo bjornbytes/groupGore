@@ -1,4 +1,4 @@
-locl PlasmaCannon = {}
+local PlasmaCannon = extend(Spell)
 PlasmaCannon.code = 'plasmacannon'
 
 function PlasmaCannon:activate(charge)

@@ -1,10 +1,10 @@
 MenuOptions = class()
 
 MenuOptions.defaults = {
-	fullscreen = true,
+	fullscreen = false,
 	borderless = true,
-	windowWidth = 0,
-	windowHeight = 0,
+	windowWidth = 800,
+	windowHeight = 600,
 	vsync = false
 }
 

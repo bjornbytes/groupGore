@@ -1,9 +1,10 @@
-local SMG = {}
+local SMG = extend(Spell)
 SMG.code = 'smg'
-SMG.hp = .12
+
+SMG.duration = .12
 
 SMG.activate = function(self)
-  self.hp = SMG.hp
+  self.timer = self.duration
   self.x = self.owner.x
   self.y = self.owner.y
   
@@ -97,12 +98,12 @@ SMG.activate = function(self)
 end
 
 SMG.update = function(self)
-  self.hp = timer.rot(self.hp, function() ctx.spells:deactivate(self) end)
+	self:rot()
 end
 
 SMG.draw = function(self)
   local function doDraw()
-    local alpha = self.hp / .12
+    local alpha = self.timer / self.duration
     love.graphics.setColor(255, 255, 255, alpha * 255)
     love.graphics.line(self.x, self.y, self.x + math.cos(self.angle) * self.len, self.y + math.sin(self.angle) * self.len)
   end

@@ -1,4 +1,4 @@
-local Shotgun = {}
+local Shotgun = extend(Spell)
 Shotgun.code = 'shotgun'
 
 Shotgun.duration = .1
@@ -117,7 +117,7 @@ end
 
 Shotgun.draw = function(self)
   local function doDraw()
-    love.graphics.setColor(255, 255, 255, (self.hp / Shotgun.hp) * 255)
+    love.graphics.setColor(255, 255, 255, (self.timer / self.duration) * 255)
     for _, bullet in pairs(self.bullets) do
       love.graphics.line(self.x, self.y, self.x + math.dx(bullet.dis, bullet.dir), self.y + math.dy(bullet.dis, bullet.dir))
     end

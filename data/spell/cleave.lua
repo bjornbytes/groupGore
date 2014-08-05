@@ -34,10 +34,10 @@ function Cleave:update()
 end
 
 function Cleave:draw()
-  love.graphics.setColor(255, 255, 255, 50 * (self.hp / Cleave.hp))
+  love.graphics.setColor(255, 255, 255, 50 * (self.timer / self.duration))
 	self:drawCircle('fill')
 	self:drawCircle('fill', {radius = self.radius * .65})
-  love.graphics.setColor(255, 255, 255, 255 * (self.hp / Cleave.hp))
+  love.graphics.setColor(255, 255, 255, 255 * (self.timer / self.duration))
 	self:drawCircle('line')
 end
 

@@ -54,7 +54,7 @@ function EnergyRifle:update()
   local enemy = self:enemiesInLine(wallDistance)
   if enemy then
     ctx.buffs:add(enemy, 'plasmasickness')
-    self:damageEnemies(enemy, data.weapon.energyrifle.damage)
+    self:damage(enemy, data.weapon.energyrifle.damage)
   end
 
   self:move(wallDistance)

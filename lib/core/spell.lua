@@ -30,7 +30,7 @@ function Spell:movePlayer(player, length, options)
 end
 
 function Spell:moveOwnerTo(x, y)
-  return Spell.movePlayerTo(self.owner, x, y)
+  return Spell.movePlayerTo(self, self.owner, x, y)
 end
 
 function Spell:moveOwner(length, options)
@@ -44,12 +44,10 @@ function Spell:distanceTo(object, options)
 end
 
 function Spell:wallDistance(range)
-  local x2, y2 = Spell.move(self, range, self.angle)
+  local x2, y2 = self.x + math.dx(range, self.angle), self.y + math.dy(range, self.angle)
   local wall, distance = ctx.collision:lineTest(self.x, self.y, x2, y2, {tag = 'wall', first = true})
   return wall and distance or range
 end
-  ctx.spells:deactivate(self)
-  ctx.spells:deactivate(self)
 
 function Spell:resolveCircle(x, y, r, options)
   options = options or {}
@@ -68,7 +66,7 @@ function Spell:resolveCircle(x, y, r, options)
     repeat
       distance = distance - 1
       move()
-    until collision:circleTest(x, y, self.owner.radius, {tag = 'wall'})
+    until ctx.collision:circleTest(x, y, self.owner.radius, {tag = 'wall'})
 
     distance = distance + 1
     move()
@@ -100,7 +98,7 @@ end
 function Spell:enemiesInLine(distance, options)
   options = options or {}
   local x, y, angle, all = options.x or self.x, options.y or self.y, options.angle or self.angle, options.all or false
-  local x2, y2 = Spell.move(self, distance, options)
+  local x2, y2 = self.x + math.dx(distance, self.angle), self.y + math.dy(distance, self.angle)
   local function isEnemy(p) return p.team ~= self.owner.team end
   return select(1, ctx.collision:lineTest(x, y, x2, y2, {tag = 'player', fn = isEnemy, first = not all, all = all}))
 end
