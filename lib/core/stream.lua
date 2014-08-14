@@ -1,5 +1,25 @@
 Stream = class()
 
+local function byteExtract(x, a, b)
+  b = b or a
+  x = x % (2 ^ (b + 1))
+  for i = 1, a do
+    x = math.floor(x / 2)
+  end
+  return x
+end
+
+local function byteInsert(x, y, a, b)
+  local res = x
+  for i = a, b do
+    local e = byteExtract(y, i - a)
+    if e ~= byteExtract(x, i) then
+      res = (e == 1) and res + (2 ^ i) or res - (2 ^ i)
+    end
+  end
+  return res
+end
+
 function Stream:init(str)
   self.str = str or ''
   self.byte = nil
@@ -53,8 +73,8 @@ function Stream:writeBits(x, n)
   repeat
     if not self.byte then self.byte = 0 self.byteLen = 0 end
     local numWrite = math.min(n, (7 - self.byteLen) + 1)
-    local toWrite = byte.extract(x, idx, idx + (numWrite - 1))
-    self.byte = byte.insert(self.byte, toWrite, self.byteLen, self.byteLen + (numWrite - 1))
+    local toWrite = byteExtract(x, idx, idx + (numWrite - 1))
+    self.byte = byteInsert(self.byte, toWrite, self.byteLen, self.byteLen + (numWrite - 1))
     self.byteLen = self.byteLen + numWrite
     
     if self.byteLen == 8 then
@@ -108,7 +128,7 @@ function Stream:readBits(n)
   while n > 0 do
     if not self.byte then self.byte = self.str:byte(1) or 0 self.byteLen = 0 end
     local numRead = math.min(n, (7 - self.byteLen) + 1)
-    x = x + (byte.extract(self.byte, self.byteLen, self.byteLen + (numRead - 1)) * (2 ^ idx))
+    x = x + (byteExtract(self.byte, self.byteLen, self.byteLen + (numRead - 1)) * (2 ^ idx))
     self.byteLen = self.byteLen + numRead
     
     if self.byteLen == 8 then

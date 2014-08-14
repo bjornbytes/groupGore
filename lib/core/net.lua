@@ -1,6 +1,6 @@
 Net = class()
 
-evtJoin  = 1
+evtJoin = 1
 evtLeave = 2
 evtClass = 3
 evtSync = 4
@@ -9,13 +9,14 @@ evtDamage = 6
 evtDead = 7
 evtSpawn = 8
 evtChat = 9
+evtProp = 10
 
-msgJoin  = 10
-msgLeave = 11
-msgSnapshot = 12
-msgClass = 13
-msgInput = 14
-msgChat = 15
+msgJoin  = 11
+msgLeave = 12
+msgSnapshot = 13
+msgClass = 14
+msgInput = 15
+msgChat = 16
 
 function Net:init()
   self.inStream = Stream()
@@ -54,12 +55,12 @@ function Net:update()
 end
 
 function Net:pack(msg, data)
-  self.outStream:write(msg, '4bits')
+  self.outStream:write(msg - 1, '4bits')
   self.outStream:pack(data, self.signatures[msg])
 end
 
 function Net:unpack()
-  local msg = self.inStream:read('4bits')
+  local msg = self.inStream:read('4bits') + 1
   if msg == 0 or not self.other.signatures[msg] then return false end
   return msg, self.inStream:unpack(self.other.signatures[msg])
 end

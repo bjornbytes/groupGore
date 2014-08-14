@@ -22,6 +22,7 @@ NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from
 NetServer.signatures[evtDead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}}
 NetServer.signatures[evtSpawn] = {{'id', '4bits'}}
 NetServer.signatures[evtChat] = {{'message', 'string'}}
+NetServer.signatures[evtProp] = {{'id', '16bits'}, {'x', '16bits'}, {'y', '16bits'}}
 NetServer.signatures[msgJoin] = {{'id', '4bits'}}
 NetServer.signatures[msgSnapshot] = {
   {'tick', '16bits'},
