@@ -12,4 +12,4 @@ love.quit = Context.quit
 love.handlers = setmetatable({}, {__index = Context})
 
 env = arg[2] or 'release'
-if env == 'test' then require 'test/test' end
+if env == 'test' then require 'test/runner' end

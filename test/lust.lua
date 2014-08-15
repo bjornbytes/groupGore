@@ -1,65 +1,32 @@
 local lust = {}
 lust.level = 0
 
--- Setup
-if love.math then love.math.setRandomSeed(os.time()) end
-
-tickRate = .02
-tickDelta = 0
-interp = .12
-delta = 0
-
-local update = love.update
-love.update = function()
-  love.event.pump()
-  for e, a, b, c, d in love.event.poll() do
-    if e == 'quit' then f.exe(love.quit) love.audio.stop() return
-    else love.handlers[e](a, b, c, d) end
-  end
-  update()
-end
-love.load = function() end
---
-
-lust.wait = function(n)
-  local i = 0
-  repeat
-    update()
-    i = i + 1
-  until i == n
-end
-
-lust.waitUntil = function(f, n)
-  local i = 0
-  while not f() do
-    update()
-    i = i + 1
-    if i == n then error('timeout!') end
-  end
-end
-
 function lust.describe(name, fn)
+  local load = love.load
+  local update = love.update
+  love.update = function()
+    love.event.pump()
+    for e, a, b, c, d in love.event.poll() do
+      if e == 'quit' then f.exe(love.quit) love.audio.stop() return
+      else love.handlers[e](a, b, c, d) end
+    end
+    update()
+  end
+  love.load = function() end
+
   print(string.rep('\t', lust.level) .. name)
   lust.level = lust.level + 1
   fn()
   lust.level = lust.level - 1
-  if lust.level == 0 then
-    love.graphics.setBackgroundColor(35, 35, 35)
-    love.graphics.clear()
-    love.graphics.setFont('pixel', 8)
-    local font = love.graphics:getFont()
-    love.graphics.setColor(0, 192, 0)
-    love.graphics.printf('all clear', 64, 64 + font:getHeight() * 4, love.graphics.getWidth() - 64)
-    love.graphics.present()
-    
-    love.timer.sleep(.6)
-    love.event.quit()
-  end
+
+  love.update = update
+  love.load = load
 end
 
-function lust.it(name, fn)
+function lust.test(name, fn)
   print(string.rep('\t', lust.level) .. name)
   lust.level = lust.level + 1
+  f.exe(lust.before)
   local success, err = pcall(fn)
   if not success then
     print(string.rep('\t', lust.level) .. 'FAIL: ' .. err)
@@ -68,12 +35,7 @@ function lust.it(name, fn)
     print(string.rep('\t', lust.level) .. 'PASS')
   end
   lust.level = lust.level - 1
-end
-
-function lust.with(o, fn)
-  ctx = o
-  fn()
-  ctx = nil
+  f.exe(lust.after)
 end
 
 -- Assertions
