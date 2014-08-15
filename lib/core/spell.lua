@@ -156,5 +156,7 @@ end
 
 function Spell:playSound(sound, options)
   options = options or {}
+  options.x = options.x or self.x
+  options.y = options.y or self.y
   ctx.event:emit('sound.play', table.merge({sound = sound}, options))
 end

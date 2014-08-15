@@ -94,7 +94,7 @@ SMG.activate = function(self)
     }
   })
 
-  ctx.event:emit('sound.play', {sound = 'smg', x = self.x, y = self.y})
+  self:playSound('smg')
 end
 
 SMG.update = function(self)
