@@ -80,6 +80,7 @@ function View:draw()
     self.sourceCanvas, self.targetCanvas = self.targetCanvas, self.sourceCanvas
   end
 
+  g.setColor(255, 255, 255)
   g.draw(self.sourceCanvas)
 
   g.push()
@@ -184,6 +185,12 @@ function View:follow()
   
   self.x = math.clamp(self.x, self.target.x - (self.width * margin), self.target.x + (self.width * margin) - self.width)
   self.y = math.clamp(self.y, self.target.y - (self.height * margin), self.target.y + (self.height * margin) - self.height)
+end
+
+function View:worldPoint(x, y)
+  x = math.round(((x - self.frame.x) / self.scale) + self.x)
+  if y then y = math.round(((y - self.frame.y) / self.scale) + self.y) end
+  return x, y
 end
 
 function View:worldMouseX()

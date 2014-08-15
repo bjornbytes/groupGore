@@ -45,12 +45,14 @@ function Rune:draw()
     elseif self.effect == 'speedBoost' then love.graphics.setColor(0, 0, 150, 255) end
     self.shape:draw('line')
 
-    ctx.effects:get('bloom'):render(function()
-      if self.effect == 'refillAmmo' then love.graphics.setColor(100, 255, 100, 255)
-      elseif self.effect == 'refillHealth' then love.graphics.setColor(255, 100, 100, 255)
-      elseif self.effect == 'speedBoost' then love.graphics.setColor(100, 100, 255, 255) end
-      love.graphics.rectangle('fill', self.x - 16, self.y - 16, self.width + 32, self.height + 32)
-    end)
+    if ctx.effects and ctx.effects:get('bloom') then
+      ctx.effects:get('bloom'):render(function()
+        if self.effect == 'refillAmmo' then love.graphics.setColor(100, 255, 100, 255)
+        elseif self.effect == 'refillHealth' then love.graphics.setColor(255, 100, 100, 255)
+        elseif self.effect == 'speedBoost' then love.graphics.setColor(100, 100, 255, 255) end
+        love.graphics.rectangle('fill', self.x - 16, self.y - 16, self.width + 32, self.height + 32)
+      end)
+    end
   end
 end
 

@@ -5,7 +5,7 @@ local industria = {}
 ----------------
 industria.name = 'Industria'
 industria.width = 2432
-industria.height = 3320
+industria.height = 3328
 industria.wallTexture = 'wallSnow'
 industria.weather = 'snow'
 industria.soundscape = 'blizzard'
