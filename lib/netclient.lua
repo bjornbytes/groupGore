@@ -1,9 +1,9 @@
 NetClient = extend(Net)
 
 NetClient.signatures = {}
-NetClient.signatures[msgJoin] = {{'username', 'string'}}
-NetClient.signatures[msgLeave] = {}
-NetClient.signatures[msgClass] = {{'class', '4bits'}, {'team', '1bit'}}
+NetClient.signatures[msgJoin] = {{'username', 'string'}, important = true}
+NetClient.signatures[msgLeave] = {important = true}
+NetClient.signatures[msgClass] = {{'class', '4bits'}, {'team', '1bit'}, important = true}
 NetClient.signatures[msgInput] = {
   {'tick', '16bits'},
   {'w', 'bool'}, {'a', 'bool'}, {'s', 'bool'}, {'d', 'bool'},
@@ -11,7 +11,7 @@ NetClient.signatures[msgInput] = {
   {'slot', '3bits'}, {'reload', 'bool'},
   delta = {{'w', 'a', 's', 'd'}, {'x', 'y'}, 'l', 'r', 'slot', 'reload'}
 }
-NetClient.signatures[msgChat] = {{'message', 'string'}}
+NetClient.signatures[msgChat] = {{'message', 'string'}, important = true}
 
 NetClient.receive = {}
 NetClient.receive['default'] = function(self, event) ctx.event:emit(event.msg, event.data) end
@@ -66,8 +66,7 @@ end
 
 function NetClient:connect(event)
   self.server = event.peer
-  local waitFor = (env == 'release') and 5 or 0
-  self:buffer(msgJoin, {username = username}, tick + (waitFor / tickRate))
+  self:send(msgJoin, {username = username})
   event.peer:ping_interval(100)
   event.peer:ping()
 end
@@ -81,26 +80,10 @@ function NetClient:send(msg, data)
   
   self.outStream:clear()
   self:pack(msg, data)
-  self.server:send(tostring(self.outStream))
-end
 
-function NetClient:buffer(msg, data, t)
-  table.insert(self.messageBuffer, {msg, data, t or tick})
-end
-
-function NetClient:sync()
-  if #self.messageBuffer == 0 then return end
-  
-  self.outStream:clear()
- 
-  while #self.messageBuffer > 0 and tick >= self.messageBuffer[1][3] do
-    local msg, data, tick = unpack(self.messageBuffer[1])
-    self:pack(msg, data)
-    table.remove(self.messageBuffer, 1)
-  end
- 
-  local res = tostring(self.outStream)
-  if #res > 0 then self.server:send(res) end
+  local channel = self.signatures[msg].important and 0 or 1
+  local reliability = self.signatures[msg].important and 'reliable' or 'unreliable'
+  self.server:send(tostring(self.outStream), channel, reliability)
 end
 
 NetClient.emit = f.empty

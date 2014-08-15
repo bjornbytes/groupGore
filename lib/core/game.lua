@@ -35,7 +35,6 @@ function Game:update()
   self.view:update()
   self.sound:update()
   self.hud:update()
-  self.net:sync()
 end
 
 function Game:draw()

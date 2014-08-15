@@ -24,13 +24,14 @@ function Net:init()
 end
 
 function Net:listen(port)
-  self.host = enet.host_create(port and '*:' .. port or nil)
+  self.host = enet.host_create(port and '*:' .. port or nil, 16, 2)
   if not self.host then error('Error creating the connection') end
+  --self.host:compress_with_range_coder()
 end
 
 function Net:connectTo(ip, port)
   if not self.host then self:listen() end
-  local peer = self.host:connect(ip .. ':' .. port)
+  local peer = self.host:connect(ip .. ':' .. port, 2)
   peer:timeout(0, 0, 3000)
 end
 
@@ -55,12 +56,12 @@ function Net:update()
 end
 
 function Net:pack(msg, data)
-  self.outStream:write(msg - 1, '4bits')
+  self.outStream:write(msg, '5bits')
   self.outStream:pack(data, self.signatures[msg])
 end
 
 function Net:unpack()
-  local msg = self.inStream:read('4bits') + 1
-  if msg == 0 or not self.other.signatures[msg] then return false end
+  local msg = self.inStream:read('5bits')
+  if not self.other.signatures[msg] then return false end
   return msg, self.inStream:unpack(self.other.signatures[msg])
 end

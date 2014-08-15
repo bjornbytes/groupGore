@@ -1,9 +1,9 @@
 NetServer = extend(Net)
 
 NetServer.signatures = {}
-NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}}
-NetServer.signatures[evtLeave] = {{'id', '4bits'}, {'reason', 'string'}}
-NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}}
+NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}, important = true}
+NetServer.signatures[evtLeave] = {{'id', '4bits'}, {'reason', 'string'}, important = true}
+NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}, important = true}
 NetServer.signatures[evtSync] = {
   {'id', '4bits'},
   {'tick', '16bits'},
@@ -19,15 +19,16 @@ NetServer.signatures[evtFire] = {
   delta = {{'mx', 'my'}}
 }
 NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
-NetServer.signatures[evtDead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}}
-NetServer.signatures[evtSpawn] = {{'id', '4bits'}}
-NetServer.signatures[evtChat] = {{'message', 'string'}}
+NetServer.signatures[evtDead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}, important = true}
+NetServer.signatures[evtSpawn] = {{'id', '4bits'}, important = true}
+NetServer.signatures[evtChat] = {{'message', 'string'}, important = true}
 NetServer.signatures[evtProp] = {{'id', '16bits'}, {'x', '16bits'}, {'y', '16bits'}}
-NetServer.signatures[msgJoin] = {{'id', '4bits'}}
+NetServer.signatures[msgJoin] = {{'id', '4bits'}, important = true}
 NetServer.signatures[msgSnapshot] = {
   {'tick', '16bits'},
   {'map', 'string'},
-  {'players', {{'id', '4bits'}, {'username', 'string'}, {'class', '4bits'}, {'team', '1bit'}}}
+  {'players', {{'id', '4bits'}, {'username', 'string'}, {'class', '4bits'}, {'team', '1bit'}}},
+  important = true
 }
 
 NetServer.receive = {}
@@ -114,6 +115,7 @@ function NetServer:init()
   self:listen(6061)
   self.peerToPlayer = {}
   self.eventBuffer = {}
+  self.importantEventBuffer = {}
 
   ctx.event:on('game.quit', function(data)
     self:quit()
@@ -160,22 +162,33 @@ end
 
 function NetServer:emit(evt, data)
   if not self.host then return end
-  table.insert(self.eventBuffer, {evt, data, tick})
+  local buffer = self.signatures[evt].important and self.importantEventBuffer or self.eventBuffer
+  table.insert(buffer, {evt, data})
   ctx.event:emit(evt, data)
 end
 
 function NetServer:sync()
-  if #self.eventBuffer == 0 or not self.host then return end
+  if not self.host then return end
   
-  self.outStream:clear()
-  
-  while #self.eventBuffer > 0 and (tick - self.eventBuffer[1][3]) * tickRate >= .000 do
-    local msg, data, tick = unpack(self.eventBuffer[1])
-    self:pack(msg, data)
-    table.remove(self.eventBuffer, 1)
+  if #self.importantEventBuffer > 0 then
+    self.outStream:clear()
+    while #self.importantEventBuffer > 0 do
+      self:pack(unpack(self.importantEventBuffer[1]))
+      table.remove(self.importantEventBuffer, 1)
+    end
+
+    self.host:broadcast(tostring(self.outStream), 0, 'reliable')
   end
 
-  self.host:broadcast(tostring(self.outStream))
+  if #self.eventBuffer > 0 then
+    self.outStream:clear()
+    while #self.eventBuffer > 0 do
+      self:pack(unpack(self.eventBuffer[1]))
+      table.remove(self.eventBuffer, 1)
+    end
+
+    self.host:broadcast(tostring(self.outStream), 1, 'unreliable')
+  end
 end
 
 function NetServer:snapshot(peer)

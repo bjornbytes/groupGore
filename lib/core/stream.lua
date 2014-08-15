@@ -41,6 +41,7 @@ function Stream:clear()
   self.str = ''
   self.byte = nil
   self.byteLen = nil
+  return self
 end
 
 function Stream:write(x, sig)
@@ -51,6 +52,8 @@ function Stream:write(x, sig)
     local n = sig:match('(%d+)bit')
     self:writeBits(x, n)
   end
+  
+  return self
 end
 
 function Stream:writeString(string)
