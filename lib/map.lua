@@ -39,8 +39,11 @@ function Map:init(name)
     return love.graphics.newQuad(unpack(tex))
   end)
 
+  local id = 1
   self.props = table.map(self.props, function(prop)
-    setmetatable(prop, {__index = data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
+    prop.id = id
+    id = id + 1
+    setmetatable(prop, {__index = data.prop[prop.kind .. (ctx.tag or ''):capitalize()] or data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
     f.exe(prop.activate, prop, self)
     return prop
   end)
