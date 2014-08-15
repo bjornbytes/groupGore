@@ -39,10 +39,8 @@ function Map:init(name)
     return love.graphics.newQuad(unpack(tex))
   end)
 
-  local id = 1
-  self.props = table.map(self.props, function(prop)
+  self.props = table.map(self.props, function(prop, id)
     prop.id = id
-    id = id + 1
     setmetatable(prop, {__index = data.prop[prop.kind .. (ctx.tag or ''):capitalize()] or data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
     f.exe(prop.activate, prop, self)
     return prop
@@ -108,6 +106,11 @@ function Map:init(name)
       end)
     end
   end
+
+  ctx.event:on(evtProp, function(data)
+    local prop = self.props[data.id]
+    prop.x, prop.y = data.x / 10, data.y / 10
+  end)
 end
 
 function Map:update()
