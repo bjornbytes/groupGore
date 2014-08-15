@@ -1,29 +1,33 @@
 Editor = class()
 
-function Editor:load()
+function Editor:load(options)
+  self.options = options
   self.grid = EditorGrid()
   
   self.view = EditorView()
+  self.effects = Effects()
+  self.effects:remove('deathDesaturate')
   self.event = Event()
   self.collision = Collision()
   self.map = Map()
-  self.menu = EditorMenu()
   self.dragger = EditorDragger()
   self.scaler = EditorScaler()
   self.selector = EditorSelector()
   self.deletor = EditorDeletor()
   self.saver = EditorSaver()
+  self.debug = EditorDebug()
   
   self.widgets = {self.grid}
   self.components = {
     self.view,
-    self.menu,
+    self.effects,
     self.dragger,
     self.scaler,
     self.deletor,
     self.selector,
     self.saver,
-    self.map
+    self.map,
+    self.debug
   }
   
   table.each(self.widgets, function(widget)
@@ -38,7 +42,6 @@ end
 
 function Editor:draw()
   self.view:draw()
-  self.menu:draw()
 end
 
 function Editor:keypressed(key)
@@ -64,4 +67,8 @@ end
 function Editor:mousereleased(x, y, button)
   table.each(self.components, f.egoexe('mousereleased', x, y, button))
   table.each(self.widgets, f.egoexe('mousereleased', x, y, button))
+end
+
+function Editor:resize()
+  self.view:resize()
 end

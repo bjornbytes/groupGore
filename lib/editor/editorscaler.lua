@@ -15,7 +15,7 @@ end
 function EditorScaler:update()
   if self.scaling then
     local prop = self.scaling
-    local mx, my = ctx.view:transform(love.mouse.getPosition())
+    local mx, my = ctx.view:worldPoint(love.mouse.getPosition())
     if prop.collision.shape == 'rectangle' then
       local xinc, yinc = ctx.grid:snap(mx - self.scaleOriginX, my - self.scaleOriginY)
       local newWidth = prop._scaleW + (xinc * math.sign(self.scaleHandleX))
@@ -57,7 +57,7 @@ function EditorScaler:mousepressed(x, y, button)
   if button == 'r' and not love.keyboard.isDown('lshift') then
     local p = ctx.selector:pointTest(x, y)[1]
     if p then
-      local x, y = ctx.view:transform(x, y)
+      local x, y = ctx.view:worldPoint(x, y)
       self.scaling = p
       self.scaleOriginX = ctx.view:worldMouseX()
       self.scaleOriginY = ctx.view:worldMouseY()

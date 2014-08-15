@@ -5,19 +5,28 @@ local g = love.graphics
 
 function EditorGrid:init()
   self.color = {0, 0, 0, 50}
+  self.hoverColor = {0, 0, 0, 20}
   self.size = 32
   self.depth = -10000
 end
 
 function EditorGrid:draw()
+  g.setLineWidth(1 / ctx.view.scale)
+
+  g.setColor(self.hoverColor)
+  local x = math.floor(ctx.view:worldMouseX() / self.size) * self.size
+  local y = math.floor(ctx.view:worldMouseY() / self.size) * self.size
+  if x >= 0 and y >= 0 and x < ctx.map.width and y < ctx.map.height then
+    g.rectangle('fill', x, y, self.size, self.size)
+  end
+
   g.setColor(self.color)
   
-  g.setLineWidth(1 / ctx.view.scale)
-  for i = .5, ctx.map.width, self.size do
+  for i = .5, ctx.map.width + .5, self.size do
     g.line(i, 0, i, ctx.map.height)
   end
   
-  for i = .5, ctx.map.height, self.size do
+  for i = .5, ctx.map.height + .5, self.size do
     g.line(0, i, ctx.map.width, i)
   end
   g.setLineWidth(1)

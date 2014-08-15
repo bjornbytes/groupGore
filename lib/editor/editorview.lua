@@ -5,8 +5,6 @@ EditorView = extend(View)
 function EditorView:init()
   self.targetScale = 1
   
-  self.x = 0
-  self.y = 0
   self.xVel = 0
   self.yVel = 0
   self.maxSpeed = 20
@@ -38,17 +36,13 @@ function EditorView:update()
   self.x = self.x + (self.xVel / (self.targetScale ^ 0.5))
   self.y = self.y + (self.yVel / (self.targetScale ^ 0.5))
   
-  local prevw, prevh = self.w, self.h
+  local prevw, prevh = self.width, self.height
   local xf, yf = love.mouse.getX() / love.graphics.getWidth(), love.mouse.getY() / love.graphics.getHeight()
   self.scale = math.round(math.lerp(self.scale, self.targetScale, 10 * tickRate) / .01) * .01
-  self.w = love.graphics.getWidth() / self.scale
-  self.h = love.graphics.getHeight() / self.scale
-  self.x = self.x + (prevw - self.w) * xf
-  self.y = self.y + (prevh - self.h) * yf
-end
-
-function EditorView:draw()
-  View.draw(self)
+  self.width = love.graphics.getWidth() / self.scale
+  self.height = love.graphics.getHeight() / self.scale
+  self.x = self.x + (prevw - self.width) * xf
+  self.y = self.y + (prevh - self.height) * yf
 end
 
 function EditorView:mousepressed(x, y, button)
@@ -57,10 +51,6 @@ function EditorView:mousepressed(x, y, button)
   elseif button == 'wd' then
     self.targetScale = math.max(self.targetScale - .2, .2)
   end
-end
-
-function EditorView:transform(x, y)
-  return x / self.scale + self.x, y / self.scale + self.y
 end
 
 EditorView.contain = f.empty

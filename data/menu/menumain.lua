@@ -54,5 +54,5 @@ end
 
 function MenuMain:edit()
   Context:remove(self.menu)
-  Context:add(Editor)
+  Context:add(Editor, ctx.options.data)
 end

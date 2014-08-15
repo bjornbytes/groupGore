@@ -11,6 +11,8 @@ function EditorSelector:init()
   self.dragging = false
   self.dragStartX = nil
   self.dragStartY = nil
+  self.depth = -100000
+  ctx.view:register(self, 'draw')
   ctx.view:register(self, 'gui')
 end
 
@@ -22,16 +24,16 @@ function EditorSelector:update()
 end
 
 function EditorSelector:draw()
-  love.graphics.setColor(0, 255, 255, 50)
-  if self.active then
-    table.each(ctx.map.props, function(prop)
-      prop.shape:draw('line')
-    end)
-  end
-  
   love.graphics.setColor(0, 255, 255, 100)
   for _, prop in ipairs(self.selection) do
-    prop.shape:draw('fill')
+    if prop.shape then prop.shape:draw('fill') end
+  end
+
+  love.graphics.setColor(0, 255, 255)
+  if self.active then
+    table.each(ctx.map.props, function(prop)
+      if prop.shape then prop.shape:draw('line') end
+    end)
   end
 end
 
@@ -52,15 +54,15 @@ function EditorSelector:gui()
 end
 
 function EditorSelector:pointTest(x, y)
-  local shapes = ctx.collision.hc:shapesAt(ctx.view:transform(x, y))
+  local shapes = ctx.collision.hc:shapesAt(ctx.view:worldPoint(x, y))
   return table.map(shapes, function(s) return s.owner end)
 end
 
 function EditorSelector:rectTest(x1, y1, x2, y2)
   if x1 > x2 then x1, x2 = x2, x1 end
   if y1 > y2 then y1, y2 = y2, y1 end
-  x1, y1 = ctx.view:transform(x1, y1)
-  x2, y2 = ctx.view:transform(x2, y2)
+  x1, y1 = ctx.view:worldPoint(x1, y1)
+  x2, y2 = ctx.view:worldPoint(x2, y2)
   local selectRect = ctx.collision.hc:addRectangle(x1, y1, x2 - x1, y2 - y1)
   
   local res = {}
@@ -76,8 +78,8 @@ function EditorSelector:rectTest(x1, y1, x2, y2)
 end
 
 function EditorSelector:lineTest(x1, y1, x2, y2)
-  x1, y1 = ctx.view:transform(x1, y1)
-  x2, y2 = ctx.view:transform(x2, y2)
+  x1, y1 = ctx.view:worldPoint(x1, y1)
+  x2, y2 = ctx.view:worldPoint(x2, y2)
   local dis = math.distance(x1, y1, x2, y2)
   
   local res = {}
