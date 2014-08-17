@@ -15,9 +15,13 @@ function CartServer:activate(map)
       table.insert(self.points, t[j])
     end
   end
-  self.x, self.y = self.points[1], self.points[2]
+  for i = 1, #self.points, 2 do
+    if self.points[i] == self.x and self.points[i + 1] == self.y then
+      self.index = i
+      break
+    end
+  end
   self.speed = 0
-  self.index = 1
 end
 
 function CartServer:update()
@@ -57,7 +61,14 @@ function CartServer:update()
         break
       end
     end
+
     if self.index + sign <= 1 or self.index + sign >= #self.points then self.speed = 0 end
+    
+    if self.index == 1 then
+      ctx.map:modExec('scoring', 'win', orange)
+    elseif self.index == #self.points - 1 then
+      ctx.map:modExec('scoring', 'win', purple)
+    end
 
     ctx.net:emit(evtProp, {id = self.id, x = math.round(self.x * 10), y = math.round(self.y * 10)})
   end

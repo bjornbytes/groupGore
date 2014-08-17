@@ -18,7 +18,6 @@ function Cart:activate(map)
   ctx.event:emit('collision.attach', {object = self})
   if ctx.view then ctx.view:register(self) end
 
-  self.x, self.y = self.curves[1][1], self.curves[1][2]
   self.prevX, self.prevY = self.x, self.y
   self.curves = table.map(self.curves, love.math.newBezierCurve)
 end
