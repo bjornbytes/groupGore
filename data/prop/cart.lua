@@ -2,6 +2,8 @@ local Cart = class()
 Cart.name = 'Cart'
 Cart.code = 'cart'
 
+Cart.mod = 'tugOfWar'
+
 Cart.collision = {}
 Cart.collision.shape = 'circle'
 Cart.collision.tag = 'wall'
