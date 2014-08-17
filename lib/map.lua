@@ -39,6 +39,13 @@ function Map:init(name)
     return love.graphics.newQuad(unpack(tex))
   end)
 
+  self.mods = {}
+  table.each({{kind = 'scoring'}, {kind = 'deathmatch'}}, function(mod)
+    setmetatable(mod, {__index = data.mods[mod.kind]})
+    f.exe(mod.activate, mod, self)
+    self.mods[mod.kind] = mod
+  end)
+
   self.props = table.map(self.props, function(prop, id)
     prop.id = id
     setmetatable(prop, {__index = data.prop[prop.kind .. (ctx.tag or ''):capitalize()] or data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
@@ -54,8 +61,6 @@ function Map:init(name)
     self.batch:add(unpack(tile))
   end)
   self.batch:unbind()
-
-  self.rules = new(data.rules.deatmatch, self)
 
   f.exe(self.activate, self)
 
@@ -116,10 +121,17 @@ end
 function Map:update()
   table.each(self.props, function(p) f.exe(p.update, p) end)
   if self.weather then self.weather:update() end
-  f.exe(self.rules.update, self.rules)
+  table.each(self.mods, function(mod) f.exe(mod.update, mod) end)
 end
 
 function Map:draw()
   love.graphics.draw(self.batch)
   love.graphics.draw(self.shadows, 0, 0, 0, 4, 4)
+end
+
+function Map:modExec(mod, fn, ...)
+  local mod = self.mods[mod]
+  if mod and mod[fn] then
+    mod[fn](mod, ...)
+  end
 end

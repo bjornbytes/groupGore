@@ -115,6 +115,7 @@ function Player:activate()
   self.damageInMultiplier = 1
 
   self.depth = -self.id
+  self.canvas = nil
   self.canvasDirty = true
 end
 
