@@ -10,7 +10,8 @@ function Menu:load()
   love.mouse.setVisible(true)
   love.keyboard.setKeyRepeat(true)
 
-  self.background = MenuBackground()
+  self.background = Gooey(data.gooey.menu.background)
+
   self.ribbon = MenuRibbon()
   self.input = MenuInput()
 	self.options = MenuOptions()
@@ -70,6 +71,7 @@ end
 
 function Menu:draw()
   self.background:draw()
+
   self.ribbon:draw()
   self.back:draw()
   local page = self.pages[#self.pages]
