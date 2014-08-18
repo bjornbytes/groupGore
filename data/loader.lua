@@ -33,18 +33,27 @@ data.load = function()
 
   -- Data
   local function load(dir, type, fn)
-    data[type] = {}
     local id = 1
-    for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
-      if file:match('%.lua$') and not file:match('^%.') then
-        local obj = love.filesystem.load(dir .. '/' .. file)()
-        obj = f.exe(fn, obj) or obj
-        obj.id = id
-        data[type][id] = obj
-        data[type][obj.code] = obj
-        id = id + 1
+    local function halp(dir, dst)
+      for _, file in ipairs(love.filesystem.getDirectoryItems(dir)) do
+        path = dir .. '/' .. file
+        if love.filesystem.isDirectory(path) then
+          dst[file] = {}
+          print(path)
+          halp(path, dst[file])
+        elseif file:match('%.lua$') and not file:match('^%.') then
+          local obj = love.filesystem.load(path)()
+          obj = f.exe(fn, obj) or obj
+          obj.id = id
+          data[type][id] = obj
+          dst[obj.code] = obj
+          id = id + 1
+        end
       end
     end
+
+    data[type] = {}
+    halp(dir, data[type])
   end
   
   load('data/weapon', 'weapon')
@@ -57,4 +66,5 @@ data.load = function()
   load('data/prop', 'prop')
   load('data/effect', 'effect')
   load('data/weather', 'weather')
+  load('data/gooey', 'gooey')
 end
