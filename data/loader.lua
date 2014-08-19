@@ -39,7 +39,6 @@ data.load = function()
         path = dir .. '/' .. file
         if love.filesystem.isDirectory(path) then
           dst[file] = {}
-          print(path)
           halp(path, dst[file])
         elseif file:match('%.lua$') and not file:match('^%.') then
           local obj = love.filesystem.load(path)()
