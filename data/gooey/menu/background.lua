@@ -16,13 +16,12 @@ return {
       background = {0, 0, 0, 80}
     }
   },
-  { kind = 'Label',
+  { kind = 'RichText',
     properties = {
       x = .6,
-      y = .05,
-      text = 'group',
-      color = {255, 255, 255},
+      y = .04,
       font = {'BebasNeue', .1},
+      richtext = {'{dark}group{light}Gore', nil, dark = {50, 50, 50}, light = {160, 160, 160}}
     }
   }
 }
