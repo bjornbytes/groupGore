@@ -10,7 +10,7 @@ function Goregous:init()
   self.messages = {}
 
   if love.filesystem.exists('version') or env == 'release' then
-    self:patch()
+    --self:patch()
   end
 
   if self.socket then self.socket:settimeout(0) end
