@@ -18,6 +18,8 @@ load 'lib'
 load 'lib/editor'
 load 'lib/goregous'
 load 'lib/gooey'
-load 'data/loader'
+
+data.load()
+print(love.filesystem.exists('data/menu/menu'))
 load 'data/hud'
 load 'data/menu'

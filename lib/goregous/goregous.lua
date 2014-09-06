@@ -47,7 +47,7 @@ function Goregous:patch()
   local code, data, patched
   
   code = self.socket:receive(bytes)
-  data = self.socket:receive(tonumber(socket:receive('*l')))
+  data = self.socket:receive(tonumber(self.socket:receive('*l')))
   patched = self['patch' .. os](self, code, data)
 
   if patched then
