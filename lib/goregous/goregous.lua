@@ -3,14 +3,13 @@ Goregous = class()
 function Goregous:init()
   self.socket = (require('socket')).tcp()
   self.socket:settimeout(10)
-  local ip = (env == 'local') and '127.0.0.1' or '174.50.68.127'
-	if env == 'sophia' then ip = '10.0.1.28' end
+  local ip = (env == 'local') and '127.0.0.1' or '0.0.0.0'
   local _, e = self.socket:connect(ip, 6060)
   if e then error('Can\'t connect to goregous') end
   self.messages = {}
 
   if love.filesystem.exists('version') or env == 'release' then
-    --self:patch()
+    self:patch()
   end
 
   if self.socket then self.socket:settimeout(0) end
