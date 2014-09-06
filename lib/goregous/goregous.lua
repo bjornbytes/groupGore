@@ -36,7 +36,7 @@ function Goregous:send(data)
 end
 
 function Goregous:patch()
-  local version = love.filesystem.read('version'):match('%w')
+  local version = love.filesystem.read('version'):match('%w+')
   local os = love.system.getOS()
   if os == 'OS X' then os = 'OSX' end
 
