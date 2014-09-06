@@ -30,12 +30,10 @@ function Menu:load()
   else
     self:push(self.main)
   end
-
-  goregous = goregous or Context:add(Goregous)
 end
 
 function Menu:update()
-  while #goregous.messages > 0 do
+  --[[while #goregous.messages > 0 do
     local data = goregous.messages[1]
     if data[1] == 'login' then
       self.loader:deactivate()
@@ -64,7 +62,7 @@ function Menu:update()
       self.loader:deactivate()
     end
     table.remove(goregous.messages, 1)
-  end
+  end]]
 
   self.loader:update()
   self.error:update()
