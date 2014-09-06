@@ -20,6 +20,5 @@ load 'lib/goregous'
 load 'lib/gooey'
 
 data.load()
-print(love.filesystem.exists('data/menu/menu'))
 load 'data/hud'
 load 'data/menu'
