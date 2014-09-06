@@ -2,8 +2,11 @@ Element = class()
 
 local g = love.graphics
 
-Element.x, Element.y = 0, 0
-Element.width, Element.height = 1, 1
+Element.x = 0
+Element.y = 0
+Element.width = 1
+Element.height = 1
+Element.padding = 0
 
 function Element:init(data)
   self.parent = nil
@@ -12,9 +15,13 @@ function Element:init(data)
   table.merge(data, self)
 end
 
+function Element:update()
+  self:callChildren('update')
+end
+
 function Element:draw()
   self:render()
-  self:renderChildren()
+  self:callChildren('draw')
 end
 
 function Element:render()
@@ -32,15 +39,34 @@ function Element:render()
 
   if self.border then
     g.setColor(self.border)
-    g.setLineWidth(.01)
     g.rectangle('line', self.x * u, self.y * v, self.width * u, self.height * v)
   end
 end
 
-function Element:renderChildren()
-  self.owner:push(self)
-  table.with(self.children, 'draw')
-  self.owner:pop(self)
+function Element:callChildren(key, ...)
+  self.owner:push(self, key == 'draw')
+  table.with(self.children, key, ...)
+  self.owner:pop(self, key == 'draw')
+end
+
+function Element:keypressed(...)
+  self:callChildren('keypressed', ...)
+end
+
+function Element:keyreleased(...)
+  self:callChildren('keyreleased', ...)
+end
+
+function Element:mousepressed(...)
+  self:callChildren('mousepressed', ...)
+end
+
+function Element:mousereleased(...)
+  self:callChildren('mousereleased', ...)
+end
+
+function Element:textinput(...)
+  self:callChildren('textinput', ...)
 end
 
 function Element:add(child)
@@ -61,4 +87,15 @@ function Element:add(child)
   end
 
   return child
+end
+
+function Element:autoFontSize()
+  return self.height * self.owner.frame.height - self.padding * 2
+end
+
+function Element:mouseOver()
+  local u, v = self.owner.frame.width, self.owner.frame.height
+  local x, y = self.owner.frame.x + self.x * u, self.owner.frame.y + self.y * v
+  local w, h = self.width * u, self.height * v
+  return math.inside(love.mouse.getX(), love.mouse.getY(), x, y, w, h)
 end

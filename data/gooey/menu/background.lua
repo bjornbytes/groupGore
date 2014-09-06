@@ -8,20 +8,38 @@ return {
       background = data.media.graphics.menu.ggbg
     }
   },
-  { kind = 'Element',
+  { name = 'panel',
+    kind = 'Element',
     properties = {
-      y = .2,
+      y = 0,
       width = 1,
-      height = .1,
+      height = .5,
       background = {0, 0, 0, 80}
-    }
-  },
-  { kind = 'RichText',
-    properties = {
-      x = .6,
-      y = .04,
-      font = {'BebasNeue', .1},
-      richtext = {'{dark}group{light}Gore', nil, dark = {50, 50, 50}, light = {160, 160, 160}}
+    },
+    children = {
+      --[[{ kind = 'RichText',
+        properties = {
+          x = 0,
+          y = 0,
+          height = .5,
+          padding = 16,
+          font = 'coolvetica',
+          richtext = {'{purple}g{orange}G', 800, purple = {190, 160, 220}, orange = {240, 160, 140}}
+        }
+      },]]
+      { kind = 'TextField',
+        properties = {
+          x = .3,
+          y = .2,
+          width = .4,
+          height = .1,
+          padding = 8,
+          font = 'aeromatics',
+          text = 'Username',
+          placeholder = 'xXanimegurl77Xx',
+          border = {255, 255, 255}
+        }
+      }
     }
   }
 }

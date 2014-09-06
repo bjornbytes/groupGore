@@ -11,7 +11,7 @@ function Server:load()
   self.net = NetServer()
   self.map = Map()
 
-  for i = 1, 4 do
+  for i = 1, 0 do
     local p = self.players.players[i]
     setmetatable(p, {__index = PlayerRobot})
     self.net:emit(evtClass, {id = i, class = 1, team = i % 2})
