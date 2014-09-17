@@ -1,6 +1,16 @@
 Context = {
-  list = {},
+  list = {}
 }
+
+function Context:bind(initial)
+  if initial then
+    love.load = f.wrap(self.add, self, initial)
+  end
+  love.update = self.update
+  love.draw = self.draw
+  love.quit = self.quit
+  love.handlers = setmetatable({}, {__index = self})
+end
 
 function Context:add(obj, ...)
   local c = obj(...)

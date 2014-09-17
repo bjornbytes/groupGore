@@ -1,7 +1,7 @@
 data = {}
 data.load = function()
-	love.filesystem.unmount('data.zip')
-	if love.filesystem.exists('data.zip') then love.filesystem.mount('data.zip', 'data') end
+  love.filesystem.unmount('data.zip')
+  if love.filesystem.exists('data.zip') then love.filesystem.mount('data.zip', '/') end
 
   -- Media
   local function lookup(ext, fn)
@@ -66,4 +66,6 @@ data.load = function()
   load('data/effect', 'effect')
   load('data/weather', 'weather')
   load('data/gooey', 'gooey')
+  require 'data/menu/menu'
+  require 'data/hud/hud'
 end

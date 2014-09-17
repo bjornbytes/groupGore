@@ -19,9 +19,4 @@ load 'lib/editor'
 load 'lib/goregous'
 load 'lib/gooey'
 
-print(love.filesystem.getSaveDirectory())
-data.load()
-print(love.filesystem.exists('data.zip'))
-print(love.filesystem.exists('data/menu/menu.lua'))
-load 'data/hud'
-load 'data/menu'
+require 'test/runner'

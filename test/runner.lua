@@ -1,3 +1,5 @@
+if arg[2] ~= 'test' then return end
+
 for _, file in ipairs(love.filesystem.getDirectoryItems('test')) do
   if file ~= 'runner.lua' and file ~= 'lust.lua' then
     love.filesystem.load('test/' .. file)()
