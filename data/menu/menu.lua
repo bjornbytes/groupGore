@@ -15,9 +15,7 @@ function Menu:load()
   self.ribbon = MenuRibbon()
   self.background = MenuBackground()
   self.input = MenuInput()
-	self.options = MenuOptions()
-  self.loader = MenuLoader()
-  self.error = MenuError()
+  self.options = MenuOptions()
   self.back = MenuBack()
   self.login = MenuLogin()
   self.main = MenuMain()
@@ -63,9 +61,6 @@ function Menu:update()
     end
     table.remove(goregous.messages, 1)
   end]]
-
-  self.loader:update()
-  self.error:update()
 end
 
 function Menu:draw()
@@ -76,8 +71,6 @@ function Menu:draw()
   self.back:draw()
   local page = self.pages[#self.pages]
   f.exe(page.draw, page)
-  self.loader:draw()
-  self.error:draw()
 end
 
 function Menu:keypressed(key)
@@ -124,8 +117,4 @@ function Menu:pop()
   table.remove(self.pages)
   local new = self.pages[#self.pages]
   if new and new.load then new:load() end
-end
-
-function Menu:threaderror(thread, e)
-  error(e)
 end
