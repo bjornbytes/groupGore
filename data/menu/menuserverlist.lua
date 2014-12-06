@@ -64,13 +64,6 @@ function MenuServerList:mousepressed(x, y, button)
 end
 
 function MenuServerList:refresh()
-  goregous:send({'listServers'})
-  ctx.loader:activate('Finding servers')
+  self.servers = Goregous:listServers()
 end
 
-function MenuServerList:setServers(servers)
-  self.servers = {}
-  for i = 1, #servers, 2 do
-    table.insert(self.servers, {name = servers[i], ip = servers[i + 1]})
-  end
-end

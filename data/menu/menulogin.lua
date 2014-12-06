@@ -47,7 +47,7 @@ function MenuLogin:login()
 
   local success = Goregous:login(username)
   if success then
-    ctx:push('main')
+    ctx:push(ctx.main)
   else
     print('problem logging in')
   end

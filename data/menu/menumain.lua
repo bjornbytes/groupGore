@@ -36,8 +36,14 @@ function MenuMain:mousepressed(x, y, button)
 end
 
 function MenuMain:host()
-  goregous:send({'createServer'})
-  ctx.loader:activate('Creating server')
+  local success = Goregous:createServer()
+  if success then
+    local server = Context:add(Server)
+    server.owner = username
+    self:connect('localhost')
+  else
+    print('problem creating server')
+  end
 end
 
 function MenuMain:join()
@@ -47,7 +53,7 @@ end
 function MenuMain:connect(ip)
   serverIp = ip
   serverPort = 6061
-  Context:remove(self.menu)
+  Context:remove(ctx)
   Context:add(Game, ctx.options.data)
   love.keyboard.setKeyRepeat(false)
 end

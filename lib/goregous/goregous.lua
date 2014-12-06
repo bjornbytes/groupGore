@@ -1,5 +1,17 @@
 Goregous = {}
 
+local function explode(line)
+  local res = {}
+  while true do
+    local pos = line:find(',')
+    if not pos then break end
+    table.insert(res, line:sub(1, pos))
+    line = line:sub(pos + 1)
+  end
+
+  return res
+end
+
 function Goregous:getConnection()
 	if self.created then return self.socket end
 
@@ -39,7 +51,38 @@ function Goregous:login(username, password)
   self:send({'login', username})
 
   local response = self.socket:receive('*l')
+
   if response == 'ok' then return true end
 
   return false
+end
+
+function Goregous:createServer()
+  if not self:getConnection() then return false end
+
+  self:send({'createServer'})
+
+  local response = self.socket:receive('*l')
+
+  if response == 'ok' then return true end
+
+  return false
+end
+
+function Goregous:listServers()
+  if not self:getConnection() then return false end
+
+  self:send({'listServers'})
+
+  local count = self.socket:receive('*l')
+
+  local servers = {}
+
+  for i = 1, count do
+    local line = self.socket:receive('*l')
+    local data = explode(line)
+    table.insert(servers, {name = data[1], ip = data[2]})
+  end
+
+  return servers
 end
