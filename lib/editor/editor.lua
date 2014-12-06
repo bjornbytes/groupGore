@@ -45,13 +45,15 @@ function Editor:draw()
 end
 
 function Editor:keypressed(key)
+  table.each(self.components, f.egoexe('keypressed', key))
+  table.each(self.widgets, f.egoexe('keypressed', key))
+end
+
+function Editor:keyreleased(key)
   if key == 'escape' then
     Context:remove(ctx)
     Context:add(Menu)
   end
-  
-  table.each(self.components, f.egoexe('keypressed', key))
-  table.each(self.widgets, f.egoexe('keypressed', key))
 end
 
 function Editor:textinput(key)

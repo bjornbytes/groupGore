@@ -20,13 +20,13 @@ function MenuInput:keypressed(key)
     data.media.sounds.click:play()
   elseif key == 'tab' then
     if not self.focused then
-      self:focusInput(self.inputs[1])
+      self:focus(self.inputs[1])
     else
       local idx
       for i = 1, #self.inputs do
         if self.inputs[i] == self.focused then idx = i break end
       end
-      self:focusInput(self.inputs[idx % #self.inputs + 1])
+      self:focus(self.inputs[idx % #self.inputs + 1])
     end
     data.media.sounds.click:play()
   end
@@ -37,7 +37,7 @@ function MenuInput:clear()
   table.clear(self.inputs)
 end
 
-function MenuInput:addInput(name, default)
+function MenuInput:add(name, default)
   self.inputs[name] = {
     val = default,
     default = default
@@ -50,7 +50,7 @@ function MenuInput:val(name)
   return self.inputs[name].val
 end
 
-function MenuInput:focusInput(input)
+function MenuInput:focus(input)
   self:unfocus()
   self.focused = input
   if self.inputs[self.focused].default == self.inputs[self.focused].val then self.inputs[self.focused].val = '' end

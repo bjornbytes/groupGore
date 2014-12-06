@@ -1,10 +1,11 @@
 Menu = class()
 
-function Menu:load()
-  love.audio.tags.all.stop()
+function Menu:load(user)
+  self.user = user or {}
 
-  love.window.setMode(800, 600, {fullscreen = false, resizable = true})
-  ctx:resize()
+  love.audio.tags.all.stop()
+  love.window.setMode(800, 600, {fullscreen = false})
+  self:resize()
   love.mouse.setGrabbed(false)
   love.mouse.setCursor(love.mouse.newCursor('data/media/graphics/cursor.png'))
   love.mouse.setVisible(true)
@@ -15,99 +16,71 @@ function Menu:load()
   self.input = MenuInput()
   self.options = MenuOptions()
   self.back = MenuBack()
-  self.login = MenuLogin()
-  self.main = MenuMain()
-  self.serverlist = MenuServerList()
+  self.alert = MenuAlert()
 
-  self.pages = {}
+  self.pages = {
+    login = MenuLogin(),
+    main = MenuMain(),
+    serverlist = MenuServerList()
+  }
   
-  if not username then
-    self:push(self.login)
-  else
-    self:push(self.main)
-  end
+  self:push(self.user.token and 'main' or 'login')
+
+  self.u, self.v = love.graphics.getDimensions()
 end
 
 function Menu:update()
-  --[[while #goregous.messages > 0 do
-    local data = goregous.messages[1]
-    if data[1] == 'login' then
-      self.loader:deactivate()
-      if data[2] == 'ok' then
-        love.filesystem.write('username', username)
-        self:push(self.main)
-      elseif data[2] == 'duplicate' then
-        self.error:activate('Nickname already in use')
-      else
-        self.error:activate('Problem logging in')
-      end
-    elseif data[1] == 'createServer' then
-      self.loader:deactivate()
-      if data[2] == 'ok' then
-        local server = Context:add(Server)
-        server.owner = username
-        self.main:connect('localhost')
-      elseif data[2] == 'duplicate' then
-        self.error:activate('You are already running a server')
-      else
-        self.error:activate('Unable to create server')
-      end
-    elseif data[1] == 'listServers' then
-      table.remove(data, 1)
-      self.serverlist:setServers(data)
-      self.loader:deactivate()
-    end
-    table.remove(goregous.messages, 1)
-  end]]
+  self.alert:update()
+  self:run('update')
 end
 
 function Menu:draw()
   self.background:draw()
   self.ribbon:draw()
   self.back:draw()
-  local page = self.pages[#self.pages]
-  f.exe(page.draw, page)
+  self:run('draw')
+  self.alert:draw()
 end
 
-function Menu:keypressed(key)
-  if key == 'escape' then love.event.quit()
-  elseif key == 'backspace' then self:pop() end
-  self.input:keypressed(key)
-  local page = self.pages[#self.pages]
-  f.exe(page.keypressed, page, key)
+function Menu:keypressed(...)
+  self.input:keypressed(...)
+  return self:run('keypressed', ...)
 end
 
-function Menu:textinput(char)
-  self.input:textinput(char)
+function Menu:keyreleased(key)
+  if key == 'escape' then love.event.quit() end
+  return self:run('keyreleased', key)
 end
 
-function Menu:mousepressed(x, y, button)
-  local page = self.pages[#self.pages]
-  f.exe(page.mousepressed, page, x, y, button)
-  self.back:mousepressed(x, y, button)
+function Menu:mousepressed(...)
+  return self:run('mousepressed', ...)
 end
 
-function Menu:mousereleased(x, y, button)
-  --
+function Menu:mousereleased(...)
+  self.back:mousereleased(...)
+  return self:run('mousereleased', ...)
+end
+
+function Menu:textinput(...)
+  self.input:textinput(...)
+  return self:run('textinput', ...)
 end
 
 function Menu:resize()
+  self.u, self.v = love.graphics.getDimensions()
+  self:run('resize')
   Typo.resize()
 end
 
-function Menu:push(page)
-  if not page then return end
-  local old = self.pages[#self.pages]
-  if old and old.unload then old:unload() end
-  table.insert(self.pages, page)
-  if page.load then page:load() end
+function Menu:run(key, ...)
+  if not self.page or not self.pages[self.page] then return end
+  local page = self.pages[self.page]
+  f.exe(page[key], page, ...)
 end
 
-function Menu:pop()
-  if #self.pages == 1 then return end
-  local old = self.pages[#self.pages]
-  if old and old.unload then old:unload() end
-  table.remove(self.pages)
-  local new = self.pages[#self.pages]
-  if new and new.load then new:load() end
+function Menu:push(page, ...)
+  self:run('deactivate', page)
+  self.page = page
+  self:run('activate', ...)
 end
+
