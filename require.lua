@@ -17,6 +17,5 @@ load 'lib/core'
 load 'lib'
 load 'lib/editor'
 load 'lib/goregous'
-load 'lib/gooey'
 
 require 'test/runner'

@@ -10,8 +10,6 @@ function Menu:load()
   love.mouse.setVisible(true)
   love.keyboard.setKeyRepeat(true)
 
-  self.gooey = Gooey(data.gooey.menu.background)
-
   self.ribbon = MenuRibbon()
   self.background = MenuBackground()
   self.input = MenuInput()
@@ -64,8 +62,6 @@ function Menu:update()
 end
 
 function Menu:draw()
-  --self.gooey:draw()
-
   self.background:draw()
   self.ribbon:draw()
   self.back:draw()
@@ -74,7 +70,6 @@ function Menu:draw()
 end
 
 function Menu:keypressed(key)
-  self.gooey:keypressed(key)
   if key == 'escape' then love.event.quit()
   elseif key == 'backspace' then self:pop() end
   self.input:keypressed(key)
@@ -83,19 +78,17 @@ function Menu:keypressed(key)
 end
 
 function Menu:textinput(char)
-  self.gooey:textinput(char)
   self.input:textinput(char)
 end
 
 function Menu:mousepressed(x, y, button)
-  self.gooey:mousepressed(x, y, button)
   local page = self.pages[#self.pages]
   f.exe(page.mousepressed, page, x, y, button)
   self.back:mousepressed(x, y, button)
 end
 
 function Menu:mousereleased(x, y, button)
-  self.gooey:mousereleased(x, y, button)
+  --
 end
 
 function Menu:resize()

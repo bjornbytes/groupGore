@@ -45,6 +45,10 @@ function MenuLogin:login()
   username = ctx.input:val('nickname')
   if #username == 0 then return end
 
-  goregous:send({'login', username})
-  ctx.loader:activate('Logging in')
+  local success = Goregous:login(username)
+  if success then
+    ctx:push('main')
+  else
+    print('problem logging in')
+  end
 end

@@ -33,3 +33,13 @@ function Goregous:patch(version, os)
 	return code, data
 end
 
+function Goregous:login(username, password)
+  if not self:getConnection() then return false end
+
+  self:send({'login', username})
+
+  local response = self.socket:receive('*l')
+  if response == 'ok' then return true end
+
+  return false
+end
