@@ -50,7 +50,7 @@ function MenuServerList:mousepressed(x, y, button)
     for i = 1, #self.servers do
       local yy = .3 * v + 24 + (g.getFont():getHeight() * (i - 1))
       if math.inside(x, y, 16, yy, u - 32, g.getFont():getHeight()) then
-        ctx.main:connect(self.servers[i].ip)
+        ctx:connect(self.servers[i].ip)
       end
     end
 

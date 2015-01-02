@@ -56,6 +56,7 @@ function MenuLogin:login()
 
   local success = Goregous:login(username)
   if success then
+    _G['username'] = username
     ctx.user.username = username
     ctx:push('main')
   else

@@ -5,6 +5,10 @@ local g = love.graphics
 function MenuMain:activate()
   ctx.ribbon.count = 4
   ctx.ribbon.margin = .1
+
+  if love.system.getClipboardText():match('%d+%.%d+%.%d+%.%d+') then
+    ctx:connect(love.system.getClipboardText())
+  end
 end
 
 function MenuMain:draw()
@@ -36,7 +40,7 @@ function MenuMain:host()
   if success then
     local server = Context:add(Server)
     server.owner = username
-    self:connect('localhost')
+    ctx:connect('localhost')
   else
     ctx.alert:show('Problem creating server.')
   end
@@ -44,14 +48,6 @@ end
 
 function MenuMain:join()
   ctx:push('serverlist')
-end
-
-function MenuMain:connect(ip)
-  serverIp = ip
-  serverPort = 6061
-  Context:remove(ctx)
-  Context:add(Game, ctx.options.data)
-  love.keyboard.setKeyRepeat(false)
 end
 
 function MenuMain:edit()

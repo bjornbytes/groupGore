@@ -84,3 +84,10 @@ function Menu:push(page, ...)
   self:run('activate', ...)
 end
 
+function Menu:connect(ip)
+  serverIp = ip
+  serverPort = 6061
+  Context:remove(self)
+  Context:add(Game, self.options.data)
+  love.keyboard.setKeyRepeat(false)
+end

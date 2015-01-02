@@ -38,7 +38,7 @@ function HudIcons:draw()
     for i = 1, 5 do
       local icon = data.media.graphics.icons[p.slots[i].code]
       local alpha = math.min(math.lerp(self.prevLabelAlphas[i], self.labelAlphas[i], tickDelta / tickRate), 1) * 200
-      local iconx = u * .5 - (math.min(u, v) * .213) + math.min(u, v) * (.1065 * (i - 1))
+      local iconx = u * .5 - (math.min(u, v) * .25) + math.min(u, v) * (.125 * (i - 1))
       g.setColor(255, 255, 255, math.max(alpha, 100) * (255 / 200))
       g.draw(icon, iconx - (width * s / 2), top, 0, s, s)
 

@@ -9,6 +9,8 @@ local function explode(line)
     line = line:sub(pos + 1)
   end
 
+  if #line > 0 then table.insert(res, line) end
+
   return res
 end
 
@@ -17,7 +19,7 @@ function Goregous:getConnection()
 
 	self.socket = (require('socket')).tcp()
 	self.socket:settimeout(10)
-	local ip = '127.0.0.1'
+	local ip = table.has(arg, 'local') and '127.0.0.1' or ''
 	local _, e = self.socket:connect(ip, 6060)
 	if e then self.socket = nil
 	else self.socket:settimeout(5) end
