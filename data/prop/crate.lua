@@ -26,7 +26,7 @@ local function perim(x, y, l, t, w, h)
 end
 
 function Crate:activate(map)
-  if not Crate.texture then 
+  if not Crate.texture then
     local x, y, w, h = map.textures.crate:getViewport()
     Crate.texture = love.graphics.newCanvas(w, h)
     Crate.texture:renderTo(function()

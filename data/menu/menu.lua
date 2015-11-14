@@ -23,7 +23,7 @@ function Menu:load(user)
     main = MenuMain(),
     serverlist = MenuServerList()
   }
-  
+
   self:push(self.user.token and 'main' or 'login')
 
   self.u, self.v = love.graphics.getDimensions()

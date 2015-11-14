@@ -35,7 +35,7 @@ Player.collision = {
 ----------------
 function Player:init()
   self.meta = {__index = self}
-  
+
   self.id = nil
   self.username = ''
   self.class = nil
@@ -44,7 +44,7 @@ function Player:init()
 
   self.kills = 0
   self.deaths = 0
-  
+
   self.x = 0
   self.y = 0
   self.z = 0
@@ -53,7 +53,7 @@ function Player:init()
   self.drawY = 0
   self.drawAngle = 0
   self.drawScale = 0
-  
+
   self.slots = {}
   self.weapon = 1
   self.skill = 1
@@ -91,7 +91,7 @@ function Player:activate()
 
   self.weapon = 1
   self.skill = 1
-  
+
   table.each(self.slots, function(slot)
     f.exe(slot.deactivate, slot, self)
   end)
@@ -101,7 +101,7 @@ function Player:activate()
     f.exe(self.slots[i].activate, self.slots[i], self)
     if self.slots[i].type == 'skill' and self.skill == self.weapon then self.skill = i end
   end
-  
+
   self.maxHealth = self.class.health
   self.health = self.maxHealth
   self.killer = nil
@@ -166,16 +166,16 @@ function Player:move(input)
 
   local w, a, s, d = input.w, input.a, input.s, input.d
   if not (w or a or s or d) then return end
-  
+
   local up, down, left, right, dx, dy = 1.5 * math.pi, .5 * math.pi, math.pi, 2.0 * math.pi
-  
+
   if a and not d then dx = left elseif d then dx = right end
   if w and not s then dy = up elseif s then dy = down end
 
   if not dx then dx = dy end
   if not dy then dy = dx end
   if dx == right and dy == down then dx = 0 end
-  
+
   local dir = (dx + dy) / 2
   local len = math.max((self.class.speed + self.haste) * tickRate, 0)
   self.x, self.y = self.x + math.dx(len, dir), self.y + math.dy(len, dir)
@@ -220,7 +220,7 @@ function Player:slot(input, prev)
     if obj.targeted then obj.targeting = false end
     ctx.net:emit(evtFire, msg)
   end
-  
+
   for i = 1, 5 do
     if self.slots[i].type ~= 'weapon' or self.weapon == i then
       f.exe(self.slots[i].update, self.slots[i], self)
@@ -265,7 +265,7 @@ Player.heal = f.empty
 
 function Player:die()
   self.ded = 5
- 
+
   ctx.event:emit('particle.create', {
     kind = 'skull',
     vars = {x = self.x, y = self.y}

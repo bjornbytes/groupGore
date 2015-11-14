@@ -8,10 +8,10 @@ function HudRight:draw()
 
   g.setColor(255, 255, 255, 64)
   g.draw(data.media.graphics.hud.rightBg, u * .81375, -v * .003, 0, s, s)
-  
+
   g.setColor(255, 255, 255, 255)
   g.draw(data.media.graphics.hud.right, u * .80375, -v * .01, 0, s, s)
-  
+
   local p = ctx.players:get(ctx.id)
   if p then
     g.setFont('BebasNeue', v * .052)
@@ -23,7 +23,7 @@ function HudRight:draw()
       if p.team == purple then g.setColor(190, 160, 220)
       else g.setColor(240, 160, 140) end
       g.print(tostring(scoring.points[p.team]), u * .85, -v * .008)
-      
+
       local str = tostring(scoring.points[1 - p.team])
       local x = u * (.80375 + (data.media.graphics.hud.right:getWidth() * s / u) - .0525) - g.getFont():getWidth(str)
       g.setColor(0, 0, 0, 100)

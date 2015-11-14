@@ -40,7 +40,7 @@ function Goregous:patch(version, os)
   local bytes = tonumber(self.socket:receive('*l'))
   if bytes == 0 then return false end
   local code, data
-  
+
   code = self.socket:receive(bytes)
   data = self.socket:receive(tonumber(self.socket:receive('*l')))
 

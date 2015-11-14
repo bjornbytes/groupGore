@@ -5,7 +5,7 @@ local function load(dir)
       require(path:gsub('%.lua', ''))
     end
   end
-  
+
   if love.filesystem.exists(dir .. '.lua') then require(dir) end
 end
 

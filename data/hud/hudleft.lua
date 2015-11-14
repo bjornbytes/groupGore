@@ -24,14 +24,14 @@ function HudLeft:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local s = ctx.view.scale
   local offset = math.lerp(self.prevOffset, self.offset, tickDelta / tickRate)
-  
+
   local p = ctx.players:get(ctx.id)
   if p then
     local first, second = f.exe(p.slots[p.weapon].ammoValue, p.slots[p.weapon], p)
 
     g.setColor(255, 255, 255, 64)
     g.draw(data.media.graphics.hud.leftBg, offset + .0025, -v * .0083, 0, s, s)
-    
+
     g.setColor(255, 255, 255)
     g.draw(data.media.graphics.hud.left, offset, -v * .013, 0, s, s)
 

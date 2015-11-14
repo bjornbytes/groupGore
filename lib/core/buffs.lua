@@ -11,7 +11,7 @@ end
 function Buffs:add(player, code)
   local buff = self:get(player, code)
   if buff then return buff.stack and buff:stack() or buff end
-  
+
   buff = new(data.buff[code])
   buff.owner = player
   f.exe(buff.activate, buff)

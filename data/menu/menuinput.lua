@@ -42,7 +42,7 @@ function MenuInput:add(name, default)
     val = default,
     default = default
   }
-  
+
   table.insert(self.inputs, name)
 end
 

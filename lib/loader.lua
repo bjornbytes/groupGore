@@ -20,7 +20,7 @@ data.load = function()
     end
     return halp
   end
-  
+
   data.media = {}
   data.media.refresh = function(k)
     if k == 'graphics' then data.media.graphics = setmetatable({_path = 'data/media/graphics'}, {__index = lookup('.png', love.graphics.newImage)})
@@ -54,7 +54,7 @@ data.load = function()
     data[type] = {}
     halp(dir, data[type])
   end
-  
+
   load('data/weapon', 'weapon')
   load('data/skill', 'skill')
   load('data/buff', 'buff')
@@ -73,7 +73,7 @@ data.load = function()
         require(path:gsub('%.lua', ''))
       end
     end
-    
+
     if love.filesystem.exists(dir .. '.lua') then require(dir) end
   end
 

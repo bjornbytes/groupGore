@@ -63,7 +63,7 @@ function CartServer:update()
     end
 
     if self.index + sign <= 1 or self.index + sign >= #self.points then self.speed = 0 end
-    
+
     if self.index == 1 then
       ctx.map:modExec('scoring', 'win', orange)
     elseif self.index == #self.points - 1 then

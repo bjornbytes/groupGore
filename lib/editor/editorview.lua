@@ -4,11 +4,11 @@ EditorView = extend(View)
 
 function EditorView:init()
   self.targetScale = 1
-  
+
   self.xVel = 0
   self.yVel = 0
   self.maxSpeed = 20
-  
+
   View.init(self)
 end
 
@@ -23,7 +23,7 @@ function EditorView:update()
     else
       self.yVel = math.lerp(self.yVel, 0, .1)
     end
-    
+
     if love.keyboard.isDown('a') then
       self.xVel = math.lerp(self.xVel, -self.maxSpeed, 10 * tickRate)
     elseif love.keyboard.isDown('d') then
@@ -35,7 +35,7 @@ function EditorView:update()
 
   self.x = self.x + (self.xVel / (self.targetScale ^ 0.5))
   self.y = self.y + (self.yVel / (self.targetScale ^ 0.5))
-  
+
   local prevw, prevh = self.width, self.height
   local xf, yf = love.mouse.getX() / love.graphics.getWidth(), love.mouse.getY() / love.graphics.getHeight()
   self.scale = math.round(math.lerp(self.scale, self.targetScale, 10 * tickRate) / .01) * .01

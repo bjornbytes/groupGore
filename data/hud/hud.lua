@@ -20,7 +20,7 @@ function Hud:init()
   self.gameOver = HudGameOver()
   self.classSelect = HudClassSelect()
   self.debug = HudDebug()
-  
+
   ctx.event:on(evtChat, function(data) self.chat:add(data) end)
   ctx.view:register(self, 'gui')
 

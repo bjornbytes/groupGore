@@ -22,7 +22,7 @@ local function perim(x, y, l, t, w, h)
 end
 
 function Wall:activate(map)
-  if not Wall.texture then 
+  if not Wall.texture then
     local x, y, w, h = map.textures.wall:getViewport()
     Wall.texture = love.graphics.newCanvas(w, h)
     Wall.texture:renderTo(function()
@@ -135,7 +135,7 @@ function Wall:draw()
     self.east:setVertex(4, lrx, lry, 0, h)
     love.graphics.draw(self.east, 0, 0)
   end
-  
+
   love.graphics.draw(self.top, 0, 0)
 end
 

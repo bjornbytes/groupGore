@@ -20,7 +20,7 @@ function Dagger:activate(visions)
     backstabbed = backstabbed or backstab
     return damage
   end)
-  
+
 	self:playSound(backstabbed and 'backstab' or 'slash')
 	self:die()
 end

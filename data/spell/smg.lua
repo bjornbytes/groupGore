@@ -7,13 +7,13 @@ SMG.activate = function(self)
   self.timer = self.duration
   self.x = self.owner.x
   self.y = self.owner.y
-  
+
   local dir = self.owner.angle
-  
+
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
   dx, dy = data.weapon.smg.tipx * data.weapon.smg.scale, data.weapon.smg.tipy * data.weapon.smg.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
@@ -26,7 +26,7 @@ SMG.activate = function(self)
   if not ctx.collision:lineTest(self.owner.x, self.owner.y, self.x, self.y, {tag = 'wall'}) then
     local hit, dis = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(900, self.angle), self.y + math.dy(900, self.angle), {tag = 'wall', first = true})
     self.len = hit and dis or 900
-    
+
     target = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(self.len, self.angle), self.y + math.dy(self.len, self.angle), {
       tag = 'player',
       fn = function(p)
@@ -40,7 +40,7 @@ SMG.activate = function(self)
     self.len = math.distance(self.x, self.y, target.x, target.y)
     ctx.net:emit(evtDamage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
-  
+
   for _ = 1, 4 do
     ctx.event:emit('particle.create', {
       kind = 'spark',

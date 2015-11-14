@@ -6,7 +6,7 @@ function PlayerMain:activate()
   self.displaces = {}
 
   self.alpha = 1
-  
+
   if self.heartbeatSound then self.heartbeatSound:stop() end
   self.heartbeatSound = ctx.sound:loop({sound = 'heartbeat', gui = true})
   if self.heartbeatSound then self.heartbeatSound:pause() end
@@ -30,7 +30,7 @@ function PlayerMain:update()
     self:fade()
     return Player.update(self)
   end
-  
+
   self.prev.x = self.x
   self.prev.y = self.y
   self.prev.z = self.z
@@ -41,7 +41,7 @@ function PlayerMain:update()
   self:turn(input)
   self:slot(input, self.prev.input)
   self:fade()
-  
+
   if self.heartbeatSound then
     if self.health < self.maxHealth * .5 then
       if self.heartbeatSound:isPaused() then self.heartbeatSound:resume() end
@@ -51,7 +51,7 @@ function PlayerMain:update()
       self.heartbeatSound:pause()
     end
   end
- 
+
   ctx.net:send(msgInput, input)
 
   Player.update(self)
@@ -94,7 +94,7 @@ function PlayerMain:readInput()
   for _, k in pairs({'w', 'a', 's', 'd'}) do
     t[k] = ctx.input:keyDown(k)
   end
-  
+
   t.x = ctx.view:worldMouseX()
   t.y = ctx.view:worldMouseY()
   t.l = ctx.input:mouseDown('l')

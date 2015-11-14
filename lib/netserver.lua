@@ -169,7 +169,7 @@ end
 
 function NetServer:sync()
   if not self.host then return end
-  
+
   if #self.importantEventBuffer > 0 then
     self.outStream:clear()
     while #self.importantEventBuffer > 0 do

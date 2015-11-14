@@ -40,7 +40,7 @@ function Net:update()
     if not self.host then break end
     local event = self.host:service()
     if not event then break end
-    
+
     if event.type == 'receive' then
       self.inStream:clear()
       self.inStream.str = event.data

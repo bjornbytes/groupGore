@@ -12,10 +12,10 @@ local function safeLoad(file)
   local ok, chunk, result
   ok, chunk = pcall(love.filesystem.load, file)
   if not ok then return nil end
-  
+
   ok, result = pcall(chunk)
   if not ok then return nil end
-  
+
   return result
 end
 

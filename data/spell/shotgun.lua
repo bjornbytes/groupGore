@@ -7,18 +7,18 @@ Shotgun.activate = function(self)
   self.timer = self.duration
   self.x = self.owner.x
   self.y = self.owner.y
-  
+
   local dir = self.owner.angle
-  
+
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
   dx, dy = data.weapon.shotgun.tipx * data.weapon.shotgun.scale, data.weapon.shotgun.tipy * data.weapon.shotgun.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)
 
-  
+
   self.len = 800
   self.bullets = {}
 
@@ -29,7 +29,7 @@ Shotgun.activate = function(self)
       local ang, len = initial + ((i - 1) * spread), self.len
       local hit, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {tag = 'wall', first = true})
       len = hit and d or len
-      
+
       hit, d = ctx.collision:lineTest(self.x, self.y, self.x + math.dx(len, ang), self.y + math.dy(len, ang), {
         tag = 'player',
         fn = function(p)
@@ -37,22 +37,22 @@ Shotgun.activate = function(self)
         end,
         first = true
       })
-      
+
       if hit then
         local p = hit
         len = d
-        
+
         local n, f = self.len * .25, self.len * .75
         local l, h = data.weapon.shotgun.damage * .4, data.weapon.shotgun.damage * 1
         local damage = l + ((h - l) * ((f - math.clamp(len, n, f)) / f))
         ctx.net:emit(evtDamage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
       end
-      
+
       table.insert(self.bullets, {
         dir = ang,
         dis = len
       })
-      
+
       if not hit and len < self.len then
         for _ = 1, 4 do
           ctx.event:emit('particle.create', {
@@ -79,7 +79,7 @@ Shotgun.activate = function(self)
       end
     end
   end
-  
+
   for _ = 1, 4 do
     ctx.event:emit('particle.create', {
       kind = 'spark',

@@ -25,12 +25,12 @@ function HudChat:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local width = u * .35
   if not self.richText then return end
-  
+
   g.setFont('pixel', 8)
   local font = g.getFont()
   local height = self.richText.height - 2
   if self.active then height = height + (font:getHeight() + 6.5) - 1 end
-  
+
   g.setColor(0, 0, 0, 180)
   g.rectangle('fill', 4 + self.offset, v - (height + 4), width, height)
   g.setColor(30, 30, 30, 180)
@@ -69,7 +69,7 @@ function HudChat:keypressed(key)
       self.message = ''
       ctx.event:emit('sound.play', {sound = 'click', gui = true})
     end
-    
+
     return true
   elseif key == 'return' then
     self.active = true
@@ -82,7 +82,7 @@ function HudChat:add(data)
   local message = data.message
   local u, v = ctx.hud.u, ctx.hud.v
   local width = u * .35
-  
+
   if #message > 0 then
     if #self.log > 0 then self.log = self.log .. '\n' end
     self.log = self.log .. message
@@ -94,7 +94,7 @@ function HudChat:add(data)
   end
 
   self.log = '{white}' .. self.log
-  
+
   self:refresh()
   self.timer = math.min(2 + (#message / 50), 5)
 end

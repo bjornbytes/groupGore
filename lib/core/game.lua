@@ -45,10 +45,10 @@ function Game:quit()
   self.net:quit()
 end
 
-function Game:mousepressed(...) self.hud:mousepressed(...) end 
-function Game:mousereleased(...) self.hud:mousereleased(...) end 
-function Game:keypressed(key) self.hud:keypressed(key) end 
-function Game:keyreleased(key) self.hud:keyreleased(key) end 
+function Game:mousepressed(...) self.hud:mousepressed(...) end
+function Game:mousereleased(...) self.hud:mousereleased(...) end
+function Game:keypressed(key) self.hud:keypressed(key) end
+function Game:keyreleased(key) self.hud:keyreleased(key) end
 function Game:textinput(character) self.hud:textinput(character) end
 
 function Game:resize()

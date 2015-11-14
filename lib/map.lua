@@ -8,10 +8,10 @@ local function safeLoad(file)
   local ok, chunk, result
   ok, chunk = pcall(love.filesystem.load, file)
   if not ok then print(chunk) return nil end
-  
+
   ok, result = pcall(chunk)
   if not ok then print(result) return nil end
-  
+
   return result
 end
 
@@ -30,7 +30,7 @@ function Map:init(name)
   local props = safeLoad(dir('props.lua'))
   local tiles = safeLoad(dir('tiles.lua'))
   map = nil
-  
+
   table.merge(tiles, self.tiles)
   table.merge(props, self.props)
 
@@ -72,7 +72,7 @@ function Map:init(name)
     ctx.view.xmax = self.width
     ctx.view.ymax = self.height
   end
- 
+
   if self.weather then
     self.weather = new(data.weather[self.weather])
     if ctx.view then

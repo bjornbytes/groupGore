@@ -7,13 +7,13 @@ end
 
 function Particles:create(arg)
   local type = arg.kind
-  
+
   for _ = 1, arg.count or 1 do
     local p = new(data.particle[type])
-    
+
     p:activate()
     table.merge(arg.vars or {}, p)
-    
+
     table.insert(self.particles, p)
   end
 end

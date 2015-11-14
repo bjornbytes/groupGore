@@ -10,7 +10,7 @@ function HudClassSelect:init()
   self.defense = 0
   self.utility = 0
   self.teamCt = {0, 0}
-  
+
   ctx.event:on(evtClass, function(data)
     if data.id == ctx.id then self.active = false end
   end)
@@ -46,18 +46,18 @@ function HudClassSelect:draw()
   g.setColor(0, 0, 0, 89)
   g.rectangle('fill', u * .08, v * .313, u * .46, v * .35)
   g.rectangle('fill', u * .55, v * .313, u * .37, v * .58)
-  
+
   g.setColor(255, 255, 255, 25)
   g.rectangle('line', u * .08, v * .313, u * .46, v * .35)
   g.rectangle('line', u * .55, v * .313, u * .37, v * .58)
-  
+
   g.setFont('BebasNeue', v * .065)
   local fh = g.getFont():getHeight()
   local x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
   local teamStr = self.team == purple and 'purple' or 'orange'
   local hover
   local white, gray = {255, 255, 255}, {128, 128, 128}
-  
+
   hover = math.inside(x, y, u * .08, v * .106, u * .24 + g.getFont():getWidth(teamStr), fh)
   g.setColor(hover and white or gray)
   g.print('Team', u * .08, v * .106)
@@ -92,7 +92,7 @@ function HudClassSelect:draw()
   hover = math.inside(x, y, u * .08, v * (1 - .106) - fh, g.getFont():getWidth('Exit'), fh)
   g.setColor(hover and white or gray)
   g.print('Exit', u * .08, v * (1 - .106) - fh)
-  
+
   g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})
   g.print(self.team == purple and 'purple' or 'orange', u * .32, v * .106)
 
@@ -104,7 +104,7 @@ end
 
 function HudClassSelect:keypressed(key)
   if key == 'escape' and ctx.players:get(ctx.id).class then self.active = not self.active end
-  
+
   if self.active then
     for i = 1, #data.class do
       if not data.class[i].locked and key == tostring(i) then
@@ -115,7 +115,7 @@ function HudClassSelect:keypressed(key)
         return true
       end
     end
-    
+
     return true
   end
 end
@@ -136,7 +136,7 @@ function HudClassSelect:mousereleased(x, y, button)
         ctx.event:emit('sound.play', {sound = 'click', gui = true})
       end
     end
-    
+
     local str = self.team and 'purple' or 'orange'
     g.setFont('BebasNeue', v * .065)
     local font = g.getFont()
@@ -151,7 +151,7 @@ function HudClassSelect:mousereleased(x, y, button)
       love.event.quit()
     end
   end
-  
+
   return self.active
 end
 
@@ -162,7 +162,7 @@ function HudClassSelect:drawClassDetails(index)
   local yy = v * .318
   g.setColor(255, 255, 255)
   g.print(class.name, u * .56, yy)
-  
+
   yy = yy + v * .08
   g.setFont('BebasNeue', v * .03)
   g.setColor(self.team == purple and {190, 160, 220} or {240, 160, 140})

@@ -11,11 +11,11 @@ function EnergyRifle:activate()
   self:mirrorOwner()
   self:lerpInit()
   self.ded = false
-  
+
   local dx, dy = self.owner.class.handx * self.owner.class.scale, self.owner.class.handy * self.owner.class.scale
   self.x = self.x + math.dx(dx, self.angle) - math.dy(dy, self.angle)
   self.y = self.y + math.dy(dx, self.angle) + math.dx(dy, self.angle)
-  
+
   dx, dy = data.weapon.energyrifle.tipx * data.weapon.energyrifle.scale, data.weapon.energyrifle.tipy * data.weapon.energyrifle.scale
   self.x = self.x + math.dx(dx, self.angle) - math.dy(dy, self.angle)
   self.y = self.y + math.dy(dx, self.angle) + math.dx(dy, self.angle)

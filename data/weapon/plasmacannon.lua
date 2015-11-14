@@ -76,7 +76,7 @@ end
 
 function PlasmaCannon:fire(owner)
   ctx.spells:activate(owner.id, data.spell.plasmacannon, math.min(self.charge, self.maxCharge))
-  
+
   self.timers.fire = self.fireTime
   self.currentAmmo = self.currentAmmo - 1
   self.charge = 0
@@ -106,12 +106,12 @@ function PlasmaCannon:crosshair()
   local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
   local len = (8 * s) + (8 * math.min(self.charge, self.maxCharge) / self.maxCharge)
-  
+
   local dir = p.angle
   local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
   dx, dy = self.tipx * self.scale * s, self.tipy * self.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)

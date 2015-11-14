@@ -35,12 +35,12 @@ function SMG:crosshair()
   local vx, vy, s = ctx.view:worldMouseX(), ctx.view:worldMouseY(), ctx.view.scale
   local d = math.distance(p.x, p.y, vx, vy)
   local len = 4 * s
-  
+
   local dir = p.angle
   local dx, dy = p.class.handx * p.class.scale * s, p.class.handy * p.class.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
   dx, dy = self.tipx * self.scale * s, self.tipy * self.scale * s
   x = x + math.dx(dx, dir) - math.dy(dy, dir)
   y = y + math.dy(dx, dir) + math.dx(dy, dir)

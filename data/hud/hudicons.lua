@@ -42,23 +42,23 @@ function HudIcons:draw()
       g.setColor(255, 255, 255, math.max(alpha, 100) * (255 / 200))
       g.draw(icon, iconx - (width * s / 2), top, 0, s, s)
 
-      local prc = 0      
+      local prc = 0
       if p.slots[i].value then
         prc = p.slots[i].value(p.slots[i], p) * 100
       end
 
       g.setColor(0, 0, 0, 128)
       local x, y = iconx, top
-      
+
       local points = {}
       local function insert(x, y)
         table.insert(points, x)
         table.insert(points, y + 1)
       end
-      
+
       insert(x, y + (width * s / 2))
       insert(x, y)
-      
+
       local function halp(val, xx, yy)
         if prc > val then
           x = x + (xx * s)--w(xx / 800)
@@ -73,7 +73,7 @@ function HudIcons:draw()
           return true
         end
       end
-      
+
       while true do
         if halp(10.21, -18, 0) then break end
         if halp(4.25, -5, 5) then break end
@@ -86,17 +86,17 @@ function HudIcons:draw()
         if halp(11.41, -19, 0) then break end
         break
       end
-      
+
       g.polygon('fill', points)
-      
+
       g.setFont('pixel', 8)
       local str = p.slots[i].name
       if p.slots[i].type == 'passive' then str = '[' .. str .. ']' end
       local strw, strh = g.getFont():getWidth(str), g.getFont():getHeight()
-      
+
       g.setColor(0, 0, 0, alpha)
       g.rectangle('fill', iconx - ((strw + 3) / 2), top + (width * s) + 1, strw + 3, strh + 2)
-      
+
       if p.slots[i].type == 'weapon' then g.setColor(255, 150, 150, alpha)
       elseif p.slots[i].type == 'skill' then g.setColor(150, 150, 255, alpha)
       else g.setColor(255, 255, 255, alpha) end

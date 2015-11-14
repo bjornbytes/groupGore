@@ -28,11 +28,11 @@ MuzzleFlash.update = function(self)
   local weapon = data.weapon[self.weapon]
   local dir = owner.angle
   self.angle = dir
-  
+
   local dx, dy = owner.class.handx * owner.class.scale, owner.class.handy * owner.class.scale
   self.x = owner.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = owner.y + math.dy(dx, dir) + math.dx(dy, dir)
-  
+
   dx, dy = weapon.tipx * weapon.scale, weapon.tipy * weapon.scale
   self.x = self.x + math.dx(dx, dir) - math.dy(dy, dir)
   self.y = self.y + math.dy(dx, dir) + math.dx(dy, dir)

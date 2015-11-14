@@ -26,7 +26,7 @@ function Tenacity:update(owner)
 
   local buff = ctx.buffs:get(owner, 'tenacity')
   if not buff and enemies == 0 then return end
-  
+
   if not buff then
     buff = ctx.buffs:add(owner, 'tenacity')
   end

@@ -22,13 +22,13 @@ function HudPlayers:draw()
 
       g.setColor(0, 0, 0, 128 * alpha) -- Dark background
       g.rectangle('fill', x0, y0, totalWidth, 10)
-      
+
       g.setColor(200, 0, 0, 128 * alpha) -- Health
       g.rectangle('fill', x0 + .5, y0 + .5, healthWidth - 1, 10 - 1)
-      
+
       g.setColor(220, 220, 220, 128 * alpha) -- Shield
       g.rectangle('fill', x0 + healthWidth, y0, shieldWidth, 10)
-      
+
       g.setColor(150, 0, 0, 255 * alpha) -- Frame
       g.rectangle('line', x0, y0, totalWidth, 10)
     end

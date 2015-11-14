@@ -4,7 +4,7 @@ function love.run()
   tickRate = .02
   tickDelta = 0
   interp = .12
-  
+
   love.load(arg)
 
   delta = 0
@@ -16,20 +16,20 @@ function love.run()
     tickDelta = tickDelta + delta
     while tickDelta >= tickRate do
       tickDelta = tickDelta - tickRate
-      
+
       love.event.pump()
       for e, a, b, c, d in love.event.poll() do
         if e == 'quit' then f.exe(love.quit) love.audio.stop() return
         else love.handlers[e](a, b, c, d) end
       end
-      
+
       love.update()
     end
-    
+
     love.graphics.clear()
     love.draw()
     love.graphics.present()
-    
+
     love.timer.sleep(.001)
   end
 end

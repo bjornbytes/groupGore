@@ -43,7 +43,7 @@ function NetClient:init()
   ctx.event:on(evtJoin, function(data)
     ctx.players:get(data.id).username = data.username
   end)
-  
+
   ctx.event:on(evtSync, function(data)
     local p = ctx.players:get(data.id)
     if p and p.active then
@@ -77,7 +77,7 @@ end
 
 function NetClient:send(msg, data)
   if not self.server then return end
-  
+
   self.outStream:clear()
   self:pack(msg, data)
 

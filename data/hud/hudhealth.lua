@@ -20,11 +20,11 @@ end
 function HudHealth:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
-  
+
   self.canvas:clear()
   self.canvas:renderTo(function()
     g.pop()
-    
+
     g.setColor(255, 255, 255)
     g.rectangle('fill', 0, 0, self.canvas:getWidth(), self.canvas:getHeight())
     g.setBlendMode('subtractive')
@@ -34,11 +34,11 @@ function HudHealth:draw()
     local w = 366 - (prc * 366)
     g.rectangle('fill', 374 - w, 0, w, 51)
     g.setBlendMode('alpha')
-    
+
     love.graphics.push()
     love.graphics.translate(ctx.view.frame.x, ctx.view.frame.y)
   end)
-  
+
   if p then
     local s = u * .4775 / 382
     local x = u * .5 - (self.canvas:getWidth() * s * .5)

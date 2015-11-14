@@ -17,15 +17,15 @@ function MenuLogin:draw()
 
   g.setFont('BebasNeue', .065 * v)
   g.setColor(160, 160, 160)
-  
+
   if input.focused == 'username' then g.setColor(220, 220, 220) else g.setColor(160, 160, 160) end
   g.printCenter('Nickname', u * .05, anchor - ctx.ribbon.margin * v / 2, false, true)
   g.printCenter(input:val('username'), .4 * u, anchor - ctx.ribbon.margin * v / 2, false, true)
-  
+
   --[[if input.focused == 'password' then g.setColor(220, 220, 220) else g.setColor(160, 160, 160) end
   g.printCenter('Password', w(.05), anchor, false, true)
   g.printCenter(string.rep('•', #input:val('password')), w(.4), anchor, false, true)]]
-  
+
   love.graphics.setColor(160, 160, 160)
   g.printCenter('Enter', .05 * u, anchor + ctx.ribbon.margin * v / 2, false, true)
 end

@@ -4,20 +4,20 @@ Players.max = 15
 function Players:init()
   self.players = {}
   self.active = {}
-  
+
   for i = 1, self.max do
     self.players[i] = ctx.tag == 'server' and PlayerServer() or PlayerDummy()
     self.players[i].id = i
   end
-  
+
   ctx.event:on(evtLeave, function(data)
     self:deactivate(data.id)
   end)
-  
+
   ctx.event:on(evtClass, function(data)
     self:setClass(data.id, data.class, data.team)
   end)
-  
+
   ctx.event:on(evtFire, function(data)
     if ctx.id and data.id ~= ctx.id then
       local p = self:get(data.id)
@@ -25,7 +25,7 @@ function Players:init()
       slot:fire(p, data.mx, data.my)
     end
   end)
-  
+
   ctx.event:on(evtDamage, function(data)
     local to, from = self:get(data.id), self:get(data.from)
     to.lastHurt = tick
@@ -49,7 +49,7 @@ function Players:init()
       }
     })
   end)
-  
+
   ctx.event:on(evtDead, function(data)
     local killer, victim = self:get(data.kill), self:get(data.id)
     if data.kill ~= data.id then
@@ -59,7 +59,7 @@ function Players:init()
     victim.killer = killer
     victim:die()
   end)
-  
+
   ctx.event:on(evtSpawn, function(data)
     local p = self:get(data.id)
     p.ded = false

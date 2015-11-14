@@ -18,7 +18,7 @@ end
 
 function Collision:attach(data)
   local obj = data.object
-  
+
   local shape
   if obj.collision.shape == 'rectangle' then
     shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
@@ -72,7 +72,7 @@ end
 function Collision:pointTest(x, y, options)
   options = options or {}
   local tag, fn = options.tag, options.fn
-  
+
   for _, shape in pairs(self.hc:shapesAt(x, y)) do
     if (not tag) or shape.owner.collision.tag == tag then
       if (not fn) or fn(shape.owner) then
@@ -80,7 +80,7 @@ function Collision:pointTest(x, y, options)
       end
     end
   end
-  
+
   return nil
 end
 
@@ -91,7 +91,7 @@ function Collision:lineTest(x1, y1, x2, y2, options)
   local tag, fn, first, all = options.tag, options.fn, options.first, options.all
   local mindis = first and math.huge or nil
   local res = all and {} or nil
-  
+
   for shape in pairs(self.hc:shapesInRange(_x1, _y1, _x2, _y2)) do
     if (not tag) or shape.owner.collision.tag == tag then
       local intersects, d = shape:intersectsRay(x1, y1, x2 - x1, y2 - y1)
@@ -111,7 +111,7 @@ function Collision:lineTest(x1, y1, x2, y2, options)
       end
     end
   end
-  
+
   return res, first and mindis or nil
 end
 
@@ -119,7 +119,7 @@ function Collision:circleTest(x, y, r, options)
   local circle = self.hc:addCircle(x, y, r)
   local tag, fn, all = options.tag, options.fn, options.all
   local res = all and {} or nil
-  
+
   for shape in pairs(circle:neighbors()) do
     if circle:collidesWith(shape) then
       if (not tag) or shape.owner.collision.tag == tag then
@@ -134,7 +134,7 @@ function Collision:circleTest(x, y, r, options)
       end
     end
   end
-  
+
   self.hc:remove(circle)
   return res
 end

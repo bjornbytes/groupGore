@@ -3,7 +3,7 @@ Editor = class()
 function Editor:load(options)
   self.options = options
   self.grid = EditorGrid()
-  
+
   self.view = EditorView()
   self.effects = Effects()
   self.effects:remove('deathDesaturate')
@@ -16,7 +16,7 @@ function Editor:load(options)
   self.deletor = EditorDeletor()
   self.saver = EditorSaver()
   self.debug = EditorDebug()
-  
+
   self.widgets = {self.grid}
   self.components = {
     self.view,
@@ -29,7 +29,7 @@ function Editor:load(options)
     self.map,
     self.debug
   }
-  
+
   table.each(self.widgets, function(widget)
     if widget.draw and widget.depth then self.view:register(widget) end
   end)

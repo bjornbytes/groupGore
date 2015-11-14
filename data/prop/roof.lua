@@ -22,7 +22,7 @@ function Roof:activate(map)
   if ctx.view then
     ctx.view:register(self)
 
-    if not Roof.texture then 
+    if not Roof.texture then
       local x, y, w, h = map.textures.wall:getViewport()
       Roof.texture = love.graphics.newCanvas(w, h)
       Roof.texture:renderTo(function()

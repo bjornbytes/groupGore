@@ -17,7 +17,7 @@ function MenuMain:draw()
 
   g.setFont('BebasNeue', .065 * v)
   g.setColor(160, 160, 160)
-  
+
   g.printCenter('Host Game', .05 * u, anchor - ctx.ribbon.margin * v * 1.5, false, true)
   g.printCenter('Join Game', .05 * u, anchor - ctx.ribbon.margin * v * .5, false, true)
   g.printCenter('Editor', .05 * u, anchor + ctx.ribbon.margin * v * .5, false, true)
@@ -27,7 +27,7 @@ end
 function MenuMain:mousepressed(x, y, button)
   if button == 'l' then
     local ribbon = ctx.ribbon:test(x, y)
-    
+
     if ribbon == 1 then self:host()
     elseif ribbon == 2 then self:join()
     elseif ribbon == 3 then self:edit()

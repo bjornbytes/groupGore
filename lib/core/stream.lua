@@ -52,7 +52,7 @@ function Stream:write(x, sig)
     local n = sig:match('(%d+)bit')
     self:writeBits(x, n)
   end
-  
+
   return self
 end
 
@@ -79,13 +79,13 @@ function Stream:writeBits(x, n)
     local toWrite = byteExtract(x, idx, idx + (numWrite - 1))
     self.byte = byteInsert(self.byte, toWrite, self.byteLen, self.byteLen + (numWrite - 1))
     self.byteLen = self.byteLen + numWrite
-    
+
     if self.byteLen == 8 then
       self.str = self.str .. string.char(self.byte)
       self.byte = nil
       self.byteLen = nil
     end
-    
+
     n = n - numWrite
     idx = idx + numWrite
   until n == 0
@@ -133,13 +133,13 @@ function Stream:readBits(n)
     local numRead = math.min(n, (7 - self.byteLen) + 1)
     x = x + (byteExtract(self.byte, self.byteLen, self.byteLen + (numRead - 1)) * (2 ^ idx))
     self.byteLen = self.byteLen + numRead
-    
+
     if self.byteLen == 8 then
       self.str = self.str:sub(2)
       self.byte = nil
       self.byteLen = nil
     end
-    
+
     n = n - numRead
     idx = idx + numRead
   end

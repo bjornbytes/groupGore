@@ -13,7 +13,7 @@ end
 StaticGrenade.update = function(self)
   self.health = self.health - tickRate
   if self.health <= 0 then return true end
-  
+
   self.alpha = self.alpha - (1 / .3) * tickRate
 end
 

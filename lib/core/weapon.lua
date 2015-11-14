@@ -5,7 +5,7 @@ function Weapon:activate(owner)
   self.timers.shoot = 0
   self.timers.reload = 0
   self.timers.switch = 0
-  
+
   self.currentAmmo = self.ammo
   self.currentClip = self.clip
 end
@@ -42,7 +42,7 @@ end
 
 function Weapon:fire(owner)
   ctx.spells:activate(owner.id, data.spell[self.code])
-  
+
   self.timers.shoot = self.fireTime
   self.currentClip = self.currentClip - 1
   if self.currentClip == 0 then self.timers.reload = self.reloadTime end

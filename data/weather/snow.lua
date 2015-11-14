@@ -29,7 +29,7 @@ function Snow:gui()
   love.graphics.setColor(255, 255, 255, 90)
   local factor = 1
   local x, y = (ctx.view.x + ctx.view.width / 2 - self.x), (ctx.view.y + ctx.view.height / 2 - self.y)
-  
+
   for _, z in ipairs({64, 128, 256}) do
     local scale = 1 + (ctx.view:convertZ(z) / 500)
 

@@ -21,7 +21,7 @@ function EditorDragger:update()
   end
 end
 
-function EditorDragger:mousepressed(x, y, button)  
+function EditorDragger:mousepressed(x, y, button)
   if button == 'l' then
     self.deselect = false
     if love.keyboard.isDown('lshift') then return end

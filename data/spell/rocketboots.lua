@@ -14,7 +14,7 @@ function RocketBoots:activate(mx, my)
   self.zAcc = -1500
   self.empowered = ctx.buffs:get(self.owner, 'overexertion')
   ctx.buffs:remove(self.owner, 'overexertion')
-  
+
   local distance = math.min(self.maxDistance, math.distance(self.owner.x, self.owner.y, mx, my))
   local tx, ty = self.x + math.dx(distance, self.angle), self.y + math.dy(distance, self.angle)
   self.distance = math.distance(self.x, self.y, self:resolveCircle(tx, ty, self.owner.radius))

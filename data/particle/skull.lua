@@ -15,7 +15,7 @@ end
 Skull.update = function(self)
   self.health = self.health - tickRate
   if self.health <= 0 then return true end
-  
+
   self.scale = self.scale - .05 * tickRate
   self.alpha = self.alpha - .2 * tickRate
 end

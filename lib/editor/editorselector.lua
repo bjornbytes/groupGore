@@ -64,7 +64,7 @@ function EditorSelector:rectTest(x1, y1, x2, y2)
   x1, y1 = ctx.view:worldPoint(x1, y1)
   x2, y2 = ctx.view:worldPoint(x2, y2)
   local selectRect = ctx.collision.hc:addRectangle(x1, y1, x2 - x1, y2 - y1)
-  
+
   local res = {}
   for shape in pairs(selectRect:neighbors()) do
     if selectRect:collidesWith(shape) then
@@ -73,7 +73,7 @@ function EditorSelector:rectTest(x1, y1, x2, y2)
   end
 
   ctx.collision.hc:remove(selectRect)
-  
+
   return res
 end
 
@@ -81,7 +81,7 @@ function EditorSelector:lineTest(x1, y1, x2, y2)
   x1, y1 = ctx.view:worldPoint(x1, y1)
   x2, y2 = ctx.view:worldPoint(x2, y2)
   local dis = math.distance(x1, y1, x2, y2)
-  
+
   local res = {}
   for shape in pairs(ctx.collision.hc:shapesInRange(math.min(x1, x2), math.min(y1, y2), math.max(x1, x2), math.max(y1, y2))) do
     local intersects, d = shape:intersectsRay(x1, y1, x2 - x1, y2 - y1)
@@ -143,7 +143,7 @@ function EditorSelector:select(prop, ...)
     table.insert(self.selection, prop)
     self.selection[prop] = #self.selection
   end
-  
+
   return self:select(...)
 end
 
@@ -157,7 +157,7 @@ function EditorSelector:deselect(prop, ...)
     table.remove(self.selection, self.selection[prop])
     self.selection[prop] = nil
   end
-  
+
   return self:deselect(...)
 end
 

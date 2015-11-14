@@ -20,7 +20,7 @@ end
 
 function PlayerDummy:get(t)
   if t == tick then return self end
-  
+
   if #self.history < 2 then
     return setmetatable({
       x = self.x,
@@ -34,7 +34,7 @@ function PlayerDummy:get(t)
   while self.history[1].tick < tick - 1 / tickRate and #self.history > 2 do
     table.remove(self.history, 1)
   end
- 
+
   -- Extrapolate if needed.
   if self.history[#self.history].tick < t then
     local h1, h2 = self.history[#self.history - 1], self.history[#self.history]
@@ -65,7 +65,7 @@ function PlayerDummy:trace(data)
   if data.angle then data.angle = math.rad(data.angle) end
   if data.x then data.x = data.x / 10 end
   if data.y then data.y = data.y / 10 end
-  
+
   table.insert(self.history, setmetatable({
     x = data.x,
     y = data.y,

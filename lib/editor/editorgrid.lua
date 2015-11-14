@@ -21,11 +21,11 @@ function EditorGrid:draw()
   end
 
   g.setColor(self.color)
-  
+
   for i = .5, ctx.map.width + .5, self.size do
     g.line(i, 0, i, ctx.map.height)
   end
-  
+
   for i = .5, ctx.map.height + .5, self.size do
     g.line(0, i, ctx.map.width, i)
   end

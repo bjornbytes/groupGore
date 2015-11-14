@@ -42,7 +42,7 @@ function View:update()
   self.prevx = self.x
   self.prevy = self.y
   self.prevscale = self.scale
-  
+
   self:follow()
   self:contain()
 
@@ -87,7 +87,7 @@ function View:draw()
   g.translate(self.frame.x, self.frame.y)
 
   for i = 1, #self.guis do self.guis[i]:gui() end
-  
+
   g.pop()
 
   g.setColor(0, 0, 0, 255)
@@ -177,12 +177,12 @@ function View:follow()
 
   local dis, dir = math.vector(self.target.x, self.target.y, self:worldMouseX(), self:worldMouseY())
   local margin = 0.8
-  
+
   dis = dis / 2
- 
+
   self.x = math.lerp(self.x, self.target.x + math.dx(dis, dir) - (self.width / 2), math.min(25 * tickRate, 1))
   self.y = math.lerp(self.y, self.target.y + math.dy(dis, dir) - (self.height / 2), math.min(25 * tickRate, 1))
-  
+
   self.x = math.clamp(self.x, self.target.x - (self.width * margin), self.target.x + (self.width * margin) - self.width)
   self.y = math.clamp(self.y, self.target.y - (self.height * margin), self.target.y + (self.height * margin) - self.height)
 end

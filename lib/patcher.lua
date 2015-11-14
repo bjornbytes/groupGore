@@ -5,7 +5,7 @@ function Patcher:load()
 	local version = fs.exists('version') and fs.read('version'):match('%w+') or ''
   local os = love.system.getOS()
   if os == 'OS X' then os = 'OSX' end
-	
+
 	local code, gameData = Goregous:patch(version, os)
 	if false and code and f.exe(self['patch' .. os], self, code, gameData) then
 		love.event.quit()

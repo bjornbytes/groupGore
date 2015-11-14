@@ -14,12 +14,12 @@ function MenuRibbon:test(x, y)
 
   g.setFont('BebasNeue', .065 * v)
   local fh = g.getFont():getHeight()
-  
+
   for i = 1, self.count do
     local yy = anchor - (self.margin * v * ((self.count - 1) / 2)) + (self.margin * v * (i - 1)) - fh / 2
     if math.inside(x, y, 0, yy, u, fh) then return i end
   end
-  
+
   return nil
 end
 
@@ -29,7 +29,7 @@ function MenuRibbon:draw()
 
   g.setFont('BebasNeue', .065 * v)
   local fh = g.getFont():getHeight()
-  
+
   local test = self:test(love.mouse.getPosition())
   for i = 1, self.count do
     if test == i then

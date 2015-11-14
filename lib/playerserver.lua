@@ -30,7 +30,7 @@ function PlayerServer:get(t)
   for i = #self.history, 1, -1 do
     if self.history[i].tick <= t then return self.history[i] end
   end
-  
+
   return self.history[1]
 end
 
@@ -74,7 +74,7 @@ end
 
 function PlayerServer:trace(data, ping)
   if data.tick > self.ack then
-    
+
     -- Lag compensation
     local oldData = {}
     local newData = {}
@@ -99,7 +99,7 @@ function PlayerServer:trace(data, ping)
     end
 
     self.ack = data.tick
-    
+
     local prev = self:get(data.tick - 1)
     if prev then prev = prev.input end
     if not self.ded then
@@ -167,7 +167,7 @@ function PlayerServer:hurt(data)
   while #self.hurtHistory > 0 and self.hurtHistory[1].tick < tick - (10 / tickRate) do
     table.remove(self.hurtHistory, 1)
   end
-  
+
   table.insert(self.hurtHistory, {tick = data.tick, amount = data.amount, from = data.from})
   target.health = math.max(target.health - data.amount, 0)
 
@@ -183,7 +183,7 @@ function PlayerServer:hurt(data)
           playerHurt[v.from][2] = playerHurt[v.from][2] + v.amount * (1 - ((data.tick - v.tick) / (10 / tickRate)))
         end
       end
-      
+
       table.sort(playerHurt, function(a, b)
         return a[2] > b[2]
       end)
