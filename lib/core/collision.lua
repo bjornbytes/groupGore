@@ -1,5 +1,3 @@
-local hardon = require 'lib/deps/hardon'
-
 Collision = class()
 Collision.cellSize = 128
 Collision.onCollide = function(_, a, b, dx, dy)
@@ -9,8 +7,7 @@ Collision.onCollide = function(_, a, b, dx, dy)
 end
 
 function Collision:init()
-  self.hc = hardon(self.cellSize, self.onCollide)
-
+  self.hc = require 'lib/deps/hc'
   ctx.event:on('collision.attach', f.cur(self.attach, self))
   ctx.event:on('collision.detach', f.cur(self.detach, self))
   ctx.event:on('collision.move', f.cur(self.move, self))
@@ -21,13 +18,9 @@ function Collision:attach(data)
 
   local shape
   if obj.collision.shape == 'rectangle' then
-    shape = self.hc:addRectangle(obj.x, obj.y, obj.width, obj.height)
+    shape = self.hc.rectangle(obj.x, obj.y, obj.width, obj.height)
   elseif obj.collision.shape == 'circle' then
-    shape = self.hc:addCircle(obj.x, obj.y, obj.radius)
-  end
-
-  if obj.collision.static then
-    self.hc:setPassive(shape)
+    shape = self.hc.circle(obj.x, obj.y, obj.radius)
   end
 
   obj.shape = shape

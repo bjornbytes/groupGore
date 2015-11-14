@@ -4,7 +4,6 @@ TeamWall.code = 'teamwall'
 
 TeamWall.collision = {}
 TeamWall.collision.shape = 'rectangle'
-TeamWall.collision.static = true
 TeamWall.collision.tag = 'teamwall'
 
 function TeamWall:activate()

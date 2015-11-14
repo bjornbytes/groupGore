@@ -8,7 +8,6 @@ Rune.effects = {'refillAmmo', 'refillHealth', 'speedBoost'}
 
 Rune.collision = {}
 Rune.collision.shape = 'rectangle'
-Rune.collision.static = true
 Rune.collision.tag = 'rune'
 Rune.collision.with = {
   player = function(self, other, dx, dy)

@@ -4,7 +4,6 @@ BoundsWall.code = 'boundswall'
 
 BoundsWall.collision = {}
 BoundsWall.collision.shape = 'rectangle'
-BoundsWall.collision.static = true
 BoundsWall.collision.tag = 'wall'
 
 function BoundsWall:activate()

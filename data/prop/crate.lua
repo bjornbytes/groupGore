@@ -8,7 +8,6 @@ Crate.z = 32
 
 Crate.collision = {}
 Crate.collision.shape = 'rectangle'
-Crate.collision.static = true
 Crate.collision.tag = 'shortwall'
 
 local function perim(x, y, l, t, w, h)

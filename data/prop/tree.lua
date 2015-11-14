@@ -4,7 +4,6 @@ Tree.code = 'tree'
 
 Tree.collision = {}
 Tree.collision.shape = 'circle'
-Tree.collision.static = true
 
 function Tree:activate(map)
   ctx.event:emit('collision.attach', {object = self})

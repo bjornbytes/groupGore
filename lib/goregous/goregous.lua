@@ -1,5 +1,7 @@
 Goregous = {}
 
+Goregous.mock = true
+
 local function explode(line)
   local res = {}
   while true do
@@ -48,6 +50,7 @@ function Goregous:patch(version, os)
 end
 
 function Goregous:login(username, password)
+  if self.mock then return true end
   if not self:getConnection() then return false end
 
   self:send({'login', username})
@@ -60,6 +63,7 @@ function Goregous:login(username, password)
 end
 
 function Goregous:createServer()
+  if self.mock then return true end
   if not self:getConnection() then return false end
 
   self:send({'createServer'})
@@ -72,6 +76,7 @@ function Goregous:createServer()
 end
 
 function Goregous:listServers()
+  if self.mock then return {} end
   if not self:getConnection() then return false end
 
   self:send({'listServers'})
