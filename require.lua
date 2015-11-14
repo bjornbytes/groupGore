@@ -10,10 +10,8 @@ local function load(dir)
 end
 
 require 'enet'
-load 'lib/deps/slam'
-load 'lib/deps/lutil'
-load 'lib/deps'
-load 'lib/core'
 load 'lib'
-load 'lib/editor'
-load 'lib/goregous'
+load 'app/core'
+load 'app'
+load 'app/editor'
+load 'app/goregous'

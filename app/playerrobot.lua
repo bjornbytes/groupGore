@@ -1,4 +1,4 @@
-require 'lib/playerserver'
+require 'app/playerserver'
 
 PlayerRobot = extend(PlayerServer)
 

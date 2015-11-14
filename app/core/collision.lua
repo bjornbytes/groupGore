@@ -7,7 +7,7 @@ Collision.onCollide = function(_, a, b, dx, dy)
 end
 
 function Collision:init()
-  self.hc = require 'lib/deps/hc'
+  self.hc = require 'lib/hc'
   ctx.event:on('collision.attach', f.cur(self.attach, self))
   ctx.event:on('collision.detach', f.cur(self.detach, self))
   ctx.event:on('collision.move', f.cur(self.move, self))
@@ -30,7 +30,7 @@ function Collision:attach(data)
 end
 
 function Collision:detach(data)
-  self.hc:remove(data.object.shape)
+  self.hc.remove(data.object.shape)
   data.object.shape = nil
 end
 
@@ -47,7 +47,7 @@ function Collision:move(data)
 end
 
 function Collision:update()
-  for shape in self.hc:activeShapes() do
+  --[[for shape in self.hc:activeShapes() do
     if shape.owner then
       self:move({object = shape.owner})
     end
@@ -59,7 +59,7 @@ function Collision:update()
     if shape.owner then
       self:move({object = shape.owner})
     end
-  end
+  end]]
 end
 
 function Collision:pointTest(x, y, options)
@@ -109,18 +109,18 @@ function Collision:lineTest(x1, y1, x2, y2, options)
 end
 
 function Collision:circleTest(x, y, r, options)
-  local circle = self.hc:addCircle(x, y, r)
+  local circle = self.hc.circle(x, y, r)
   local tag, fn, all = options.tag, options.fn, options.all
   local res = all and {} or nil
 
-  for shape in pairs(circle:neighbors()) do
+  for shape in pairs(self.hc.neighbors(circle)) do
     if circle:collidesWith(shape) then
       if (not tag) or shape.owner.collision.tag == tag then
         if (not fn) or fn(shape.owner) then
           if all then
             table.insert(res, shape.owner)
           else
-            self.hc:remove(circle)
+            self.hc.remove(circle)
             return shape.owner
           end
         end
@@ -128,6 +128,6 @@ function Collision:circleTest(x, y, r, options)
     end
   end
 
-  self.hc:remove(circle)
+  self.hc.remove(circle)
   return res
 end
