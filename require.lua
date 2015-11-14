@@ -17,5 +17,3 @@ load 'lib/core'
 load 'lib'
 load 'lib/editor'
 load 'lib/goregous'
-
-require 'test/runner'
