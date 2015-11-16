@@ -3,11 +3,11 @@ View = class()
 local g = love.graphics
 
 function View:init()
-  love.window.setMode(ctx.options.windowWidth, ctx.options.windowHeight, {
+  --[[love.window.setMode(ctx.options.windowWidth, ctx.options.windowHeight, {
 		fullscreen = ctx.options.fullscreen,
 		fullscreentype = ctx.options.borderless and 'desktop' or 'normal',
 		vsync = ctx.options.vsync
-	})
+	})]]
 
   self.x = 0
   self.y = 0
@@ -116,11 +116,8 @@ function View:resize()
 
   self.sourceCanvas = love.graphics.newCanvas(w, h)
   self.targetCanvas = love.graphics.newCanvas(w, h)
-  data.media.refresh('shaders')
-  data.media.refresh('graphics')
   Typo.resize()
-  data.load()
-  collectgarbage()
+  ctx.event:emit('view.resize')
 end
 
 function View:register(x, action)

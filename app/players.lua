@@ -105,7 +105,7 @@ end
 function Players:setClass(id, class, team)
   local p = self.players[id]
   if not table.has(self.active, id) then self:activate(id) end
-  p.class = data.class[class]
+  p.class = data.class[data.class.list[class]]
   p.team = team
   p:activate()
 end

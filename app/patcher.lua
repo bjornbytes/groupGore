@@ -10,7 +10,6 @@ function Patcher:load()
 	if false and code and f.exe(self['patch' .. os], self, code, gameData) then
 		love.event.quit()
 	else
-		data.load()
 		Context:remove(self)
 		Context:add(Menu)
 	end

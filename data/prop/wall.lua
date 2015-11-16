@@ -4,7 +4,6 @@ Wall.code = 'wall'
 
 Wall.collision = {}
 Wall.collision.shape = 'rectangle'
-Wall.collision.static = true
 Wall.collision.tag = 'wall'
 
 local function perim(x, y, l, t, w, h)

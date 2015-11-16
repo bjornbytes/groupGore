@@ -22,11 +22,12 @@ function HudClassSelect:update()
 
   local u, v = ctx.hud.u, ctx.hud.v
   local x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
-  for i = 1, #data.class do
+  for i = 1, #data.class.list do
+    local class = data.class[data.class.list[i]]
     if math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
-      self.offense = math.lerp(self.offense, data.class[i].offense, math.min(12 * tickRate, 1))
-      self.defense = math.lerp(self.defense, data.class[i].defense, math.min(12 * tickRate, 1))
-      self.utility = math.lerp(self.utility, data.class[i].utility, math.min(12 * tickRate, 1))
+      self.offense = math.lerp(self.offense, class.offense, math.min(12 * tickRate, 1))
+      self.defense = math.lerp(self.defense, class.defense, math.min(12 * tickRate, 1))
+      self.utility = math.lerp(self.utility, class.utility, math.min(12 * tickRate, 1))
     end
   end
 
@@ -63,22 +64,24 @@ function HudClassSelect:draw()
   g.print('Team', u * .08, v * .106)
 
   hover = false
-  for i = 1, #data.class do
+  for i = 1, #data.class.list do
+    local class = data.class[data.class.list[i]]
+
     g.setColor(255, 255, 255, 25)
     g.rectangle('line', u * .09 * i, v * .326, u * .08, u * .08)
 
     if math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
       hover = true
-      self:drawClassDetails(i)
-      g.setColor(255, 255, 255, data.class[i].locked and 50 or 255)
+      self:drawClassDetails(class)
+      g.setColor(255, 255, 255, class.locked and 50 or 255)
     else
-      g.setColor(255, 255, 255, data.class[i].locked and 50 or 150)
+      g.setColor(255, 255, 255, class.locked and 50 or 150)
     end
 
-    local s = u * .08 / data.class[i].portrait:getWidth()
-    g.draw(data.class[i].portrait, u * .09 * i, v * .326, 0, s, s)
+    local s = u * .08 / class.portrait:getWidth()
+    g.draw(class.portrait, u * .09 * i, v * .326, 0, s, s)
     g.setFont('pixel', 8)
-    g.print(data.class[i].name, u * .09 * i + 4, v * .326)
+    g.print(class.name, u * .09 * i + 4, v * .326)
     g.setFont('BebasNeue', v * .065)
   end
 
@@ -107,7 +110,8 @@ function HudClassSelect:keypressed(key)
 
   if self.active then
     for i = 1, #data.class do
-      if not data.class[i].locked and key == tostring(i) then
+      local class = data.class[data.class.list[i]]
+      if not class.locked and key == tostring(i) then
         ctx.net:send(msgClass, {
           class = i,
           team = ctx.id > 1 and 1 or 0
@@ -127,8 +131,8 @@ function HudClassSelect:mousereleased(x, y, button)
   x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
 
   if self.active and button == 'l' then
-    for i = 1, #data.class do
-      if not data.class[i].locked and math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
+    for i = 1, #data.class.list do
+      if not data.class[data.class.list[i]].locked and math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
         ctx.net:send(msgClass, {
           class = i,
           team = self.team
@@ -155,8 +159,7 @@ function HudClassSelect:mousereleased(x, y, button)
   return self.active
 end
 
-function HudClassSelect:drawClassDetails(index)
-  local class = data.class[index]
+function HudClassSelect:drawClassDetails(class)
   local u, v = ctx.hud.u, ctx.hud.v
   local fh = g.getFont():getHeight()
   local yy = v * .318

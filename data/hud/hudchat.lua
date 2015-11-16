@@ -1,5 +1,3 @@
-local rich = require 'lib/richtext'
-
 HudChat = class()
 
 local g = love.graphics
@@ -106,5 +104,5 @@ end
 function HudChat:refresh(width)
   local u, v = ctx.hud.u, ctx.hud.v
   local width = u * .35
-  self.richText = rich:new({self.log, width, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}, red = {255, 0, 0}, green = {0, 255, 0}})
+  self.richText = lib.richtext:new({self.log, width, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}, red = {255, 0, 0}, green = {0, 255, 0}})
 end

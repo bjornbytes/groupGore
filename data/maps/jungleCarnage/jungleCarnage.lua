@@ -16,13 +16,13 @@ jungleCarnage.wallTexture = 'wallStone'
 jungleCarnage.spawn = {}
 
 jungleCarnage.spawn[purple] = {
-    x = 128,
-    y = 128
+  x = 128,
+  y = 128
 }
 
 jungleCarnage.spawn[orange] = {
-    x = jungleCarnage.width - 128,
-    y = jungleCarnage.height - 128
+  x = jungleCarnage.width - 128,
+  y = jungleCarnage.height - 128
 }
 
 return jungleCarnage

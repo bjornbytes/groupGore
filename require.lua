@@ -10,8 +10,9 @@ local function load(dir)
 end
 
 require 'enet'
-load 'lib'
 load 'app/core'
 load 'app'
 load 'app/editor'
 load 'app/goregous'
+load 'data/menu'
+load 'data/hud'
