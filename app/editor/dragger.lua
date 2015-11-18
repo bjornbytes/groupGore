@@ -1,8 +1,8 @@
-EditorDragger = class()
+local Dragger = class()
 
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
-function EditorDragger:init()
+function Dragger:init()
   self.dragging = false
   self.dragX = 0
   self.dragY = 0
@@ -10,7 +10,7 @@ function EditorDragger:init()
   self.deselect = false
 end
 
-function EditorDragger:update()
+function Dragger:update()
   if self.dragging then
     ctx.selector:each(function(prop)
       local ox, oy = ctx.grid:snap(prop._dragX, prop._dragY)
@@ -21,7 +21,7 @@ function EditorDragger:update()
   end
 end
 
-function EditorDragger:mousepressed(x, y, button)
+function Dragger:mousepressed(x, y, button)
   if button == 'l' then
     self.deselect = false
     if love.keyboard.isDown('lshift') then return end
@@ -39,7 +39,9 @@ function EditorDragger:mousepressed(x, y, button)
   end
 end
 
-function EditorDragger:mousereleased(x, y, button)
+function Dragger:mousereleased(x, y, button)
   self.dragging = false
   if self.deselect then ctx.selector:deselectAll() end
 end
+
+return Dragger

@@ -1,16 +1,16 @@
-EditorGrid = class()
-EditorGrid.name = 'Grid'
+local Grid = class()
+Grid.name = 'Grid'
 
 local g = love.graphics
 
-function EditorGrid:init()
+function Grid:init()
   self.color = {0, 0, 0, 50}
   self.hoverColor = {0, 0, 0, 20}
   self.size = 32
   self.depth = -10000
 end
 
-function EditorGrid:draw()
+function Grid:draw()
   g.setLineWidth(1 / ctx.view.scale)
 
   g.setColor(self.hoverColor)
@@ -32,12 +32,14 @@ function EditorGrid:draw()
   g.setLineWidth(1)
 end
 
-function EditorGrid:keypressed(key)
+function Grid:keypressed(key)
   if key == '[' then self.size = math.max(self.size / 2, 8)
   elseif key == ']' then self.size = math.min(self.size * 2, 256) end
 end
 
-function EditorGrid:snap(x, y)
+function Grid:snap(x, y)
   if love.keyboard.isDown('lalt') then return x, y end
   return math.round(x / self.size) * self.size, math.round(y / self.size) * self.size
 end
+
+return Grid

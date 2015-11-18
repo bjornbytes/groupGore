@@ -1,9 +1,9 @@
-EditorSelector = class()
-EditorSelector.doubleClickSpeed = .25
+local Selector = class()
+Selector.doubleClickSpeed = .25
 
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
-function EditorSelector:init()
+function Selector:init()
   self.selection = {}
   self.active = false
   self.lastClick = tick
@@ -16,14 +16,14 @@ function EditorSelector:init()
   ctx.view:register(self, 'gui')
 end
 
-function EditorSelector:update()
+function Selector:update()
   self.active = love.keyboard.isDown('lshift')
   if self.active and love.mouse.isDown('l', 'r') and math.distance(self.dragStartX, self.dragStartY, love.mouse.getPosition()) > 5 then
     self.dragging = true
   end
 end
 
-function EditorSelector:draw()
+function Selector:draw()
   love.graphics.setColor(0, 255, 255, 100)
   for _, prop in ipairs(self.selection) do
     if prop.shape then prop.shape:draw('fill') end
@@ -37,7 +37,7 @@ function EditorSelector:draw()
   end
 end
 
-function EditorSelector:gui()
+function Selector:gui()
   if self.active and self.dragging then
     if love.keyboard.isDown('lctrl') then
       love.graphics.setColor(0, 255, 255, 150)
@@ -53,12 +53,12 @@ function EditorSelector:gui()
   end
 end
 
-function EditorSelector:pointTest(x, y)
+function Selector:pointTest(x, y)
   local shapes = ctx.collision.hc:shapesAt(ctx.view:worldPoint(x, y))
   return table.map(shapes, function(s) return s.owner end)
 end
 
-function EditorSelector:rectTest(x1, y1, x2, y2)
+function Selector:rectTest(x1, y1, x2, y2)
   if x1 > x2 then x1, x2 = x2, x1 end
   if y1 > y2 then y1, y2 = y2, y1 end
   x1, y1 = ctx.view:worldPoint(x1, y1)
@@ -77,7 +77,7 @@ function EditorSelector:rectTest(x1, y1, x2, y2)
   return res
 end
 
-function EditorSelector:lineTest(x1, y1, x2, y2)
+function Selector:lineTest(x1, y1, x2, y2)
   x1, y1 = ctx.view:worldPoint(x1, y1)
   x2, y2 = ctx.view:worldPoint(x2, y2)
   local dis = math.distance(x1, y1, x2, y2)
@@ -93,7 +93,7 @@ function EditorSelector:lineTest(x1, y1, x2, y2)
   return res
 end
 
-function EditorSelector:mousepressed(x, y, button)
+function Selector:mousepressed(x, y, button)
   local function doubleClick()
     return button == self.lastButton and (tick - self.lastClick) * tickRate <= self.doubleClickSpeed
   end
@@ -123,7 +123,7 @@ function EditorSelector:mousepressed(x, y, button)
   end
 end
 
-function EditorSelector:mousereleased(x, y, button)
+function Selector:mousereleased(x, y, button)
   if self.active and self.dragging then
     local selector = love.keyboard.isDown('lctrl') and self.lineTest or self.rectTest
     local targets = selector(self, self.dragStartX, self.dragStartY, x, y)
@@ -136,7 +136,7 @@ function EditorSelector:mousereleased(x, y, button)
   end
 end
 
-function EditorSelector:select(prop, ...)
+function Selector:select(prop, ...)
   if not prop then return end
 
   if not self.selection[prop] then
@@ -147,7 +147,7 @@ function EditorSelector:select(prop, ...)
   return self:select(...)
 end
 
-function EditorSelector:deselect(prop, ...)
+function Selector:deselect(prop, ...)
   if not prop then return end
 
   if self.selection[prop] then
@@ -161,16 +161,18 @@ function EditorSelector:deselect(prop, ...)
   return self:deselect(...)
 end
 
-function EditorSelector:selectAll()
+function Selector:selectAll()
   self:select(unpack(ctx.map.props))
 end
 
-function EditorSelector:deselectAll()
+function Selector:deselectAll()
   self:deselect(unpack(ctx.map.props))
 end
 
-function EditorSelector:each(fn)
+function Selector:each(fn)
   for i = 1, #self.selection do
     fn(self.selection[i])
   end
 end
+
+return Selector

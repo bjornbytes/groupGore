@@ -1,8 +1,8 @@
-EditorDeletor = class()
+local Deletor = class()
 
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
-function EditorDeletor:keypressed(key)
+function Deletor:keypressed(key)
   if key == 'delete' then
     table.each(ctx.map.props, function(p)
       if math.inside(ctx.view:worldMouseX(), ctx.view:worldMouseY(), invoke(p, 'boundingBox')) then
@@ -14,3 +14,5 @@ function EditorDeletor:keypressed(key)
     end)
   end
 end
+
+return Deletor

@@ -52,5 +52,5 @@ end
 
 function MenuMain:edit()
   app.core.context:remove(ctx)
-  app.core.context:add(Editor, ctx.options.data)
+  app.core.context:add(app.editor.context, ctx.options.data)
 end

@@ -1,21 +1,21 @@
-Editor = class()
+local Editor = class()
 
 function Editor:load(options)
   self.options = options
-  self.grid = EditorGrid()
+  self.grid = app.editor.grid()
 
-  self.view = EditorView()
+  self.event = app.core.event()
+  self.view = app.editor.view()
   self.effects = app.core.effects()
   self.effects:remove('deathDesaturate')
-  self.event = app.core.event()
   self.collision = app.core.collision()
   self.map = app.map()
-  self.dragger = EditorDragger()
-  self.scaler = EditorScaler()
-  self.selector = EditorSelector()
-  self.deletor = EditorDeletor()
-  self.saver = EditorSaver()
-  self.debug = EditorDebug()
+  self.dragger = app.editor.dragger()
+  self.scaler = app.editor.scaler()
+  self.selector = app.editor.selector()
+  self.deletor = app.editor.deletor()
+  self.saver = app.editor.saver()
+  self.debug = app.editor.debug()
 
   self.widgets = {self.grid}
   self.components = {
@@ -74,3 +74,5 @@ end
 function Editor:resize()
   self.view:resize()
 end
+
+return Editor

@@ -1,8 +1,8 @@
-EditorScaler = class()
+local Scaler = class()
 
 local function invoke(x, k, ...) return x.editor[k](x, ...) end
 
-function EditorScaler:init()
+function Scaler:init()
   self.scaling = nil
   self.scaleOriginX = 0
   self.scaleOriginY = 0
@@ -12,7 +12,7 @@ function EditorScaler:init()
   ctx.view:register(self)
 end
 
-function EditorScaler:update()
+function Scaler:update()
   if self.scaling then
     local prop = self.scaling
     local mx, my = ctx.view:worldPoint(love.mouse.getPosition())
@@ -36,7 +36,7 @@ function EditorScaler:update()
   end
 end
 
-function EditorScaler:draw()
+function Scaler:draw()
   if self.scaling and self.scaling.collision.shape == 'rectangle' then
     love.graphics.setColor(0, 255, 255, 200)
     local x, y, w, h = self.scaling.x, self.scaling.y, self.scaling.width, self.scaling.height
@@ -53,7 +53,7 @@ function EditorScaler:draw()
   end
 end
 
-function EditorScaler:mousepressed(x, y, button)
+function Scaler:mousepressed(x, y, button)
   if button == 'r' and not love.keyboard.isDown('lshift') then
     local p = ctx.selector:pointTest(x, y)[1]
     if p then
@@ -75,6 +75,8 @@ function EditorScaler:mousepressed(x, y, button)
   end
 end
 
-function EditorScaler:mousereleased(x, y, button)
+function Scaler:mousereleased(x, y, button)
   self.scaling = nil
 end
+
+return Scaler

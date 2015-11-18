@@ -1,6 +1,6 @@
-EditorView = extend(app.core.view)
+local View = extend(app.core.view)
 
-function EditorView:init()
+function View:init()
   self.targetScale = 1
 
   self.xVel = 0
@@ -10,7 +10,7 @@ function EditorView:init()
   app.core.view.init(self)
 end
 
-function EditorView:update()
+function View:update()
   app.core.view.update(self)
 
   if not love.keyboard.isDown('lctrl') then
@@ -43,7 +43,7 @@ function EditorView:update()
   self.y = self.y + (prevh - self.height) * yf
 end
 
-function EditorView:mousepressed(x, y, button)
+function View:mousepressed(x, y, button)
   if button == 'wu' then
     self.targetScale = math.min(self.targetScale + .2, 4)
   elseif button == 'wd' then
@@ -51,4 +51,6 @@ function EditorView:mousepressed(x, y, button)
   end
 end
 
-EditorView.contain = f.empty
+View.contain = f.empty
+
+return View
