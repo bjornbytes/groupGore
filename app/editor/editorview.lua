@@ -1,6 +1,4 @@
-require 'app/core/view'
-
-EditorView = extend(View)
+EditorView = extend(app.core.view)
 
 function EditorView:init()
   self.targetScale = 1
@@ -9,11 +7,11 @@ function EditorView:init()
   self.yVel = 0
   self.maxSpeed = 20
 
-  View.init(self)
+  app.core.view.init(self)
 end
 
 function EditorView:update()
-  View.update(self)
+  app.core.view.update(self)
 
   if not love.keyboard.isDown('lctrl') then
     if love.keyboard.isDown('w') then

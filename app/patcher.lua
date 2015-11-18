@@ -1,18 +1,18 @@
-Patcher = class()
+local Patcher = class()
 
 function Patcher:load()
-	local fs = love.filesystem
-	local version = fs.exists('version') and fs.read('version'):match('%w+') or ''
+  local fs = love.filesystem
+  local version = fs.exists('version') and fs.read('version'):match('%w+') or ''
   local os = love.system.getOS()
   if os == 'OS X' then os = 'OSX' end
 
-	local code, gameData = Goregous:patch(version, os)
-	if false and code and f.exe(self['patch' .. os], self, code, gameData) then
-		love.event.quit()
-	else
-		Context:remove(self)
-		Context:add(Menu)
-	end
+  local code, gameData = Goregous:patch(version, os)
+  if false and code and f.exe(self['patch' .. os], self, code, gameData) then
+    love.event.quit()
+  else
+    app.core.context:remove(self)
+    app.core.context:add(Menu)
+  end
 end
 
 function Patcher:patchWindows(code, data)
@@ -43,3 +43,5 @@ function Patcher:patchOSX(code, data)
   os.execute('rm ' .. zip)
   os.execute('open ' .. app .. ' --args local')
 end
+
+return Patcher

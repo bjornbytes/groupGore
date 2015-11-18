@@ -1,4 +1,4 @@
-Sound = class()
+local Sound = class()
 
 function Sound:init()
   self.mute = false
@@ -47,3 +47,5 @@ function Sound:mute()
   self.mute = not self.mute
   love.audio.tag.all.stop()
 end
+
+return Sound

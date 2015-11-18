@@ -1,4 +1,4 @@
-Net = class()
+local Net = class()
 
 evtJoin = 1
 evtLeave = 2
@@ -19,8 +19,8 @@ msgInput = 15
 msgChat = 16
 
 function Net:init()
-  self.inStream = Stream()
-  self.outStream = Stream()
+  self.inStream = app.core.stream()
+  self.outStream = app.core.stream()
 end
 
 function Net:listen(port)
@@ -65,3 +65,5 @@ function Net:unpack()
   if not self.other.signatures[msg] then return false end
   return msg, self.inStream:unpack(self.other.signatures[msg])
 end
+
+return Net

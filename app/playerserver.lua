@@ -1,4 +1,4 @@
-PlayerServer = extend(Player)
+local PlayerServer = extend(app.player)
 
 function PlayerServer:activate()
   self.shields = {}
@@ -13,7 +13,7 @@ function PlayerServer:activate()
   self.spawnTimer = 0
   self.spawnMultiplier = 0
 
-  Player.activate(self)
+  app.player.activate(self)
 end
 
 function PlayerServer:get(t)
@@ -37,7 +37,7 @@ end
 function PlayerServer:update()
   if self.ded then
     self:time()
-    return Player.update(self)
+    return app.player.update(self)
   end
 
   self:time()
@@ -69,7 +69,7 @@ function PlayerServer:update()
     self.spawnTimer = .5
   end
 
-  Player.update(self)
+  app.player.update(self)
 end
 
 function PlayerServer:trace(data, ping)
@@ -156,7 +156,7 @@ function PlayerServer:time()
 end
 
 function PlayerServer:spell(kind)
-  Player.spell(self, kind)
+  app.player.spell(self, kind)
 end
 
 function PlayerServer:hurt(data)
@@ -210,7 +210,9 @@ function PlayerServer:spawn()
   table.clear(self.hurtHistory)
   table.clear(self.helpHistory)
 
-  Player.spawn(self)
+  app.player.spawn(self)
 end
 
 PlayerServer.logic = f.empty
+
+return PlayerServer

@@ -1,4 +1,4 @@
-local BattleAxe = extend(Spell)
+local BattleAxe = extend(app.core.spell)
 BattleAxe.code = 'battleaxe'
 BattleAxe.duration = .5
 BattleAxe.radius = 45

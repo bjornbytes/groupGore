@@ -1,9 +1,7 @@
-require 'app/playerserver'
-
-PlayerRobot = extend(PlayerServer)
+local PlayerRobot = extend(app.playerServer)
 
 function PlayerRobot:activate()
-  PlayerServer.activate(self)
+  app.playerServer.activate(self)
 
   self.username = 'robot'
 
@@ -102,3 +100,5 @@ function PlayerRobot:rateDirection(dir)
   score = math.clamp(score, 0, 1)
   return score
 end
+
+return PlayerRobot

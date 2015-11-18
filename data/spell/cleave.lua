@@ -1,4 +1,4 @@
-local Cleave = extend(Spell)
+local Cleave = extend(app.core.spell)
 
 Cleave.code = 'cleave'
 Cleave.radius = 175

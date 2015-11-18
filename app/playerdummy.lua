@@ -1,11 +1,11 @@
-PlayerDummy = extend(Player)
+local PlayerDummy = extend(app.player)
 
 local function drawTick() return tick - (interp / tickRate) end
 
 function PlayerDummy:activate()
   self.history = {}
 
-  Player.activate(self)
+  app.player.activate(self)
 end
 
 function PlayerDummy:update()
@@ -15,7 +15,7 @@ function PlayerDummy:update()
 
   self:slot()
 
-  Player.update(self)
+  app.player.update(self)
 end
 
 function PlayerDummy:get(t)
@@ -58,7 +58,7 @@ function PlayerDummy:draw()
   self.drawAngle = lerpd.angle
   self.drawX, self.drawY = ctx.view:three(lerpd.x, lerpd.y, lerpd.z)
   self.drawScale = 1 + (ctx.view:convertZ(lerpd.z) / 500)
-  Player.draw(lerpd)
+  app.player.draw(lerpd)
 end
 
 function PlayerDummy:trace(data)
@@ -78,3 +78,5 @@ function PlayerDummy:trace(data)
   self.health, self.shield = data.health or self.health, data.shield or self.shield
   self.weapon, self.skill = data.weapon or self.weapon, data.skill or self.skill
 end
+
+return PlayerDummy

@@ -1,4 +1,4 @@
-Player = class()
+local Player = class()
 
 Player.radius = 28
 Player.collision = {
@@ -366,3 +366,5 @@ function Player:refreshCanvas()
 
   self.canvasDirty = false
 end
+
+return Player

@@ -1,4 +1,4 @@
-Event = class()
+local Event = class()
 
 function Event:init()
   self.handlers = {}
@@ -25,3 +25,5 @@ function Event:remove(event, context)
     self.handlers[event][context] = nil
   end
 end
+
+return Event

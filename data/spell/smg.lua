@@ -1,4 +1,4 @@
-local SMG = extend(Spell)
+local SMG = extend(app.core.spell)
 SMG.code = 'smg'
 
 SMG.duration = .12

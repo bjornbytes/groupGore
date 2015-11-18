@@ -5,11 +5,11 @@ function Editor:load(options)
   self.grid = EditorGrid()
 
   self.view = EditorView()
-  self.effects = Effects()
+  self.effects = app.core.effects()
   self.effects:remove('deathDesaturate')
-  self.event = Event()
-  self.collision = Collision()
-  self.map = Map()
+  self.event = app.core.event()
+  self.collision = app.core.collision()
+  self.map = app.map()
   self.dragger = EditorDragger()
   self.scaler = EditorScaler()
   self.selector = EditorSelector()
@@ -51,8 +51,8 @@ end
 
 function Editor:keyreleased(key)
   if key == 'escape' then
-    Context:remove(ctx)
-    Context:add(Menu)
+    app.core.context:remove(ctx)
+    app.core.context:add(Menu)
   end
 end
 

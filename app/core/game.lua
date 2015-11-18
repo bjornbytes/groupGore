@@ -1,26 +1,26 @@
-Game = class()
+local Game = class()
 
 Game.tag = 'client'
 
 function Game:load(options)
 	self.options = options
-  self.event = Event()
-  self.net = NetClient()
-  self.input = Input()
-  self.view = View()
-  self.collision = Collision()
-  self.players = Players()
-  self.spells = Spells()
-  self.buffs = Buffs()
-  self.particles = Particles()
-  self.effects = Effects()
-  self.sound = Sound()
-  self.map = Map()
+  self.event = app.core.event()
+  self.net = app.netClient()
+  self.input = app.core.input()
+  self.view = app.core.view()
+  self.collision = app.core.collision()
+  self.players = app.players()
+  self.spells = app.core.spells()
+  self.buffs = app.core.buffs()
+  self.particles = app.core.particles()
+  self.effects = app.core.effects()
+  self.sound = app.core.sound()
+  self.map = app.map()
   self.hud = Hud()
 
   self.event:on('game.quit', function(data)
-    Context:remove(ctx)
-    Context:add(Menu)
+    app.core.context:remove(ctx)
+    app.core.context:add(Menu)
   end)
 end
 
@@ -56,3 +56,5 @@ function Game:resize()
   self.hud:resize()
   self.effects:resize()
 end
+
+return Game

@@ -62,11 +62,11 @@ function PlasmaCannon:update()
 end
 
 function PlasmaCannon:draw(owner)
-  Weapon.draw(self, owner)
+  app.core.weapon.draw(self, owner)
 end
 
 function PlasmaCannon:select(owner)
-  Weapon.select(self, owner)
+  app.core.weapon.select(self, owner)
   self.charge = 0
 end
 

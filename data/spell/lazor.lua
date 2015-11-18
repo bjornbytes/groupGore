@@ -1,4 +1,4 @@
-local Lazor = extend(Spell)
+local Lazor = extend(app.core.spell)
 Lazor.code = 'lazor'
 
 Lazor.maxCharge = 1.2

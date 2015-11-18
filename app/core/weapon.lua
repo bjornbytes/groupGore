@@ -1,4 +1,4 @@
-Weapon = class()
+local Weapon = class()
 
 function Weapon:activate(owner)
   self.timers = {}
@@ -68,3 +68,5 @@ end
 function Weapon:ammoValue(owner)
   return self.currentClip, self.currentAmmo
 end
+
+return Weapon

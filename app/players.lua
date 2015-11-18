@@ -1,4 +1,4 @@
-Players = class()
+local Players = class()
 Players.max = 15
 
 function Players:init()
@@ -6,7 +6,7 @@ function Players:init()
   self.active = {}
 
   for i = 1, self.max do
-    self.players[i] = ctx.tag == 'server' and PlayerServer() or PlayerDummy()
+    self.players[i] = ctx.tag == 'server' and app.playerServer() or app.playerDummy()
     self.players[i].id = i
   end
 
@@ -109,3 +109,5 @@ function Players:setClass(id, class, team)
   p.team = team
   p:activate()
 end
+
+return Players

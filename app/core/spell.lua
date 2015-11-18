@@ -1,4 +1,4 @@
-Spell = class()
+local Spell = class()
 
 function Spell:mirrorOwner()
   self.x, self.y, self.angle = self.owner.x, self.owner.y, self.owner.angle
@@ -160,3 +160,5 @@ function Spell:playSound(sound, options)
   options.y = options.y or self.y
   ctx.event:emit('sound.play', table.merge({sound = sound}, options))
 end
+
+return Spell

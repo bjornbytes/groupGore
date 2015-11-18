@@ -1,4 +1,4 @@
-View = class()
+local View = class()
 
 local g = love.graphics
 
@@ -223,3 +223,5 @@ function View:worldPush()
   g.scale(s)
   g.translate(-x, -y)
 end
+
+return View

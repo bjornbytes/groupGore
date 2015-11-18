@@ -1,4 +1,4 @@
-Collision = class()
+local Collision = class()
 Collision.cellSize = 128
 Collision.onCollide = function(_, a, b, dx, dy)
   a, b = a.owner, b.owner
@@ -131,3 +131,5 @@ function Collision:circleTest(x, y, r, options)
   self.hc.remove(circle)
   return res
 end
+
+return Collision

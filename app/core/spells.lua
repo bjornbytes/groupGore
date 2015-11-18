@@ -1,4 +1,4 @@
-Spells = class()
+local Spells = class()
 
 function Spells:init()
   self.spells = {}
@@ -26,3 +26,5 @@ end
 function Spells:draw()
   table.with(self.spells, 'draw')
 end
+
+return Spells

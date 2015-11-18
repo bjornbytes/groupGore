@@ -1,4 +1,4 @@
-Stream = class()
+local Stream = class()
 
 local function byteExtract(x, a, b)
   b = b or a
@@ -212,3 +212,5 @@ function Stream:unpack(signature)
   end
   return data
 end
+
+return Stream

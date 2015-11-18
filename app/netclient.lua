@@ -1,4 +1,4 @@
-NetClient = extend(Net)
+local NetClient = extend(app.core.net)
 
 NetClient.signatures = {}
 NetClient.signatures[msgJoin] = {{'username', 'string'}, important = true}
@@ -18,7 +18,7 @@ NetClient.receive['default'] = function(self, event) ctx.event:emit(event.msg, e
 
 NetClient.receive[msgJoin] = function(self, event)
   ctx.id = event.data.id
-  setmetatable(ctx.players:get(ctx.id), {__index = PlayerMain})
+  setmetatable(ctx.players:get(ctx.id), {__index = app.playerMain})
 end
 
 NetClient.receive[msgSnapshot] = function(self, event)
@@ -36,7 +36,7 @@ NetClient.receive[msgSnapshot] = function(self, event)
 end
 
 function NetClient:init()
-  self.other = NetServer
+  self.other = app.netServer
   self:connectTo(serverIp, 6061)
   self.messageBuffer = {}
 
@@ -55,7 +55,7 @@ function NetClient:init()
     self:quit()
   end)
 
-  Net.init(self)
+  app.core.net.init(self)
 end
 
 function NetClient:quit()
@@ -87,3 +87,5 @@ function NetClient:send(msg, data)
 end
 
 NetClient.emit = f.empty
+
+return NetClient

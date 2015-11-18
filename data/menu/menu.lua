@@ -87,7 +87,7 @@ end
 function Menu:connect(ip)
   serverIp = ip
   serverPort = 6061
-  Context:remove(self)
-  Context:add(Game, self.options.data)
+  app.core.context:remove(self)
+  app.core.context:add(app.core.game, self.options.data)
   love.keyboard.setKeyRepeat(false)
 end

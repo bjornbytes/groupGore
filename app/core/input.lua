@@ -1,4 +1,4 @@
-Input = class()
+local Input = class()
 
 function Input:init()
   self.keyboardEnabled = true
@@ -12,3 +12,5 @@ end
 function Input:keyDown(k)
   return self.keyboardEnabled and love.keyboard.isDown(k)
 end
+
+return Input

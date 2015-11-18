@@ -1,4 +1,4 @@
-Particles = class()
+local Particles = class()
 
 function Particles:init()
   self.particles = {}
@@ -27,3 +27,5 @@ function Particles:update()
     end
   end
 end
+
+return Particles

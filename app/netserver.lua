@@ -1,4 +1,4 @@
-NetServer = extend(Net)
+local NetServer = extend(app.core.net)
 
 NetServer.signatures = {}
 NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}, important = true}
@@ -110,7 +110,7 @@ NetServer.receive[msgChat] = function(self, event)
 end
 
 function NetServer:init()
-  self.other = NetClient
+  self.other = app.netClient
 
   self:listen(6061)
   self.peerToPlayer = {}
@@ -121,7 +121,7 @@ function NetServer:init()
     self:quit()
   end)
 
-  Net.init(self)
+  app.core.net.init(self)
 end
 
 function NetServer:quit()
@@ -212,3 +212,5 @@ function NetServer:nextPlayerId()
     if #ctx.players:get(i).username == 0 then return i end
   end
 end
+
+return NetServer

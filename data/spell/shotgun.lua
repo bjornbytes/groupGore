@@ -1,4 +1,4 @@
-local Shotgun = extend(Spell)
+local Shotgun = extend(app.core.spell)
 Shotgun.code = 'shotgun'
 
 Shotgun.duration = .1

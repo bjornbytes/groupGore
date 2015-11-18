@@ -1,3 +1,4 @@
+require 'lib/love'
 require 'lib/util'
 require 'lib/slam'
 setmetatable(_G, {
@@ -6,5 +7,5 @@ setmetatable(_G, {
 
 require 'require'
 
-Context:bind(Patcher)
+app.core.context:bind(app.patcher)
 

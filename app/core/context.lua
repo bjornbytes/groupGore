@@ -1,4 +1,4 @@
-Context = {
+local Context = {
   list = {}
 }
 
@@ -57,3 +57,5 @@ setmetatable(Context, {
     return function(...) return t:run(k, ...) end
   end
 })
+
+return Context

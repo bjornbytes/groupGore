@@ -1,4 +1,4 @@
-local PlasmaCannon = extend(Spell)
+local PlasmaCannon = extend(app.core.spell)
 PlasmaCannon.code = 'plasmacannon'
 
 function PlasmaCannon:activate(charge)

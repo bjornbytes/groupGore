@@ -1,4 +1,4 @@
-Buffs = class()
+local Buffs = class()
 
 function Buffs:init()
   self.buffs = {}
@@ -47,3 +47,5 @@ function Buffs:get(player, code)
     end
   end
 end
+
+return Buffs

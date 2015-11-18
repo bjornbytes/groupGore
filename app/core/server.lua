@@ -1,25 +1,25 @@
-Server = class()
+local Server = class()
 
 Server.tag = 'server'
 
 function Server:load()
-  self.event = Event()
-  self.players = Players()
-  self.spells = Spells()
-  self.collision = Collision()
-  self.buffs = Buffs()
-  self.net = NetServer()
-  self.map = Map()
+  self.event = app.core.event()
+  self.players = app.players()
+  self.spells = app.core.spells()
+  self.collision = app.core.collision()
+  self.buffs = app.core.buffs()
+  self.net = app.netServer()
+  self.map = app.map()
 
   for i = 1, 0 do
     local p = self.players.players[i]
-    setmetatable(p, {__index = PlayerRobot})
+    setmetatable(p, {__index = app.playerRobot})
     self.net:emit(evtClass, {id = i, class = 1, team = i % 2})
   end
 
   self.event:on('game.quit', function()
     goregous:send({'killServer'})
-    Context:remove(ctx)
+    app.core.context:remove(ctx)
   end)
 end
 
@@ -35,3 +35,5 @@ end
 function Server:quit()
   self.net:quit()
 end
+
+return Server

@@ -38,7 +38,7 @@ end
 function MenuMain:host()
   local success = Goregous:createServer()
   if success then
-    local server = Context:add(Server)
+    local server = app.core.context:add(app.core.server)
     server.owner = username
     ctx:connect('localhost')
   else
@@ -51,6 +51,6 @@ function MenuMain:join()
 end
 
 function MenuMain:edit()
-  Context:remove(ctx)
-  Context:add(Editor, ctx.options.data)
+  app.core.context:remove(ctx)
+  app.core.context:add(Editor, ctx.options.data)
 end

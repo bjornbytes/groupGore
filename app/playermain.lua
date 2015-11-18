@@ -1,4 +1,4 @@
-PlayerMain = extend(Player)
+local PlayerMain = extend(app.player)
 
 function PlayerMain:activate()
   self.prev = setmetatable({}, self.meta)
@@ -13,7 +13,7 @@ function PlayerMain:activate()
 
   ctx.view.target = self
 
-  Player.activate(self)
+  app.player.activate(self)
 end
 
 function PlayerMain:get(t)
@@ -28,7 +28,7 @@ function PlayerMain:update()
   if self.ded then
     self.ded = timer.rot(self.ded)
     self:fade()
-    return Player.update(self)
+    return app.player.update(self)
   end
 
   self.prev.x = self.x
@@ -54,7 +54,7 @@ function PlayerMain:update()
 
   ctx.net:send(msgInput, input)
 
-  Player.update(self)
+  app.player.update(self)
 
   self.prev.input = input
 end
@@ -65,7 +65,7 @@ function PlayerMain:draw()
   self.drawAngle = lerpd.angle
   self.drawX, self.drawY = ctx.view:three(lerpd.x, lerpd.y, lerpd.z)
   self.drawScale = 1 + (ctx.view:convertZ(lerpd.z) / 500)
-  Player.draw(lerpd)
+  app.player.draw(lerpd)
 end
 
 function PlayerMain:trace(data)
@@ -132,8 +132,10 @@ end
 
 function PlayerMain:die()
   if self.heartbeatSound then self.heartbeatSound:pause() end
-  Player.die(self)
+  app.player.die(self)
   ctx.view:screenshake(20)
   ctx.view.target = nil
   ctx.view.target = self.killer
 end
+
+return PlayerMain

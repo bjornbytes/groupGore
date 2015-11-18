@@ -1,4 +1,4 @@
-Effects = class()
+local Effects = class()
 
 function Effects:init()
   self.active = love.graphics.isSupported('shader')
@@ -43,3 +43,5 @@ end
 function Effects:get(code)
   return self.effects[code]
 end
+
+return Effects

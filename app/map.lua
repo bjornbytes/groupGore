@@ -1,4 +1,4 @@
-Map = class()
+local Map = class()
 
 -- ...
 purple = 0
@@ -137,3 +137,5 @@ function Map:modExec(mod, fn, ...)
     mod[fn](mod, ...)
   end
 end
+
+return Map
