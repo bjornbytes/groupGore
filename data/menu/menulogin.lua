@@ -54,7 +54,7 @@ function MenuLogin:login()
   local username = ctx.input:val('username')
   if #username == 0 then return end
 
-  local success = Goregous:login(username)
+  local success = app.goregous:login(username)
   if success then
     _G['username'] = username
     ctx.user.username = username

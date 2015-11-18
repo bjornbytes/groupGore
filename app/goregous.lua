@@ -1,4 +1,4 @@
-Goregous = {}
+local Goregous = {}
 
 Goregous.mock = true
 
@@ -93,3 +93,5 @@ function Goregous:listServers()
 
   return servers
 end
+
+return Goregous

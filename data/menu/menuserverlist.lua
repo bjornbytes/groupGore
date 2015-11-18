@@ -61,6 +61,6 @@ function MenuServerList:mousepressed(x, y, button)
 end
 
 function MenuServerList:refresh()
-  self.servers = Goregous:listServers()
+  self.servers = app.goregous:listServers()
 end
 

@@ -36,7 +36,7 @@ function MenuMain:mousepressed(x, y, button)
 end
 
 function MenuMain:host()
-  local success = Goregous:createServer()
+  local success = app.goregous:createServer()
   if success then
     local server = app.core.context:add(app.core.server)
     server.owner = username
