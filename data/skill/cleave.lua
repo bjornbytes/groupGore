@@ -23,7 +23,7 @@ end
 
 function Cleave:fire(owner)
   ctx.spells:activate(owner.id, data.spell.cleave)
-  ctx.net:emit(evtDamage, {id = owner.id, amount = self.cost, from = owner.id, tick = tick})
+  ctx.net:emit(app.core.net.events.damage, {id = owner.id, amount = self.cost, from = owner.id, tick = tick})
   self.timer = self.cooldown
 end
 

@@ -11,7 +11,7 @@ function Patcher:load()
     love.event.quit()
   else
     app.core.context:remove(self)
-    app.core.context:add(Menu)
+    app.core.context:add(app.menu.context)
   end
 end
 

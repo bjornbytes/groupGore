@@ -14,7 +14,7 @@ function Server:load()
   for i = 1, 0 do
     local p = self.players.players[i]
     setmetatable(p, {__index = app.playerRobot})
-    self.net:emit(evtClass, {id = i, class = 1, team = i % 2})
+    self.net:emit(app.core.net.events.class, {id = i, class = 1, team = i % 2})
   end
 
   self.event:on('game.quit', function()

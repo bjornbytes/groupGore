@@ -1,6 +1,6 @@
-HudDead = class()
+local Dead = class()
 
-function HudDead:draw()
+function Dead:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
   if p and p.ded then
@@ -12,3 +12,5 @@ function HudDead:draw()
     love.graphics.printCenter(val, u * .5, v * .5)
   end
 end
+
+return Dead

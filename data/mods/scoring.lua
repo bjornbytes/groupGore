@@ -34,7 +34,7 @@ function Scoring:score(team, amount)
 end
 
 function Scoring:win(team)
-  ctx.net:emit(evtChat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
+  ctx.net:emit(app.core.net.events.chat, {message = (team == 0 and 'purple' or 'orange') .. ' team wins!'})
   self.winner = team
   self.restartTimer = 6
 end

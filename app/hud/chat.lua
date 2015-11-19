@@ -1,9 +1,9 @@
-HudChat = class()
+local Chat = class()
 
 local g = love.graphics
 local w, h = g.width, g.height
 
-function HudChat:init()
+function Chat:init()
   self.active = false
   self.message = ''
   self.log = ''
@@ -12,14 +12,14 @@ function HudChat:init()
   self.richText = nil
 end
 
-function HudChat:update()
+function Chat:update()
   local u, v = ctx.hud.u, ctx.hud.v
   self.timer = timer.rot(self.timer)
   if self.active then self.timer = 2 end
   self.offset = math.lerp(self.offset, (self.timer == 0) and -(u * .35) - 4 or 0, math.min(tickRate * 30, 1))
 end
 
-function HudChat:draw()
+function Chat:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local width = u * .35
   if not self.richText then return end
@@ -47,19 +47,19 @@ function HudChat:draw()
   end
 end
 
-function HudChat:textinput(character)
+function Chat:textinput(character)
   if self.active then
     self.message = self.message .. character
     ctx.event:emit('sound.play', {sound = 'click', gui = true})
   end
 end
 
-function HudChat:keypressed(key)
+function Chat:keypressed(key)
   if self.active then
     if key == 'backspace' then self.message = self.message:sub(1, -2)
     elseif key == 'return' or key == 'escape' then
       if #self.message > 0 and key ~= 'escape' then
-        ctx.net:send(msgChat, {
+        ctx.net:send(app.core.net.messages.chat, {
           message = self.message
         })
       end
@@ -76,7 +76,7 @@ function HudChat:keypressed(key)
   end
 end
 
-function HudChat:add(data)
+function Chat:add(data)
   local message = data.message
   local u, v = ctx.hud.u, ctx.hud.v
   local width = u * .35
@@ -97,12 +97,14 @@ function HudChat:add(data)
   self.timer = math.min(2 + (#message / 50), 5)
 end
 
-function HudChat:resize()
+function Chat:resize()
   self:refresh()
 end
 
-function HudChat:refresh(width)
+function Chat:refresh(width)
   local u, v = ctx.hud.u, ctx.hud.v
   local width = u * .35
   self.richText = lib.richtext:new({self.log, width, white = {255, 255, 255}, purple = {190, 160, 220}, orange = {240, 160, 140}, red = {255, 0, 0}, green = {0, 255, 0}})
 end
+
+return Chat

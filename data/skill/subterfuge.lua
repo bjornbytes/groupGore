@@ -6,7 +6,7 @@ Subterfuge.text = 'When you get a kill you cloak.'
 Subterfuge.type = 'passive'
 
 function Subterfuge:activate(owner)
-	ctx.event:on(evtDead, function(data)
+	ctx.event:on(app.core.net.events.dead, function(data)
 		if data.kill == owner.id then
 			ctx.buffs:add(owner, 'subterfuge')
 		end
@@ -14,7 +14,7 @@ function Subterfuge:activate(owner)
 end
 
 function Subterfuge:deactivate(owner)
-  ctx.event:remove(evtDead, self)
+  ctx.event:remove(app.core.net.events.dead, self)
 end
 
 function Subterfuge:value(owner)

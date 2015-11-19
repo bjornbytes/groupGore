@@ -1,8 +1,8 @@
-MenuMain = class()
+local Main = class()
 
 local g = love.graphics
 
-function MenuMain:activate()
+function Main:activate()
   ctx.ribbon.count = 4
   ctx.ribbon.margin = .1
 
@@ -11,7 +11,7 @@ function MenuMain:activate()
   end
 end
 
-function MenuMain:draw()
+function Main:draw()
   local u, v = ctx.u, ctx.v
   local anchor = (.3 + (.8 - .3) / 2) * v
 
@@ -24,7 +24,7 @@ function MenuMain:draw()
   g.printCenter('Exit', .05 * u, anchor + ctx.ribbon.margin * v * 1.5, false, true)
 end
 
-function MenuMain:mousepressed(x, y, button)
+function Main:mousepressed(x, y, button)
   if button == 'l' then
     local ribbon = ctx.ribbon:test(x, y)
 
@@ -35,7 +35,7 @@ function MenuMain:mousepressed(x, y, button)
   end
 end
 
-function MenuMain:host()
+function Main:host()
   local success = app.goregous:createServer()
   if success then
     local server = app.core.context:add(app.core.server)
@@ -46,11 +46,13 @@ function MenuMain:host()
   end
 end
 
-function MenuMain:join()
+function Main:join()
   ctx:push('serverlist')
 end
 
-function MenuMain:edit()
+function Main:edit()
   app.core.context:remove(ctx)
   app.core.context:add(app.editor.context, ctx.options.data)
 end
+
+return Main

@@ -1,4 +1,4 @@
-Menu = class()
+local Menu = class()
 
 function Menu:load(user)
   self.user = user or {}
@@ -11,17 +11,17 @@ function Menu:load(user)
   love.mouse.setVisible(true)
   love.keyboard.setKeyRepeat(true)
 
-  self.ribbon = MenuRibbon()
-  self.background = MenuBackground()
-  self.input = MenuInput()
-  self.options = MenuOptions()
-  self.back = MenuBack()
-  self.alert = MenuAlert()
+  self.ribbon = app.menu.ribbon()
+  self.background = app.menu.background()
+  self.input = app.menu.input()
+  self.options = app.menu.options()
+  self.back = app.menu.back()
+  self.alert = app.menu.alert()
 
   self.pages = {
-    login = MenuLogin(),
-    main = MenuMain(),
-    serverlist = MenuServerList()
+    login = app.menu.login(),
+    main = app.menu.main(),
+    serverlist = app.menu.serverList()
   }
 
   self:push(self.user.token and 'main' or 'login')
@@ -91,3 +91,5 @@ function Menu:connect(ip)
   app.core.context:add(app.core.game, self.options.data)
   love.keyboard.setKeyRepeat(false)
 end
+
+return Menu

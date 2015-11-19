@@ -52,7 +52,7 @@ end
 function Editor:keyreleased(key)
   if key == 'escape' then
     app.core.context:remove(ctx)
-    app.core.context:add(Menu)
+    app.core.context:add(app.menu.context)
   end
 end
 

@@ -1,8 +1,8 @@
-HudClassSelect = class()
+local ClassSelect = class()
 
 local g = love.graphics
 
-function HudClassSelect:init()
+function ClassSelect:init()
   self.team = love.math.random(purple, orange)
   self.angle = 0
   self.active = true
@@ -11,12 +11,12 @@ function HudClassSelect:init()
   self.utility = 0
   self.teamCt = {0, 0}
 
-  ctx.event:on(evtClass, function(data)
+  ctx.event:on(app.core.net.events.class, function(data)
     if data.id == ctx.id then self.active = false end
   end)
 end
 
-function HudClassSelect:update()
+function ClassSelect:update()
   self.angle = (self.angle + .65 * tickRate) % (2 * math.pi)
   if not love.mouse.isVisible() then love.mouse.setVisible(true) end
 
@@ -38,7 +38,7 @@ function HudClassSelect:update()
   end)
 end
 
-function HudClassSelect:draw()
+function ClassSelect:draw()
   local u, v = ctx.hud.u, ctx.hud.v
 
   g.setColor(0, 0, 0, 153)
@@ -105,14 +105,14 @@ function HudClassSelect:draw()
   g.print(self.teamCt[1], u * .5 + math.max(u * .05, g.getFont():getWidth(tostring(self.teamCt[0]))), v * .106)
 end
 
-function HudClassSelect:keypressed(key)
+function ClassSelect:keypressed(key)
   if key == 'escape' and ctx.players:get(ctx.id).class then self.active = not self.active end
 
   if self.active then
     for i = 1, #data.class do
       local class = data.class[data.class.list[i]]
       if not class.locked and key == tostring(i) then
-        ctx.net:send(msgClass, {
+        ctx.net:send(app.core.net.messages.class, {
           class = i,
           team = ctx.id > 1 and 1 or 0
         })
@@ -124,16 +124,16 @@ function HudClassSelect:keypressed(key)
   end
 end
 
-function HudClassSelect:mousepressed() return self.active end
+function ClassSelect:mousepressed() return self.active end
 
-function HudClassSelect:mousereleased(x, y, button)
+function ClassSelect:mousereleased(x, y, button)
   local u, v = ctx.hud.u, ctx.hud.v
   x, y = ctx.view:frameMouseX(), ctx.view:frameMouseY()
 
   if self.active and button == 'l' then
     for i = 1, #data.class.list do
       if not data.class[data.class.list[i]].locked and math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
-        ctx.net:send(msgClass, {
+        ctx.net:send(app.core.net.messages.class, {
           class = i,
           team = self.team
         })
@@ -159,7 +159,7 @@ function HudClassSelect:mousereleased(x, y, button)
   return self.active
 end
 
-function HudClassSelect:drawClassDetails(class)
+function ClassSelect:drawClassDetails(class)
   local u, v = ctx.hud.u, ctx.hud.v
   local fh = g.getFont():getHeight()
   local yy = v * .318
@@ -202,3 +202,5 @@ function HudClassSelect:drawClassDetails(class)
   g.setFont('BebasNeue', v * .065)
   g.setColor(255, 255, 255)
 end
+
+return ClassSelect

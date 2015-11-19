@@ -1,11 +1,11 @@
-HudScoreboard = class()
+local Scoreboard = class()
 
 local g = love.graphics
 
-function HudScoreboard:init()
-  ctx.event:on(evtClass, function(data) self:refresh() end)
-  ctx.event:on(evtDead, function(data) self:refresh() end)
-  ctx.event:on(evtLeave, function(data) self:refresh() end)
+function Scoreboard:init()
+  ctx.event:on(app.core.net.events.class, function(data) self:refresh() end)
+  ctx.event:on(app.core.net.events.dead, function(data) self:refresh() end)
+  ctx.event:on(app.core.net.events.leave, function(data) self:refresh() end)
 
   self.names = {[0] = '', [1] = ''}
   self.ks = {[0] = '', [1] = ''}
@@ -21,7 +21,7 @@ function HudScoreboard:init()
   self.offset = {[0] = -love.graphics.getWidth(), [1] = love.graphics.getWidth() * 2}
 end
 
-function HudScoreboard:update()
+function Scoreboard:update()
   if love.keyboard.isDown('tab') then
     self.offset[0] = math.lerp(self.offset[0], 0, math.min(30 * tickRate, 1))
     self.offset[1] = math.lerp(self.offset[1], ctx.hud.u - self.width[1], math.min(30 * tickRate, 1))
@@ -37,7 +37,7 @@ function HudScoreboard:update()
   end
 end
 
-function HudScoreboard:draw()
+function Scoreboard:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   g.setFont('pixel', 8)
   local font = g.getFont()
@@ -62,7 +62,7 @@ function HudScoreboard:draw()
   end
 end
 
-function HudScoreboard:refresh()
+function Scoreboard:refresh()
   self.teams = {[0] = {}, [1] = {}}
   ctx.players:each(function(p)
     table.insert(self.teams[p.team], {name = p.username, kills = p.kills, deaths = p.deaths})
@@ -97,3 +97,5 @@ function HudScoreboard:refresh()
     self.height[i] = (#self.teams[i] + 1) * font:getHeight() + 12
   end
 end
+
+return Scoreboard

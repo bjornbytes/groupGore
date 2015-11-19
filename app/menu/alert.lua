@@ -1,17 +1,17 @@
-MenuAlert = class()
+local Alert = class()
 
 local g = love.graphics
 
-function MenuAlert:init()
+function Alert:init()
   self.message = nil
   self.alpha = 0
 end
 
-function MenuAlert:update()
+function Alert:update()
   self.alpha = math.max(self.alpha - tickRate, 0)
 end
 
-function MenuAlert:draw()
+function Alert:draw()
   if self.alpha < .001 then return end
   local u, v = ctx.u, ctx.v
 
@@ -26,8 +26,10 @@ function MenuAlert:draw()
   g.printCenter(str, .5 * u, .5 * v)
 end
 
-function MenuAlert:show(message, alpha)
+function Alert:show(message, alpha)
   alpha = alpha or 2
   self.alpha = alpha
   self.message = message
 end
+
+return Alert

@@ -1,22 +1,26 @@
 local Net = class()
 
-evtJoin = 1
-evtLeave = 2
-evtClass = 3
-evtSync = 4
-evtFire = 5
-evtDamage = 6
-evtDead = 7
-evtSpawn = 8
-evtChat = 9
-evtProp = 10
+Net.events = {
+  join = 1,
+  leave = 2,
+  class = 3,
+  sync = 4,
+  fire = 5,
+  damage = 6,
+  dead = 7,
+  spawn = 8,
+  chat = 9,
+  prop = 10
+}
 
-msgJoin  = 11
-msgLeave = 12
-msgSnapshot = 13
-msgClass = 14
-msgInput = 15
-msgChat = 16
+Net.messages = {
+  join  = 11,
+  leave = 12,
+  snapshot = 13,
+  class = 14,
+  input = 15,
+  chat = 16
+}
 
 function Net:init()
   self.inStream = app.core.stream()

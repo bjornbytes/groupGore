@@ -1,10 +1,10 @@
 local NetServer = extend(app.core.net)
 
 NetServer.signatures = {}
-NetServer.signatures[evtJoin] = {{'id', '4bits'}, {'username', 'string'}, important = true}
-NetServer.signatures[evtLeave] = {{'id', '4bits'}, {'reason', 'string'}, important = true}
-NetServer.signatures[evtClass] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}, important = true}
-NetServer.signatures[evtSync] = {
+NetServer.signatures[app.core.net.events.join] = {{'id', '4bits'}, {'username', 'string'}, important = true}
+NetServer.signatures[app.core.net.events.leave] = {{'id', '4bits'}, {'reason', 'string'}, important = true}
+NetServer.signatures[app.core.net.events.class] = {{'id', '4bits'}, {'class', '4bits'}, {'team', '1bit'}, important = true}
+NetServer.signatures[app.core.net.events.sync] = {
   {'id', '4bits'},
   {'tick', '16bits'},
   {'ack', '16bits'},
@@ -14,17 +14,17 @@ NetServer.signatures[evtSync] = {
   {'weapon', '3bits'}, {'skill', '3bits'},
   delta = {'x', 'y', 'z', 'angle', 'health', 'shield', 'weapon', 'skill'}
 }
-NetServer.signatures[evtFire] = {
+NetServer.signatures[app.core.net.events.fire] = {
   {'id', '4bits'}, {'slot', '3bits'}, {'mx', '12bits'}, {'my', '12bits'},
   delta = {{'mx', 'my'}}
 }
-NetServer.signatures[evtDamage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
-NetServer.signatures[evtDead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}, important = true}
-NetServer.signatures[evtSpawn] = {{'id', '4bits'}, important = true}
-NetServer.signatures[evtChat] = {{'message', 'string'}, important = true}
-NetServer.signatures[evtProp] = {{'id', '16bits'}, {'x', '16bits'}, {'y', '16bits'}}
-NetServer.signatures[msgJoin] = {{'id', '4bits'}, important = true}
-NetServer.signatures[msgSnapshot] = {
+NetServer.signatures[app.core.net.events.damage] = {{'id', '4bits'}, {'amount', 'string'}, {'from', '4bits'}}
+NetServer.signatures[app.core.net.events.dead] = {{'id', '4bits'}, {'kill', '4bits'}, {'assists', {{'id', '4bits'}}}, important = true}
+NetServer.signatures[app.core.net.events.spawn] = {{'id', '4bits'}, important = true}
+NetServer.signatures[app.core.net.events.chat] = {{'message', 'string'}, important = true}
+NetServer.signatures[app.core.net.events.prop] = {{'id', '16bits'}, {'x', '16bits'}, {'y', '16bits'}}
+NetServer.signatures[app.core.net.messages.join] = {{'id', '4bits'}, important = true}
+NetServer.signatures[app.core.net.messages.snapshot] = {
   {'tick', '16bits'},
   {'map', 'string'},
   {'players', {{'id', '4bits'}, {'username', 'string'}, {'class', '4bits'}, {'team', '1bit'}}},
@@ -34,26 +34,26 @@ NetServer.signatures[msgSnapshot] = {
 NetServer.receive = {}
 NetServer.receive['default'] = f.empty
 
-NetServer.receive[msgJoin] = function(self, event)
+NetServer.receive[app.core.net.messages.join] = function(self, event)
   local pid = self.peerToPlayer[event.peer]
   ctx.players:get(pid).username = event.data.username
-  self:send(msgJoin, event.peer, {id = pid})
-  self:emit(evtJoin, {id = pid, username = event.data.username})
-  self:emit(evtChat, {message = '{white}' .. event.data.username .. ' has joined!'})
+  self:send(app.core.net.messages.join, event.peer, {id = pid})
+  self:emit(app.core.net.events.join, {id = pid, username = event.data.username})
+  self:emit(app.core.net.events.chat, {message = '{white}' .. event.data.username .. ' has joined!'})
   self:snapshot(event.peer)
 end
 
-NetServer.receive[msgLeave] = function(self, event) self:disconnect(event) end
+NetServer.receive[app.core.net.messages.leave] = function(self, event) self:disconnect(event) end
 
-NetServer.receive[msgClass] = function(self, event)
-  self:emit(evtClass, {id = self.peerToPlayer[event.peer], class = event.data.class, team = event.data.team})
+NetServer.receive[app.core.net.messages.class] = function(self, event)
+  self:emit(app.core.net.events.class, {id = self.peerToPlayer[event.peer], class = event.data.class, team = event.data.team})
 end
 
-NetServer.receive[msgInput] = function(self, event)
+NetServer.receive[app.core.net.messages.input] = function(self, event)
   ctx.players:get(self.peerToPlayer[event.peer]):trace(event.data, event.peer:round_trip_time())
 end
 
-NetServer.receive[msgChat] = function(self, event)
+NetServer.receive[app.core.net.messages.chat] = function(self, event)
   local pid = self.peerToPlayer[event.peer]
   local username = ctx.players:get(pid).username
   local color = ctx.players:get(pid).team == 0 and 'purple' or 'orange'
@@ -63,7 +63,7 @@ NetServer.receive[msgChat] = function(self, event)
     for word in string.gmatch(message, '([^ ]+)') do
       table.insert(data, word)
     end
-    local function reply(message) self:send(evtChat, event.peer, {message = '{red}' .. message}) end
+    local function reply(message) self:send(app.core.net.events.chat, event.peer, {message = '{red}' .. message}) end
     local handlers = {
       ['/restart'] = function(data)
         if username ~= ctx.owner then return reply('permission denied') end
@@ -79,25 +79,25 @@ NetServer.receive[msgChat] = function(self, event)
         for i = 1, ctx.players.max do
           if ctx.players:get(i).username == data[2] then player = i break end
         end
-        if not player then return self:send(evtChat, event.peer, {message = '{red}couldn\'t find player "' .. data[2] .. '"'}) end
+        if not player then return self:send(app.core.net.events.chat, event.peer, {message = '{red}couldn\'t find player "' .. data[2] .. '"'}) end
         for i = 1, ctx.players.max do
           local p = self.host:get_peer(i)
           if self.peerToPlayer[p] == player then peer = p break end
         end
-        if not peer then return self:send(evtChat, event.peer, {message = '{red}"' .. data[2] .. '" doesn\'t seem to be connected'}) end
+        if not peer then return self:send(app.core.net.events.chat, event.peer, {message = '{red}"' .. data[2] .. '" doesn\'t seem to be connected'}) end
         self:disconnect({peer = peer, reason = 'kicked'})
       end,
 
       ['/roll'] = function(data)
-        self:emit(evtChat, {message = '{red}' .. username .. ' rolled {green}' .. love.math.random(1, 100)})
+        self:emit(app.core.net.events.chat, {message = '{red}' .. username .. ' rolled {green}' .. love.math.random(1, 100)})
       end,
 
       ['/bjorn'] = function(data)
-        self:emit(evtChat, {message = '{purple}-_-'})
+        self:emit(app.core.net.events.chat, {message = '{purple}-_-'})
       end,
 
       default = function(data)
-        self:send(evtChat, event.peer, {message = '{red}unknown command "' .. data[1]:sub(2) .. '"'})
+        self:send(app.core.net.events.chat, event.peer, {message = '{red}unknown command "' .. data[1]:sub(2) .. '"'})
       end
     }
     handlers['/reset'] = handlers['/restart']
@@ -106,7 +106,7 @@ NetServer.receive[msgChat] = function(self, event)
 
     return (handlers[data[1]] or handlers.default)(data)
   end
-  self:emit(evtChat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. message})
+  self:emit(app.core.net.events.chat, {message = '{' .. color .. '}' .. username .. '{white}: ' .. message})
 end
 
 function NetServer:init()
@@ -145,8 +145,8 @@ function NetServer:disconnect(event)
   local pid = self.peerToPlayer[event.peer]
   local username = ctx.players:get(pid).username
   local reason = event.reason or 'left'
-  self:emit(evtChat, {message = '{white}' .. username .. ' has left (' .. reason .. ')'})
-  self:emit(evtLeave, {id = pid, reason = reason})
+  self:emit(app.core.net.events.chat, {message = '{white}' .. username .. ' has left (' .. reason .. ')'})
+  self:emit(app.core.net.events.leave, {id = pid, reason = reason})
   self.peerToPlayer[event.peer] = nil
   event.peer:disconnect_now()
   if username == ctx.owner then
@@ -204,7 +204,7 @@ function NetServer:snapshot(peer)
       })
     end
   end
-  self:send(msgSnapshot, peer, {tick = tick, map = 'testArena', ['players'] = players})
+  self:send(app.core.net.messages.snapshot, peer, {tick = tick, map = 'testArena', ['players'] = players})
 end
 
 function NetServer:nextPlayerId()

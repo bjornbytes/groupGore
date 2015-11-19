@@ -1,6 +1,6 @@
-MenuOptions = class()
+local Options = class()
 
-MenuOptions.defaults = {
+Options.defaults = {
   fullscreen = false,
   borderless = true,
   windowWidth = 800,
@@ -19,6 +19,8 @@ local function safeLoad(file)
   return result
 end
 
-function MenuOptions:init()
+function Options:init()
   self.data = table.merge(safeLoad('options.lua'), self.defaults)
 end
+
+return Options

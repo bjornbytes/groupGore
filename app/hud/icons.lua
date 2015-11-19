@@ -1,9 +1,9 @@
-HudIcons = class()
+local Icons = class()
 
 local g = love.graphics
 local w, h = g.width, g.height
 
-function HudIcons:init()
+function Icons:init()
   self.prevLabelAlphas = {}
   self.labelAlphas = {}
   for i = 1, 5 do
@@ -12,7 +12,7 @@ function HudIcons:init()
   end
 end
 
-function HudIcons:update()
+function Icons:update()
   local p = ctx.players:get(ctx.id)
   if p then
     for i = 1, 5 do
@@ -28,7 +28,7 @@ function HudIcons:update()
   end
 end
 
-function HudIcons:draw()
+function Icons:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local top = v * .1
   local p = ctx.players:get(ctx.id)
@@ -104,3 +104,5 @@ function HudIcons:draw()
     end
   end
 end
+
+return Icons

@@ -1,6 +1,6 @@
-HudBlood = class()
+local Blood = class()
 
-function HudBlood:draw()
+function Blood:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
   if p then
@@ -11,3 +11,5 @@ function HudBlood:draw()
     love.graphics.draw(image, 0, 0, 0, u / image:getWidth(), v / image:getHeight())
   end
 end
+
+return Blood

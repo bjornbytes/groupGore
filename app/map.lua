@@ -114,7 +114,7 @@ function Map:init(name)
     end
   end
 
-  ctx.event:on(evtProp, function(data)
+  ctx.event:on(app.core.net.events.prop, function(data)
     local prop = self.props[data.id]
     prop.x, prop.y = data.x / 10, data.y / 10
   end)

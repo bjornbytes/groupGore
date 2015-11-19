@@ -1,27 +1,27 @@
-Hud = class()
+local Hud = class()
 
 local g = love.graphics
 
 function Hud:init()
   self._debug = false
 
-  self.players = HudPlayers()
-  self.blood = HudBlood()
-  self.left = HudLeft()
-  self.health = HudHealth()
-  self.icons = HudIcons()
-  self.right = HudRight()
-  self.buffs = HudBuffs()
-  self.feed = HudFeed()
-  self.chat = HudChat()
-  self.scoreboard = HudScoreboard()
-  self.dead = HudDead()
-  self.killPopup = HudKillPopup()
-  self.gameOver = HudGameOver()
-  self.classSelect = HudClassSelect()
-  self.debug = HudDebug()
+  self.players = app.hud.players()
+  self.blood = app.hud.blood()
+  self.left = app.hud.left()
+  self.health = app.hud.health()
+  self.icons = app.hud.icons()
+  self.right = app.hud.right()
+  self.buffs = app.hud.buffs()
+  self.feed = app.hud.feed()
+  self.chat = app.hud.chat()
+  self.scoreboard = app.hud.scoreboard()
+  self.dead = app.hud.dead()
+  self.killPopup = app.hud.killPopup()
+  self.gameOver = app.hud.gameOver()
+  self.classSelect = app.hud.classSelect()
+  self.debug = app.hud.debug()
 
-  ctx.event:on(evtChat, function(data) self.chat:add(data) end)
+  ctx.event:on(app.core.net.events.chat, function(data) self.chat:add(data) end)
   ctx.view:register(self, 'gui')
 
   self.u = ctx.view.frame.width
@@ -120,3 +120,5 @@ function Hud:crosshair()
     end
   end
 end
+
+return Hud

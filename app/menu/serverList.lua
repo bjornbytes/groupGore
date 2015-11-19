@@ -1,13 +1,13 @@
-MenuServerList = class()
+local ServerList = class()
 
 local g = love.graphics
 
-function MenuServerList:activate()
+function ServerList:activate()
   ctx.ribbon.count = 0
   self:refresh()
 end
 
-function MenuServerList:draw()
+function ServerList:draw()
   local u, v = ctx.u, ctx.v
   local mx, my = love.mouse.getPosition()
   local hover = math.inside(mx, my, 0, .2 * v, u, .1 * v)
@@ -40,11 +40,11 @@ function MenuServerList:draw()
 
 end
 
-function MenuServerList:keypressed(key)
+function ServerList:keypressed(key)
   if key == 'r' then self:refresh() end
 end
 
-function MenuServerList:mousepressed(x, y, button)
+function ServerList:mousepressed(x, y, button)
   local u, v = ctx.u, ctx.v
   if button == 'l' then
     for i = 1, #self.servers do
@@ -60,7 +60,8 @@ function MenuServerList:mousepressed(x, y, button)
   end
 end
 
-function MenuServerList:refresh()
+function ServerList:refresh()
   self.servers = app.goregous:listServers()
 end
 
+return ServerList

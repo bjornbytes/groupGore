@@ -1,13 +1,13 @@
-HudLeft = class()
+local Left = class()
 
 local g = love.graphics
 
-function HudLeft:init()
+function Left:init()
   self.offset = -data.media.graphics.hud.left:getWidth() * ctx.view.scale
   self.prevOffset = self.offset
 end
 
-function HudLeft:update()
+function Left:update()
   local p = ctx.players:get(ctx.id)
   if p then
     self.prevOffset = self.offset
@@ -20,7 +20,7 @@ function HudLeft:update()
   end
 end
 
-function HudLeft:draw()
+function Left:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local s = ctx.view.scale
   local offset = math.lerp(self.prevOffset, self.offset, tickDelta / tickRate)
@@ -58,3 +58,5 @@ function HudLeft:draw()
     end
   end
 end
+
+return Left

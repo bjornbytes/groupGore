@@ -1,8 +1,8 @@
-HudDebug = class()
+local Debug = class()
 
 local g = love.graphics
 
-function HudDebug:draw()
+function Debug:draw()
   if env ~= 'release' then
     ctx.players:each(function(p)
       g.push()
@@ -32,3 +32,5 @@ function HudDebug:draw()
   g.setFont('aeromatics', ctx.hud.v * .02)
   g.print(debug, ctx.hud.u - g.getFont():getWidth(debug), ctx.hud.v - g.getFont():getHeight())
 end
+
+return Debug

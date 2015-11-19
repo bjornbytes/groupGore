@@ -109,7 +109,7 @@ function Spell:damage(enemies, amount)
   amount = f.val(amount)
 
   table.each(enemies, function(enemy)
-    ctx.net:emit(evtDamage, {id = enemy.id, from = self.owner.id, amount = amount(enemy), tick = tick})
+    ctx.net:emit(app.core.net.events.damage, {id = enemy.id, from = self.owner.id, amount = amount(enemy), tick = tick})
   end)
 end
 

@@ -1,8 +1,8 @@
-HudBuffs = class()
+local Buffs = class()
 
 local g = love.graphics
 
-function HudBuffs:draw()
+function Buffs:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
   if p then
@@ -16,3 +16,5 @@ function HudBuffs:draw()
     end)
   end
 end
+
+return Buffs

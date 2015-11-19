@@ -1,9 +1,9 @@
-MenuBackground = class()
+local Background = class()
 
 local g = love.graphics
 local w, h = g.width, g.height
 
-function MenuBackground:draw()
+function Background:draw()
   g.setColor(255, 255, 255)
   g.draw(data.media.graphics.menu.ggbg, 0, 0)
 
@@ -16,3 +16,5 @@ function MenuBackground:draw()
   g.setColor(0, 0, 0, 80)
   g.rectangle('fill', 0, h(.2), w(), h(.1))
 end
+
+return Background

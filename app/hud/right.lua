@@ -1,8 +1,8 @@
-HudRight = class()
+local Right = class()
 
 local g = love.graphics
 
-function HudRight:draw()
+function Right:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local s = ctx.view.scale
 
@@ -39,3 +39,5 @@ function HudRight:draw()
     end]]
   end
 end
+
+return Right

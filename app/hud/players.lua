@@ -1,8 +1,8 @@
-HudPlayers = class()
+local Players = class()
 
 local g = love.graphics
 
-function HudPlayers:draw()
+function Players:draw()
   g.setFont('pixel', 8)
   ctx.players:each(function(p)
     if not p.ded then
@@ -41,3 +41,5 @@ function HudPlayers:draw()
     end
   end
 end
+
+return Players

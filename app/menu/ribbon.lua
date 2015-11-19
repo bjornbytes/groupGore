@@ -1,14 +1,14 @@
-MenuRibbon = class()
+local Ribbon = class()
 
 local g = love.graphics
 
-function MenuRibbon:init()
+function Ribbon:init()
   self.ribbons = {0, 0, 0, 0, 0}
   self.count = 3
   self.margin = .1
 end
 
-function MenuRibbon:test(x, y)
+function Ribbon:test(x, y)
   local u, v = ctx.u, ctx.v
   local anchor = (.3 + (.8 - .3) / 2) * v
 
@@ -23,7 +23,7 @@ function MenuRibbon:test(x, y)
   return nil
 end
 
-function MenuRibbon:draw()
+function Ribbon:draw()
   local u, v = ctx.u, ctx.v
   local anchor = (.3 + (.8 - .3) / 2) * v
 
@@ -45,3 +45,4 @@ function MenuRibbon:draw()
   end
 end
 
+return Ribbon

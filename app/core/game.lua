@@ -16,11 +16,11 @@ function Game:load(options)
   self.effects = app.core.effects()
   self.sound = app.core.sound()
   self.map = app.map()
-  self.hud = Hud()
+  self.hud = app.hud.controller()
 
   self.event:on('game.quit', function(data)
     app.core.context:remove(ctx)
-    app.core.context:add(Menu)
+    app.core.context:add(app.menu.context)
   end)
 end
 

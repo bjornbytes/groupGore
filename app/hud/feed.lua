@@ -1,15 +1,15 @@
-HudFeed = class()
+local Feed = class()
 
 local g = love.graphics
 
-function HudFeed:init()
+function Feed:init()
   self.entries = {}
   self.alpha = 0
 
-  ctx.event:on(evtDead, function(data) self:insert(data) end)
+  ctx.event:on(app.core.net.events.dead, function(data) self:insert(data) end)
 end
 
-function HudFeed:update()
+function Feed:update()
   for i = 1, #self.entries do
     local k = self.entries[i]
     k.x = math.lerp(k.x, k.targetX, 30 * tickRate)
@@ -23,7 +23,7 @@ function HudFeed:update()
   end
 end
 
-function HudFeed:draw()
+function Feed:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   g.setFont('pixel', 8)
   local font = g.getFont()
@@ -51,7 +51,7 @@ function HudFeed:draw()
   end
 end
 
-function HudFeed:insert(data)
+function Feed:insert(data)
   local u, v = ctx.hud.u, ctx.hud.v
   g.setFont('pixel', 8)
   local font = g.getFont()
@@ -71,7 +71,7 @@ function HudFeed:insert(data)
   self.alpha = 4
 end
 
-function HudFeed:resize()
+function Feed:resize()
   local u, v = ctx.hud.u, ctx.hud.v
   g.setFont('pixel', 8)
   local font = g.getFont()
@@ -87,3 +87,5 @@ function HudFeed:resize()
     entry.y = entry.targetY
   end
 end
+
+return Feed

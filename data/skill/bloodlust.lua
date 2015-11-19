@@ -13,7 +13,7 @@ Bloodlust.type = 'passive'
 -- Behavior
 ----------------
 function Bloodlust:activate(owner)
-  ctx.event:on(evtDead, function(data)
+  ctx.event:on(app.core.net.events.dead, function(data)
     if data.kill == owner.id and data.id ~= owner.id then
       ctx.buffs:add(owner, 'bloodlust')
     end
@@ -21,7 +21,7 @@ function Bloodlust:activate(owner)
 end
 
 function Bloodlust:deactivate(owner)
-  ctx.event:remove(evtDead, self)
+  ctx.event:remove(app.core.net.events.dead, self)
 end
 
 function Bloodlust:value(owner)

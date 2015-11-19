@@ -52,7 +52,7 @@ function PlayerMain:update()
     end
   end
 
-  ctx.net:send(msgInput, input)
+  ctx.net:send(app.core.net.messages.input, input)
 
   app.player.update(self)
 

@@ -1,13 +1,13 @@
-HudKillPopup = class()
+local KillPopup = class()
 
 local g = love.graphics
 
-function HudKillPopup:init()
+function KillPopup:init()
   self.streak = {}
   self.multikill = {}
   self.multikillTick = {}
   self.feed = {}
-  ctx.event:on(evtDead, function(data)
+  ctx.event:on(app.core.net.events.dead, function(data)
     self.streak[data.id] = 0
     if data.id ~= data.kill then
       self.multikill[data.kill] = self.multikill[data.kill] or 0
@@ -31,7 +31,7 @@ function HudKillPopup:init()
   end)
 end
 
-function HudKillPopup:update()
+function KillPopup:update()
   local u, v = ctx.hud.u, ctx.hud.v
   local ty = v * .22
   for i = 1, #self.feed do
@@ -50,7 +50,7 @@ function HudKillPopup:update()
   end
 end
 
-function HudKillPopup:draw()
+function KillPopup:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   for i = 1, #self.feed do
     local f = self.feed[i]
@@ -75,3 +75,5 @@ function HudKillPopup:draw()
     g.printCenter(str, f.x, f.y + v * .038, true, false)
   end
 end
+
+return KillPopup

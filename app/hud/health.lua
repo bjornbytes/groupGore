@@ -1,15 +1,15 @@
-HudHealth = class()
+Health = class()
 
 local g = love.graphics
 
-function HudHealth:init()
+function Health:init()
   local health = data.media.graphics.hud.health
   self.canvas = g.newCanvas(health:getWidth(), health:getHeight())
   self.val = 0
   self.prevVal = 0
 end
 
-function HudHealth:update()
+function Health:update()
   local p = ctx.players:get(ctx.id)
   if p then
     self.prevVal = self.val
@@ -17,7 +17,7 @@ function HudHealth:update()
   end
 end
 
-function HudHealth:draw()
+function Health:draw()
   local u, v = ctx.hud.u, ctx.hud.v
   local p = ctx.players:get(ctx.id)
 
@@ -53,3 +53,5 @@ function HudHealth:draw()
     g.printCenter(math.ceil(p.health) .. ' / ' .. p.maxHealth, u * .5, data.media.graphics.hud.health:getHeight() * s / 2 + (v * .003))
   end
 end
+
+return Health

@@ -1,8 +1,8 @@
-MenuBack = class()
+local Back = class()
 
 local g = love.graphics
 
-function MenuBack:draw()
+function Back:draw()
   local u, v = ctx.u, ctx.v
   local active = ctx.page and ctx.page ~= 'login' and ctx.page ~= 'main'
   local mx, my = love.mouse.getPosition()
@@ -17,10 +17,12 @@ function MenuBack:draw()
   end
 end
 
-function MenuBack:mousereleased(x, y, button)
+function Back:mousereleased(x, y, button)
   local u, v = ctx.u, ctx.v
   if button == 'l' and math.inside(x, y, 0, .8 * v, u, .2 * v) then
     ctx:push('main')
     data.media.sounds.click:play()
   end
 end
+
+return Back
