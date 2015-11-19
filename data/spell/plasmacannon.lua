@@ -1,4 +1,4 @@
-local PlasmaCannon = extend(app.core.spell)
+local PlasmaCannon = extend(app.logic.spell)
 PlasmaCannon.code = 'plasmacannon'
 
 function PlasmaCannon:activate(charge)
@@ -57,7 +57,7 @@ function PlasmaCannon:update()
     self.x, self.y = self.x + math.dx(dis, self.angle), self.y + math.dy(dis, self.angle)
     local targets = ctx.collision:circleTest(self.x, self.y, self.radius, {tag = 'player', fn = function(p) return p.team ~= self.owner.team end, all = true})
     table.each(targets, function(p)
-      ctx.net:emit(app.core.net.events.damage, {id = p.id, amount = self.damage, from = self.owner.id, tick = tick})
+      ctx.net:emit(app.net.core.events.damage, {id = p.id, amount = self.damage, from = self.owner.id, tick = tick})
       ctx.buffs:add(p, 'plasmasickness')
     end)
     ctx.event:emit('particle.create', {

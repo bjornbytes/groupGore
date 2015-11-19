@@ -1,4 +1,4 @@
-local Dagger = extend(app.core.spell)
+local Dagger = extend(app.logic.spell)
 Dagger.code = 'dagger'
 Dagger.radius = 18
 Dagger.distance = 45

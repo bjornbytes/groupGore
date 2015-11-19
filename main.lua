@@ -7,4 +7,4 @@ setmetatable(_G, {
   __index = require('lib/cargo').init('/')
 })
 
-app.core.context:bind(app.patcher)
+app.util.context:bind(app.context.patcher)

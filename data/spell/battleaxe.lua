@@ -1,4 +1,4 @@
-local BattleAxe = extend(app.core.spell)
+local BattleAxe = extend(app.logic.spell)
 BattleAxe.code = 'battleaxe'
 BattleAxe.duration = .5
 BattleAxe.radius = 45

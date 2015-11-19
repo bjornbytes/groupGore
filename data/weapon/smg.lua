@@ -1,4 +1,4 @@
-local SMG = extend(app.core.weapon)
+local SMG = extend(app.logic.weapon)
 
 ----------------
 -- Meta

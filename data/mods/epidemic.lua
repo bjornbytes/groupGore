@@ -4,19 +4,19 @@ Epidemic.code = 'epidemic'
 function Epidemic:init(map)
   self.timer = 5 * 60
 
-  ctx.event:on(app.core.net.events.dead, function(_data)
+  ctx.event:on(app.net.core.events.dead, function(_data)
     if _data.id == _data.kill then return end
     local p = ctx.players:get(_data.id)
     if p.team == purple then
-      ctx.net:emit(app.core.net.events.class, {id = _data.id, class = p.class.id, team = orange})
+      ctx.net:emit(app.net.core.events.class, {id = _data.id, class = p.class.id, team = orange})
       ctx.players:each(function(p)
         if p.team == orange then ctx.buffs:add(p, 'zombieboost') end
       end)
     end
   end)
 
-  ctx.event:on(app.core.net.events.class, function(data) self:refresh() end)
-  ctx.event:on(app.core.net.messages.leave, function(data) self:refresh() end)
+  ctx.event:on(app.net.core.events.class, function(data) self:refresh() end)
+  ctx.event:on(app.net.core.messages.leave, function(data) self:refresh() end)
 
   for i = #map.props, 1, -1 do
     local p = map.props[i]

@@ -1,4 +1,4 @@
-local RocketBoots = extend(app.core.spell)
+local RocketBoots = extend(app.logic.spell)
 
 RocketBoots.code = 'rocketboots'
 RocketBoots.maxDistance = 410

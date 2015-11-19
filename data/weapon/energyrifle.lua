@@ -1,4 +1,4 @@
-local EnergyRifle = extend(app.core.weapon)
+local EnergyRifle = extend(app.logic.weapon)
 
 ----------------
 -- Meta

@@ -1,4 +1,4 @@
-local Lazor = extend(app.core.spell)
+local Lazor = extend(app.logic.spell)
 Lazor.code = 'lazor'
 
 Lazor.maxCharge = 1.2
@@ -34,7 +34,7 @@ function Lazor:update()
         hit[p.id] = true
         local buff = ctx.buffs:get(p, 'plasmasickness')
         local damage = 70 + 50 * (buff and buff.stacks or 0)
-        ctx.net:emit(app.core.net.events.damage, {id = p.id, from = self.owner.id, amount = damage, tick = tick})
+        ctx.net:emit(app.net.core.events.damage, {id = p.id, from = self.owner.id, amount = damage, tick = tick})
         ctx.buffs:remove(p, 'plasmasickness')
       end)
     end

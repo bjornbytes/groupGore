@@ -1,4 +1,4 @@
-local Dusk = extend(app.core.spell)
+local Dusk = extend(app.logic.spell)
 
 Dusk.code = 'dusk'
 Dusk.maxDistance = 300

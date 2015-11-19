@@ -1,4 +1,4 @@
-local EnergyRifle = extend(app.core.spell)
+local EnergyRifle = extend(app.logic.spell)
 EnergyRifle.code = 'energyrifle'
 
 EnergyRifle.image = data.media.graphics.effects.pulse

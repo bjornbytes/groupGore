@@ -70,7 +70,7 @@ function CartServer:update()
       ctx.map:modExec('scoring', 'win', purple)
     end
 
-    ctx.net:emit(app.core.net.events.prop, {id = self.id, x = math.round(self.x * 10), y = math.round(self.y * 10)})
+    ctx.net:emit(app.net.core.events.prop, {id = self.id, x = math.round(self.x * 10), y = math.round(self.y * 10)})
   end
 end
 

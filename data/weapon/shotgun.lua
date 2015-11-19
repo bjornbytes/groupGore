@@ -1,4 +1,4 @@
-local Shotgun = extend(app.core.weapon)
+local Shotgun = extend(app.logic.weapon)
 
 ----------------
 -- Meta
