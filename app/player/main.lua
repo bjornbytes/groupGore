@@ -69,6 +69,7 @@ function PlayerMain:draw()
 end
 
 function PlayerMain:trace(data)
+  do return end
   self.x, self.y = data.x / 10, data.y / 10
   self.health, self.shield = data.health, data.shield
 
@@ -83,7 +84,7 @@ function PlayerMain:trace(data)
   end
 
   self.moving = true
-  ctx.collision:update()
+  ctx.event:emit('collision.move', {object = self, resolve = true})
   self.moving = nil
 end
 

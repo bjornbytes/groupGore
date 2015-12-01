@@ -52,12 +52,12 @@ function Dusk:update(owner)
       owner.x, owner.y = tx, ty
       owner.moving = true
       owner.ghosting = true
-      ctx.collision:update()
+      ctx.event:emit('collision.move', {object = owner, resolve = true})
       owner.moving = nil
       owner.ghosting = nil
       self.targetGhostX, self.targetGhostY = owner.x, owner.y
       owner.x, owner.y = ox, oy
-      ctx.event:emit('collision.move', {object = owner})
+      ctx.event:emit('collision.move', {object = owner, resolve = true})
       if math.distance(px, py, self.targetGhostX, self.targetGhostY) > 2 then
         self.ghostTick = 1
       else

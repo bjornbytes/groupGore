@@ -93,7 +93,7 @@ function PlayerServer:trace(data, ping)
           p.y = lerpd.y
           newData[p.id] = {p.x, p.y}
           p.angle = lerpd.angle
-          ctx.event:emit('collision.move', {object = p})
+          ctx.event:emit('collision.move', {object = p, resolve = true})
         end
       end)
     end

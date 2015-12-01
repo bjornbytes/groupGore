@@ -47,7 +47,10 @@ function Map:init(name)
   end)
 
   table.each(self.props, function(prop)
-    setmetatable(prop, {__index = data.prop[prop.kind .. (ctx.tag or ''):capitalize()] or data.prop[prop.kind], __tostring = data.prop[prop.kind].__tostring})
+    setmetatable(prop, {
+      __index = data.prop[prop.kind .. (ctx.tag or ''):capitalize()] or data.prop[prop.kind],
+      __tostring = data.prop[prop.kind].__tostring
+    })
   end)
   self.props = table.filter(self.props, function(prop) return not ctx.tag or not prop.mod or self.mods[prop.mod] end)
   table.each(self.props, function(prop, id)

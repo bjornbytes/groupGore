@@ -1,10 +1,7 @@
 local Collision = class()
 Collision.cellSize = 128
-Collision.onCollide = function(_, a, b, dx, dy)
-  a, b = a.owner, b.owner
-  f.exe(a.collision.with and a.collision.with[b.collision.tag], a, b, dx, dy)
-  f.exe(b.collision.with and b.collision.with[a.collision.tag], b, a, -dx, -dy)
-end
+
+local check = {}
 
 function Collision:init()
   self.hc = require 'lib/hc'
@@ -44,22 +41,21 @@ function Collision:move(data)
   end
 
   data.object.shape:moveTo(x, y)
+
+  if data.resolve then
+    self:resolve(data.object)
+  end
 end
 
-function Collision:update()
-  --[[for shape in self.hc:activeShapes() do
-    if shape.owner then
-      self:move({object = shape.owner})
-    end
+function Collision:resolve(object)
+  local a = object
+  local check = {}
+
+  for other, vector in pairs(self.hc.collisions(object.shape)) do
+    local b, dx, dy = other.owner, vector.x, vector.y
+    f.exe(a.collision.with and a.collision.with[b.collision.tag], a, b, dx, dy)
+    f.exe(b.collision.with and b.collision.with[a.collision.tag], b, a, -dx, -dy)
   end
-
-  self.hc:update()
-
-  for shape in self.hc:activeShapes() do
-    if shape.owner then
-      self:move({object = shape.owner})
-    end
-  end]]
 end
 
 function Collision:pointTest(x, y, options)

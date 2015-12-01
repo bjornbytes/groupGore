@@ -132,7 +132,7 @@ function Player:update()
   self.silence = timer.rot(self.silence)
   if self.ded then
     self.x, self.y = 0, 0
-    ctx.event:emit('collision.move', {object = self})
+    ctx.event:emit('collision.move', {object = self, resolve = true})
   end
   if ctx.view then
     self.depth = ctx.view:threeDepth(self.x, self.y, self.z)
@@ -184,7 +184,7 @@ function Player:move(input)
   self.y = math.clamp(self.y, 0, ctx.map.height)
 
   self.moving = true
-  ctx.collision:update()
+  ctx.event:emit('collision.move', {object = self, resolve = true})
   self.moving = nil
 end
 
@@ -280,7 +280,7 @@ function Player:die()
 
   self.alpha = 0
   self.x, self.y = 0, 0
-  ctx.event:emit('collision.move', {object = self})
+  ctx.event:emit('collision.move', {object = self, resolve = true})
 end
 
 function Player:spawn()
