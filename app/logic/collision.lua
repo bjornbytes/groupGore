@@ -65,15 +65,18 @@ end
 function Collision:pointTest(x, y, options)
   options = options or {}
   local tag, fn = options.tag, options.fn
+  local detector = self.hc.point(x, y)
 
-  for _, shape in pairs(self.hc:shapesAt(x, y)) do
-    if (not tag) or shape.owner.collision.tag == tag then
-      if (not fn) or fn(shape.owner) then
+  for _, shape in pairs(self.hc.collisions(detector)) do
+    if not tag or shape.owner.collision.tag == tag then
+      if not fn or fn(shape.owner) then
+        self.hc.remove(detector)
         return shape.owner
       end
     end
   end
 
+  self.hc.remove(detector)
   return nil
 end
 
@@ -85,7 +88,7 @@ function Collision:lineTest(x1, y1, x2, y2, options)
   local mindis = first and math.huge or nil
   local res = all and {} or nil
 
-  for shape in pairs(self.hc:shapesInRange(_x1, _y1, _x2, _y2)) do
+  for shape in pairs(self.hc:hash():shapes()) do
     if (not tag) or shape.owner.collision.tag == tag then
       local intersects, d = shape:intersectsRay(x1, y1, x2 - x1, y2 - y1)
       if intersects and d >= 0 and d <= 1 then
@@ -109,26 +112,24 @@ function Collision:lineTest(x1, y1, x2, y2, options)
 end
 
 function Collision:circleTest(x, y, r, options)
-  local circle = self.hc.circle(x, y, r)
+  local detector = self.hc.circle(x, y, r)
   local tag, fn, all = options.tag, options.fn, options.all
   local res = all and {} or nil
 
-  for shape in pairs(self.hc.neighbors(circle)) do
-    if circle:collidesWith(shape) then
-      if (not tag) or shape.owner.collision.tag == tag then
-        if (not fn) or fn(shape.owner) then
-          if all then
-            table.insert(res, shape.owner)
-          else
-            self.hc.remove(circle)
-            return shape.owner
-          end
+  for shape in pairs(self.hc.collisions(detector)) do
+    if (not tag) or shape.owner.collision.tag == tag then
+      if (not fn) or fn(shape.owner) then
+        if all then
+          table.insert(res, shape.owner)
+        else
+          self.hc.remove(detector)
+          return shape.owner
         end
       end
     end
   end
 
-  self.hc.remove(circle)
+  self.hc.remove(detector)
   return res
 end
 
