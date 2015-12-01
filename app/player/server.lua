@@ -60,7 +60,7 @@ function PlayerServer:update()
       if spawn.team == self.team then
         self.health = math.min(self.health + amount, self.maxHealth)
       else
-        ctx.event:emit(app.net.core.events.damage, {id = self.id, amount = amount, from = self.id, tick = tick})
+        ctx.event:emit(app.net.events.damage, {id = self.id, amount = amount, from = self.id, tick = tick})
       end
     else
       self.spawnMultiplier = 0
@@ -137,7 +137,7 @@ function PlayerServer:trace(data, ping)
     msg.id = self.id
     msg.tick = tick
     msg.ack = self.ack
-    ctx.net:emit(app.net.core.events.sync, msg)
+    ctx.net:emit(app.net.events.sync, msg)
 
     -- Undo lag compensation
     ctx.players:each(function(p)
@@ -151,7 +151,7 @@ function PlayerServer:trace(data, ping)
 end
 
 function PlayerServer:time()
-  self.ded = timer.rot(self.ded, function() ctx.net:emit(app.net.core.events.spawn, {id = self.id}) end)
+  self.ded = timer.rot(self.ded, function() ctx.net:emit(app.net.events.spawn, {id = self.id}) end)
   if self.ded == 0 then self.ded = false end
 end
 
@@ -194,7 +194,7 @@ function PlayerServer:hurt(data)
         if playerHurt[2][2] > 0 then table.insert(assists, {id = playerHurt[2][1]}) end
       end
 
-      ctx.net:emit(app.net.core.events.dead, {id = self.id, kill = data.from, assists = assists})
+      ctx.net:emit(app.net.events.dead, {id = self.id, kill = data.from, assists = assists})
     else
       f.exe(self.shields[1].callback, self)
       table.remove(self.shields, 1)

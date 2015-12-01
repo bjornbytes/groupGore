@@ -1,27 +1,5 @@
 local Net = class()
 
-Net.events = {
-  join = 1,
-  leave = 2,
-  class = 3,
-  sync = 4,
-  fire = 5,
-  damage = 6,
-  dead = 7,
-  spawn = 8,
-  chat = 9,
-  prop = 10
-}
-
-Net.messages = {
-  join  = 11,
-  leave = 12,
-  snapshot = 13,
-  class = 14,
-  input = 15,
-  chat = 16
-}
-
 function Net:init()
   self.inStream = app.net.stream()
   self.outStream = app.net.stream()

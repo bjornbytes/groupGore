@@ -21,7 +21,7 @@ function Hud:init()
   self.classSelect = app.ui.hud.classSelect()
   self.debug = app.ui.hud.debug()
 
-  ctx.event:on(app.net.core.events.chat, function(data) self.chat:add(data) end)
+  ctx.event:on(app.net.events.chat, function(data) self.chat:add(data) end)
   ctx.view:register(self, 'gui')
 
   self.u = ctx.view.frame.width

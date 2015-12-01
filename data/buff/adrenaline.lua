@@ -29,7 +29,7 @@ function Adrenaline:update()
   self.hurtTimer = self.hurtTimer - 1
   if self.hurtTimer <= 0 then
     local amt = math.min(Adrenaline.drain * Adrenaline.rate, self.owner.health - 1)
-    ctx.net:emit(app.net.core.events.damage, {id = self.owner.id, amount = amt, from = self.owner.id, tick = tick})
+    ctx.net:emit(app.net.events.damage, {id = self.owner.id, amount = amt, from = self.owner.id, tick = tick})
     self.hurtTimer = math.round(Adrenaline.rate / tickRate)
     for _ = 1, 8 do
       ctx.event:emit('particle.create', {

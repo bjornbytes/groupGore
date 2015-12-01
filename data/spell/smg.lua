@@ -38,7 +38,7 @@ SMG.activate = function(self)
 
   if target then
     self.len = math.distance(self.x, self.y, target.x, target.y)
-    ctx.net:emit(app.net.core.events.damage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
+    ctx.net:emit(app.net.events.damage, {id = target.id, amount = data.weapon.smg.damage, from = self.owner.id, tick = tick})
   end
 
   for _ = 1, 4 do

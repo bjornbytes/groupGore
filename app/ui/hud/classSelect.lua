@@ -11,7 +11,7 @@ function ClassSelect:init()
   self.utility = 0
   self.teamCt = {0, 0}
 
-  ctx.event:on(app.net.core.events.class, function(data)
+  ctx.event:on(app.net.events.class, function(data)
     if data.id == ctx.id then self.active = false end
   end)
 end
@@ -112,7 +112,7 @@ function ClassSelect:keypressed(key)
     for i = 1, #data.class do
       local class = data.class[data.class.list[i]]
       if not class.locked and key == tostring(i) then
-        ctx.net:send(app.net.core.messages.class, {
+        ctx.net:send(app.net.messages.class, {
           class = i,
           team = ctx.id > 1 and 1 or 0
         })
@@ -133,7 +133,7 @@ function ClassSelect:mousereleased(x, y, button)
   if self.active and button == 'l' then
     for i = 1, #data.class.list do
       if not data.class[data.class.list[i]].locked and math.inside(x, y, u * .09 * i, v * .326, u * .08, u * .08) then
-        ctx.net:send(app.net.core.messages.class, {
+        ctx.net:send(app.net.messages.class, {
           class = i,
           team = self.team
         })

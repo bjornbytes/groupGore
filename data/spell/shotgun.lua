@@ -45,7 +45,7 @@ Shotgun.activate = function(self)
         local n, f = self.len * .25, self.len * .75
         local l, h = data.weapon.shotgun.damage * .4, data.weapon.shotgun.damage * 1
         local damage = l + ((h - l) * ((f - math.clamp(len, n, f)) / f))
-        ctx.net:emit(app.net.core.events.damage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
+        ctx.net:emit(app.net.events.damage, {id = p.id, amount = damage, from = self.owner.id, tick = tick})
       end
 
       table.insert(self.bullets, {

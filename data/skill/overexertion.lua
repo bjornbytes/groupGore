@@ -12,7 +12,7 @@ function Overexertion:canFire(owner)
 end
 
 function Overexertion:fire(owner)
-  ctx.net:emit(app.net.core.events.damage, {id = owner.id, amount = self.cost, from = owner.id, tick = tick})
+  ctx.net:emit(app.net.events.damage, {id = owner.id, amount = self.cost, from = owner.id, tick = tick})
   ctx.buffs:add(owner, 'overexertion')
 end
 

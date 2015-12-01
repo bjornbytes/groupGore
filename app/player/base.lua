@@ -218,7 +218,7 @@ function Player:slot(input, prev)
     local msg = {id = self.id, slot = slot, mx = obj.needsMouse and input.x, my = obj.needsMouse and input.y}
     obj:fire(self, input.x, input.y)
     if obj.targeted then obj.targeting = false end
-    ctx.net:emit(app.net.core.events.fire, msg)
+    ctx.net:emit(app.net.events.fire, msg)
   end
 
   for i = 1, 5 do

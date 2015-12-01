@@ -6,7 +6,7 @@ function Feed:init()
   self.entries = {}
   self.alpha = 0
 
-  ctx.event:on(app.net.core.events.dead, function(data) self:insert(data) end)
+  ctx.event:on(app.net.events.dead, function(data) self:insert(data) end)
 end
 
 function Feed:update()

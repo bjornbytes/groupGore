@@ -5,7 +5,7 @@ Deathmatch.pointsPerKill = 1
 Deathmatch.experiencePerKill = 0
 
 function Deathmatch:init()
-  ctx.event:on(app.net.core.events.dead, function(data)
+  ctx.event:on(app.net.events.dead, function(data)
     if data.id == data.kill then return end
 
     local killer = ctx.players:get(data.kill)

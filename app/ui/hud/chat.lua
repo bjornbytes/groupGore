@@ -59,7 +59,7 @@ function Chat:keypressed(key)
     if key == 'backspace' then self.message = self.message:sub(1, -2)
     elseif key == 'return' or key == 'escape' then
       if #self.message > 0 and key ~= 'escape' then
-        ctx.net:send(app.net.core.messages.chat, {
+        ctx.net:send(app.net.messages.chat, {
           message = self.message
         })
       end

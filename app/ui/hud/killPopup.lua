@@ -7,7 +7,7 @@ function KillPopup:init()
   self.multikill = {}
   self.multikillTick = {}
   self.feed = {}
-  ctx.event:on(app.net.core.events.dead, function(data)
+  ctx.event:on(app.net.events.dead, function(data)
     self.streak[data.id] = 0
     if data.id ~= data.kill then
       self.multikill[data.kill] = self.multikill[data.kill] or 0

@@ -3,9 +3,9 @@ local Scoreboard = class()
 local g = love.graphics
 
 function Scoreboard:init()
-  ctx.event:on(app.net.core.events.class, function(data) self:refresh() end)
-  ctx.event:on(app.net.core.events.dead, function(data) self:refresh() end)
-  ctx.event:on(app.net.core.events.leave, function(data) self:refresh() end)
+  ctx.event:on(app.net.events.class, function(data) self:refresh() end)
+  ctx.event:on(app.net.events.dead, function(data) self:refresh() end)
+  ctx.event:on(app.net.events.leave, function(data) self:refresh() end)
 
   self.names = {[0] = '', [1] = ''}
   self.ks = {[0] = '', [1] = ''}
