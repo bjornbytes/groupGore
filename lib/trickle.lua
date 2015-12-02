@@ -1,4 +1,4 @@
-local Stream = class()
+local trickle = {}
 
 local function byteExtract(x, a, b)
   b = b or a
@@ -20,14 +20,17 @@ local function byteInsert(x, y, a, b)
   return res
 end
 
-function Stream:init(str)
-  self.str = str or ''
-  self.byte = nil
-  self.byteLen = nil
-  getmetatable(self).__tostring = self.truncate
+function trickle.create(str)
+  local stream = {
+    str = str or '',
+    byte = nil,
+    byteLen = nil
+  }
+
+  return setmetatable(stream, trickle)
 end
 
-function Stream:truncate()
+function trickle:truncate()
   if self.byte then
     self.str = self.str .. string.char(self.byte)
     self.byte = nil
@@ -37,14 +40,14 @@ function Stream:truncate()
   return self.str
 end
 
-function Stream:clear()
+function trickle:clear()
   self.str = ''
   self.byte = nil
   self.byteLen = nil
   return self
 end
 
-function Stream:write(x, sig)
+function trickle:write(x, sig)
   if sig == 'string' then self:writeString(x)
   elseif sig == 'bool' then self:writeBool(x)
   elseif sig == 'float' then self:writeFloat(x)
@@ -56,22 +59,22 @@ function Stream:write(x, sig)
   return self
 end
 
-function Stream:writeString(string)
+function trickle:writeString(string)
   self:truncate()
   string = tostring(string)
   self.str = self.str .. string.char(#string) .. string
 end
 
-function Stream:writeBool(bool)
+function trickle:writeBool(bool)
   local x = bool and 1 or 0
   self:writeBits(x, 1)
 end
 
-function Stream:writeFloat(float)
+function trickle:writeFloat(float)
   self:writeString(float)
 end
 
-function Stream:writeBits(x, n)
+function trickle:writeBits(x, n)
   local idx = 0
   repeat
     if not self.byte then self.byte = 0 self.byteLen = 0 end
@@ -91,7 +94,7 @@ function Stream:writeBits(x, n)
   until n == 0
 end
 
-function Stream:read(kind)
+function trickle:read(kind)
   if kind == 'string' then return self:readString()
   elseif kind == 'bool' then return self:readBool()
   elseif kind == 'float' then return self:readFloat()
@@ -101,7 +104,7 @@ function Stream:read(kind)
   end
 end
 
-function Stream:readString()
+function trickle:readString()
   if self.byte then
     self.str = self.str:sub(2)
     self.byte = nil
@@ -117,15 +120,15 @@ function Stream:readString()
   return res
 end
 
-function Stream:readBool()
+function trickle:readBool()
   return self:readBits(1) > 0
 end
 
-function Stream:readFloat()
+function trickle:readFloat()
   return tonumber(self:readString())
 end
 
-function Stream:readBits(n)
+function trickle:readBits(n)
   local x = 0
   local idx = 0
   while n > 0 do
@@ -147,7 +150,7 @@ function Stream:readBits(n)
   return x
 end
 
-function Stream:pack(data, signature)
+function trickle:pack(data, signature)
   local keys
   if signature.delta then
     keys = {}
@@ -184,7 +187,7 @@ function Stream:pack(data, signature)
   end
 end
 
-function Stream:unpack(signature)
+function trickle:unpack(signature)
   local keys
   if signature.delta then
     keys = {}
@@ -213,4 +216,7 @@ function Stream:unpack(signature)
   return data
 end
 
-return Stream
+trickle.__tostring = trickle.truncate
+trickle.__index = trickle
+
+return { create = trickle.create }

@@ -1,8 +1,8 @@
 local Net = class()
 
 function Net:init()
-  self.inStream = app.net.stream()
-  self.outStream = app.net.stream()
+  self.inStream = lib.trickle.create()
+  self.outStream = lib.trickle.create()
 end
 
 function Net:listen(port)
