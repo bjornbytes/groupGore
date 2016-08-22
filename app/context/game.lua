@@ -3,7 +3,7 @@ local Game = class()
 Game.tag = 'client'
 
 function Game:load(options)
-	self.options = options
+  self.options = options
   self.event = app.util.event()
   self.net = app.net.client()
   self.input = app.util.input()
